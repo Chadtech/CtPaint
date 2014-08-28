@@ -47,7 +47,6 @@ putPixel = (canvas, color, whereAtX, whereAtY) ->
 
 drawLine = (canvas, color, beginX, beginY, endX, endY) ->
   deltaX = Math.abs(endX - beginX)
-  console.log 'THE ARGUMENTS', beginX, beginY, endX, endY
   if beginX < endX
     directionX = 1
   else
@@ -63,9 +62,7 @@ drawLine = (canvas, color, beginX, beginY, endX, endY) ->
     errorOne = -deltaY/2
   keepGoin = true
   while keepGoin
-    console.log 'HEY', beginX, endX, 'YS', beginY, endY
     putPixel(canvas,color,beginX,beginY)
-    console.log 'OUR TWO CONDITIONS', beginX == endX, beginY == endY
     if (beginX == endX) and (beginY == endY)
       keepGoin = false
     errorTwo = errorOne
@@ -117,22 +114,13 @@ placeToolbars = ->
   $('#toolbar1Div').css('top', (window.innerHeight-toolbarHeight).toString())
 
 drawToolbars = ->
-  toolbar0Context.fillStyle = '#202818'
+  toolbar0Context.fillStyle = '#202810'
   toolbar0Context.fillRect(0,0,toolbarWidth,window.innerHeight-toolbarHeight)
+  drawLine(toolbar0Context,[16,20,8],toolbarWidth-1,0,toolbarWidth-1,window.innerHeight-toolbarHeight)
 
-  #drawLine(toolbar0Context,[255,0,0],0,0,21,100)
-
-  toolbar1Context.fillStyle = '#202818'
+  toolbar1Context.fillStyle = '#202810'
   toolbar1Context.fillRect(0,0,window.innerWidth,toolbarHeight)
-  ###
-  toolbarContext.beginPath()
-  toolbarContext.moveTo(toolbarWidth-0.5,0)
-  toolbarContext.lineTo(toolbarWidth-0.5,window.innerHeight-toolbarHeight)
-  toolbarContext.lineWidth = 1
-  toolbarContext.strokeStyle = '#101010'
-  toolbarContext.stroke()
-  toolbarContext.closePath()
-  ###
+  drawLine(toolbar1Context,[16,20,8],toolbarWidth-1,0,window.innerWidth,0)
 
 getMousePosition = (event) ->
   'x':event.clientX
