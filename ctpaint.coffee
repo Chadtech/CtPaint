@@ -127,6 +127,10 @@ getMousePosition = (event) ->
   'y':event.clientY
 
 $(document).ready ()->
+  setCanvasSizes()
+  prepareCanvas()
+  placeToolbars()
+  drawToolbars()
 
   $(window).resize ()->
     setCanvasSizes()
@@ -139,29 +143,6 @@ $(document).ready ()->
   $('#CtPaint').mousedown (event)->
     xSpot = getMousePosition(event)['x'] - toolbarWidth
     ySpot = getMousePosition(event)['y']
-
-
-
-  $('#toolbar').mousemove (event)->
-    console.log getMousePosition(event)
-
-setTimeout( ()->
-  setCanvasSizes()
-  prepareCanvas()
-  placeToolbars()
-  drawToolbars()
-
-  drawLine(ctContext,[255,0,0],64,64,96,64)
-  drawLine(ctContext,[255,255,0],64,64,96,96)
-  drawLine(ctContext,[0,255,0],64,64,64,96)
-  drawLine(ctContext,[0,255,255],64,64,32,96)
-  drawLine(ctContext,[0,0,255],64,64,32,64)
-  drawLine(ctContext,[255,0,255],64,64,32,32)
-  drawLine(ctContext,[255,0,0],64,64,64,32)
-  drawLine(ctContext,[255,255,0],64,64,96,32)
-  #drawLine(ctContext,[255,0,0],16,16,64,32)
-
-,250)
 
 
 
