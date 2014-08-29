@@ -8,11 +8,16 @@ selectedTool = undefined
 numberOfTools = 22
 toolViewMode = 0
 
+mousePressed = false
+
 zeroPadder = (number,zerosToFill) ->
   numberAsString = number+''
   while numberAsString.length < zerosToFill
     numberAsString = '0'+numberAsString
   return numberAsString
+
+rgbToHex = (rgb) ->
+  return '#' + rgb[0].toString(16) + rgb[1].toString(16) + rgb[2].toString(16)
 
 ctCanvas = document.getElementById('CtPaint')
 ctContext = ctCanvas.getContext('2d')
@@ -27,7 +32,32 @@ toolbar0sImage1.src = 'toolbar0u.PNG'
 buttonWidth = 24
 buttonHeight = 24
 
-functionNames = ['zoom','select','sample','fill','square','circle','line','point']
+toolNames = ['zoom','select','sample','fill','square','circle','line','point']
+
+zoomAction = ->
+  console.log '0'
+
+selectAction = ->
+  console.log '1'
+
+sampleAction = ->
+  console.log '2'
+
+fillAction = ->
+  console.log '3'
+
+squareAction = ->
+  console.log '4'
+
+circleAction = ->
+  console.log '5'
+
+lineAction = ->
+  console.log '6'
+
+pointAction = (canvas, color, beginX, beginY, endX, endY) ->
+  console.log 'Actually Made it here'
+  drawLine(canvas, color, beginX, beginY, endX, endY)
 
 ctPaintTools = {}
 
@@ -36,15 +66,17 @@ while iteration < numberOfTools
   thisIteration = iteration
   ctPaintTools[iteration] =
     number: iteration
-    name: functionNames[iteration]
+    name: toolNames[iteration]
     clickRegion: [((iteration%2)*25),(Math.floor(iteration/2))*25]
     pressedImage: [new Image(), new Image()]
     toolsAction: ->
-      console.log functionNames, iteration, thisIteration
-      console.log 'did a '+functionNames[@number]
+      console.log toolNames, iteration, thisIteration
+      console.log 'did a '+toolNames[@number]
   ctPaintTools[iteration].pressedImage[0].src = 'u'+zeroPadder(iteration,2)+'.PNG'
   ctPaintTools[iteration].pressedImage[1].src = 'v'+zeroPadder(iteration,2)+'.PNG'
   iteration++
+
+ctPaintTools[7].toolsAction = pointAction
 
 toolbar1Canvas = document.getElementById('toolbar1')
 toolbar1Context = toolbar1Canvas.getContext('2d')
@@ -75,8 +107,6 @@ colorsAtHand = [[192,192,192],[0,0,0],[255,255,255],[0,0,0]]
 
 xSpot = undefined
 ySpot = undefined
-setCoordinates = (event)->
-  xSpot
 
 putPixel = (canvas, color, whereAtX, whereAtY) ->
   newPixel = canvas.createImageData(1,1)
@@ -167,6 +197,18 @@ drawToolbars = ->
   toolbar1Context.drawImage(toolbar1sImage,0,1)
   drawLine(toolbar1Context,[16,20,8],toolbarWidth-1,0,window.innerWidth,0)
 
+  toolbar1Context.fillStyle = rgbToHex(colorsAtHand[0])
+  toolbar1Context.fillRect(4,3,14,14)
+
+  toolbar1Context.fillStyle = rgbToHex(colorsAtHand[1])
+  toolbar1Context.fillRect(21,3,14,14)
+
+  toolbar1Context.fillStyle = rgbToHex(colorsAtHand[2])
+  toolbar1Context.fillRect(13,20,14,14)
+
+  toolbar1Context.fillStyle = rgbToHex(colorsAtHand[2])
+  toolbar1Context.fillRect(30,20,14,14)
+
 getMousePosition = (event) ->
   xSpot = event.clientX
   ySpot = event.clientY
@@ -176,6 +218,7 @@ $(document).ready ()->
     setCanvasSizes()
     prepareCanvas()
     placeToolbars()
+    selectedTool = ctPaintTools[7]
     drawToolbars()
   ,200)
 
@@ -184,13 +227,20 @@ $(document).ready ()->
     placeToolbars()
     drawToolbars()
 
-  #$('#CtPaint').mousemove (event)->
-    #console.log getMousePosition(event)['x']
-    #console.log getMousePosition(event)
+  $('#CtPaint').mousemove (event)->
+    oldX = xSpot
+    oldY = ySpot
+    getMousePosition(event)
+    if mousePressed
+      selectedTool.toolsAction(ctContext, colorsAtHand[0], xSpot-(toolbarWidth+5), ySpot-5, oldX-(toolbarWidth+5), oldY-5)
 
   $('#CtPaint').mousedown (event)->
+    mousePressed = true
     getMousePosition(event)
-    selectedTool.toolsAction()
+    selectedTool.toolsAction(ctContext, colorsAtHand[0], xSpot-(toolbarWidth+5), ySpot-5, xSpot-(toolbarWidth+5), ySpot-5)
+
+  $('#CtPaint').mouseup (event)->
+    mousePressed = false
 
   $('#toolbar0').mousedown (event)->
     getMousePosition(event)
