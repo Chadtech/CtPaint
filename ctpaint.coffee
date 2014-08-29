@@ -29,18 +29,21 @@ buttonHeight = 24
 
 functionNames = ['zoom','select','sample','fill','square','circle','line','point']
 
-ctPaintFunctions = {}
+ctPaintTools = {}
 
 iteration = 0
 while iteration < numberOfTools
-  ctPaintFunctions[iteration] =
-    name:functionNames[iteration]
+  thisIteration = iteration
+  ctPaintTools[iteration] =
+    number: iteration
+    name: functionNames[iteration]
     clickRegion: [((iteration%2)*25),(Math.floor(iteration/2))*25]
     pressedImage: [new Image(), new Image()]
     toolsAction: ->
-      console.log 'did a '+functionsNames[iteration]
-  ctPaintFunctions[iteration].pressedImage[0].src = 'u'+zeroPadder(iteration,2)+'.PNG'
-  ctPaintFunctions[iteration].pressedImage[1].src = 'v'+zeroPadder(iteration,2)+'.PNG'
+      console.log functionNames, iteration, thisIteration
+      console.log 'did a '+functionNames[@number]
+  ctPaintTools[iteration].pressedImage[0].src = 'u'+zeroPadder(iteration,2)+'.PNG'
+  ctPaintTools[iteration].pressedImage[1].src = 'v'+zeroPadder(iteration,2)+'.PNG'
   iteration++
 
 toolbar1Canvas = document.getElementById('toolbar1')
@@ -72,6 +75,8 @@ colorsAtHand = [[192,192,192],[0,0,0],[255,255,255],[0,0,0]]
 
 xSpot = undefined
 ySpot = undefined
+setCoordinates = (event)->
+  xSpot
 
 putPixel = (canvas, color, whereAtX, whereAtY) ->
   newPixel = canvas.createImageData(1,1)
@@ -163,8 +168,8 @@ drawToolbars = ->
   drawLine(toolbar1Context,[16,20,8],toolbarWidth-1,0,window.innerWidth,0)
 
 getMousePosition = (event) ->
-  'x':event.clientX
-  'y':event.clientY
+  xSpot = event.clientX
+  ySpot = event.clientY
 
 $(document).ready ()->
   setTimeout( ()->
@@ -184,17 +189,16 @@ $(document).ready ()->
     #console.log getMousePosition(event)
 
   $('#CtPaint').mousedown (event)->
-    xSpot = getMousePosition(event)['x'] - toolbarWidth
-    ySpot = getMousePosition(event)['y']
+    getMousePosition(event)
+    selectedTool.toolsAction()
 
   $('#toolbar0').mousedown (event)->
-    xSpot = getMousePosition(event)['x']
-    ySpot = getMousePosition(event)['y']
+    getMousePosition(event)
     toolIndex = 0
     while toolIndex < numberOfTools
-      if ctPaintFunctions[toolIndex].clickRegion[0]<xSpot and xSpot<(ctPaintFunctions[toolIndex].clickRegion[0]+buttonWidth)
-        if ctPaintFunctions[toolIndex].clickRegion[1]<ySpot and ySpot<(ctPaintFunctions[toolIndex].clickRegion[1]+buttonHeight)
-          selectedTool = ctPaintFunctions[toolIndex]
+      if ctPaintTools[toolIndex].clickRegion[0]<xSpot and xSpot<(ctPaintTools[toolIndex].clickRegion[0]+buttonWidth)
+        if ctPaintTools[toolIndex].clickRegion[1]<ySpot and ySpot<(ctPaintTools[toolIndex].clickRegion[1]+buttonHeight)
+          selectedTool = ctPaintTools[toolIndex]
       toolIndex++
     drawToolbars()
 
