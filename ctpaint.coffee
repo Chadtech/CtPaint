@@ -4,14 +4,44 @@ toolbarWidth = 52
 canvasWidth = 256
 canvasHeight = 256
 
+selectedTool = undefined
+numberOfTools = 22
+toolViewMode = 0
+
+zeroPadder = (number,zerosToFill) ->
+  numberAsString = number+''
+  while numberAsString.length < zerosToFill
+    numberAsString = '0'+numberAsString
+  return numberAsString
+
 ctCanvas = document.getElementById('CtPaint')
 ctContext = ctCanvas.getContext('2d')
+
 toolbar0Canvas = document.getElementById('toolbar0')
 toolbar0Context = toolbar0Canvas.getContext('2d')
 toolbar0sImage0 = new Image()
 toolbar0sImage0.src = 'toolbar0v.PNG'
 toolbar0sImage1 = new Image()
 toolbar0sImage1.src = 'toolbar0u.PNG'
+
+buttonWidth = 24
+buttonHeight = 24
+
+functionNames = ['zoom','select','sample','fill','square','circle','line','point']
+
+ctPaintFunctions = {}
+
+iteration = 0
+while iteration < numberOfTools
+  ctPaintFunctions[iteration] =
+    name:functionNames[iteration]
+    clickRegion: [((iteration%2)*25),(Math.floor(iteration/2))*25]
+    pressedImage: [new Image(), new Image()]
+    toolsAction: ->
+      console.log 'did a '+functionsNames[iteration]
+  ctPaintFunctions[iteration].pressedImage[0].src = 'u'+zeroPadder(iteration,2)+'.PNG'
+  ctPaintFunctions[iteration].pressedImage[1].src = 'v'+zeroPadder(iteration,2)+'.PNG'
+  iteration++
 
 toolbar1Canvas = document.getElementById('toolbar1')
 toolbar1Context = toolbar1Canvas.getContext('2d')
@@ -124,6 +154,8 @@ drawToolbars = ->
   toolbar0Context.fillRect(0,0,toolbarWidth,window.innerHeight-toolbarHeight)
   toolbar0Context.drawImage(toolbar0sImage0,0,0)
   drawLine(toolbar0Context,[16,20,8],toolbarWidth-1,0,toolbarWidth-1,window.innerHeight-toolbarHeight)
+  if selectedTool
+    toolbar0Context.drawImage(selectedTool.pressedImage[toolViewMode],selectedTool.clickRegion[0],selectedTool.clickRegion[1])
 
   toolbar1Context.fillStyle = '#202020'
   toolbar1Context.fillRect(0,0,window.innerWidth,toolbarHeight)
@@ -135,22 +167,39 @@ getMousePosition = (event) ->
   'y':event.clientY
 
 $(document).ready ()->
-  setCanvasSizes()
-  prepareCanvas()
-  placeToolbars()
-  drawToolbars()
+  setTimeout( ()->
+    setCanvasSizes()
+    prepareCanvas()
+    placeToolbars()
+    drawToolbars()
+  ,200)
 
   $(window).resize ()->
     setCanvasSizes()
     placeToolbars()
     drawToolbars()
 
-  $('#CtPaint').mousemove (event)->
-    console.log getMousePosition(event)
+  #$('#CtPaint').mousemove (event)->
+    #console.log getMousePosition(event)['x']
+    #console.log getMousePosition(event)
 
   $('#CtPaint').mousedown (event)->
     xSpot = getMousePosition(event)['x'] - toolbarWidth
     ySpot = getMousePosition(event)['y']
+
+  $('#toolbar0').mousedown (event)->
+    xSpot = getMousePosition(event)['x']
+    ySpot = getMousePosition(event)['y']
+    toolIndex = 0
+    while toolIndex < numberOfTools
+      if ctPaintFunctions[toolIndex].clickRegion[0]<xSpot and xSpot<(ctPaintFunctions[toolIndex].clickRegion[0]+buttonWidth)
+        if ctPaintFunctions[toolIndex].clickRegion[1]<ySpot and ySpot<(ctPaintFunctions[toolIndex].clickRegion[1]+buttonHeight)
+          selectedTool = ctPaintFunctions[toolIndex]
+      toolIndex++
+    drawToolbars()
+
+
+
 
 
 
