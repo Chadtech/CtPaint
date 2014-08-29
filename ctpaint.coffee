@@ -1,15 +1,22 @@
 toolbarHeight = 36
 toolbarWidth = 52
 
-canvasWidth = 128
-canvasHeight = 128
+canvasWidth = 256
+canvasHeight = 256
 
 ctCanvas = document.getElementById('CtPaint')
 ctContext = ctCanvas.getContext('2d')
 toolbar0Canvas = document.getElementById('toolbar0')
 toolbar0Context = toolbar0Canvas.getContext('2d')
+toolbar0sImage0 = new Image()
+toolbar0sImage0.src = 'toolbar0v.PNG'
+toolbar0sImage1 = new Image()
+toolbar0sImage1.src = 'toolbar0u.PNG'
+
 toolbar1Canvas = document.getElementById('toolbar1')
 toolbar1Context = toolbar1Canvas.getContext('2d')
+toolbar1sImage = new Image()
+toolbar1sImage.src = 'toolbar10.png'
 backgroundCanvas = document.getElementById('background')
 backgroundContext = backgroundCanvas.getContext('2d')
 
@@ -80,12 +87,11 @@ positionCorners = ->
   $('#border1Div').css('top','4')
   $('#border1Div').css('left',(toolbarWidth+canvasWidth+5).toString())
 
-  $('#border2Div').css('top',(4+canvasHeight).toString())
+  $('#border2Div').css('top',(5+canvasHeight).toString())
   $('#border2Div').css('left',(toolbarWidth+canvasWidth+5).toString())
 
-  $('#border3Div').css('top',(4+canvasHeight).toString())
+  $('#border3Div').css('top',(5+canvasHeight).toString())
   $('#border3Div').css('left',(toolbarWidth+4).toString())
-
 
 prepareCanvas = ->
   ctContext.canvas.width = canvasWidth
@@ -114,12 +120,14 @@ placeToolbars = ->
   $('#toolbar1Div').css('top', (window.innerHeight-toolbarHeight).toString())
 
 drawToolbars = ->
-  toolbar0Context.fillStyle = '#202810'
+  toolbar0Context.fillStyle = '#202020'
   toolbar0Context.fillRect(0,0,toolbarWidth,window.innerHeight-toolbarHeight)
+  toolbar0Context.drawImage(toolbar0sImage0,0,0)
   drawLine(toolbar0Context,[16,20,8],toolbarWidth-1,0,toolbarWidth-1,window.innerHeight-toolbarHeight)
 
-  toolbar1Context.fillStyle = '#202810'
+  toolbar1Context.fillStyle = '#202020'
   toolbar1Context.fillRect(0,0,window.innerWidth,toolbarHeight)
+  toolbar1Context.drawImage(toolbar1sImage,0,1)
   drawLine(toolbar1Context,[16,20,8],toolbarWidth-1,0,window.innerWidth,0)
 
 getMousePosition = (event) ->
