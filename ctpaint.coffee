@@ -56,7 +56,6 @@ lineAction = ->
   console.log '6'
 
 pointAction = (canvas, color, beginX, beginY, endX, endY) ->
-  console.log 'Actually Made it here'
   drawLine(canvas, color, beginX, beginY, endX, endY)
 
 ctPaintTools = {}
@@ -231,13 +230,17 @@ $(document).ready ()->
     oldX = xSpot
     oldY = ySpot
     getMousePosition(event)
-    if mousePressed
-      selectedTool.toolsAction(ctContext, colorsAtHand[0], xSpot-(toolbarWidth+5), ySpot-5, oldX-(toolbarWidth+5), oldY-5)
+    switch selectedTool.name
+      when 'point'
+        if mousePressed
+          selectedTool.toolsAction(ctContext, colorsAtHand[0], xSpot-(toolbarWidth+5), ySpot-5, oldX-(toolbarWidth+5), oldY-5)
 
   $('#CtPaint').mousedown (event)->
     mousePressed = true
     getMousePosition(event)
-    selectedTool.toolsAction(ctContext, colorsAtHand[0], xSpot-(toolbarWidth+5), ySpot-5, xSpot-(toolbarWidth+5), ySpot-5)
+    switch selectedTool.name
+      when 'point'
+       selectedTool.toolsAction(ctContext, colorsAtHand[0], xSpot-(toolbarWidth+5), ySpot-5, xSpot-(toolbarWidth+5), ySpot-5)
 
   $('#CtPaint').mouseup (event)->
     mousePressed = false
