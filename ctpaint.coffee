@@ -1,8 +1,11 @@
 toolbarHeight = 36
 toolbarWidth = 52
 
-canvasWidth = 256
-canvasHeight = 256
+canvasWidth = 512
+canvasHeight = 512
+
+canvasYPos = 5
+canvasXPos = toolbarWidth+5
 
 canvasAsData = undefined
 
@@ -170,8 +173,8 @@ prepareCanvas = ->
   ctContext.fillStyle = '#000000'
   ctContext.fillRect(0,0,canvasWidth,canvasHeight)
 
-  $('#ctpaintDiv').css('top', '5')
-  $('#ctpaintDiv').css('left', (toolbarWidth+5).toString())
+  $('#ctpaintDiv').css('top', canvasYPos.toString())
+  $('#ctpaintDiv').css('left', canvasXPos.toString())
 
   positionCorners()
 
@@ -232,6 +235,15 @@ $(document).ready ()->
     setCanvasSizes()
     placeToolbars()
     drawToolbars()
+
+  $(window).scroll ()->
+    #console.log window.pageXOffset, window.pageYOffset
+    canvasYPos-=window.pageYOffset
+    canvasXPos-=window.pageXOffset
+    $('#ctpaintDiv').css('top', canvasYPos.toString())
+    $('#ctpaintDiv').css('left', canvasXPos.toString())
+    window.scroll(0,0)
+
 
   $('#CtPaint').mousemove (event)->
     switch selectedTool.name
