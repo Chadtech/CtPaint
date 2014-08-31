@@ -241,17 +241,17 @@ drawLine = (canvas, color, beginX, beginY, endX, endY) ->
       beginY += directionY
   
 positionCorners = ->
-  $('#border0Div').css('top','4')
-  $('#border0Div').css('left',(toolbarWidth+4).toString())
+  $('#border0Div').css('top',(canvasYPos-1).toString())
+  $('#border0Div').css('left',(canvasXPos-1).toString())
 
-  $('#border1Div').css('top','4')
-  $('#border1Div').css('left',(toolbarWidth+canvasWidth+5).toString())
+  $('#border1Div').css('top',(canvasYPos-1).toString())
+  $('#border1Div').css('left',(canvasXPos+canvasWidth+1).toString())
 
-  $('#border2Div').css('top',(5+canvasHeight).toString())
-  $('#border2Div').css('left',(toolbarWidth+canvasWidth+5).toString())
+  $('#border2Div').css('top',(canvasYPos+canvasHeight+1).toString())
+  $('#border2Div').css('left',(canvasXPos+canvasWidth+1).toString())
 
-  $('#border3Div').css('top',(5+canvasHeight).toString())
-  $('#border3Div').css('left',(toolbarWidth+4).toString())
+  $('#border3Div').css('top',(canvasYPos+canvasHeight+1).toString())
+  $('#border3Div').css('left',(canvasXPos-1).toString())
 
 prepareCanvas = ->
   ctContext.canvas.width = canvasWidth
@@ -319,14 +319,32 @@ $(document).ready ()->
   ,200)
 
   $('body').keydown (event) ->
-    console.log 'down'
+    if event.keyCode == keysToKeyCodes['up']
+      canvasYPos-=3
+      $('#ctpaintDiv').css('top', canvasYPos.toString())
+      $('#ctpaintDiv').css('left', canvasXPos.toString())
+      positionCorners()
+    if event.keyCode == keysToKeyCodes['down']
+      canvasYPos+=3
+      $('#ctpaintDiv').css('top', canvasYPos.toString())
+      $('#ctpaintDiv').css('left', canvasXPos.toString())
+      positionCorners()
+    if event.keyCode == keysToKeyCodes['right']
+      console.log 'B'
+      canvasXPos+=3
+      $('#ctpaintDiv').css('top', canvasYPos.toString())
+      $('#ctpaintDiv').css('left', canvasXPos.toString())
+      positionCorners()
+    if event.keyCode == keysToKeyCodes['left']
+      canvasXPos-=3
+      $('#ctpaintDiv').css('top', canvasYPos.toString())
+      $('#ctpaintDiv').css('left', canvasXPos.toString())
+      positionCorners()
+  #$('body').keypress (event)->
 
-  $('body').keypress (event)->
-    console.log 'PRESS'
-    #window.scrollBy()
 
-  $('body').keyup (event) ->
-    console.log 'UP'
+  #$('body').keyup (event) ->
+  #  console.log 'UP'
 
 
   $(window).resize ()->
