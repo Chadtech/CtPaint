@@ -4,6 +4,8 @@ toolbarWidth = 52
 canvasWidth = 256
 canvasHeight = 256
 
+canvasAsData = undefined
+
 selectedTool = undefined
 numberOfTools = 22
 toolViewMode = 0
@@ -52,8 +54,8 @@ squareAction = ->
 circleAction = ->
   console.log '5'
 
-lineAction = ->
-  console.log '6'
+lineAction = (canvas, color, beginX, beginY, endX, endY) ->
+  drawLine(canvas, color, beginX, beginY, endX, endY)
 
 pointAction = (canvas, color, beginX, beginY, endX, endY) ->
   drawLine(canvas, color, beginX, beginY, endX, endY)
@@ -76,6 +78,7 @@ while iteration < numberOfTools
   iteration++
 
 ctPaintTools[7].toolsAction = pointAction
+ctPaintTools[6].toolsAction = lineAction
 
 toolbar1Canvas = document.getElementById('toolbar1')
 toolbar1Context = toolbar1Canvas.getContext('2d')
@@ -106,6 +109,9 @@ colorsAtHand = [[192,192,192],[0,0,0],[255,255,255],[0,0,0]]
 
 xSpot = undefined
 ySpot = undefined
+
+oldX = undefined
+oldY = undefined
 
 putPixel = (canvas, color, whereAtX, whereAtY) ->
   newPixel = canvas.createImageData(1,1)
@@ -219,6 +225,7 @@ $(document).ready ()->
     placeToolbars()
     selectedTool = ctPaintTools[7]
     drawToolbars()
+    canvasAsData = ctCanvas.toDataURL()
   ,200)
 
   $(window).resize ()->
@@ -227,23 +234,39 @@ $(document).ready ()->
     drawToolbars()
 
   $('#CtPaint').mousemove (event)->
-    oldX = xSpot
-    oldY = ySpot
-    getMousePosition(event)
     switch selectedTool.name
+      when 'line'
+        if mousePressed
+          getMousePosition(event)
+          canvasDataAsImage = new Image()
+          canvasDataAsImage.onload = ->
+            ctContext.drawImage(canvasDataAsImage,0,0)
+            selectedTool.toolsAction(ctContext, colorsAtHand[0], oldX-(toolbarWidth+5), oldY-5, xSpot-(toolbarWidth+5), ySpot-5)
+          canvasDataAsImage.src = canvasAsData
       when 'point'
         if mousePressed
+          oldX = xSpot
+          oldY = ySpot
+          getMousePosition(event)
           selectedTool.toolsAction(ctContext, colorsAtHand[0], xSpot-(toolbarWidth+5), ySpot-5, oldX-(toolbarWidth+5), oldY-5)
 
   $('#CtPaint').mousedown (event)->
     mousePressed = true
     getMousePosition(event)
     switch selectedTool.name
+      when 'line'
+        oldX = xSpot
+        oldY = ySpot
       when 'point'
        selectedTool.toolsAction(ctContext, colorsAtHand[0], xSpot-(toolbarWidth+5), ySpot-5, xSpot-(toolbarWidth+5), ySpot-5)
 
   $('#CtPaint').mouseup (event)->
     mousePressed = false
+    switch selectedTool.name
+      when 'line'
+        canvasAsData = ctCanvas.toDataURL()
+      when 'point'
+        canvasAsData = ctCanvas.toDataURL()
 
   $('#toolbar0').mousedown (event)->
     getMousePosition(event)
