@@ -318,15 +318,23 @@ $(document).ready ()->
     canvasAsData = ctCanvas.toDataURL()
   ,200)
 
+  $('body').keydown (event) ->
+    console.log 'down'
+
+  $('body').keypress (event)->
+    console.log 'PRESS'
+    #window.scrollBy()
+
+  $('body').keyup (event) ->
+    console.log 'UP'
+
+
   $(window).resize ()->
     setCanvasSizes()
     placeToolbars()
     drawToolbars()
 
   $(window).scroll ()->
-    #console.log window.pageXOffset, window.pageYOffset
-    canvasYPos-=window.pageYOffset
-    canvasXPos-=window.pageXOffset
     $('#ctpaintDiv').css('top', canvasYPos.toString())
     $('#ctpaintDiv').css('left', canvasXPos.toString())
     window.scroll(0,0)
