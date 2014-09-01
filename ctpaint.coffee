@@ -318,7 +318,6 @@ getMousePositionOnCanvas = (event) ->
   ySpot = event.clientY - 5 - canvasYOffset
 
 scaleImageBigger = (imageData,factor) ->
-  factor = Math.floor(factor)
   imageHeight = imageData.height
   imageWidth = imageData.width
   imageDatasData = imageData.data
@@ -362,17 +361,23 @@ scaleImageBigger = (imageData,factor) ->
     while rowIteration < factor
       pixelIndex = 0
       while pixelIndex < arrayOfRows[rowIndex].length
-        outputImage.push arrayOfRows[rowIndex][pixelIndex]
+        colorDatumIndex = 0
+        while colorDatumIndex < 4
+          outputImage.push arrayOfRows[rowIndex][pixelIndex][colorDatumIndex]
+          colorDatumIndex++
         pixelIndex++
       rowIteration++
     rowIndex++
 
-  imageAsObject =
-    height: outputsHeight
-    width: outputsWidth
-    data: outputImage
+  scaledImage = document.createElement('canvas')
+  scaledImageData = scaledImage.getContext('2d').createImageData(outputsWidth, outputsHeight)
 
-  return imageAsObject
+  outputImageIndex = 0
+  while outputImageIndex < outputImage.length
+    scaledImageData.data[outputImageIndex] = outputImage[outputImageIndex]
+    outputImageIndex++
+
+  return scaledImageData
 
 $(document).ready ()->
   setTimeout( ()->
@@ -382,21 +387,12 @@ $(document).ready ()->
     selectedTool = ctPaintTools[7]
     drawToolbars()
     canvasAsData = ctCanvas.toDataURL()
-    #$('#zoomDiv').css('top',window.innerHeight)
-    zoomGrab = ctContext.createImageData(20,20)
-    #console.log(zoomGrab.data)
-    console.log(ctContext.getImageData(0,0,10,10).data)
-    console.log(ctContext.getImageData(0,0,10,10))
-    zoomPaste = new Image()
-    zoomPaste.onload = ()->
-      zoomContext.putImageData(zoomPaste,0,0)
   ,200)
 
-  setInterval( ()->
-    #console.log 'HERE', ctContext.getImageData(0,0,10,10).toDataURL()
+  setTimeout( ()->
     canvasSectionToPaste = ctContext.getImageData(0,0,10,10)
-    console.log scaleImageBigger(canvasSectionToPaste,2)
-    zoomContext.putImageData(scaleImageBigger(canvasSectionToPaste,2),0,0)
+    zoomContext.putImageData(scaleImageBigger(canvasSectionToPaste,8),0,64)
+    zoomContext.putImageData(canvasSectionToPaste,0,0)
   ,5000)
 
   $('body').keydown (event) ->
