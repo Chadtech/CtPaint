@@ -1,4 +1,4 @@
-toolbarHeight = 36
+toolbarHeight = 37
 toolbarWidth = 52
 
 canvasWidth = 256
@@ -310,20 +310,20 @@ drawToolbars = ->
 
   toolbar1Context.fillStyle = '#202020'
   toolbar1Context.fillRect(0,0,window.innerWidth,toolbarHeight)
-  toolbar1Context.drawImage(toolbar1sImage,0,1)
+  toolbar1Context.drawImage(toolbar1sImage,3,2)
   drawLine(toolbar1Context,[16,20,8],toolbarWidth-1,0,window.innerWidth,0)
 
   toolbar1Context.fillStyle = rgbToHex(colorsAtHand[0])
-  toolbar1Context.fillRect(4,3,14,14)
+  toolbar1Context.fillRect(7,4,14,14)
 
   toolbar1Context.fillStyle = rgbToHex(colorsAtHand[1])
-  toolbar1Context.fillRect(21,3,14,14)
+  toolbar1Context.fillRect(24,4,14,14)
 
   toolbar1Context.fillStyle = rgbToHex(colorsAtHand[2])
-  toolbar1Context.fillRect(13,20,14,14)
+  toolbar1Context.fillRect(16,21,14,14)
 
   toolbar1Context.fillStyle = rgbToHex(colorsAtHand[2])
-  toolbar1Context.fillRect(30,20,14,14)
+  toolbar1Context.fillRect(33,21,14,14)
 
 getMousePositionOnCanvas = (event) ->
   xSpot = event.clientX - (toolbarWidth+5) - canvasXOffset
