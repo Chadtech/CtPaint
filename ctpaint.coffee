@@ -479,10 +479,37 @@ $(document).ready ()->
     window.scroll(0,0)
 
   window.onmousedown = (event)->
-    #console.log event.clientX, event.clientY, 'WHERE X SHOULD BE', (canvasWidth + 5 + toolbarWidth + 20), ((event.clientX < (canvasWidth + 5 + toolbarWidth + 20)) and ((canvasWidth + 5 + toolbarWidth) < event.clientX))
     if (event.clientX < (canvasWidth + 5 + toolbarWidth + 20)) and ((canvasWidth + 5 + toolbarWidth) < event.clientX)
       if (event.clientY < (canvasHeight + 5 + 20)) and ((canvasHeight + 5) < event.clientY)
-        console.log 'MET CONDITION'
+        canvasAsData = ctCanvas.toDataURL()
+        oldX = event.clientX
+        oldY = event.clientY
+        draggingBorder = true
+
+  window.onmouseup = (event) ->
+    if draggingBorder
+      draggingBorder = false
+      ctContext.canvas.width = event.clientX - oldX + canvasWidth
+      ctContext.canvas.height = event.clientY - oldY + canvasHeight
+      canvasDataAsImage = new Image()
+      canvasDataAsImage.onload = ->
+        ctContext.drawImage(canvasDataAsImage,0,0)
+        canvasAsData = ctCanvas.toDataURL()
+        canvasDataAsImage = new Image()
+        canvasDataAsImage.src = canvasAsData
+      canvasDataAsImage.src = canvasAsData
+      ctContext.fillStyle = rgbToHex(colorsAtHand[1])
+      if (ctContext.canvas.width > canvasWidth) and (ctContext.canvas.height > canvasHeight)
+        ctContext.fillRect(canvasWidth, 0, ctContext.canvas.width, ctContext.canvas.height)
+        ctContext.fillRect(0, canvasHeight, canvasWidth, ctContext.canvas.height)
+      else if (ctContext.canvas.width > canvasWidth)
+        ctContext.fillRect(canvasWidth, 0, ctContext.canvas.width, ctContext.canvas.height)
+      else if (ctContext.canvas.height > canvasHeight)
+        ctContext.fillRect(0, canvasHeight, ctContext.canvas.width, ctContext.canvas.height)
+      canvasWidth = ctContext.canvas.width
+      canvasHeight = ctContext.canvas.height
+      positionCorners()
+        
 
   $('#CtPaint').mousemove (event)->
     switch selectedTool.name
@@ -522,7 +549,6 @@ $(document).ready ()->
         canvasAsData = ctCanvas.toDataURL()
 
   $('#toolbar0').mousedown (event)->
-    #getMousePosition(event)
     toolIndex = 0
     while toolIndex < numberOfTools
       if ctPaintTools[toolIndex].clickRegion[0]<event.clientX and event.clientX<(ctPaintTools[toolIndex].clickRegion[0]+buttonWidth)
@@ -531,11 +557,11 @@ $(document).ready ()->
       toolIndex++
     drawToolbars()
 
-  $('#border2').mousedown (event) ->
-    canvasAsData = ctCanvas.toDataURL()
-    oldX = xSpot
-    oldY = ySpot
-    console.log 'BORDER', oldX, oldY
+  #$('#border2').mousedown (event) ->
+  #  canvasAsData = ctCanvas.toDataURL()
+  #  oldX = xSpot
+  #  oldY = ySpot
+  #  console.log 'BORDER', oldX, oldY
 
   #$('#border2').mousemove
     
