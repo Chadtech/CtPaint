@@ -18,6 +18,7 @@ toolViewMode = 0
 mousePressed = false
 
 zoomMagnitude = false
+zoomActivate = false
 
 zeroPadder = (number,zerosToFill) ->
   numberAsString = number+''
@@ -131,7 +132,9 @@ keysToKeyCodes =
 toolNames = ['zoom','select','sample','fill','square','circle','line','point']
 
 zoomAction = ->
-  console.log '0'
+  zoomActivate = true
+  console.log 'ZOOM zoomActivate'
+  positionZoom()
 
 selectAction = ->
   console.log '1'
@@ -274,6 +277,14 @@ prepareCanvas = ->
   positionCanvas()
   positionCorners()
 
+positionZoom = ->
+  if zoomActivate
+    $('#zoomDiv').css('top', '0')
+    $('#zoomDiv').css('left', toolbarWidth.toString())
+  else
+    $('#zoomDiv').css('top', window.innerHeight)
+    $('#zoomDiv').css('left', toolbarWidth.toString())
+
 setCanvasSizes = ->
   toolbar0Context.canvas.width = toolbarWidth
   toolbar0Context.canvas.height = window.innerHeight-toolbarHeight
@@ -386,16 +397,42 @@ $(document).ready ()->
     placeToolbars()
     selectedTool = ctPaintTools[7]
     drawToolbars()
+    positionZoom()
     canvasAsData = ctCanvas.toDataURL()
   ,200)
 
-  setTimeout( ()->
-    canvasSectionToPaste = ctContext.getImageData(0,0,10,10)
-    zoomContext.putImageData(scaleImageBigger(canvasSectionToPaste,8),0,64)
-    zoomContext.putImageData(canvasSectionToPaste,0,0)
-  ,5000)
+  #setTimeout( ()->
+  #  canvasSectionToPaste = ctContext.getImageData(0,0,10,10)
+  #  zoomContext.putImageData(scaleImageBigger(canvasSectionToPaste,8),0,64)
+  #  zoomContext.putImageData(canvasSectionToPaste,0,0)
+  #,5000)
 
   $('body').keydown (event) ->
+    if event.keyCode == keysToKeyCodes['1']
+      selectedTool = ctPaintTools[0]
+      drawToolbars()
+    if event.keyCode == keysToKeyCodes['2']
+      selectedTool = ctPaintTools[1]
+      drawToolbars()
+    if event.keyCode == keysToKeyCodes['3']
+      selectedTool = ctPaintTools[2]
+      drawToolbars()
+    if event.keyCode == keysToKeyCodes['4']
+      selectedTool = ctPaintTools[3]
+      drawToolbars()
+    if event.keyCode == keysToKeyCodes['5']
+      selectedTool = ctPaintTools[4]
+      drawToolbars()
+    if event.keyCode == keysToKeyCodes['6']
+      selectedTool = ctPaintTools[5]
+      drawToolbars()
+    if event.keyCode == keysToKeyCodes['7']
+      selectedTool = ctPaintTools[6]
+      drawToolbars()
+    if event.keyCode == keysToKeyCodes['8']
+      selectedTool = ctPaintTools[7]
+      drawToolbars()
+
     if event.keyCode == keysToKeyCodes['up']
       canvasYOffset-=3
       positionCanvas()
@@ -425,7 +462,7 @@ $(document).ready ()->
     setCanvasSizes()
     placeToolbars()
     drawToolbars()
-    #$('#zoomDiv').css('top',window.innerHeight)
+    positionZoom()
 
   $(window).scroll ()->
   #  $('#ctpaintDiv').css('top', canvasYPos.toString())
