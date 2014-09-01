@@ -483,7 +483,7 @@ $(document).ready ()->
       if (event.clientY < (canvasHeight + 5 + 20)) and ((canvasHeight + 5) < event.clientY)
         $('#wholeWindow').css 'cursor', 'se-resize'
       else
-        $('#wholeWindow').css 'cursor', 'auto'
+        $('#wholeWindow').css 'cursor', 'default'
 
   window.onmousedown = (event)->
     if (event.clientX < (canvasWidth + 5 + toolbarWidth + 20)) and ((canvasWidth + 5 + toolbarWidth) < event.clientX)
@@ -516,6 +516,7 @@ $(document).ready ()->
       canvasWidth = ctContext.canvas.width
       canvasHeight = ctContext.canvas.height
       positionCorners()
+      #$('#wholeWindow').css 'cursor', 'auto'
         
 
   $('#CtPaint').mousemove (event)->
@@ -564,14 +565,6 @@ $(document).ready ()->
       toolIndex++
     drawToolbars()
 
-  $('#border2Div').mousedown (event) ->
-    console.log 'HOVER'
-  #  canvasAsData = ctCanvas.toDataURL()
-  #  oldX = xSpot
-  #  oldY = ySpot
-  #  console.log 'BORDER', oldX, oldY
-
-  #$('#border2').mousemove
     
 
 
