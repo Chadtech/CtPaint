@@ -33,10 +33,10 @@ ctContext = ctCanvas.getContext('2d')
 
 toolbar0Canvas = document.getElementById('toolbar0')
 toolbar0Context = toolbar0Canvas.getContext('2d')
-toolbar0sImage0 = new Image()
-toolbar0sImage0.src = 'toolbar0v.PNG'
-toolbar0sImage1 = new Image()
-toolbar0sImage1.src = 'toolbar0u.PNG'
+
+toolbar0sImages = [new Image(), new Image()]
+toolbar0sImages[0].src = 'toolbar0v.PNG'
+toolbar0sImages[1].src = 'toolbar0u.PNG'
 
 buttonWidth = 24
 buttonHeight = 24
@@ -291,7 +291,7 @@ placeToolbars = ->
 drawToolbars = ->
   toolbar0Context.fillStyle = '#202020'
   toolbar0Context.fillRect(0,0,toolbarWidth,window.innerHeight-toolbarHeight)
-  toolbar0Context.drawImage(toolbar0sImage0,0,0)
+  toolbar0Context.drawImage(toolbar0sImages[toolViewMode],0,0)
   drawLine(toolbar0Context,[16,20,8],toolbarWidth-1,0,toolbarWidth-1,window.innerHeight-toolbarHeight)
   if selectedTool
     toolbar0Context.drawImage(selectedTool.pressedImage[toolViewMode],selectedTool.clickRegion[0],selectedTool.clickRegion[1])
@@ -412,7 +412,10 @@ $(document).ready ()->
       canvasXOffset-=3
       positionCanvas()
       positionCorners()
-    #if event.keyCode == keys
+    if event.keyCode == keysToKeyCodes['alt']
+      toolViewMode++
+      toolViewMode = toolViewMode%2
+      drawToolbars()
   #$('body').keypress (event)->
 
   #$('body').keyup (event) ->
