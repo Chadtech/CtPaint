@@ -2,7 +2,7 @@ toolbarHeight = 36
 toolbarWidth = 52
 
 canvasWidth = 512
-canvasHeight = 512
+canvasHeight = 256
 
 canvasXPos = toolbarWidth+5
 canvasYPos = 5
@@ -434,39 +434,47 @@ $(document).ready ()->
       drawToolbars()
 
     if event.keyCode == keysToKeyCodes['up']
-      canvasYOffset-=3
-      positionCanvas()
-      positionCorners()
+      if canvasHeight > (window.innerHeight - toolbarHeight - 5)
+        if canvasYOffset < 0 
+          canvasYOffset+=3
+          positionCanvas()
+          positionCorners()
     if event.keyCode == keysToKeyCodes['down']
-      canvasYOffset+=3
-      positionCanvas()
-      positionCorners()
+      if canvasHeight > (window.innerHeight - toolbarHeight - 5)
+        if (-1 * canvasYOffset) < ((canvasHeight + 10) - (window.innerHeight - toolbarHeight))
+          canvasYOffset-=3
+          positionCanvas()
+          positionCorners()
     if event.keyCode == keysToKeyCodes['right']
-      canvasXOffset+=3
-      positionCanvas()
-      positionCorners()
+      if canvasWidth > (window.innerWidth - toolbarWidth - 5)
+        if (-1 * canvasXOffset) < ((canvasWidth + 10) - (window.innerWidth - toolbarWidth))
+          canvasXOffset-=3
+          positionCanvas()
+          positionCorners()
     if event.keyCode == keysToKeyCodes['left']
-      canvasXOffset-=3
-      positionCanvas()
-      positionCorners()
+      if canvasWidth > (window.innerWidth - toolbarWidth - 5)
+        if canvasXOffset < 0
+          canvasXOffset+=3
+          positionCanvas()
+          positionCorners()
     if event.keyCode == keysToKeyCodes['alt']
       toolViewMode++
       toolViewMode = toolViewMode%2
       drawToolbars()
-  #$('body').keypress (event)->
-
-  #$('body').keyup (event) ->
-  #  console.log 'UP'
-
+ 
   $(window).resize ()->
+    if canvasWidth < (window.innerWidth - toolbarWidth - 5)
+      canvasXOffset = 0
+    if canvasHeight < (window.innerHeight - toolbarHeight - 5)
+      canvasYOffset = 0
+    positionCanvas()
+    positionCorners()
     setCanvasSizes()
     placeToolbars()
     drawToolbars()
     positionZoom()
 
   $(window).scroll ()->
-  #  $('#ctpaintDiv').css('top', canvasYPos.toString())
-  #  $('#ctpaintDiv').css('left', canvasXPos.toString())
     window.scroll(0,0)
 
   $('#CtPaint').mousemove (event)->
@@ -515,6 +523,8 @@ $(document).ready ()->
           selectedTool = ctPaintTools[toolIndex]
       toolIndex++
     drawToolbars()
+
+  $('#border2').mousedown (event) ->
 
 
 
