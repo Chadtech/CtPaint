@@ -1,7 +1,7 @@
 toolbarHeight = 36
 toolbarWidth = 52
 
-canvasWidth = 512
+canvasWidth = 256
 canvasHeight = 256
 
 canvasXPos = toolbarWidth+5
@@ -16,6 +16,7 @@ numberOfTools = 22
 toolViewMode = 0
 
 mousePressed = false
+draggingBorder = false
 
 zoomMagnitude = false
 zoomActivate = false
@@ -477,6 +478,12 @@ $(document).ready ()->
   $(window).scroll ()->
     window.scroll(0,0)
 
+  window.onmousedown = (event)->
+    #console.log event.clientX, event.clientY, 'WHERE X SHOULD BE', (canvasWidth + 5 + toolbarWidth + 20), ((event.clientX < (canvasWidth + 5 + toolbarWidth + 20)) and ((canvasWidth + 5 + toolbarWidth) < event.clientX))
+    if (event.clientX < (canvasWidth + 5 + toolbarWidth + 20)) and ((canvasWidth + 5 + toolbarWidth) < event.clientX)
+      if (event.clientY < (canvasHeight + 5 + 20)) and ((canvasHeight + 5) < event.clientY)
+        console.log 'MET CONDITION'
+
   $('#CtPaint').mousemove (event)->
     switch selectedTool.name
       when 'line'
@@ -525,6 +532,13 @@ $(document).ready ()->
     drawToolbars()
 
   $('#border2').mousedown (event) ->
+    canvasAsData = ctCanvas.toDataURL()
+    oldX = xSpot
+    oldY = ySpot
+    console.log 'BORDER', oldX, oldY
+
+  #$('#border2').mousemove
+    
 
 
 
