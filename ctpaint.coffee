@@ -4,8 +4,10 @@ toolbarWidth = 52
 canvasWidth = 512
 canvasHeight = 512
 
-canvasYPos = 5
 canvasXPos = toolbarWidth+5
+canvasYPos = 5
+canvasXOffset = 0
+canvasYOffset = 0
 
 canvasAsData = undefined
 
@@ -14,6 +16,8 @@ numberOfTools = 22
 toolViewMode = 0
 
 mousePressed = false
+
+zoomMagnitude = false
 
 zeroPadder = (number,zerosToFill) ->
   numberAsString = number+''
@@ -127,7 +131,7 @@ keysToKeyCodes =
 toolNames = ['zoom','select','sample','fill','square','circle','line','point']
 
 zoomAction = ->
-  console.log '0'
+  
 
 selectAction = ->
   console.log '1'
@@ -169,6 +173,7 @@ while iteration < numberOfTools
 
 ctPaintTools[7].toolsAction = pointAction
 ctPaintTools[6].toolsAction = lineAction
+ctPaintTools[0].toolsAction = zoomAction
 
 toolbar1Canvas = document.getElementById('toolbar1')
 toolbar1Context = toolbar1Canvas.getContext('2d')
@@ -176,6 +181,8 @@ toolbar1sImage = new Image()
 toolbar1sImage.src = 'toolbar10.png'
 backgroundCanvas = document.getElementById('background')
 backgroundContext = backgroundCanvas.getContext('2d')
+zoomCanvas = document.getElementById('zoomWindow')
+zoomContext = zoomCanvas.getContext('2d')
 
 border0Canvas = document.getElementById('border0')
 border0Context = border0Canvas.getContext('2d')
@@ -241,17 +248,21 @@ drawLine = (canvas, color, beginX, beginY, endX, endY) ->
       beginY += directionY
   
 positionCorners = ->
-  $('#border0Div').css('top',(canvasYPos-1).toString())
-  $('#border0Div').css('left',(canvasXPos-1).toString())
+  $('#border0Div').css('top',(canvasYPos-1+canvasYOffset).toString())
+  $('#border0Div').css('left',(canvasXPos-1+canvasXOffset).toString())
 
-  $('#border1Div').css('top',(canvasYPos-1).toString())
-  $('#border1Div').css('left',(canvasXPos+canvasWidth+1).toString())
+  $('#border1Div').css('top',(canvasYPos-1+canvasYOffset).toString())
+  $('#border1Div').css('left',(canvasXPos+canvasWidth+1+canvasXOffset).toString())
 
-  $('#border2Div').css('top',(canvasYPos+canvasHeight+1).toString())
-  $('#border2Div').css('left',(canvasXPos+canvasWidth+1).toString())
+  $('#border2Div').css('top',(canvasYPos+canvasHeight+1+canvasYOffset).toString())
+  $('#border2Div').css('left',(canvasXPos+canvasWidth+1+canvasXOffset).toString())
 
-  $('#border3Div').css('top',(canvasYPos+canvasHeight+1).toString())
-  $('#border3Div').css('left',(canvasXPos-1).toString())
+  $('#border3Div').css('top',(canvasYPos+canvasHeight+1+canvasYOffset).toString())
+  $('#border3Div').css('left',(canvasXPos-1+canvasXOffset).toString())
+
+positionCanvas = ->
+  $('#ctpaintDiv').css('top', (canvasYPos+canvasYOffset).toString())
+  $('#ctpaintDiv').css('left',(canvasXPos+canvasXOffset).toString())
 
 prepareCanvas = ->
   ctContext.canvas.width = canvasWidth
@@ -260,9 +271,7 @@ prepareCanvas = ->
   ctContext.fillStyle = '#000000'
   ctContext.fillRect(0,0,canvasWidth,canvasHeight)
 
-  $('#ctpaintDiv').css('top', canvasYPos.toString())
-  $('#ctpaintDiv').css('left', canvasXPos.toString())
-
+  positionCanvas()
   positionCorners()
 
 setCanvasSizes = ->
@@ -304,9 +313,9 @@ drawToolbars = ->
   toolbar1Context.fillStyle = rgbToHex(colorsAtHand[2])
   toolbar1Context.fillRect(30,20,14,14)
 
-getMousePosition = (event) ->
-  xSpot = event.clientX
-  ySpot = event.clientY
+getMousePositionOnCanvas = (event) ->
+  xSpot = event.clientX - (toolbarWidth+5) - canvasXOffset
+  ySpot = event.clientY - 5 - canvasYOffset
 
 $(document).ready ()->
   setTimeout( ()->
@@ -316,74 +325,83 @@ $(document).ready ()->
     selectedTool = ctPaintTools[7]
     drawToolbars()
     canvasAsData = ctCanvas.toDataURL()
+    #$('#zoomDiv').css('top',window.innerHeight)
+    zoomGrab = ctContext.createImageData(20,20)
+    #console.log(zoomGrab.data)
+    console.log(ctContext.getImageData(0,0,10,10).data)
+    console.log(ctContext.getImageData(0,0,10,10))
+    zoomPaste = new Image()
+    zoomPaste.onload = ()->
+      zoomContext.putImageData(zoomPaste,0,0)
   ,200)
+
+  setInterval( ()->
+    #console.log 'HERE', ctContext.getImageData(0,0,10,10).toDataURL()
+    canvasSectionToPaste = ctContext.getImageData(0,0,10,10)
+    zoomContext.putImageData(canvasSectionToPaste,0,0)
+  ,5000)
 
   $('body').keydown (event) ->
     if event.keyCode == keysToKeyCodes['up']
-      canvasYPos-=3
-      $('#ctpaintDiv').css('top', canvasYPos.toString())
-      $('#ctpaintDiv').css('left', canvasXPos.toString())
+      canvasYOffset-=3
+      positionCanvas()
       positionCorners()
     if event.keyCode == keysToKeyCodes['down']
-      canvasYPos+=3
-      $('#ctpaintDiv').css('top', canvasYPos.toString())
-      $('#ctpaintDiv').css('left', canvasXPos.toString())
+      canvasYOffset+=3
+      positionCanvas()
       positionCorners()
     if event.keyCode == keysToKeyCodes['right']
-      console.log 'B'
-      canvasXPos+=3
-      $('#ctpaintDiv').css('top', canvasYPos.toString())
-      $('#ctpaintDiv').css('left', canvasXPos.toString())
+      canvasXOffset+=3
+      positionCanvas()
       positionCorners()
     if event.keyCode == keysToKeyCodes['left']
-      canvasXPos-=3
-      $('#ctpaintDiv').css('top', canvasYPos.toString())
-      $('#ctpaintDiv').css('left', canvasXPos.toString())
+      canvasXOffset-=3
+      positionCanvas()
       positionCorners()
   #$('body').keypress (event)->
 
-
   #$('body').keyup (event) ->
   #  console.log 'UP'
-
 
   $(window).resize ()->
     setCanvasSizes()
     placeToolbars()
     drawToolbars()
+    #$('#zoomDiv').css('top',window.innerHeight)
 
   $(window).scroll ()->
-    $('#ctpaintDiv').css('top', canvasYPos.toString())
-    $('#ctpaintDiv').css('left', canvasXPos.toString())
+  #  $('#ctpaintDiv').css('top', canvasYPos.toString())
+  #  $('#ctpaintDiv').css('left', canvasXPos.toString())
     window.scroll(0,0)
-
 
   $('#CtPaint').mousemove (event)->
     switch selectedTool.name
       when 'line'
         if mousePressed
-          getMousePosition(event)
+          getMousePositionOnCanvas(event)
           canvasDataAsImage = new Image()
           canvasDataAsImage.onload = ->
             ctContext.drawImage(canvasDataAsImage,0,0)
-            selectedTool.toolsAction(ctContext, colorsAtHand[0], oldX-(toolbarWidth+5), oldY-5, xSpot-(toolbarWidth+5), ySpot-5)
+            selectedTool.toolsAction(ctContext, colorsAtHand[0], oldX, oldY, xSpot, ySpot)
           canvasDataAsImage.src = canvasAsData
       when 'point'
         if mousePressed
           oldX = xSpot
           oldY = ySpot
-          getMousePosition(event)
-          selectedTool.toolsAction(ctContext, colorsAtHand[0], xSpot-(toolbarWidth+5), ySpot-5, oldX-(toolbarWidth+5), oldY-5)
+          getMousePositionOnCanvas(event)
+          selectedTool.toolsAction(ctContext, colorsAtHand[0], xSpot, ySpot, oldX, oldY)
 
   $('#CtPaint').mousedown (event)->
     mousePressed = true
-    getMousePosition(event)
+    getMousePositionOnCanvas(event)
     switch selectedTool.name
+      when 'zoom'
+        selectedTool.toolsAction()
       when 'line'
         oldX = xSpot
         oldY = ySpot
       when 'point'
-       selectedTool.toolsAction(ctContext, colorsAtHand[0], xSpot-(toolbarWidth+5), ySpot-5, xSpot-(toolbarWidth+5), ySpot-5)
+       selectedTool.toolsAction(ctContext, colorsAtHand[0], xSpot, ySpot, xSpot, ySpot)
 
   $('#CtPaint').mouseup (event)->
     mousePressed = false
@@ -394,11 +412,11 @@ $(document).ready ()->
         canvasAsData = ctCanvas.toDataURL()
 
   $('#toolbar0').mousedown (event)->
-    getMousePosition(event)
+    #getMousePosition(event)
     toolIndex = 0
     while toolIndex < numberOfTools
-      if ctPaintTools[toolIndex].clickRegion[0]<xSpot and xSpot<(ctPaintTools[toolIndex].clickRegion[0]+buttonWidth)
-        if ctPaintTools[toolIndex].clickRegion[1]<ySpot and ySpot<(ctPaintTools[toolIndex].clickRegion[1]+buttonHeight)
+      if ctPaintTools[toolIndex].clickRegion[0]<event.clientX and event.clientX<(ctPaintTools[toolIndex].clickRegion[0]+buttonWidth)
+        if ctPaintTools[toolIndex].clickRegion[1]<event.clientY and event.clientY<(ctPaintTools[toolIndex].clickRegion[1]+buttonHeight)
           selectedTool = ctPaintTools[toolIndex]
       toolIndex++
     drawToolbars()
