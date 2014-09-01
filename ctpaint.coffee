@@ -131,7 +131,7 @@ keysToKeyCodes =
 toolNames = ['zoom','select','sample','fill','square','circle','line','point']
 
 zoomAction = ->
-  
+  console.log '0'
 
 selectAction = ->
   console.log '1'
@@ -317,6 +317,63 @@ getMousePositionOnCanvas = (event) ->
   xSpot = event.clientX - (toolbarWidth+5) - canvasXOffset
   ySpot = event.clientY - 5 - canvasYOffset
 
+scaleImageBigger = (imageData,factor) ->
+  factor = Math.floor(factor)
+  imageHeight = imageData.height
+  imageWidth = imageData.width
+  imageDatasData = imageData.data
+
+  outputsHeight = imageHeight*factor
+  outputsWidth = imageWidth*factor
+
+  outputImage = []
+  arrayOfPixels = []
+  arrayOfRows = []
+  singleRow = []
+  singlePixel = []
+
+  datumIndex = 0
+  while datumIndex < imageDatasData.length
+    singlePixel.push imageDatasData[datumIndex]
+    if singlePixel.length == 4
+      singleRow.push singlePixel
+      singlePixel = []
+    if singleRow.length == imageWidth
+      arrayOfRows.push singleRow
+      singleRow = []
+    datumIndex++
+
+  rowIndex = 0
+  while rowIndex < arrayOfRows.length
+    throwAwayArray = []
+    pixelIndex = 0
+    while pixelIndex < arrayOfRows[rowIndex].length
+      pixelIteration = 0
+      while pixelIteration < factor
+        throwAwayArray.push arrayOfRows[rowIndex][pixelIndex]
+        pixelIteration++
+      pixelIndex++
+    arrayOfRows[rowIndex] = throwAwayArray
+    rowIndex++
+
+  rowIndex = 0
+  while rowIndex < arrayOfRows.length
+    rowIteration = 0
+    while rowIteration < factor
+      pixelIndex = 0
+      while pixelIndex < arrayOfRows[rowIndex].length
+        outputImage.push arrayOfRows[rowIndex][pixelIndex]
+        pixelIndex++
+      rowIteration++
+    rowIndex++
+
+  imageAsObject =
+    height: outputsHeight
+    width: outputsWidth
+    data: outputImage
+
+  return imageAsObject
+
 $(document).ready ()->
   setTimeout( ()->
     setCanvasSizes()
@@ -338,7 +395,8 @@ $(document).ready ()->
   setInterval( ()->
     #console.log 'HERE', ctContext.getImageData(0,0,10,10).toDataURL()
     canvasSectionToPaste = ctContext.getImageData(0,0,10,10)
-    zoomContext.putImageData(canvasSectionToPaste,0,0)
+    console.log scaleImageBigger(canvasSectionToPaste,2)
+    zoomContext.putImageData(scaleImageBigger(canvasSectionToPaste,2),0,0)
   ,5000)
 
   $('body').keydown (event) ->
@@ -358,6 +416,7 @@ $(document).ready ()->
       canvasXOffset-=3
       positionCanvas()
       positionCorners()
+    #if event.keyCode == keys
   #$('body').keypress (event)->
 
   #$('body').keyup (event) ->
