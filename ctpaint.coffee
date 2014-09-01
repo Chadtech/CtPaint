@@ -482,7 +482,6 @@ $(document).ready ()->
     if (event.clientX < (canvasWidth + 5 + toolbarWidth + 20)) and ((canvasWidth + 5 + toolbarWidth) < event.clientX)
       if (event.clientY < (canvasHeight + 5 + 20)) and ((canvasHeight + 5) < event.clientY)
         $('#wholeWindow').css 'cursor', 'se-resize'
-        console.log 'A'
       else
         $('#wholeWindow').css 'cursor', 'auto'
 
