@@ -525,7 +525,9 @@ $(document).ready ()->
       toolViewMode = toolViewMode%2
       drawToolbars()
     if event.keyCode == keysToKeyCodes['equals']
-      selectedTool.magnitude+=1
+      selectedTool.magnitude++
+    if event.keyCode == keysToKeyCodes['minus']
+      selectedTool.magnitude--
  
   $(window).resize ()->
     if canvasWidth < (window.innerWidth - toolbarWidth - 5)
