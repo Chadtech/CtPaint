@@ -158,12 +158,10 @@ zoomAction = ->
   #  zoomContext.putImageData(scaleImageBigger(canvasSectionToPaste,8),0,64)
   #  zoomContext.putImageData(canvasSectionToPaste,0,0)
 
-
 selectAction = (canvas, beginX, beginY, endX, endY) ->
   #selectLine = document.createElement('canvas')
   #selectLinesData = selectLine.getContext('2d').createImageData(4, 1)
   console.log '1'
-
 
 sampleAction = ->
   console.log '2'
