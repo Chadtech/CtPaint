@@ -12,7 +12,7 @@ canvasYOffset = 0
 canvasAsData = undefined
 
 selectedTool = undefined
-numberOfTools = 22
+numberOfTools = 20
 toolViewMode = 0
 
 mousePressed = false
