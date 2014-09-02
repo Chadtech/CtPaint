@@ -151,12 +151,18 @@ toolNames = ['zoom','select','sample','fill','square','circle','line','point']
 
 zoomAction = ->
   zoomActivate = true
-  #console.log 'ZOOM zoomActivate'
   positionZoom()
+  canvasSectionToZoomAt = ctContext.getImageData(xSpot, ySpot, xSpot+Math.floor((window.innerWidth-toolbarWidth)/Math.pow(2,selectedTool.magnitude)), ySpot+Math.floor((window.innerHeight-toolbarHeight)/Math.pow(2,selectedTool.magnitude)) )
+  zoomContext.putImageData(scaleImageBigger(canvasSectionToZoomAt,Math.pow(2,selectedTool.magnitude)),0,0)
+  #  canvasSectionToPaste = ctContext.getImageData(0,0,10,10)
+  #  zoomContext.putImageData(scaleImageBigger(canvasSectionToPaste,8),0,64)
+  #  zoomContext.putImageData(canvasSectionToPaste,0,0)
+
 
 selectAction = (canvas, beginX, beginY, endX, endY) ->
   #selectLine = document.createElement('canvas')
   #selectLinesData = selectLine.getContext('2d').createImageData(4, 1)
+  console.log '1'
 
 
 sampleAction = ->
@@ -187,6 +193,7 @@ while iteration < numberOfTools
     name: toolNames[iteration]
     clickRegion: [((iteration%2)*25),(Math.floor(iteration/2))*25]
     pressedImage: [new Image(), new Image()]
+    magnitude:1
     toolsAction: ->
       console.log toolNames, iteration, thisIteration
       console.log 'did a '+toolNames[@number]
@@ -330,9 +337,16 @@ positionZoom = ->
   if zoomActivate
     $('#zoomDiv').css('top', '0')
     $('#zoomDiv').css('left', toolbarWidth.toString())
+
+    zoomContext.canvas.width = window.innerWidth - toolbarWidth
+    zoomContext.canvas.height = window.innerHeight - toolbarHeight
+
   else
     $('#zoomDiv').css('top', window.innerHeight)
     $('#zoomDiv').css('left', toolbarWidth.toString())
+
+    zoomContext.canvas.width = 1
+    zoomContext.canvas.height = 1
 
 setCanvasSizes = ->
   toolbar0Context.canvas.width = toolbarWidth
@@ -510,6 +524,8 @@ $(document).ready ()->
       toolViewMode++
       toolViewMode = toolViewMode%2
       drawToolbars()
+    if event.keyCode == keysToKeyCodes['equals']
+      selectedTool.magnitude+=1
  
   $(window).resize ()->
     if canvasWidth < (window.innerWidth - toolbarWidth - 5)
