@@ -21,6 +21,23 @@ draggingBorder = false
 zoomMagnitude = false
 zoomActivate = false
 
+selectLinesOfLengthX = []
+selectLinesOfLengthY = []
+dataToGive = [[255,255,255,255], [255,255,255,255], [255,255,255,255], [128,128,128,255]]
+lineIndex = 0
+while lineIndex < 4
+  selectLinesOfLengthX.push document.createElement('canvas').getContext('2d').createImageData(lineIndex+1, 1)
+  selectLinesOfLengthY.push document.createElement('canvas').getContext('2d').createImageData(1, lineIndex+1)
+  dataIndex = 0
+  while dataIndex < (lineIndex+1)
+    eachColorIndex = 0
+    while eachColorIndex < dataToGive.length
+      selectLinesOfLengthX[selectLinesOfLengthX.length-1].data[eachColorIndex + (dataIndex * 4)] = dataToGive[dataIndex][eachColorIndex]
+      selectLinesOfLengthY[selectLinesOfLengthY.length-1].data[eachColorIndex + (dataIndex * 4)] = dataToGive[dataIndex][eachColorIndex]
+      eachColorIndex++
+    dataIndex++
+  lineIndex++
+
 zeroPadder = (number,zerosToFill) ->
   numberAsString = number+''
   while numberAsString.length < zerosToFill
@@ -134,11 +151,13 @@ toolNames = ['zoom','select','sample','fill','square','circle','line','point']
 
 zoomAction = ->
   zoomActivate = true
-  console.log 'ZOOM zoomActivate'
+  #console.log 'ZOOM zoomActivate'
   positionZoom()
 
-selectAction = ->
-  console.log '1'
+selectAction = (canvas, beginX, beginY, endX, endY) ->
+  #selectLine = document.createElement('canvas')
+  #selectLinesData = selectLine.getContext('2d').createImageData(4, 1)
+
 
 sampleAction = ->
   console.log '2'
@@ -222,6 +241,35 @@ putPixel = (canvas, color, whereAtX, whereAtY) ->
   newPixelsColor[2] = color[2]
   newPixelsColor[3] = 255
   canvas.putImageData(newPixel,whereAtX,whereAtY)
+
+drawSelectLine = (canvas, beginX, beginY, endX, endY) ->
+  if beginX > endX
+    swapStorage = beginX
+    beginX = endX
+    endX = swapStorage
+  if beginY > endY
+    swapStorage = beginY
+    beginY = endY
+    endX = swapStorage
+  distanceX = endX - beginX
+  distanceY = endY - beginY
+  while distanceX > 0
+    if distanceX > 3
+      canvas.putImageData(selectLinesOfLengthX[3],endX - distanceX, beginY)
+      canvas.putImageData(selectLinesOfLengthX[3],endX - distanceX, endY)
+      distanceX-=4
+    else
+      canvas.putImageData(selectLinesOfLengthX[distanceX - 1],endX - distanceX, beginY)
+      canvas.putImageData(selectLinesOfLengthX[distanceX - 1],endX - distanceX, endY)
+      distanceX-=distanceX
+  while distanceY > 0
+    if distanceY > 3
+      canvas.putImageData(selectLinesOfLengthY[3], beginX, endY - distanceY)
+      canvas.putImageData(selectLinesOfLengthY[3], endX, endY - distanceY)
+      distanceY-=4
+    else
+      canvas.putImageData(selectLinesOfLengthY[distanceY - 1], beginX, endY - distanceY)
+      canvas.putImageData(selectLinesOfLengthY[distanceY - 1], endX, endY - distanceY)
 
 drawLine = (canvas, color, beginX, beginY, endX, endY) ->
   deltaX = Math.abs(endX - beginX)
@@ -520,6 +568,10 @@ $(document).ready ()->
 
   $('#CtPaint').mousemove (event)->
     switch selectedTool.name
+      when 'select'
+        if mousePressed
+          getMousePositionOnCanvas(event)
+          selectedTool.toolsAction(ctContext, oldX, oldY, xSpot, ySpot)
       when 'line'
         if mousePressed
           getMousePositionOnCanvas(event)
@@ -541,6 +593,9 @@ $(document).ready ()->
     switch selectedTool.name
       when 'zoom'
         selectedTool.toolsAction()
+      when 'select'
+        oldX = xSpot
+        oldY = ySpot
       when 'line'
         oldX = xSpot
         oldY = ySpot
@@ -550,6 +605,8 @@ $(document).ready ()->
   $('#CtPaint').mouseup (event)->
     mousePressed = false
     switch selectedTool.name
+      when 'select'
+        selectedTool.toolsAction()
       when 'line'
         canvasAsData = ctCanvas.toDataURL()
       when 'point'
