@@ -19,6 +19,7 @@ mousePressed = false
 draggingBorder = false
 
 zoomActivate = false
+cornersVisible = true
 
 colorsAtHand = [[192,192,192],[0,0,0],[255,255,255],[0,0,0]]
 
@@ -174,14 +175,26 @@ while stringOfCharactersIndex > stringOfCharacters.length
 
 toolNames = ['zoom','select','sample','fill','square','circle','line','point']
 
-zoomAction = ->
-  zoomActivate = true
+zoomTransition = ->
   positionZoom()
-  canvasSectionToZoomAt = ctContext.getImageData(xSpot, ySpot, xSpot+Math.floor((window.innerWidth-toolbarWidth)/Math.pow(2,selectedTool.magnitude)), ySpot+Math.floor((window.innerHeight-toolbarHeight)/Math.pow(2,selectedTool.magnitude)) )
-  zoomContext.putImageData(scaleImageBigger(canvasSectionToZoomAt,Math.pow(2,selectedTool.magnitude)),0,0)
-  #  canvasSectionToPaste = ctContext.getImageData(0,0,10,10)
-  #  zoomContext.putImageData(scaleImageBigger(canvasSectionToPaste,8),0,64)
-  #  zoomContext.putImageData(canvasSectionToPaste,0,0)
+  positionCorners()
+
+zoomAction = ->
+  if zoomActivate
+    zoomActivate = false
+    cornersVisible = true
+    zoomTransition()
+    console.log 'B'
+  else
+    zoomActivate = true
+    cornersVisible = false
+    zoomTransition()
+    canvasSectionToZoomAt = ctContext.getImageData(xSpot, ySpot, xSpot+Math.floor((window.innerWidth-toolbarWidth)/Math.pow(2,selectedTool.magnitude)), ySpot+Math.floor((window.innerHeight-toolbarHeight)/Math.pow(2,selectedTool.magnitude)) )
+    zoomContext.putImageData(scaleImageBigger(canvasSectionToZoomAt,Math.pow(2,selectedTool.magnitude)),0,0)
+    #  canvasSectionToPaste = ctContext.getImageData(0,0,10,10)
+    #  zoomContext.putImageData(scaleImageBigger(canvasSectionToPaste,8),0,64)
+    #  zoomContext.putImageData(canvasSectionToPaste,0,0)
+
 
 selectAction = (canvas, beginX, beginY, endX, endY) ->
   #selectLine = document.createElement('canvas')
@@ -322,17 +335,31 @@ drawLine = (canvas, color, beginX, beginY, endX, endY) ->
       beginY += directionY
   
 positionCorners = ->
-  $('#border0Div').css('top',(canvasYPos-1+canvasYOffset).toString())
-  $('#border0Div').css('left',(canvasXPos-1+canvasXOffset).toString())
+  if cornersVisible
+    $('#border0Div').css('top',(canvasYPos-1+canvasYOffset).toString())
+    $('#border0Div').css('left',(canvasXPos-1+canvasXOffset).toString())
 
-  $('#border1Div').css('top',(canvasYPos-1+canvasYOffset).toString())
-  $('#border1Div').css('left',(canvasXPos+canvasWidth+1+canvasXOffset).toString())
+    $('#border1Div').css('top',(canvasYPos-1+canvasYOffset).toString())
+    $('#border1Div').css('left',(canvasXPos+canvasWidth+1+canvasXOffset).toString())
 
-  $('#border2Div').css('top',(canvasYPos+canvasHeight+1+canvasYOffset).toString())
-  $('#border2Div').css('left',(canvasXPos+canvasWidth+1+canvasXOffset).toString())
+    $('#border2Div').css('top',(canvasYPos+canvasHeight+1+canvasYOffset).toString())
+    $('#border2Div').css('left',(canvasXPos+canvasWidth+1+canvasXOffset).toString())
 
-  $('#border3Div').css('top',(canvasYPos+canvasHeight+1+canvasYOffset).toString())
-  $('#border3Div').css('left',(canvasXPos-1+canvasXOffset).toString())
+    $('#border3Div').css('top',(canvasYPos+canvasHeight+1+canvasYOffset).toString())
+    $('#border3Div').css('left',(canvasXPos-1+canvasXOffset).toString())
+  
+  else
+    $('#border0Div').css('top',(window.innerHeight).toString())
+    $('#border0Div').css('left',(canvasXPos-1+canvasXOffset).toString())
+
+    $('#border1Div').css('top',(window.innerHeight).toString())
+    $('#border1Div').css('left',(canvasXPos+canvasWidth+1+canvasXOffset).toString())
+
+    $('#border2Div').css('top',(window.innerHeight).toString())
+    $('#border2Div').css('left',(canvasXPos+canvasWidth+1+canvasXOffset).toString())
+
+    $('#border3Div').css('top',(window.innerHeight).toString())
+    $('#border3Div').css('left',(canvasXPos-1+canvasXOffset).toString())  
 
 positionCanvas = ->
   $('#ctpaintDiv').css('top', (canvasYPos+canvasYOffset).toString())
@@ -644,6 +671,12 @@ $(document).ready ()->
         canvasAsData = ctCanvas.toDataURL()
       when 'point'
         canvasAsData = ctCanvas.toDataURL()
+
+  $('#zoomWindow').mousedown (event)->
+    mousePressed = true
+    switch selectedTool.name
+      when 'zoom'
+        selectedTool.toolsAction()
 
   $('#toolbar0').mousedown (event)->
     toolIndex = 0
