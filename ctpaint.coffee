@@ -59,7 +59,7 @@ zeroPadder = (number,zerosToFill) ->
   return numberAsString
 
 rgbToHex = (rgb) ->
-  return '#' + rgb[0].toString(16) + rgb[1].toString(16) + rgb[2].toString(16)
+  return '#' + zeroPadder(rgb[0].toString(16),2) + zeroPadder(rgb[1].toString(16),2) + zeroPadder(rgb[2].toString(16),2)
 
 ctCanvas = document.getElementById('CtPaint')
 ctContext = ctCanvas.getContext('2d')
@@ -267,6 +267,9 @@ border2Context.canvas.width = 1
 border2Context.canvas.height = 1
 border3Context.canvas.width = 1
 border3Context.canvas.height = 1
+
+getColorValue = (canvas, whereAtX, whereAtY) ->
+  return rgbToHex(canvas.getImageData(whereAtX, whereAtY, 1, 1).data)
 
 putPixel = (canvas, color, whereAtX, whereAtY) ->
   newPixel = canvas.createImageData(1,1)
@@ -631,6 +634,7 @@ $(document).ready ()->
       $('#wholeWindow').css 'cursor', 'default'        
 
   $('#CtPaint').mousemove (event)->
+    console.log getColorValue(ctContext, event.clientX - (toolbarWidth + 5), event.clientY - (toolbarHeight + 5))
     switch selectedTool.name
       when 'select'
         if mousePressed
