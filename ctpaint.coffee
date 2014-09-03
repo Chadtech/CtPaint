@@ -165,13 +165,20 @@ stringOfCharacters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ `.,;:
 stringsToGlyphs = {}
 stringOfCharactersIndex = 0
 varietyCodes = [ 'm', 'n', 'o' ]
-while stringOfCharactersIndex > stringOfCharacters.length
-  stringToGlyphs[stringOfCharacters[stringOfCharactersIndex]] = [ new Image(), new Image(), new Image() ]
+while stringOfCharactersIndex < stringOfCharacters.length
+  stringsToGlyphs[stringOfCharacters[stringOfCharactersIndex]] = [ new Image(), new Image(), new Image() ]
   imageVariety = 0
   while imageVariety < 3
-    stringToGlyphs[stringOfCharacters[stringOfCharactersIndex]][imageVariety].src = varietyCodes[imageVairety]+zeroPadder(stringOfCharacterIndex,4)+'.PNG'
+    stringsToGlyphs[stringOfCharacters[stringOfCharactersIndex]][imageVariety].src = varietyCodes[imageVariety]+zeroPadder(stringOfCharactersIndex,4)+'.PNG'
     imageVariety++
   stringOfCharactersIndex++
+
+drawStringAsCommandPrompt = (canvas, stringToDraw, coloration, whereAtX, whereAtY) ->
+  stringIndex = 0
+  while stringIndex < stringToDraw.length
+    console.log stringToDraw[stringIndex]
+    canvas.drawImage(stringsToGlyphs[stringToDraw[stringIndex]][coloration], whereAtX + (12 * stringIndex), whereAtY)
+    stringIndex++
 
 toolNames = ['zoom','select','sample','fill','square','circle','line','point']
 
@@ -194,7 +201,6 @@ zoomAction = ->
     #  canvasSectionToPaste = ctContext.getImageData(0,0,10,10)
     #  zoomContext.putImageData(scaleImageBigger(canvasSectionToPaste,8),0,64)
     #  zoomContext.putImageData(canvasSectionToPaste,0,0)
-
 
 selectAction = (canvas, beginX, beginY, endX, endY) ->
   #selectLine = document.createElement('canvas')
@@ -511,7 +517,10 @@ $(document).ready ()->
     drawToolbars()
     positionZoom()
     canvasAsData = ctCanvas.toDataURL()
-  ,200)
+    drawStringAsCommandPrompt(backgroundContext, 'Wittgenstein', 0, 100, 300)
+    drawStringAsCommandPrompt(backgroundContext, 'GEMoore', 1, 100, 284)
+    drawStringAsCommandPrompt(backgroundContext, stringOfCharacters, 2, 50, 268 )
+  ,2000)
 
   #setTimeout( ()->
   #  canvasSectionToPaste = ctContext.getImageData(0,0,10,10)
