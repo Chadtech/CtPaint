@@ -433,6 +433,10 @@ getMousePositionOnCanvas = (event) ->
   xSpot = event.clientX - (toolbarWidth+5) - canvasXOffset
   ySpot = event.clientY - 5 - canvasYOffset
 
+getMousePositionOnZoom = (event) ->
+  xSpotZoom = event.clientX - (toolbarWidth)
+  ySpotZoom = event.clientY - (toolbarHeight)
+
 scaleImageBigger = (imageData,factor) ->
   imageHeight = imageData.height
   imageWidth = imageData.width
