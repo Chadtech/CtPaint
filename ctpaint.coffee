@@ -647,10 +647,6 @@ $(document).ready ()->
       positionCorners()
       $('#wholeWindow').css 'cursor', 'default'   
 
-  #$('#wholeWindow').mousemove () ->
-  #  if 
-  #    toolbar1Context.drawImage(toolbar1sImage1,188,3)  
-
   $('#CtPaint').mouseleave ()->  
     toolbar1Context.drawImage(toolbar1sImage1,188,3)   
 
