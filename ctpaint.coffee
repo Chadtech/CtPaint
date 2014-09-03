@@ -161,7 +161,7 @@ keysToKeyCodes =
   'right bracket':221
   'single quote':222
 
-stringOfCharacters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ `.,;:'+"'"+'"?!0123456789'
+stringOfCharacters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ `.,;:'+"'"+'"?!0123456789@#$%^&*(){}[]'
 stringsToGlyphs = {}
 stringOfCharactersIndex = 0
 varietyCodes = [ 'm', 'n', 'o' ]
@@ -176,7 +176,6 @@ while stringOfCharactersIndex < stringOfCharacters.length
 drawStringAsCommandPrompt = (canvas, stringToDraw, coloration, whereAtX, whereAtY) ->
   stringIndex = 0
   while stringIndex < stringToDraw.length
-    console.log stringToDraw[stringIndex]
     canvas.drawImage(stringsToGlyphs[stringToDraw[stringIndex]][coloration], whereAtX + (12 * stringIndex), whereAtY)
     stringIndex++
 
@@ -191,7 +190,6 @@ zoomAction = ->
     zoomActivate = false
     cornersVisible = true
     zoomTransition()
-    console.log 'B'
   else
     zoomActivate = true
     cornersVisible = false
@@ -249,8 +247,10 @@ ctPaintTools[0].toolsAction = zoomAction
 
 toolbar1Canvas = document.getElementById('toolbar1')
 toolbar1Context = toolbar1Canvas.getContext('2d')
-toolbar1sImage = new Image()
-toolbar1sImage.src = 'toolbar10.png'
+toolbar1sImage0 = new Image()
+toolbar1sImage0.src = 'toolbar10.png'
+toolbar1sImage1 = new Image()
+toolbar1sImage1.src = 'toolbar11.png'
 backgroundCanvas = document.getElementById('background')
 backgroundContext = backgroundCanvas.getContext('2d')
 zoomCanvas = document.getElementById('zoomWindow')
@@ -423,7 +423,10 @@ drawToolbars = ->
 
   toolbar1Context.fillStyle = '#202020'
   toolbar1Context.fillRect(0,0,window.innerWidth,toolbarHeight)
-  toolbar1Context.drawImage(toolbar1sImage,3,2)
+
+  toolbar1Context.drawImage(toolbar1sImage0,3,2)
+  drawLine(toolbar1Context,[16,20,8],toolbarWidth-1,0,window.innerWidth,0)
+  toolbar1Context.drawImage(toolbar1sImage1,188,3)
   drawLine(toolbar1Context,[16,20,8],toolbarWidth-1,0,window.innerWidth,0)
 
   toolbar1Context.fillStyle = rgbToHex(colorsAtHand[0])
@@ -437,6 +440,11 @@ drawToolbars = ->
 
   toolbar1Context.fillStyle = rgbToHex(colorsAtHand[2])
   toolbar1Context.fillRect(33,21,14,14)
+
+drawInformation = ->
+  drawLine(toolbar1Context,[16,20,8],toolbarWidth-1,0,window.innerWidth,0)
+  drawStringAsCommandPrompt(toolbar1Context, getColorValue(ctContext, event.clientX - (toolbarWidth + 5), event.clientY - (toolbarHeight + 5)) + ', (' + (event.clientX - (toolbarWidth + 5)).toString() + ', ' + (event.clientY - (toolbarHeight + 5)).toString() + ')', 0, 191, 12)
+  #drawStringAsCommandPrompt = (canvas, stringToDraw, coloration, whereAtX, whereAtY) ->
 
 getMousePositionOnCanvas = (event) ->
   xSpot = event.clientX - (toolbarWidth+5) - canvasXOffset
@@ -517,7 +525,7 @@ $(document).ready ()->
     drawToolbars()
     positionZoom()
     canvasAsData = ctCanvas.toDataURL()
-  ,2000)
+  , 2000)
 
   #setTimeout( ()->
   #  canvasSectionToPaste = ctContext.getImageData(0,0,10,10)
@@ -637,10 +645,18 @@ $(document).ready ()->
       canvasWidth = ctContext.canvas.width
       canvasHeight = ctContext.canvas.height
       positionCorners()
-      $('#wholeWindow').css 'cursor', 'default'        
+      $('#wholeWindow').css 'cursor', 'default'   
+
+  #$('#wholeWindow').mousemove () ->
+  #  if 
+  #    toolbar1Context.drawImage(toolbar1sImage1,188,3)  
+
+  $('#CtPaint').mouseleave ()->  
+    toolbar1Context.drawImage(toolbar1sImage1,188,3)   
 
   $('#CtPaint').mousemove (event)->
-    console.log getColorValue(ctContext, event.clientX - (toolbarWidth + 5), event.clientY - (toolbarHeight + 5))
+    toolbar1Context.drawImage(toolbar1sImage1,188,3)   
+    drawInformation()
     switch selectedTool.name
       when 'select'
         if mousePressed
@@ -685,6 +701,15 @@ $(document).ready ()->
         canvasAsData = ctCanvas.toDataURL()
       when 'point'
         canvasAsData = ctCanvas.toDataURL()
+
+  #$('#background').mousemove ()->
+  #  toolbar1Context.drawImage(toolbar1sImage1,188,3) 
+
+  #$('toolbar0').mousemove ()->
+  #  toolbar1Context.drawImage(toolbar1sImage1,188,3) 
+
+  #$('toolbar1').mousemove ()->
+  #  toolbar1Context.drawImage(toolbar1sImage1,188,3) 
 
   $('#zoomWindow').mousedown (event)->
     mousePressed = true
