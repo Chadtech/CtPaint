@@ -12,7 +12,7 @@ canvasYOffset = 0
 canvasAsData = undefined
 
 selectedTool = undefined
-numberOfTools = 20
+numberOfTools = 24
 toolViewMode = 0
 
 mousePressed = false
@@ -517,9 +517,6 @@ $(document).ready ()->
     drawToolbars()
     positionZoom()
     canvasAsData = ctCanvas.toDataURL()
-    drawStringAsCommandPrompt(backgroundContext, 'Wittgenstein', 0, 100, 300)
-    drawStringAsCommandPrompt(backgroundContext, 'GEMoore', 1, 100, 284)
-    drawStringAsCommandPrompt(backgroundContext, stringOfCharacters, 2, 50, 268 )
   ,2000)
 
   #setTimeout( ()->
