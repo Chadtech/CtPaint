@@ -443,7 +443,7 @@ drawToolbars = ->
 
 drawInformation = ->
   drawLine(toolbar1Context,[16,20,8],toolbarWidth-1,0,window.innerWidth,0)
-  drawStringAsCommandPrompt(toolbar1Context, getColorValue(ctContext, event.clientX - (toolbarWidth + 5), event.clientY - (toolbarHeight + 5)) + ', (' + (event.clientX - (toolbarWidth + 5)).toString() + ', ' + (event.clientY - (toolbarHeight + 5)).toString() + ')', 0, 191, 12)
+  drawStringAsCommandPrompt(toolbar1Context, getColorValue(ctContext, event.clientX - (toolbarWidth + 5), event.clientY - 5).toUpperCase() + ', (' + (event.clientX - (toolbarWidth + 5)).toString() + ', ' + (event.clientY - 5).toString() + ')', 0, 191, 12)
   #drawStringAsCommandPrompt = (canvas, stringToDraw, coloration, whereAtX, whereAtY) ->
 
 getMousePositionOnCanvas = (event) ->
