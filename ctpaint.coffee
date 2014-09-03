@@ -18,8 +18,21 @@ toolViewMode = 0
 mousePressed = false
 draggingBorder = false
 
-zoomMagnitude = false
 zoomActivate = false
+
+colorsAtHand = [[192,192,192],[0,0,0],[255,255,255],[0,0,0]]
+
+xSpot = undefined
+ySpot = undefined
+
+oldX = undefined
+oldY = undefined
+
+xSpotZoom = undefined
+ySpotZoom = undefined
+
+oldXZoom = undefined
+oldYZoom = undefined
 
 selectLinesOfLengthX = []
 selectLinesOfLengthY = []
@@ -147,6 +160,18 @@ keysToKeyCodes =
   'right bracket':221
   'single quote':222
 
+stringOfCharacters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ `.,;:'+"'"+'"?!0123456789'
+stringsToGlyphs = {}
+stringOfCharactersIndex = 0
+varietyCodes = [ 'm', 'n', 'o' ]
+while stringOfCharactersIndex > stringOfCharacters.length
+  stringToGlyphs[stringOfCharacters[stringOfCharactersIndex]] = [ new Image(), new Image(), new Image() ]
+  imageVariety = 0
+  while imageVariety < 3
+    stringToGlyphs[stringOfCharacters[stringOfCharactersIndex]][imageVariety].src = varietyCodes[imageVairety]+zeroPadder(stringOfCharacterIndex,4)+'.PNG'
+    imageVariety++
+  stringOfCharactersIndex++
+
 toolNames = ['zoom','select','sample','fill','square','circle','line','point']
 
 zoomAction = ->
@@ -229,14 +254,6 @@ border2Context.canvas.width = 1
 border2Context.canvas.height = 1
 border3Context.canvas.width = 1
 border3Context.canvas.height = 1
-
-colorsAtHand = [[192,192,192],[0,0,0],[255,255,255],[0,0,0]]
-
-xSpot = undefined
-ySpot = undefined
-
-oldX = undefined
-oldY = undefined
 
 putPixel = (canvas, color, whereAtX, whereAtY) ->
   newPixel = canvas.createImageData(1,1)
