@@ -208,8 +208,8 @@ selectAction = (canvas, beginX, beginY, endX, endY) ->
 sampleAction = ->
   console.log '2'
 
-fillAction = ->
-  console.log '3'
+fillAction = (canvas, colorToChangeTo, xPos, yPos) ->
+  floodFill(canvas, colorToChangeTo, xPos, yPos)
 
 squareAction = ->
   console.log '4'
@@ -244,6 +244,7 @@ while iteration < numberOfTools
 ctPaintTools[7].toolsAction = pointAction
 ctPaintTools[6].toolsAction = lineAction
 ctPaintTools[0].toolsAction = zoomAction
+ctPaintTools[3].toolsAction = fillAction
 
 toolbar1Canvas = document.getElementById('toolbar1')
 toolbar1Context = toolbar1Canvas.getContext('2d')
@@ -342,6 +343,55 @@ drawLine = (canvas, color, beginX, beginY, endX, endY) ->
     if errorTwo < deltaY
       errorOne += deltaX
       beginY += directionY
+
+floodFill = (canvas, colorToChangeTo, xFill, yFill) ->
+  #  canvasSectionToPaste = ctContext.getImageData(0,0,10,10)
+  #  zoomContext.putImageData(canvasSectionToPaste,0,0)
+  replacedColor = canvas.getImageData(xFill, yFill, 1, 1).data
+  pixelsToCheck = [[xFill, yFill]]
+
+  pixelToPutIn = document.createElement('canvas').getContext('2d').createImageData(1,1)
+  pixelToPutInsData = pixelToPutIn.data
+
+  colorValueIndex = 0
+  while colorValueIndex < colorToChangeTo.length
+    pixelToPutInsData[colorValueIndex] = colorToChangeTo[colorValueIndex]
+    colorValueIndex++
+  pixelToPutInsData[3] = 255
+
+  console.log pixelToPutInsData
+
+  checkAndFill = (xPos, yPos, indexInPixelsToCheck)->
+    #canvas.putImageData(pixelToPutIn, xPos, yPos)
+    pixelsToCheck.pop()
+    if canvas.getImageData(xPos+1, yPos, 1, 1).data[0] == replacedColor[0]
+      if canvas.getImageData(xPos+1, yPos, 1, 1).data[1] == replacedColor[1]
+        if canvas.getImageData(xPos+1, yPos, 1, 1).data[2] == replacedColor[2]
+          if canvas.getImageData(xPos+1, yPos, 1, 1).data[3] == replacedColor[3]
+            pixelsToCheck.push [xPos+1, yPos]
+            canvas.putImageData(pixelToPutIn, xPos+1, yPos)
+    if canvas.getImageData(xPos-1, yPos, 1, 1).data[0] == replacedColor[0]
+      if canvas.getImageData(xPos-1, yPos, 1, 1).data[1] == replacedColor[1]
+        if canvas.getImageData(xPos-1, yPos, 1, 1).data[2] == replacedColor[2]
+          if canvas.getImageData(xPos-1, yPos, 1, 1).data[3] == replacedColor[3]
+            pixelsToCheck.push [xPos-1, yPos]
+            canvas.putImageData(pixelToPutIn, xPos-1, yPos)
+    if canvas.getImageData(xPos, yPos+1, 1, 1).data[0] == replacedColor[0]
+      if canvas.getImageData(xPos, yPos+1, 1, 1).data[1] == replacedColor[1]
+        if canvas.getImageData(xPos, yPos+1, 1, 1).data[2] == replacedColor[2]
+          if canvas.getImageData(xPos, yPos+1, 1, 1).data[3] == replacedColor[3]
+            pixelsToCheck.push [xPos, yPos+1]
+            canvas.putImageData(pixelToPutIn, xPos, yPos+1)
+    if canvas.getImageData(xPos, yPos-1, 1, 1).data[0] == replacedColor[0]
+      if canvas.getImageData(xPos, yPos-1, 1, 1).data[1] == replacedColor[1]
+        if canvas.getImageData(xPos, yPos-1, 1, 1).data[2] == replacedColor[2]
+          if canvas.getImageData(xPos, yPos-1, 1, 1).data[3] == replacedColor[3]
+            pixelsToCheck.push [xPos, yPos-1]
+            canvas.putImageData(pixelToPutIn, xPos, yPos-1)
+
+  canvas.putImageData(pixelToPutIn, xFill, yFill)
+  while pixelsToCheck.length
+    checkAndFill(pixelsToCheck[pixelsToCheck.length][0], pixelsToCheck[pixelsToCheck.length][1], 0)
   
 positionCorners = ->
   if cornersVisible
@@ -679,6 +729,8 @@ $(document).ready ()->
     switch selectedTool.name
       when 'zoom'
         selectedTool.toolsAction()
+      when 'fill'
+        selectedTool.toolsAction(ctContext, colorsAtHand[0], xSpot, ySpot)
       when 'select'
         oldX = xSpot
         oldY = ySpot
