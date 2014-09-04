@@ -363,7 +363,7 @@ floodFill = (canvas, colorToChangeTo, xFill, yFill) ->
 
   checkAndFill = (xPos, yPos, indexInPixelsToCheck)->
     #canvas.putImageData(pixelToPutIn, xPos, yPos)
-    pixelsToCheck.pop()
+    pixelsToCheck.splice(indexInPixelsToCheck, 1)
     if canvas.getImageData(xPos+1, yPos, 1, 1).data[0] == replacedColor[0]
       if canvas.getImageData(xPos+1, yPos, 1, 1).data[1] == replacedColor[1]
         if canvas.getImageData(xPos+1, yPos, 1, 1).data[2] == replacedColor[2]
@@ -391,7 +391,7 @@ floodFill = (canvas, colorToChangeTo, xFill, yFill) ->
 
   canvas.putImageData(pixelToPutIn, xFill, yFill)
   while pixelsToCheck.length
-    checkAndFill(pixelsToCheck[pixelsToCheck.length][0], pixelsToCheck[pixelsToCheck.length][1], 0)
+    checkAndFill(pixelsToCheck[0][0], pixelsToCheck[0][1], 0)
   
 positionCorners = ->
   if cornersVisible
