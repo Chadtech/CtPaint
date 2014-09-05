@@ -353,6 +353,12 @@ floodFill = (canvas, colorToChangeTo, xFill, yFill) ->
   pixelToPutIn = document.createElement('canvas').getContext('2d').createImageData(1,1)
   pixelToPutInsData = pixelToPutIn.data
 
+  sameColorCheck = (colorAsData, rgbColors) ->
+    datasRed = colorAsData[0]
+    datasGreen = colorAsData[1]
+    datasBlue = colorAsData[2]
+    return (rgbColors[0] == datasRed and rgbColors[1] == datasGreen and rgbColors[2] == datasBlue)
+
   colorValueIndex = 0
   while colorValueIndex < colorToChangeTo.length
     pixelToPutInsData[colorValueIndex] = colorToChangeTo[colorValueIndex]
