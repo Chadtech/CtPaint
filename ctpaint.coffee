@@ -358,40 +358,23 @@ floodFill = (canvas, colorToChangeTo, xFill, yFill) ->
     pixelToPutInsData[colorValueIndex] = colorToChangeTo[colorValueIndex]
     colorValueIndex++
   pixelToPutInsData[3] = 255
+  console.log 'A'
+  counter = 0
+  checkAndFill = (xPos, yPos)->
+    proceed = true
+    if canvas.getImageData(xPos, yPos, 1, 1).data[0] == pixelToPutIn[0] and canvas.getImageData(xPos, yPos, 1, 1).data[1] == pixelToPutIn[1] and canvas.getImageData(xPos, yPos, 1, 1).data[2] == pixelToPutIn[2]
+      proceed = false
+    if proceed
+      if (canvas.getImageData(xPos, yPos, 1, 1).data[0] != replacedColor[0]) or (canvas.getImageData(xPos, yPos, 1, 1).data[1] != replacedColor[1]) or (canvas.getImageData(xPos, yPos, 1, 1).data[2] != replacedColor[2])
+        proceed = false
+      if proceed
+        canvas.putImageData(pixelToPutIn, xPos, yPos)
+        checkAndFill(xPos+1, yPos)
+        checkAndFill(xPos-1, yPos)
+        checkAndFill(xPos, yPos+1)
+        checkAndFill(xPos, yPos-1)
 
-  console.log pixelToPutInsData
-
-  checkAndFill = (xPos, yPos, indexInPixelsToCheck)->
-    #canvas.putImageData(pixelToPutIn, xPos, yPos)
-    pixelsToCheck.splice(indexInPixelsToCheck, 1)
-    if canvas.getImageData(xPos+1, yPos, 1, 1).data[0] == replacedColor[0]
-      if canvas.getImageData(xPos+1, yPos, 1, 1).data[1] == replacedColor[1]
-        if canvas.getImageData(xPos+1, yPos, 1, 1).data[2] == replacedColor[2]
-          if canvas.getImageData(xPos+1, yPos, 1, 1).data[3] == replacedColor[3]
-            pixelsToCheck.push [xPos+1, yPos]
-            canvas.putImageData(pixelToPutIn, xPos+1, yPos)
-    if canvas.getImageData(xPos-1, yPos, 1, 1).data[0] == replacedColor[0]
-      if canvas.getImageData(xPos-1, yPos, 1, 1).data[1] == replacedColor[1]
-        if canvas.getImageData(xPos-1, yPos, 1, 1).data[2] == replacedColor[2]
-          if canvas.getImageData(xPos-1, yPos, 1, 1).data[3] == replacedColor[3]
-            pixelsToCheck.push [xPos-1, yPos]
-            canvas.putImageData(pixelToPutIn, xPos-1, yPos)
-    if canvas.getImageData(xPos, yPos+1, 1, 1).data[0] == replacedColor[0]
-      if canvas.getImageData(xPos, yPos+1, 1, 1).data[1] == replacedColor[1]
-        if canvas.getImageData(xPos, yPos+1, 1, 1).data[2] == replacedColor[2]
-          if canvas.getImageData(xPos, yPos+1, 1, 1).data[3] == replacedColor[3]
-            pixelsToCheck.push [xPos, yPos+1]
-            canvas.putImageData(pixelToPutIn, xPos, yPos+1)
-    if canvas.getImageData(xPos, yPos-1, 1, 1).data[0] == replacedColor[0]
-      if canvas.getImageData(xPos, yPos-1, 1, 1).data[1] == replacedColor[1]
-        if canvas.getImageData(xPos, yPos-1, 1, 1).data[2] == replacedColor[2]
-          if canvas.getImageData(xPos, yPos-1, 1, 1).data[3] == replacedColor[3]
-            pixelsToCheck.push [xPos, yPos-1]
-            canvas.putImageData(pixelToPutIn, xPos, yPos-1)
-
-  canvas.putImageData(pixelToPutIn, xFill, yFill)
-  while pixelsToCheck.length
-    checkAndFill(pixelsToCheck[0][0], pixelsToCheck[0][1], 0)
+  checkAndFill(xFill, yFill)
   
 positionCorners = ->
   if cornersVisible
