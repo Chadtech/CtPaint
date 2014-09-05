@@ -347,40 +347,64 @@ drawLine = (canvas, color, beginX, beginY, endX, endY) ->
 floodFill = (canvas, colorToChangeTo, xFill, yFill) ->
   #  canvasSectionToPaste = ctContext.getImageData(0,0,10,10)
   #  zoomContext.putImageData(canvasSectionToPaste,0,0)
-  replacedColor = canvas.getImageData(xFill, yFill, 1, 1).data
-  pixelsToCheck = [[xFill, yFill]]
-
-  pixelToPutIn = document.createElement('canvas').getContext('2d').createImageData(1,1)
-  pixelToPutInsData = pixelToPutIn.data
-
   sameColorCheck = (colorAsData, rgbColors) ->
     datasRed = colorAsData[0]
     datasGreen = colorAsData[1]
     datasBlue = colorAsData[2]
     return (rgbColors[0] == datasRed and rgbColors[1] == datasGreen and rgbColors[2] == datasBlue)
 
+  replacedColor = canvas.getImageData(xFill, yFill, 1, 1).data
+  replacedColor = [ replacedColor[0], replacedColor[1], replacedColor[2] ]
+
+  pixelToPutIn = document.createElement('canvas').getContext('2d').createImageData(1,1)
+  pixelToPutInsData = pixelToPutIn.data
   colorValueIndex = 0
   while colorValueIndex < colorToChangeTo.length
     pixelToPutInsData[colorValueIndex] = colorToChangeTo[colorValueIndex]
     colorValueIndex++
   pixelToPutInsData[3] = 255
-  console.log 'A'
-  counter = 0
-  checkAndFill = (xPos, yPos)->
-    proceed = true
-    if canvas.getImageData(xPos, yPos, 1, 1).data[0] == pixelToPutIn[0] and canvas.getImageData(xPos, yPos, 1, 1).data[1] == pixelToPutIn[1] and canvas.getImageData(xPos, yPos, 1, 1).data[2] == pixelToPutIn[2]
-      proceed = false
-    if proceed
-      if (canvas.getImageData(xPos, yPos, 1, 1).data[0] != replacedColor[0]) or (canvas.getImageData(xPos, yPos, 1, 1).data[1] != replacedColor[1]) or (canvas.getImageData(xPos, yPos, 1, 1).data[2] != replacedColor[2])
-        proceed = false
-      if proceed
-        canvas.putImageData(pixelToPutIn, xPos, yPos)
-        checkAndFill(xPos+1, yPos)
-        checkAndFill(xPos-1, yPos)
-        checkAndFill(xPos, yPos+1)
-        checkAndFill(xPos, yPos-1)
 
-  checkAndFill(xFill, yFill)
+  # [north, east, south, west]
+  neighborRelativePositions [ [0,-1], [1,0], [0,1], [-1,0] ]
+  checkNeighbors = (xPos, yPos) ->
+    pathCount = 0
+    availableNeighbors = []
+    if sameColorCheck(canvas.getImageData(xPos, yPos-1, 1, 1).data, replacedColor)
+      availableNeighbors.push [xPos, yPos-1]
+    if sameColorCheck(canvas.getImageData(xPos+1, yPos, 1, 1).data, replacedColor)
+      availableNeighbors.push [xPos+1, yPos]
+    if sameColorCheck(canvas.getImageData(xPos, yPos+1, 1, 1).data, replacedColor)
+      availableNeighbors.push [xPos, yPos+1]
+    if sameColorCheck (canvas.getImageData(xPos-1, yPos, 1, 1).data, replacedColor)
+      availableNeighbors.push [xPos-1, yPos]
+
+    neighors: availableNeighbors
+    xCoord: xPos
+    yCoord: yPos
+
+  nodesToReexamine = []
+  whatToDoGivenAvailability =
+    4: (xPos, yPos, whichSpot) ->
+      xFill++
+    3: (xPos, yPos, whichSpot) ->
+      directionIndex = 0
+      checkMoreDirections = true
+      while directionIndex < 4 and checkMoreDirections
+        
+    2:
+    1: (xPos, yPos, whichSpot) ->
+      currentX+=whichSpot.neighbors[0][0]
+      currentY+=whichSpot.neighbors[0][1]
+    0: (xPos, yPos) ->
+      canvas.putImageData(pixelToPutIn, whichSpot.xCoord, whichSpot.yCoord)
+
+  currentX = xFill
+  currentY = yFill
+  proceed = true
+  while proceed
+    thisSpot = checkNeighbors(currentX, currentY)
+    canvas.putImageData(pixelToPutIn, thisSpot.xCoord, thisSpot.yCoord)
+    whatToDoGivenAvailability[thisSpot.length](currentX, currentY, thisSpot)
   
 positionCorners = ->
   if cornersVisible
