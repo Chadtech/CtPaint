@@ -391,7 +391,7 @@ floodFill = (canvas, colorToChangeTo, xFill, yFill) ->
       checkMoreDirections = true
       while directionIndex < 4 and checkMoreDirections
         
-    2:
+    2: () ->
     1: (xPos, yPos, whichSpot) ->
       currentX+=whichSpot.neighbors[0][0]
       currentY+=whichSpot.neighbors[0][1]
