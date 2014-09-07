@@ -374,7 +374,6 @@ floodFill = (canvas, context, colorToChangeTo, xFill, yFill) ->
 
   pixelsToCheck = [thePixelAtXFillYFill]
   checkAndFill = (pixelIndex)->
-    #console.log 'IN CHECK AND FILL', canvas.width, pixelIndex
     if sameColorCheck(replacedColor, arrayOfWholeCanvas[pixelIndex - canvas.width])
       pixelsToCheck.push (pixelIndex - canvas.width)
       arrayOfWholeCanvas[pixelIndex - canvas.width] = colorToChangeTo
@@ -388,24 +387,20 @@ floodFill = (canvas, context, colorToChangeTo, xFill, yFill) ->
       pixelsToCheck.push (pixelIndex - 1)
       arrayOfWholeCanvas[pixelIndex - 1] = colorToChangeTo
 
-  console.log 'B', arrayOfWholeCanvas
   while pixelsToCheck.length
-    #console.log pixelsToCheck.length
-    checkAndFill(pixelsToCheck[pixelsToCheck.length - 1])
+    checkAndFill(pixelsToCheck[0])
     pixelsToCheck.splice(0,1)
 
   revisedCanvasToPaste = document.createElement('canvas').getContext('2d').createImageData(canvas.width, canvas.height)
 
-  revisedCanvasIndex = 0
-  while revisedCanvasIndex < arrayOfWholeCanvas.length
+  pixelInCanvasIndex = 0
+  while pixelInCanvasIndex < arrayOfWholeCanvas.length
     colorValueIndex = 0
-    while colorValueIndex < arrayOfWholeCanvas[revisedCanvasIndex].length
-      #console.log arrayOfWholeCanvas[revisedCanvasIndex][colorValueIndex]
-      revisedCanvasToPaste.data[revisedCanvasIndex] = arrayOfWholeCanvas[revisedCanvasIndex]
+    while colorValueIndex < arrayOfWholeCanvas[pixelInCanvasIndex].length
+      revisedCanvasToPaste.data[(pixelInCanvasIndex * 4) + colorValueIndex] = arrayOfWholeCanvas[pixelInCanvasIndex][colorValueIndex]
       colorValueIndex++
-    revisedCanvasIndex++
+    pixelInCanvasIndex++
 
-  console.log 'A', revisedCanvasToPaste
   context.putImageData(revisedCanvasToPaste,0,0)
 
 
