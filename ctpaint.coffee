@@ -12,6 +12,7 @@ canvasYOffset = 0
 canvasAsData = undefined
 
 selectedTool = undefined
+previouslySelectedTool = undefined
 numberOfTools = 24
 toolViewMode = 0
 
@@ -180,7 +181,21 @@ drawStringAsCommandPrompt = (canvas, stringToDraw, coloration, whereAtX, whereAt
     canvas.drawImage(stringsToGlyphs[stringToDraw[stringIndex]][coloration], whereAtX + (12 * stringIndex), whereAtY)
     stringIndex++
 
-toolNames = ['zoom','select','sample','fill','square','circle','line','point']
+# organized as they are in the 2 x 11 tool bar grid
+toolNames = [
+  'zoom', 'select'
+  'sample', 'fill'
+  'square', 'circle'
+  'line', 'point'
+
+  'flip', 'rotate'
+  'invert', 'displace'
+  'scale', 'resize'
+  'horizontalSwap', 'verticalSwap'
+  'copy', 'paste'
+  'cut', 'view'
+  'undo', 'redo'
+]
 
 zoomTransition = ->
   positionZoom()
@@ -200,6 +215,8 @@ zoomAction = ->
     #  canvasSectionToPaste = ctContext.getImageData(0,0,10,10)
     #  zoomContext.putImageData(scaleImageBigger(canvasSectionToPaste,8),0,64)
     #  zoomContext.putImageData(canvasSectionToPaste,0,0)
+  selectedTool = previouslySelectedTool
+  drawToolbars()
 
 selectAction = (canvas, beginX, beginY, endX, endY) ->
   #selectLine = document.createElement('canvas')
@@ -224,6 +241,20 @@ lineAction = (canvas, color, beginX, beginY, endX, endY) ->
 pointAction = (canvas, color, beginX, beginY, endX, endY) ->
   drawLine(canvas, color, beginX, beginY, endX, endY)
 
+horizontalColorSwap = () ->
+  previouslySelectedTool = selectedTool
+  selectedTool = ctPaintTools[16]
+  drawToolbars()
+
+  rearrangedSwatches = [ colorSwatches[1], colorSwatches[0], colorSwatches[3], colorSwatches[2] ]
+  colorSwatches = rearrangedSwatches
+
+  selectedTool = previouslySelectedTool
+  setTimeout( ()->
+    drawToolbars()
+  ,100)
+  #drawToolbars()
+
 ctPaintTools = {}
 
 iteration = 0
@@ -246,6 +277,7 @@ ctPaintTools[7].toolsAction = pointAction
 ctPaintTools[6].toolsAction = lineAction
 ctPaintTools[0].toolsAction = zoomAction
 ctPaintTools[3].toolsAction = fillAction
+ctPaintTools[16].toolsAction = horizontalColorSwap
 
 toolbar1Canvas = document.getElementById('toolbar1')
 toolbar1Context = toolbar1Canvas.getContext('2d')
@@ -576,11 +608,6 @@ drawToolbars = ->
   toolbar1Context.fillStyle = rgbToHex(colorSwatches[3])
   toolbar1Context.fillRect(33,21,14,14)
 
-horizontalColorSwap = (trueIfDown) ->
-  rearrangedSwatches = [ colorSwatches[1], colorSwatches[0], colorSwatches[3], colorSwatches[2] ]
-  colorSwatches = rearrangedSwatches
-  drawToolbars()
-
 drawInformation = ->
   drawLine(toolbar1Context,[16,20,8],toolbarWidth-1,0,window.innerWidth,0)
   drawStringAsCommandPrompt(toolbar1Context, getColorValue(ctContext, event.clientX - (toolbarWidth + 5) - canvasXOffset, event.clientY - 5 - canvasYOffset).toUpperCase() + ', (' + (event.clientX - (toolbarWidth + 5) - canvasXOffset).toString() + ', ' + (event.clientY - 5 - canvasYOffset).toString() + ')', 0, 191, 12)
@@ -662,6 +689,7 @@ $(document).ready ()->
     prepareCanvas()
     placeToolbars()
     selectedTool = ctPaintTools[7]
+    previouslySelectedTool = ctPaintTools[7]
     drawToolbars()
     positionZoom()
     canvasAsData = ctCanvas.toDataURL()
@@ -675,27 +703,35 @@ $(document).ready ()->
 
   $('body').keydown (event) ->
     if event.keyCode == keysToKeyCodes['1']
+      previouslySelectedTool = selectedTool
       selectedTool = ctPaintTools[0]
       drawToolbars()
     if event.keyCode == keysToKeyCodes['2']
+      previouslySelectedTool = selectedTool
       selectedTool = ctPaintTools[1]
       drawToolbars()
     if event.keyCode == keysToKeyCodes['3']
+      previouslySelectedTool = selectedTool
       selectedTool = ctPaintTools[2]
       drawToolbars()
     if event.keyCode == keysToKeyCodes['4']
+      previouslySelectedTool = selectedTool
       selectedTool = ctPaintTools[3]
       drawToolbars()
     if event.keyCode == keysToKeyCodes['5']
+      previouslySelectedTool = selectedTool
       selectedTool = ctPaintTools[4]
       drawToolbars()
     if event.keyCode == keysToKeyCodes['6']
+      previouslySelectedTool = selectedTool
       selectedTool = ctPaintTools[5]
       drawToolbars()
     if event.keyCode == keysToKeyCodes['7']
+      previouslySelectedTool = selectedTool
       selectedTool = ctPaintTools[6]
       drawToolbars()
     if event.keyCode == keysToKeyCodes['8']
+      previouslySelectedTool = selectedTool
       selectedTool = ctPaintTools[7]
       drawToolbars()
 
@@ -731,8 +767,8 @@ $(document).ready ()->
       selectedTool.magnitude++
     if event.keyCode == keysToKeyCodes['minus']
       selectedTool.magnitude--
-    if event.keyCode == keysToKeyCodes['space']
-      horizontalColorSwap()
+    if event.keyCode == keysToKeyCodes['q']
+      ctPaintTools[16].toolsAction()
 
   $(window).resize ()->
     if canvasWidth < (window.innerWidth - toolbarWidth - 5)
@@ -862,7 +898,10 @@ $(document).ready ()->
     while toolIndex < numberOfTools
       if ctPaintTools[toolIndex].clickRegion[0]<event.clientX and event.clientX<(ctPaintTools[toolIndex].clickRegion[0]+buttonWidth)
         if ctPaintTools[toolIndex].clickRegion[1]<event.clientY and event.clientY<(ctPaintTools[toolIndex].clickRegion[1]+buttonHeight)
+          previouslySelectedTool = selectedTool
           selectedTool = ctPaintTools[toolIndex]
+          if toolIndex > 7
+            selectedTool.toolsAction()
       toolIndex++
     drawToolbars()
 
