@@ -187,7 +187,7 @@ toolNames = [
   'sample', 'fill'
   'square', 'circle'
   'line', 'point'
-
+  'NOT A TOOL', 'NOT A TOOL'
   'flip', 'rotate'
   'invert', 'displace'
   'scale', 'resize'
@@ -244,16 +244,19 @@ pointAction = (canvas, color, beginX, beginY, endX, endY) ->
 horizontalColorSwap = () ->
   previouslySelectedTool = selectedTool
   selectedTool = ctPaintTools[16]
+  console.log 'Current tool and Previous tool', selectedTool.name, previouslySelectedTool.name
   drawToolbars()
 
   rearrangedSwatches = [ colorSwatches[1], colorSwatches[0], colorSwatches[3], colorSwatches[2] ]
   colorSwatches = rearrangedSwatches
 
-  selectedTool = previouslySelectedTool
   setTimeout( ()->
+    console.log 'timeout tool and Previous tool', selectedTool.name, previouslySelectedTool.name
+    selectedTool = previouslySelectedTool
     drawToolbars()
   ,100)
-  #drawToolbars()
+
+
 
 ctPaintTools = {}
 
@@ -609,9 +612,7 @@ drawToolbars = ->
   toolbar1Context.fillRect(33,21,14,14)
 
 drawInformation = ->
-  drawLine(toolbar1Context,[16,20,8],toolbarWidth-1,0,window.innerWidth,0)
   drawStringAsCommandPrompt(toolbar1Context, getColorValue(ctContext, event.clientX - (toolbarWidth + 5) - canvasXOffset, event.clientY - 5 - canvasYOffset).toUpperCase() + ', (' + (event.clientX - (toolbarWidth + 5) - canvasXOffset).toString() + ', ' + (event.clientY - 5 - canvasYOffset).toString() + ')', 0, 191, 12)
-  #drawStringAsCommandPrompt = (canvas, stringToDraw, coloration, whereAtX, whereAtY) ->
 
 getMousePositionOnCanvas = (event) ->
   xSpot = event.clientX - (toolbarWidth+5) - canvasXOffset
@@ -898,10 +899,11 @@ $(document).ready ()->
     while toolIndex < numberOfTools
       if ctPaintTools[toolIndex].clickRegion[0]<event.clientX and event.clientX<(ctPaintTools[toolIndex].clickRegion[0]+buttonWidth)
         if ctPaintTools[toolIndex].clickRegion[1]<event.clientY and event.clientY<(ctPaintTools[toolIndex].clickRegion[1]+buttonHeight)
-          previouslySelectedTool = selectedTool
-          selectedTool = ctPaintTools[toolIndex]
-          if toolIndex > 7
-            selectedTool.toolsAction()
+          if toolIndex < 8 
+            previouslySelectedTool = selectedTool
+            selectedTool = ctPaintTools[toolIndex]
+          else
+            ctPaintTools[toolIndex].toolsAction()
       toolIndex++
     drawToolbars()
 
