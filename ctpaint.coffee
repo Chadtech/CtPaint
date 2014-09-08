@@ -356,6 +356,7 @@ floodFill = (canvas, context, colorToChangeTo, xFill, yFill) ->
   Javascript (unlike python) doesnt allow comparing arrays, but 
   I can compare to values of the arrays to verify their equality.
   ###
+
   sameColorCheck = (firstColor, secondColor) ->
     return firstColor[0] == secondColor[0] and firstColor[1] == secondColor[1] and firstColor[2] == secondColor[2]
 
@@ -410,7 +411,8 @@ floodFill = (canvas, context, colorToChangeTo, xFill, yFill) ->
   (B)
   The checkAndFill pixel looks at each neighbor (north, east, west, and south), and sees if its
   the color to be replaced (replacedColor). If it is repalcedColor, it then checks if its already
-  in queue.
+  in queue. Before doing any of that though, it checks to make sure there is in fact a northernly,
+  easternly, westernly, southernly neighbor. 
 
   (C)
   The while loop does checkAndFill for as long as there is an element in the queue. After it checks
@@ -424,22 +426,26 @@ floodFill = (canvas, context, colorToChangeTo, xFill, yFill) ->
 
   # (B)
   checkAndFill = (pixelIndex)->
-    if sameColorCheck(replacedColor, arrayOfWholeCanvas[pixelIndex - canvas.width])
-      if pixelsToCheck.indexOf(pixelIndex -  canvas.width) == -1
-        pixelsToCheck.push (pixelIndex - canvas.width)
-        arrayOfWholeCanvas[pixelIndex - canvas.width] = colorToChangeTo
-    if sameColorCheck(replacedColor, arrayOfWholeCanvas[pixelIndex + 1])
-      if pixelsToCheck.indexOf(pixelIndex + 1) == -1
-        pixelsToCheck.push (pixelIndex + 1)
-        arrayOfWholeCanvas[pixelIndex + 1] = colorToChangeTo
-    if sameColorCheck(replacedColor, arrayOfWholeCanvas[pixelIndex + canvas.width])
-      if pixelsToCheck.indexOf(pixelIndex + canvas.width) == -1
-        pixelsToCheck.push (pixelIndex + canvas.width)
-        arrayOfWholeCanvas[pixelIndex + canvas.width] = colorToChangeTo
-    if sameColorCheck(replacedColor, arrayOfWholeCanvas[pixelIndex - 1])
-      if pixelsToCheck.indexOf(pixelIndex - 1) == -1
-        pixelsToCheck.push (pixelIndex - 1)
-        arrayOfWholeCanvas[pixelIndex - 1] = colorToChangeTo
+    if typeof arrayOfWholeCanvas[ pixelIndex - canvas.width ] != 'undefined'
+      if sameColorCheck(replacedColor, arrayOfWholeCanvas[pixelIndex - canvas.width])
+        if (pixelsToCheck.indexOf(pixelIndex - canvas.width) == -1)
+          pixelsToCheck.push (pixelIndex - canvas.width)
+          arrayOfWholeCanvas[pixelIndex - canvas.width] = colorToChangeTo
+    if (pixelIndex + 1)%canvas.width != 0 
+      if sameColorCheck(replacedColor, arrayOfWholeCanvas[pixelIndex + 1])
+        if (pixelsToCheck.indexOf(pixelIndex + 1) == -1)
+          pixelsToCheck.push (pixelIndex + 1)
+          arrayOfWholeCanvas[pixelIndex + 1] = colorToChangeTo
+    if typeof arrayOfWholeCanvas[pixelIndex + canvas.width] != 'undefined'
+      if sameColorCheck(replacedColor, arrayOfWholeCanvas[pixelIndex + canvas.width])
+        if pixelsToCheck.indexOf(pixelIndex + canvas.width) == -1
+          pixelsToCheck.push (pixelIndex + canvas.width)
+          arrayOfWholeCanvas[pixelIndex + canvas.width] = colorToChangeTo
+    if (pixelIndex)%canvas.width != 0
+      if sameColorCheck(replacedColor, arrayOfWholeCanvas[pixelIndex - 1])
+        if (pixelsToCheck.indexOf(pixelIndex - 1) == -1)
+          pixelsToCheck.push (pixelIndex - 1)
+          arrayOfWholeCanvas[pixelIndex - 1] = colorToChangeTo
 
   # (C)
   while pixelsToCheck.length
