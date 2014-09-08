@@ -346,8 +346,8 @@ drawLine = (canvas, color, beginX, beginY, endX, endY) ->
 
 # The argument context is the context of the argument canvas.
 # ColorToChangeTo is a three element array of color values 0<=.<255
-# xFill and yFill are the coordates that the fill is initiated ( where
-# the user clicks in my case)
+# xPosition and yPosition are the coordates that the fill is initiated 
+# ( where the user clicks in my case )
 floodFill = (canvas, context, colorToChangeTo, xPosition, yPosition) ->
   ###
   In my code, colors are given as (R,G,B), but the pixels in the canvas have an alpha channel, so I need
