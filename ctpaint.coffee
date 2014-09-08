@@ -21,7 +21,8 @@ draggingBorder = false
 zoomActivate = false
 cornersVisible = true
 
-colorsAtHand = [ [192,192,192],[0,0,0],[255,255,255],[0,0,0] ]
+colorSwatches = [ [192,192,192],[0,0,0],[255,255,255],[0,0,0] ]
+colorAtHand = colorSwatches[0]
 
 xSpot = undefined
 ySpot = undefined
@@ -474,7 +475,7 @@ floodFill = (canvas, context, colorToChangeTo, xPosition, yPosition) ->
       colorValueIndex++
     pixelInCanvasIndex++
 
-  context.putImageData(revisedCanvasToPaste,0,0)  
+  context.putImageData(revisedCanvasToPaste,0,0)
   
 positionCorners = ->
   if cornersVisible
@@ -562,16 +563,16 @@ drawToolbars = ->
   toolbar1Context.drawImage(toolbar1sImage1,188,3)
   drawLine(toolbar1Context,[16,20,8],toolbarWidth-1,0,window.innerWidth,0)
 
-  toolbar1Context.fillStyle = rgbToHex(colorsAtHand[0])
+  toolbar1Context.fillStyle = rgbToHex(colorSwatches[0])
   toolbar1Context.fillRect(7,4,14,14)
 
-  toolbar1Context.fillStyle = rgbToHex(colorsAtHand[1])
+  toolbar1Context.fillStyle = rgbToHex(colorSwatches[1])
   toolbar1Context.fillRect(24,4,14,14)
 
-  toolbar1Context.fillStyle = rgbToHex(colorsAtHand[2])
+  toolbar1Context.fillStyle = rgbToHex(colorSwatches[2])
   toolbar1Context.fillRect(16,21,14,14)
 
-  toolbar1Context.fillStyle = rgbToHex(colorsAtHand[2])
+  toolbar1Context.fillStyle = rgbToHex(colorSwatches[2])
   toolbar1Context.fillRect(33,21,14,14)
 
 drawInformation = ->
@@ -767,7 +768,7 @@ $(document).ready ()->
         canvasDataAsImage = new Image()
         canvasDataAsImage.src = canvasAsData
       canvasDataAsImage.src = canvasAsData
-      ctContext.fillStyle = rgbToHex(colorsAtHand[1])
+      ctContext.fillStyle = rgbToHex(colorSwatches[1])
       if (ctContext.canvas.width > canvasWidth) and (ctContext.canvas.height > canvasHeight)
         ctContext.fillRect(canvasWidth, 0, ctContext.canvas.width, ctContext.canvas.height)
         ctContext.fillRect(0, canvasHeight, canvasWidth, ctContext.canvas.height)
@@ -797,14 +798,14 @@ $(document).ready ()->
           canvasDataAsImage = new Image()
           canvasDataAsImage.onload = ->
             ctContext.drawImage(canvasDataAsImage,0,0)
-            selectedTool.toolsAction(ctContext, colorsAtHand[0], oldX, oldY, xSpot, ySpot)
+            selectedTool.toolsAction(ctContext, colorSwatches[0], oldX, oldY, xSpot, ySpot)
           canvasDataAsImage.src = canvasAsData
       when 'point'
         if mousePressed
           oldX = xSpot
           oldY = ySpot
           getMousePositionOnCanvas(event)
-          selectedTool.toolsAction(ctContext, colorsAtHand[0], xSpot, ySpot, oldX, oldY)
+          selectedTool.toolsAction(ctContext, colorSwatches[0], xSpot, ySpot, oldX, oldY)
 
   $('#CtPaint').mousedown (event)->
     mousePressed = true
@@ -813,7 +814,7 @@ $(document).ready ()->
       when 'zoom'
         selectedTool.toolsAction()
       when 'fill'
-        selectedTool.toolsAction(ctCanvas, ctContext, colorsAtHand[0], xSpot, ySpot)
+        selectedTool.toolsAction(ctCanvas, ctContext, colorSwatches[0], xSpot, ySpot)
       when 'select'
         oldX = xSpot
         oldY = ySpot
@@ -821,7 +822,7 @@ $(document).ready ()->
         oldX = xSpot
         oldY = ySpot
       when 'point'
-       selectedTool.toolsAction(ctContext, colorsAtHand[0], xSpot, ySpot, xSpot, ySpot)
+       selectedTool.toolsAction(ctContext, colorSwatches[0], xSpot, ySpot, xSpot, ySpot)
 
   $('#CtPaint').mouseup (event)->
     mousePressed = false
