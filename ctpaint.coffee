@@ -348,7 +348,7 @@ drawLine = (canvas, color, beginX, beginY, endX, endY) ->
 # ColorToChangeTo is a three element array of color values 0<=.<255
 # xFill and yFill are the coordates that the fill is initiated ( where
 # the user clicks in my case)
-floodFill = (canvas, context, colorToChangeTo, xFill, yFill) ->
+floodFill = (canvas, context, colorToChangeTo, xPosition, yPosition) ->
   ###
   In my code, colors are given as (R,G,B), but the pixels in the canvas have an alpha channel, so I need
   to add an alpha value of 255
@@ -372,11 +372,11 @@ floodFill = (canvas, context, colorToChangeTo, xFill, yFill) ->
 
   (B)
   The checkAndFill pixel looks at each neighbor (north, east, west, and south), and sees if its
-  the color to be replaced (replacedColor). If it is repalcedColor, it then checks if its already
+  the color to be replaced (colorToReplace). If it is colorToReplace, it then checks if its already
   in queue. Before doing any of that though, it checks to make sure there is in fact a northernly,
   easternly, westernly, southernly neighbor (by seeing if the element of the array is defined for
   the vertical directions, and if the pixel or its neighbor is 0 modulo canvas width for the
-  horizontal directions. 
+  horizontal directions). 
 
   (C)
   The while loop does checkAndFill for as long as there is an element in the queue. After it checks
@@ -386,31 +386,32 @@ floodFill = (canvas, context, colorToChangeTo, xFill, yFill) ->
   ###
 
   # (A)
-  theWholeCanvas = context.getImageData(0,0, canvas.width, canvas.height)
-  arrayOfWholeCanvas = []
-  wholeCanvasIndex = 0
-  while wholeCanvasIndex < theWholeCanvas.data.length
-    arrayOfWholeCanvas.push theWholeCanvas.data[wholeCanvasIndex]
-    wholeCanvasIndex++
+  wholeCanvas = context.getImageData(0,0, canvas.width, canvas.height)
+  wholeCanvasData = []
+  canvasIndex = 0
+  while canvasIndex < wholeCanvas.data.length
+    wholeCanvasData.push wholeCanvas.data[canvasIndex]
+    canvasIndex++
+  wholeCanvas = wholeCanvasData
 
   # (B)    
-  arrayOfWholeCanvasAsRGBPixelValues = []
+  wholeCanvasAsPixels = []
   singlePixel = []
   canvasIndex = 0
-  while canvasIndex < arrayOfWholeCanvas.length
-    singlePixel.push arrayOfWholeCanvas[canvasIndex]
+  while canvasIndex < wholeCanvas.length
+    singlePixel.push wholeCanvas[canvasIndex]
     if singlePixel.length == 4
-      arrayOfWholeCanvasAsRGBPixelValues.push singlePixel
+      wholeCanvasAsPixels.push singlePixel
       singlePixel = []
     canvasIndex++
-  arrayOfWholeCanvas = arrayOfWholeCanvasAsRGBPixelValues
+  wholeCanvas = wholeCanvasAsPixels
 
-  thePixelAtXFillYFill = xFill + (yFill * canvas.width)
-  replacedColor = arrayOfWholeCanvas[thePixelAtXFillYFill]
+  originalPosition = xPosition + (yPosition * canvas.width)
+  colorToReplace = wholeCanvas[originalPosition]
 
   ###
   (A)
-  Below, each pixel is checked to see if its the replacedColor. If it is the color is changed
+  Below, each pixel is checked to see if its the colorToReplace. If it is the color is changed
   and the pixels neighbors are added to a queue of pixels to be checked. The queue is declared
   populated with the pixel that was clicked on.
 
@@ -422,35 +423,35 @@ floodFill = (canvas, context, colorToChangeTo, xFill, yFill) ->
 
   (C)
   Since we are working with a one dimensional array of pixels. The (x,y) coordinates no longer make sense.
-  thePixelAtXFillYFill is now the position in the array translated from the (x,y)
-  replacedColor is the color we are replacing, and its the color at thePixelAtXFillYFill.
+  originalPosition is the position in the one dimensional array translated from the two dimenstional (x,y)
+  coordinates. colorToReplace is the color we are replacing, and its the color at originalPosition.
   ###
 
   # (A)
-  pixelsToCheck = [thePixelAtXFillYFill]
+  pixelsToCheck = [originalPosition]
 
   # (B)
   checkAndFill = (pixelIndex)->
-    if typeof arrayOfWholeCanvas[ pixelIndex - canvas.width ] != 'undefined'
-      if sameColorCheck(replacedColor, arrayOfWholeCanvas[pixelIndex - canvas.width])
+    if typeof wholeCanvas[ pixelIndex - canvas.width ] != 'undefined'
+      if sameColorCheck(colorToReplace, wholeCanvas[pixelIndex - canvas.width])
         if (pixelsToCheck.indexOf(pixelIndex - canvas.width) == -1)
           pixelsToCheck.push (pixelIndex - canvas.width)
-          arrayOfWholeCanvas[pixelIndex - canvas.width] = colorToChangeTo
+          wholeCanvas[pixelIndex - canvas.width] = colorToChangeTo
     if (pixelIndex + 1)%canvas.width != 0 
-      if sameColorCheck(replacedColor, arrayOfWholeCanvas[pixelIndex + 1])
+      if sameColorCheck(colorToReplace, wholeCanvas[pixelIndex + 1])
         if (pixelsToCheck.indexOf(pixelIndex + 1) == -1)
           pixelsToCheck.push (pixelIndex + 1)
-          arrayOfWholeCanvas[pixelIndex + 1] = colorToChangeTo
-    if typeof arrayOfWholeCanvas[pixelIndex + canvas.width] != 'undefined'
-      if sameColorCheck(replacedColor, arrayOfWholeCanvas[pixelIndex + canvas.width])
+          wholeCanvas[pixelIndex + 1] = colorToChangeTo
+    if typeof wholeCanvas[pixelIndex + canvas.width] != 'undefined'
+      if sameColorCheck(colorToReplace, wholeCanvas[pixelIndex + canvas.width])
         if pixelsToCheck.indexOf(pixelIndex + canvas.width) == -1
           pixelsToCheck.push (pixelIndex + canvas.width)
-          arrayOfWholeCanvas[pixelIndex + canvas.width] = colorToChangeTo
+          wholeCanvas[pixelIndex + canvas.width] = colorToChangeTo
     if (pixelIndex)%canvas.width != 0
-      if sameColorCheck(replacedColor, arrayOfWholeCanvas[pixelIndex - 1])
+      if sameColorCheck(colorToReplace, wholeCanvas[pixelIndex - 1])
         if (pixelsToCheck.indexOf(pixelIndex - 1) == -1)
           pixelsToCheck.push (pixelIndex - 1)
-          arrayOfWholeCanvas[pixelIndex - 1] = colorToChangeTo
+          wholeCanvas[pixelIndex - 1] = colorToChangeTo
 
   # (C)
   while pixelsToCheck.length
@@ -466,10 +467,10 @@ floodFill = (canvas, context, colorToChangeTo, xFill, yFill) ->
   revisedCanvasToPaste = document.createElement('canvas').getContext('2d').createImageData(canvas.width, canvas.height)
 
   pixelInCanvasIndex = 0
-  while pixelInCanvasIndex < arrayOfWholeCanvas.length
+  while pixelInCanvasIndex < wholeCanvas.length
     colorValueIndex = 0
-    while colorValueIndex < arrayOfWholeCanvas[pixelInCanvasIndex].length
-      revisedCanvasToPaste.data[(pixelInCanvasIndex * 4) + colorValueIndex] = arrayOfWholeCanvas[pixelInCanvasIndex][colorValueIndex]
+    while colorValueIndex < wholeCanvas[pixelInCanvasIndex].length
+      revisedCanvasToPaste.data[(pixelInCanvasIndex * 4) + colorValueIndex] = wholeCanvas[pixelInCanvasIndex][colorValueIndex]
       colorValueIndex++
     pixelInCanvasIndex++
 
