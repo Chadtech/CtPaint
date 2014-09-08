@@ -22,7 +22,7 @@ zoomActivate = false
 cornersVisible = true
 
 colorSwatches = [ [192,192,192],[0,0,0],[255,255,255],[0,0,0] ]
-colorAtHand = colorSwatches[0]
+horizontalColorSwapKeyDown = false
 
 xSpot = undefined
 ySpot = undefined
@@ -572,8 +572,21 @@ drawToolbars = ->
   toolbar1Context.fillStyle = rgbToHex(colorSwatches[2])
   toolbar1Context.fillRect(16,21,14,14)
 
-  toolbar1Context.fillStyle = rgbToHex(colorSwatches[2])
+  toolbar1Context.fillStyle = rgbToHex(colorSwatches[3])
   toolbar1Context.fillRect(33,21,14,14)
+
+horizontalColorSwap = (trueIfDown) ->
+  if trueIfDown
+    if not horizontalColorSwapKeyDown
+      horizontalColorSwapKeyDown = true
+      rearrangedSwatches = [ colorSwatches[1], colorSwatches[0], colorSwatches[3], colorSwatches[2] ]
+      colorSwatches = rearrangedSwatches
+      drawToolbars()
+  else
+    horizontalColorSwapKeyDown = false
+    rearrangedSwatches = [ colorSwatches[1], colorSwatches[0], colorSwatches[3], colorSwatches[2] ]
+    colorSwatches = rearrangedSwatches
+    drawToolbars()
 
 drawInformation = ->
   drawLine(toolbar1Context,[16,20,8],toolbarWidth-1,0,window.innerWidth,0)
@@ -725,7 +738,13 @@ $(document).ready ()->
       selectedTool.magnitude++
     if event.keyCode == keysToKeyCodes['minus']
       selectedTool.magnitude--
- 
+    if event.keyCode == keysToKeyCodes['space']
+      horizontalColorSwap(true)
+
+  $('body').keyup (event)->
+    if event.keyCode == keysToKeyCodes['space']
+      horizontalColorSwap(false)
+
   $(window).resize ()->
     if canvasWidth < (window.innerWidth - toolbarWidth - 5)
       canvasXOffset = 0
