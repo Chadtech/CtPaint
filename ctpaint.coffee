@@ -345,11 +345,12 @@ drawLine = (canvas, color, beginX, beginY, endX, endY) ->
       errorOne += deltaX
       beginY += directionY
 
-# The argument context is the context of the argument canvas.
-# ColorToChangeTo is a three element array of color values 0<=.<255
-# xPosition and yPosition are the coordates that the fill is initiated 
-# ( where the user clicks in my case )
 floodFill = (canvas, context, colorToChangeTo, xPosition, yPosition) ->
+  # The argument context is the context of the argument canvas.
+  # ColorToChangeTo is a three element array of color values 0<=.<255
+  # xPosition and yPosition are the coordates that the fill is initiated 
+  # ( where the user clicks in my case )
+
   ###
   In my code, colors are given as (R,G,B), but the pixels in the canvas have an alpha channel, so I need
   to add an alpha value of 255
@@ -576,17 +577,9 @@ drawToolbars = ->
   toolbar1Context.fillRect(33,21,14,14)
 
 horizontalColorSwap = (trueIfDown) ->
-  if trueIfDown
-    if not horizontalColorSwapKeyDown
-      horizontalColorSwapKeyDown = true
-      rearrangedSwatches = [ colorSwatches[1], colorSwatches[0], colorSwatches[3], colorSwatches[2] ]
-      colorSwatches = rearrangedSwatches
-      drawToolbars()
-  else
-    horizontalColorSwapKeyDown = false
-    rearrangedSwatches = [ colorSwatches[1], colorSwatches[0], colorSwatches[3], colorSwatches[2] ]
-    colorSwatches = rearrangedSwatches
-    drawToolbars()
+  rearrangedSwatches = [ colorSwatches[1], colorSwatches[0], colorSwatches[3], colorSwatches[2] ]
+  colorSwatches = rearrangedSwatches
+  drawToolbars()
 
 drawInformation = ->
   drawLine(toolbar1Context,[16,20,8],toolbarWidth-1,0,window.innerWidth,0)
@@ -739,11 +732,7 @@ $(document).ready ()->
     if event.keyCode == keysToKeyCodes['minus']
       selectedTool.magnitude--
     if event.keyCode == keysToKeyCodes['space']
-      horizontalColorSwap(true)
-
-  $('body').keyup (event)->
-    if event.keyCode == keysToKeyCodes['space']
-      horizontalColorSwap(false)
+      horizontalColorSwap()
 
   $(window).resize ()->
     if canvasWidth < (window.innerWidth - toolbarWidth - 5)
