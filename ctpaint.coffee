@@ -22,7 +22,7 @@ draggingBorder = false
 zoomActivate = false
 cornersVisible = true
 
-colorSwatches = [ [192,192,192],[0,0,0],[255,255,255],[0,0,0] ]
+colorSwatches = [ [192,192,192],[0,0,0],[208,48,32],[255,255,255] ]
 horizontalColorSwapKeyDown = false
 
 xSpot = undefined
@@ -244,17 +244,28 @@ pointAction = (canvas, color, beginX, beginY, endX, endY) ->
 horizontalColorSwap = () ->
   previouslySelectedTool = selectedTool
   selectedTool = ctPaintTools[16]
-  console.log 'Current tool and Previous tool', selectedTool.name, previouslySelectedTool.name
   drawToolbars()
 
   rearrangedSwatches = [ colorSwatches[1], colorSwatches[0], colorSwatches[3], colorSwatches[2] ]
   colorSwatches = rearrangedSwatches
 
   setTimeout( ()->
-    console.log 'timeout tool and Previous tool', selectedTool.name, previouslySelectedTool.name
     selectedTool = previouslySelectedTool
     drawToolbars()
-  ,100)
+  ,50)
+
+verticalColorSwap = () ->
+  previouslySelectedTool = selectedTool
+  selectedTool = ctPaintTools[17]
+  drawToolbars()
+
+  rearrangedSwatches = [ colorSwatches[2], colorSwatches[3], colorSwatches[0], colorSwatches[1] ]
+  colorSwatches = rearrangedSwatches
+
+  setTimeout( ()->
+    selectedTool = previouslySelectedTool
+    drawToolbars()
+  ,50)
 
 
 
@@ -281,6 +292,7 @@ ctPaintTools[6].toolsAction = lineAction
 ctPaintTools[0].toolsAction = zoomAction
 ctPaintTools[3].toolsAction = fillAction
 ctPaintTools[16].toolsAction = horizontalColorSwap
+ctPaintTools[17].toolsAction = verticalColorSwap
 
 toolbar1Canvas = document.getElementById('toolbar1')
 toolbar1Context = toolbar1Canvas.getContext('2d')
@@ -770,6 +782,8 @@ $(document).ready ()->
       selectedTool.magnitude--
     if event.keyCode == keysToKeyCodes['q']
       ctPaintTools[16].toolsAction()
+    if event.keyCode == keysToKeyCodes['b']
+      ctPaintTools[17].toolsAction()
 
   $(window).resize ()->
     if canvasWidth < (window.innerWidth - toolbarWidth - 5)
