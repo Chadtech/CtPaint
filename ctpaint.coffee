@@ -219,8 +219,6 @@ zoomAction = ->
   drawToolbars()
 
 selectAction = (canvas, beginX, beginY, endX, endY) ->
-  #selectLine = document.createElement('canvas')
-  #selectLinesData = selectLine.getContext('2d').createImageData(4, 1)
   console.log '1'
 
 sampleAction = ->
@@ -252,7 +250,7 @@ horizontalColorSwap = () ->
   setTimeout( ()->
     selectedTool = previouslySelectedTool
     drawToolbars()
-  ,50)
+  ,20)
 
 verticalColorSwap = () ->
   previouslySelectedTool = selectedTool
@@ -265,9 +263,7 @@ verticalColorSwap = () ->
   setTimeout( ()->
     selectedTool = previouslySelectedTool
     drawToolbars()
-  ,50)
-
-
+  ,20)
 
 ctPaintTools = {}
 
