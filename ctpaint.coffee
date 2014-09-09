@@ -22,7 +22,7 @@ draggingBorder = false
 zoomActivate = false
 cornersVisible = true
 
-colorSwatches = [ [192,192,192],[0,0,0],[208,48,32],[255,255,255] ]
+colorSwatches = [ [192,192,192],[0,0,0],[64,64,64],[255,255,255] ]
 horizontalColorSwapKeyDown = false
 
 xSpot = undefined
