@@ -396,9 +396,11 @@ floodFill = (canvas, context, colorToChangeTo, xPosition, yPosition) ->
 
   ###
   In my code, colors are given as (R,G,B), but the pixels in the canvas have an alpha channel, so I need
-  to add an alpha value of 255
+  to add an alpha value of 255. In my code I found that if floodFill is used quickly in succession,
+  colorToChangeTo, could retain the pushed 255, and become a RGB pixel with several 255s after it.
+  To enture its in the form of [R,G,B,255], I take only the first three values of colorToChangeTo.
   ###
-  colorToChangeTo.push 255
+  colorToChangeTo = [colorToChangeTo[0], colorToChangeTo[1], colorToChangeTo[2], 255]
 
   ###
   Here is a function to simplify the code comparing two colors.
@@ -406,9 +408,12 @@ floodFill = (canvas, context, colorToChangeTo, xPosition, yPosition) ->
   I can compare to values of the arrays to verify their equality.
   ###
 
-  sameColorCheck = (firstColor, secondColor) ->
-    return firstColor[0] == secondColor[0] and firstColor[1] == secondColor[1] and firstColor[2] == secondColor[2]
-
+  sameColorCheck = (firstColor, secondColor, brokenIndex) ->
+    try
+      #console.log 'WORKING', brokenIndex
+      return firstColor[0] == secondColor[0] and firstColor[1] == secondColor[1] and firstColor[2] == secondColor[2]
+    catch error
+      console.log firstColor, secondColor, brokenIndex
   ###
   (A)
   The the getImageData the puteImageData functions of the canvas are computationally taxing.
@@ -477,22 +482,26 @@ floodFill = (canvas, context, colorToChangeTo, xPosition, yPosition) ->
 
   # (B)
   checkAndFill = (pixelIndex)->
-    if typeof wholeCanvas[ pixelIndex - canvas.width ] != 'undefined'
+    # North
+    if (pixelIndex - canvas.width) >= 0
       if sameColorCheck(colorToReplace, wholeCanvas[pixelIndex - canvas.width])
         if (pixelsToCheck.indexOf(pixelIndex - canvas.width) == -1)
           pixelsToCheck.push (pixelIndex - canvas.width)
           wholeCanvas[pixelIndex - canvas.width] = colorToChangeTo
-    if (pixelIndex + 1)%canvas.width != 0 
+    # East
+    if (pixelIndex + 1)%canvas.width != 0
       if sameColorCheck(colorToReplace, wholeCanvas[pixelIndex + 1])
         if (pixelsToCheck.indexOf(pixelIndex + 1) == -1)
           pixelsToCheck.push (pixelIndex + 1)
           wholeCanvas[pixelIndex + 1] = colorToChangeTo
-    if typeof wholeCanvas[pixelIndex + canvas.width] != 'undefined'
+    # South
+    if (pixelIndex + canvas.width) < (canvas.width * canvas.height)
       if sameColorCheck(colorToReplace, wholeCanvas[pixelIndex + canvas.width])
-        if pixelsToCheck.indexOf(pixelIndex + canvas.width) == -1
+        if (pixelsToCheck.indexOf(pixelIndex + canvas.width) == -1)
           pixelsToCheck.push (pixelIndex + canvas.width)
           wholeCanvas[pixelIndex + canvas.width] = colorToChangeTo
-    if (pixelIndex)%canvas.width != 0
+    # West
+    if pixelIndex%canvas.width != 0
       if sameColorCheck(colorToReplace, wholeCanvas[pixelIndex - 1])
         if (pixelsToCheck.indexOf(pixelIndex - 1) == -1)
           pixelsToCheck.push (pixelIndex - 1)
@@ -501,7 +510,7 @@ floodFill = (canvas, context, colorToChangeTo, xPosition, yPosition) ->
   # (C)
   while pixelsToCheck.length
     checkAndFill(pixelsToCheck[0])
-    pixelsToCheck.splice(0,1)
+    pixelsToCheck.shift()
 
   ###
   revisedCanvasToPaste is a new canvas, that is the same size of the canvas that was read.
