@@ -232,10 +232,10 @@ squareAction = (canvas, color, beginX, beginY, endX, endY) ->
   drawLine(canvas, color, endX, beginY, endX, endY)
   drawLine(canvas, color, beginX, endY, endX, endY)
 
-circleAction = ->
-  console.log '5'
-#drawLine = (canvas, color, beginX, beginY, endX, endY) ->
-#selectedTool.toolsAction(ctContext, colorSwatches[0], oldX, oldY, xSpot, ySpot)
+circleAction = ( canvas, color, xPos, yPos ) ->
+  calculatedRadius = Math.pow(Math.pow(xPos - oldX, 2) + Math.pow(yPos - oldY, 2), 0.5)
+  drawCircle( canvas, color, oldX, oldY, calculatedRadius)
+
 
 lineAction = (canvas, color, beginX, beginY, endX, endY) ->
   drawLine(canvas, color, beginX, beginY, endX, endY)
@@ -290,6 +290,7 @@ while iteration < numberOfTools
 ctPaintTools[0].toolsAction = zoomAction
 ctPaintTools[3].toolsAction = fillAction
 ctPaintTools[4].toolsAction = squareAction
+ctPaintTools[5].toolsAction = circleAction
 ctPaintTools[6].toolsAction = lineAction
 ctPaintTools[7].toolsAction = pointAction
 ctPaintTools[16].toolsAction = horizontalColorSwap
@@ -392,6 +393,39 @@ drawLine = (canvas, color, beginX, beginY, endX, endY) ->
     if errorTwo < deltaY
       errorOne += deltaX
       beginY += directionY
+
+drawCircle = ( canvas, color, centerX, centerY, radius) ->
+  radiusError = 1 - radius
+  xOffset = 0
+  yOffset = radius
+  xDelta = 0
+  yDelta = -2 * radius
+
+  putPixel(canvas, color, centerX, centerY + radius)
+  putPixel(canvas, color, centerX, centerY - radius)
+  putPixel(canvas, color, centerX + radius, centerY)
+  putPixel(canvas, color, centerX - radius, centerY)
+
+  while xOffset < yOffset
+    if radiusError >= 0
+      yOffset--
+      yDelta += 2
+      radiusError += yDelta
+    xOffset++
+    xDelta += 2
+    radiusError += (xDelta + 1)
+
+    putPixel( canvas, color, centerX + xOffset, centerY + yOffset)
+    putPixel( canvas, color, centerX - xOffset, centerY + yOffset)
+    putPixel( canvas, color, centerX + xOffset, centerY - yOffset)
+    putPixel( canvas, color, centerX - xOffset, centerY - yOffset)
+
+    putPixel( canvas, color, centerX + yOffset, centerY + xOffset)
+    putPixel( canvas, color, centerX - yOffset, centerY + xOffset)
+    putPixel( canvas, color, centerX + yOffset, centerY - xOffset)
+    putPixel( canvas, color, centerX - yOffset, centerY - xOffset)
+
+
 
 floodFill = (canvas, context, colorToChangeTo, xPosition, yPosition) ->
   # The argument context is the context of the argument canvas.
@@ -862,6 +896,14 @@ $(document).ready ()->
             ctContext.drawImage(canvasDataAsImage,0,0)
             selectedTool.toolsAction(ctContext, colorSwatches[0], oldX, oldY, xSpot, ySpot)
           canvasDataAsImage.src = canvasAsData
+      when 'circle'
+        if mousePressed
+          getMousePositionOnCanvas(event)
+          canvasDataAsImage = new Image()
+          canvasDataAsImage.onload = ->
+            ctContext.drawImage(canvasDataAsImage,0,0)
+            selectedTool.toolsAction(ctContext, colorSwatches[0], xSpot, ySpot)
+          canvasDataAsImage.src = canvasAsData
       when 'line'
         if mousePressed
           getMousePositionOnCanvas(event)
@@ -888,6 +930,9 @@ $(document).ready ()->
         oldY = ySpot
       when 'fill'
         selectedTool.toolsAction(ctCanvas, ctContext, colorSwatches[0], xSpot, ySpot)
+      when 'circle'
+        oldX = xSpot
+        oldY = ySpot
       when 'square'
         oldX = xSpot
         oldY = ySpot
@@ -903,6 +948,8 @@ $(document).ready ()->
       when 'select'
         selectedTool.toolsAction()
       when 'square'
+        canvasAsData = ctCanvas.toDataURL()
+      when 'circle'
         canvasAsData = ctCanvas.toDataURL()
       when 'line'
         canvasAsData = ctCanvas.toDataURL()
