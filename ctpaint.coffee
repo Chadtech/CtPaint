@@ -214,9 +214,6 @@ zoomAction = ->
     zoomTransition()
     canvasSectionToZoomAt = ctContext.getImageData(xSpot, ySpot, xSpot+Math.floor((window.innerWidth-toolbarWidth)/Math.pow(2,selectedTool.magnitude)), ySpot+Math.floor((window.innerHeight-toolbarHeight)/Math.pow(2,selectedTool.magnitude)) )
     zoomContext.putImageData(scaleImageBigger(canvasSectionToZoomAt,Math.pow(2,selectedTool.magnitude)),0,0)
-    #  canvasSectionToPaste = ctContext.getImageData(0,0,10,10)
-    #  zoomContext.putImageData(scaleImageBigger(canvasSectionToPaste,8),0,64)
-    #  zoomContext.putImageData(canvasSectionToPaste,0,0)
   selectedTool = previouslySelectedTool
   drawToolbars()
 
@@ -227,18 +224,18 @@ sampleAction = ->
   console.log '2'
 
 fillAction = (canvas, context, colorToChangeTo, xPos, yPos) ->
-  if fillPermission
-    fillPermission = false
-    floodFill(canvas, context, colorToChangeTo, xPos, yPos)
-    setTimeout( ()->
-      fillPermission = true
-    ,200)
+  floodFill(canvas, context, colorToChangeTo, xPos, yPos)
 
-squareAction = ->
-  console.log '4'
+squareAction = (canvas, color, beginX, beginY, endX, endY) ->
+  drawLine(canvas, color, beginX, beginY, endX, beginY)
+  drawLine(canvas, color, beginX, beginY, beginX, endY)
+  drawLine(canvas, color, endX, beginY, endX, endY)
+  drawLine(canvas, color, beginX, endY, endX, endY)
 
 circleAction = ->
   console.log '5'
+#drawLine = (canvas, color, beginX, beginY, endX, endY) ->
+#selectedTool.toolsAction(ctContext, colorSwatches[0], oldX, oldY, xSpot, ySpot)
 
 lineAction = (canvas, color, beginX, beginY, endX, endY) ->
   drawLine(canvas, color, beginX, beginY, endX, endY)
@@ -290,10 +287,11 @@ while iteration < numberOfTools
   ctPaintTools[iteration].pressedImage[1].src = 'v'+zeroPadder(iteration,2)+'.PNG'
   iteration++
 
-ctPaintTools[7].toolsAction = pointAction
-ctPaintTools[6].toolsAction = lineAction
 ctPaintTools[0].toolsAction = zoomAction
 ctPaintTools[3].toolsAction = fillAction
+ctPaintTools[4].toolsAction = squareAction
+ctPaintTools[6].toolsAction = lineAction
+ctPaintTools[7].toolsAction = pointAction
 ctPaintTools[16].toolsAction = horizontalColorSwap
 ctPaintTools[17].toolsAction = verticalColorSwap
 
@@ -465,15 +463,13 @@ floodFill = (canvas, context, colorToChangeTo, xPosition, yPosition) ->
 
   ###
   (A)
-  The queue is declared populated with the pixel that was clicked on.
+  The queue is declared populated with the pixel that was clicked on. The first pixel to be
+  checked is set to colorToChangeTo. Every pixel after will be color changed by checkAndFill
 
   (B)
   The checkAndFill pixel looks at each neighbor (north, east, west, and south), and sees if its
-  the color to be replaced (colorToReplace). If it is colorToReplace, it then checks if its already
-  in queue. Before doing any of that though, it checks to make sure there is in fact a northernly,
-  easternly, westernly, southernly neighbor (by seeing if the element of the array is defined for
-  the vertical directions, and if the pixel or its neighbor is 0 modulo canvas width for the
-  horizontal directions). 
+  the color to be replaced (colorToReplace). Before doing any of that though, it checks to make 
+  sure there is in fact a northernly, easternly, westernly, southernly neighbor. 
 
   (C)
   The while loop does checkAndFill for as long as there is an element in the queue. After it checks
@@ -488,41 +484,31 @@ floodFill = (canvas, context, colorToChangeTo, xPosition, yPosition) ->
 
   # (B)
   checkAndFill = (pixelIndex)->
-    #if pixelIndex%300 == 0
-    #  console.log 'in check', wholeCanvas[pixelIndex], pixelIndex
     # North
     if (pixelIndex - canvas.width) >= 0
-      #console.log sameColorCheck(colorToReplace, wholeCanvas[pixelIndex - canvas.width])
       if sameColorCheck(colorToReplace, wholeCanvas[pixelIndex - canvas.width])
         pixelsToCheck.push (pixelIndex - canvas.width)
         wholeCanvas[pixelIndex - canvas.width] = colorToChangeTo
     # East
     if (pixelIndex + 1)%canvas.width != 0
-      #console.log sameColorCheck(colorToReplace, wholeCanvas[pixelIndex + 1])
       if sameColorCheck(colorToReplace, wholeCanvas[pixelIndex + 1])
         pixelsToCheck.push (pixelIndex + 1)
         wholeCanvas[pixelIndex + 1] = colorToChangeTo
     # South
     if (pixelIndex + canvas.width) < (canvas.width * canvas.height)
-      #console.log sameColorCheck(colorToReplace, wholeCanvas[pixelIndex + canvas.width])
       if sameColorCheck(colorToReplace, wholeCanvas[pixelIndex + canvas.width])
         pixelsToCheck.push (pixelIndex + canvas.width)
         wholeCanvas[pixelIndex + canvas.width] = colorToChangeTo
     # West
-    #console.log 'WEST PRE', (pixelsToCheck.indexOf(pixelIndex - 1) == -1)
     if pixelIndex%canvas.width != 0
-      #console.log sameColorCheck(colorToReplace, wholeCanvas[pixelIndex - 1])
       if sameColorCheck(colorToReplace, wholeCanvas[pixelIndex - 1])
         pixelsToCheck.push (pixelIndex - 1)
         wholeCanvas[pixelIndex - 1] = colorToChangeTo
 
   # (C)
-  #counter = 0
   while pixelsToCheck.length
-    console.log counter
     checkAndFill(pixelsToCheck[0])
     pixelsToCheck.shift()
-    counter++
 
   ###
   revisedCanvasToPaste is a new canvas, that is the same size of the canvas that was read.
@@ -868,6 +854,14 @@ $(document).ready ()->
         if mousePressed
           getMousePositionOnCanvas(event)
           selectedTool.toolsAction(ctContext, oldX, oldY, xSpot, ySpot)
+      when 'square'
+        if mousePressed
+          getMousePositionOnCanvas(event)
+          canvasDataAsImage = new Image()
+          canvasDataAsImage.onload = ->
+            ctContext.drawImage(canvasDataAsImage,0,0)
+            selectedTool.toolsAction(ctContext, colorSwatches[0], oldX, oldY, xSpot, ySpot)
+          canvasDataAsImage.src = canvasAsData
       when 'line'
         if mousePressed
           getMousePositionOnCanvas(event)
@@ -889,9 +883,12 @@ $(document).ready ()->
     switch selectedTool.name
       when 'zoom'
         selectedTool.toolsAction()
+      when 'select'
+        oldX = xSpot
+        oldY = ySpot
       when 'fill'
         selectedTool.toolsAction(ctCanvas, ctContext, colorSwatches[0], xSpot, ySpot)
-      when 'select'
+      when 'square'
         oldX = xSpot
         oldY = ySpot
       when 'line'
@@ -905,6 +902,8 @@ $(document).ready ()->
     switch selectedTool.name
       when 'select'
         selectedTool.toolsAction()
+      when 'square'
+        canvasAsData = ctCanvas.toDataURL()
       when 'line'
         canvasAsData = ctCanvas.toDataURL()
       when 'point'
