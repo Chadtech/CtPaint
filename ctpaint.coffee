@@ -234,6 +234,7 @@ squareAction = (canvas, color, beginX, beginY, endX, endY) ->
 
 circleAction = ( canvas, color, xPos, yPos ) ->
   calculatedRadius = Math.pow(Math.pow(xPos - oldX, 2) + Math.pow(yPos - oldY, 2), 0.5)
+  calculatedRadius = Math.round(calculatedRadius)
   drawCircle( canvas, color, oldX, oldY, calculatedRadius)
 
 
