@@ -22,6 +22,8 @@ draggingBorder = false
 zoomActivate = false
 cornersVisible = true
 
+fillPermission = true
+
 colorSwatches = [ [192,192,192],[0,0,0],[64,64,64],[255,255,255] ]
 horizontalColorSwapKeyDown = false
 
@@ -225,7 +227,12 @@ sampleAction = ->
   console.log '2'
 
 fillAction = (canvas, context, colorToChangeTo, xPos, yPos) ->
-  floodFill(canvas, context, colorToChangeTo, xPos, yPos)
+  if fillPermission
+    fillPermission = false
+    floodFill(canvas, context, colorToChangeTo, xPos, yPos)
+    setTimeout( ()->
+      fillPermission = true
+    ,200)
 
 squareAction = ->
   console.log '4'
@@ -400,6 +407,7 @@ floodFill = (canvas, context, colorToChangeTo, xPosition, yPosition) ->
   colorToChangeTo, could retain the pushed 255, and become a RGB pixel with several 255s after it.
   To enture its in the form of [R,G,B,255], I take only the first three values of colorToChangeTo.
   ###
+
   colorToChangeTo = [colorToChangeTo[0], colorToChangeTo[1], colorToChangeTo[2], 255]
 
   ###
@@ -408,7 +416,7 @@ floodFill = (canvas, context, colorToChangeTo, xPosition, yPosition) ->
   I can compare to values of the arrays to verify their equality.
   ###
 
-  sameColorCheck = (firstColor, secondColor, brokenIndex) ->
+  sameColorCheck = (firstColor, secondColor) ->
     return firstColor[0] == secondColor[0] and firstColor[1] == secondColor[1] and firstColor[2] == secondColor[2]
   ###
 
@@ -476,38 +484,45 @@ floodFill = (canvas, context, colorToChangeTo, xPosition, yPosition) ->
 
   # (A)
   pixelsToCheck = [originalPosition]
+  wholeCanvas[originalPosition] = colorToChangeTo
 
   # (B)
   checkAndFill = (pixelIndex)->
+    #if pixelIndex%300 == 0
+    #  console.log 'in check', wholeCanvas[pixelIndex], pixelIndex
     # North
     if (pixelIndex - canvas.width) >= 0
+      #console.log sameColorCheck(colorToReplace, wholeCanvas[pixelIndex - canvas.width])
       if sameColorCheck(colorToReplace, wholeCanvas[pixelIndex - canvas.width])
-        if (pixelsToCheck.indexOf(pixelIndex - canvas.width) == -1)
-          pixelsToCheck.push (pixelIndex - canvas.width)
-          wholeCanvas[pixelIndex - canvas.width] = colorToChangeTo
+        pixelsToCheck.push (pixelIndex - canvas.width)
+        wholeCanvas[pixelIndex - canvas.width] = colorToChangeTo
     # East
     if (pixelIndex + 1)%canvas.width != 0
+      #console.log sameColorCheck(colorToReplace, wholeCanvas[pixelIndex + 1])
       if sameColorCheck(colorToReplace, wholeCanvas[pixelIndex + 1])
-        if (pixelsToCheck.indexOf(pixelIndex + 1) == -1)
-          pixelsToCheck.push (pixelIndex + 1)
-          wholeCanvas[pixelIndex + 1] = colorToChangeTo
+        pixelsToCheck.push (pixelIndex + 1)
+        wholeCanvas[pixelIndex + 1] = colorToChangeTo
     # South
     if (pixelIndex + canvas.width) < (canvas.width * canvas.height)
+      #console.log sameColorCheck(colorToReplace, wholeCanvas[pixelIndex + canvas.width])
       if sameColorCheck(colorToReplace, wholeCanvas[pixelIndex + canvas.width])
-        if (pixelsToCheck.indexOf(pixelIndex + canvas.width) == -1)
-          pixelsToCheck.push (pixelIndex + canvas.width)
-          wholeCanvas[pixelIndex + canvas.width] = colorToChangeTo
+        pixelsToCheck.push (pixelIndex + canvas.width)
+        wholeCanvas[pixelIndex + canvas.width] = colorToChangeTo
     # West
+    #console.log 'WEST PRE', (pixelsToCheck.indexOf(pixelIndex - 1) == -1)
     if pixelIndex%canvas.width != 0
+      #console.log sameColorCheck(colorToReplace, wholeCanvas[pixelIndex - 1])
       if sameColorCheck(colorToReplace, wholeCanvas[pixelIndex - 1])
-        if (pixelsToCheck.indexOf(pixelIndex - 1) == -1)
-          pixelsToCheck.push (pixelIndex - 1)
-          wholeCanvas[pixelIndex - 1] = colorToChangeTo
+        pixelsToCheck.push (pixelIndex - 1)
+        wholeCanvas[pixelIndex - 1] = colorToChangeTo
 
   # (C)
+  #counter = 0
   while pixelsToCheck.length
+    console.log counter
     checkAndFill(pixelsToCheck[0])
     pixelsToCheck.shift()
+    counter++
 
   ###
   revisedCanvasToPaste is a new canvas, that is the same size of the canvas that was read.
