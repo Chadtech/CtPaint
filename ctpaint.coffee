@@ -411,10 +411,11 @@ floodFill = (canvas, context, colorToChangeTo, xPosition, yPosition) ->
   sameColorCheck = (firstColor, secondColor, brokenIndex) ->
     return firstColor[0] == secondColor[0] and firstColor[1] == secondColor[1] and firstColor[2] == secondColor[2]
   ###
+
   (A)
-  Below, each pixel is checked to see if its the colorToReplace. If it is the color is changed
-  and the pixels neighbors are added to a queue of pixels to be checked. The queue is declared
-  populated with the pixel that was clicked on.
+  The the getImageData the puteImageData functions of the canvas are computationally taxing.
+  In this flood fill function, the data, an array of color values, is first grabbed.
+  Its far faster to manipulate an array than it is to manipulate the canvas element directly.
 
   (B)
   The canvas elements data is just an array of color values. If the pixels are numbered, and 'R0' refers to the red value
@@ -426,6 +427,7 @@ floodFill = (canvas, context, colorToChangeTo, xPosition, yPosition) ->
   Since we are working with a one dimensional array of pixels. The (x,y) coordinates no longer make sense.
   originalPosition is the position in the one dimensional array translated from the two dimenstional (x,y)
   coordinates. colorToReplace is the color we are replacing, and its the color at originalPosition.
+
   ###
 
   # (A)
@@ -449,14 +451,13 @@ floodFill = (canvas, context, colorToChangeTo, xPosition, yPosition) ->
     canvasIndex++
   wholeCanvas = wholeCanvasAsPixels
 
+  # (C)
   originalPosition = xPosition + (yPosition * canvas.width)
   colorToReplace = wholeCanvas[originalPosition]
 
   ###
   (A)
-  The the getImageData the puteImageData functions of the canvas are computationally taxing.
-  In this flood fill function, the data, an array of color values, is first grabbed.
-  Its far faster to manipulate an array than it is to manipulate the canvas element directly.
+  The queue is declared populated with the pixel that was clicked on.
 
   (B)
   The checkAndFill pixel looks at each neighbor (north, east, west, and south), and sees if its
