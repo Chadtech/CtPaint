@@ -48,8 +48,6 @@ dataToGive = [
   [192, 192, 0, 255] 
 ]
 
-console.log dataToGive
-
 lineIndex = 0
 while lineIndex < dataToGive.length
   selectLinesOfLengthX.push document.createElement('canvas').getContext('2d').createImageData(lineIndex+1, 1)
@@ -226,7 +224,7 @@ zoomAction = ->
   drawToolbars()
 
 selectAction = (canvas, beginX, beginY, endX, endY) ->
-  console.log '1'
+  drawSelectBox(canvas, beginX, beginY, endX, endY)
 
 sampleAction = ->
   console.log '2'
@@ -296,6 +294,7 @@ while iteration < numberOfTools
   iteration++
 
 ctPaintTools[0].toolsAction = zoomAction
+ctPaintTools[1].toolsAction = selectAction
 ctPaintTools[3].toolsAction = fillAction
 ctPaintTools[4].toolsAction = squareAction
 ctPaintTools[5].toolsAction = circleAction
@@ -345,7 +344,8 @@ putPixel = (canvas, color, whereAtX, whereAtY) ->
   newPixelsColor[3] = 255
   canvas.putImageData(newPixel,whereAtX,whereAtY)
 
-drawSelectLine = (canvas, beginX, beginY, endX, endY) ->
+drawSelectBox = (canvas, beginX, beginY, endX, endY) ->
+  console.log 'A'
   if beginX > endX
     swapStorage = beginX
     beginX = endX
@@ -353,9 +353,10 @@ drawSelectLine = (canvas, beginX, beginY, endX, endY) ->
   if beginY > endY
     swapStorage = beginY
     beginY = endY
-    endX = swapStorage
+    endY = swapStorage
   distanceX = endX - beginX
   distanceY = endY - beginY
+  console.log 'B'
   while distanceX > 0
     if distanceX > 3
       canvas.putImageData(selectLinesOfLengthX[3],endX - distanceX, beginY)
@@ -365,6 +366,7 @@ drawSelectLine = (canvas, beginX, beginY, endX, endY) ->
       canvas.putImageData(selectLinesOfLengthX[distanceX - 1],endX - distanceX, beginY)
       canvas.putImageData(selectLinesOfLengthX[distanceX - 1],endX - distanceX, endY)
       distanceX-=distanceX
+  console.log 'C'
   while distanceY > 0
     if distanceY > 3
       canvas.putImageData(selectLinesOfLengthY[3], beginX, endY - distanceY)
@@ -373,6 +375,8 @@ drawSelectLine = (canvas, beginX, beginY, endX, endY) ->
     else
       canvas.putImageData(selectLinesOfLengthY[distanceY - 1], beginX, endY - distanceY)
       canvas.putImageData(selectLinesOfLengthY[distanceY - 1], endX, endY - distanceY)
+      distanceY-=distanceY
+  console.log 'D'
 
 drawLine = (canvas, color, beginX, beginY, endX, endY) ->
   deltaX = Math.abs(endX - beginX)
@@ -753,9 +757,9 @@ $(document).ready ()->
     canvasAsData = ctCanvas.toDataURL()
   , 2000)
 
-  setTimeout( ()->
-    drawSelectLine(ctContext, 10, 10, 100, 50)
-  , 4000)
+  #setTimeout( ()->
+  #  drawSelectLine(ctContext, 10, 10, 100, 50)
+  #, 4000)
 
   $('body').keydown (event) ->
     if event.keyCode == keysToKeyCodes['1']
@@ -893,7 +897,11 @@ $(document).ready ()->
       when 'select'
         if mousePressed
           getMousePositionOnCanvas(event)
-          selectedTool.toolsAction(ctContext, oldX, oldY, xSpot, ySpot)
+          canvasDataAsImage = new Image()
+          canvasDataAsImage.onload = ->
+            ctContext.drawImage(canvasDataAsImage,0,0)
+            selectedTool.toolsAction(ctContext, oldX, oldY, xSpot, ySpot)
+          canvasDataAsImage.src = canvasAsData
       when 'square'
         if mousePressed
           getMousePositionOnCanvas(event)
@@ -952,7 +960,8 @@ $(document).ready ()->
     mousePressed = false
     switch selectedTool.name
       when 'select'
-        selectedTool.toolsAction()
+        console.log 'BARK'
+        #canvasAsData = ctCanvas.t
       when 'fill'
         canvasAsData = ctCanvas.toDataURL()
       when 'square'
