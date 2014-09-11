@@ -345,7 +345,6 @@ putPixel = (canvas, color, whereAtX, whereAtY) ->
   canvas.putImageData(newPixel,whereAtX,whereAtY)
 
 drawSelectBox = (canvas, beginX, beginY, endX, endY) ->
-  console.log 'A'
   if beginX > endX
     swapStorage = beginX
     beginX = endX
@@ -356,7 +355,6 @@ drawSelectBox = (canvas, beginX, beginY, endX, endY) ->
     endY = swapStorage
   distanceX = endX - beginX
   distanceY = endY - beginY
-  console.log 'B'
   while distanceX > 0
     if distanceX > 3
       canvas.putImageData(selectLinesOfLengthX[3],endX - distanceX, beginY)
@@ -366,7 +364,6 @@ drawSelectBox = (canvas, beginX, beginY, endX, endY) ->
       canvas.putImageData(selectLinesOfLengthX[distanceX - 1],endX - distanceX, beginY)
       canvas.putImageData(selectLinesOfLengthX[distanceX - 1],endX - distanceX, endY)
       distanceX-=distanceX
-  console.log 'C'
   while distanceY > 0
     if distanceY > 3
       canvas.putImageData(selectLinesOfLengthY[3], beginX, endY - distanceY)
@@ -376,7 +373,6 @@ drawSelectBox = (canvas, beginX, beginY, endX, endY) ->
       canvas.putImageData(selectLinesOfLengthY[distanceY - 1], beginX, endY - distanceY)
       canvas.putImageData(selectLinesOfLengthY[distanceY - 1], endX, endY - distanceY)
       distanceY-=distanceY
-  console.log 'D'
 
 drawLine = (canvas, color, beginX, beginY, endX, endY) ->
   deltaX = Math.abs(endX - beginX)
