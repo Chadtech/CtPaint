@@ -237,7 +237,6 @@ circleAction = ( canvas, color, xPos, yPos ) ->
   calculatedRadius = Math.round(calculatedRadius)
   drawCircle( canvas, color, oldX, oldY, calculatedRadius)
 
-
 lineAction = (canvas, color, beginX, beginY, endX, endY) ->
   drawLine(canvas, color, beginX, beginY, endX, endY)
 
@@ -746,12 +745,6 @@ $(document).ready ()->
     canvasAsData = ctCanvas.toDataURL()
   , 2000)
 
-  #setTimeout( ()->
-  #  canvasSectionToPaste = ctContext.getImageData(0,0,10,10)
-  #  zoomContext.putImageData(scaleImageBigger(canvasSectionToPaste,8),0,64)
-  #  zoomContext.putImageData(canvasSectionToPaste,0,0)
-  #,5000)
-
   $('body').keydown (event) ->
     if event.keyCode == keysToKeyCodes['1']
       previouslySelectedTool = selectedTool
@@ -948,6 +941,8 @@ $(document).ready ()->
     switch selectedTool.name
       when 'select'
         selectedTool.toolsAction()
+      when 'fill'
+        canvasAsData = ctCanvas.toDataURL()
       when 'square'
         canvasAsData = ctCanvas.toDataURL()
       when 'circle'
