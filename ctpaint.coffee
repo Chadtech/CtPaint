@@ -41,9 +41,17 @@ oldYZoom = undefined
 
 selectLinesOfLengthX = []
 selectLinesOfLengthY = []
-dataToGive = [[255,255,255,255], [255,255,255,255], [255,255,255,255], [128,128,128,255]]
+dataToGive = [
+  [224, 96, 128, 255] 
+  [128, 128, 128, 255] 
+  [128, 128, 128, 255] 
+  [192, 192, 0, 255] 
+]
+
+console.log dataToGive
+
 lineIndex = 0
-while lineIndex < 4
+while lineIndex < dataToGive.length
   selectLinesOfLengthX.push document.createElement('canvas').getContext('2d').createImageData(lineIndex+1, 1)
   selectLinesOfLengthY.push document.createElement('canvas').getContext('2d').createImageData(1, lineIndex+1)
   dataIndex = 0
@@ -745,6 +753,10 @@ $(document).ready ()->
     canvasAsData = ctCanvas.toDataURL()
   , 2000)
 
+  setTimeout( ()->
+    drawSelectLine(ctContext, 10, 10, 100, 50)
+  , 4000)
+
   $('body').keydown (event) ->
     if event.keyCode == keysToKeyCodes['1']
       previouslySelectedTool = selectedTool
@@ -952,15 +964,6 @@ $(document).ready ()->
       when 'point'
         canvasAsData = ctCanvas.toDataURL()
 
-  #$('#background').mousemove ()->
-  #  toolbar1Context.drawImage(toolbar1sImage1,188,3) 
-
-  #$('toolbar0').mousemove ()->
-  #  toolbar1Context.drawImage(toolbar1sImage1,188,3) 
-
-  #$('toolbar1').mousemove ()->
-  #  toolbar1Context.drawImage(toolbar1sImage1,188,3) 
-
   $('#zoomWindow').mousedown (event)->
     mousePressed = true
     switch selectedTool.name
@@ -979,6 +982,8 @@ $(document).ready ()->
             ctPaintTools[toolIndex].toolsAction()
       toolIndex++
     drawToolbars()
+
+
 
     
 
