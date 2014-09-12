@@ -254,9 +254,10 @@ zoomAction = ->
   else
     zoomActivate = true
     cornersVisible = false
-    zoomTransition()
+    #zoomTransition()
     canvasSectionToZoomAt = ctContext.getImageData(xSpot, ySpot, xSpot+Math.floor((window.innerWidth-toolbarWidth)/Math.pow(2,selectedTool.magnitude)), ySpot+Math.floor((window.innerHeight-toolbarHeight)/Math.pow(2,selectedTool.magnitude)) )
-    zoomContext.putImageData(scaleImageBigger(canvasSectionToZoomAt,Math.pow(2,selectedTool.magnitude)),0,0)
+    #zoomContext.putImageData(scaleImageBigger(canvasSectionToZoomAt,Math.pow(2,selectedTool.magnitude)),0,0)
+    scaleImageBigger(canvasSectionToZoomAt,Math.pow(2,selectedTool.magnitude))
   selectedTool = previouslySelectedTool
   drawToolbars()
 
@@ -887,6 +888,8 @@ getMousePositionOnZoom = (event) ->
 
 scaleImageBigger = ( imageToScale, factor ) ->
 
+  #ctContext.drawImage(imageToScale, 0, 0, imageToScale.width * factor, imageToScale.height * factor)
+  ###
   scaledBigger = []
 
   rowIndex = 0
@@ -905,21 +908,24 @@ scaleImageBigger = ( imageToScale, factor ) ->
         columnIndex++
       heightFactorIndex++
     rowIndex++
-
-  scaledImage = document.createElement('canvas')
-  scaledImage = scaledImage.getContext('2d').createImageData(imageToScale.width * factor, imageToScale.height * factor)
+  ###
+  scaledImageCanvas = document.createElement('canvas')
+  scaledImage = scaledImageCanvas.getContext('2d').createImageData(imageToScale.width, imageToScale.height)
 
   scaledImageIndex = 0
-  while scaledImageIndex < scaledBigger.length
-    scaledImage.data[scaledImageIndex] = scaledBigger[scaledImageIndex]
+  while scaledImageIndex < imageToScale.data.length
+    scaledImage.data[scaledImageIndex] = imageToScale.data[scaledImageIndex]
     scaledImageIndex++
 
-  return scaledImage
-
-
+  scaledImageToPaste = new Image()
+  scaledImageToPaste.onload = ->
+    ctContext.drawImage(scaledImageToPaste, 0, 0, 256 * factor, 256 * factor)
+  scaledImageToPaste.src = canvasAsData
+  #return scaledImage
 
 $(document).ready ()->
   setTimeout( ()->
+    ctContext.imageSmoothingEnabled = false
     setCanvasSizes()
     prepareCanvas()
     placeToolbars()
