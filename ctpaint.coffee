@@ -384,11 +384,6 @@ pointAction = (canvas, color, beginX, beginY, endX, endY) ->
   if selectedTool.magnitude < 2
     drawLine(canvas, color, beginX, beginY, endX, endY)
   else
-    lineSlope = undefined
-    if selectedTool.magnitude > 1
-      lineSlope = Math.abs(beginX - endX) / Math.abs(beginY - endY)
-      if lineSlope > 1
-        lineSlope = Math.abs(beginY - endY) / Math.abs(beginX - endX)
     magnitudeIncrement = 0
     while magnitudeIncrement < selectedTool.magnitude
       drawLine(canvas, color, beginX + magnitudeIncrement, beginY, endX + magnitudeIncrement, endY)
@@ -396,13 +391,13 @@ pointAction = (canvas, color, beginX, beginY, endX, endY) ->
       drawLine(canvas, color, beginX, beginY + magnitudeIncrement, endX, endY + magnitudeIncrement)
       drawLine(canvas, color, beginX, beginY - magnitudeIncrement, endX, endY - magnitudeIncrement)
       magnitudeIncrement++
-    if selectedTool.magnitude > 1
-      calculatedRadius = (selectedTool.magnitude - 2) - Math.round(lineSlope * 1.21)
-      magnitudeIncrement = 0
-      while magnitudeIncrement < calculatedRadius
-        drawCircle( canvas, color, beginX, beginY, calculatedRadius - magnitudeIncrement, true )
-        drawCircle( canvas, color, endX, endY, calculatedRadius - magnitudeIncrement, true )
-        magnitudeIncrement++
+  if selectedTool.magnitude > 1
+    calculatedRadius = (selectedTool.magnitude - 2)
+    magnitudeIncrement = 0
+    while magnitudeIncrement < calculatedRadius
+      drawCircle( canvas, color, beginX, beginY, calculatedRadius - magnitudeIncrement, true )
+      drawCircle( canvas, color, endX, endY, calculatedRadius - magnitudeIncrement, true )
+      magnitudeIncrement++
 
 horizontalColorSwap = () ->
   previouslySelectedTool = selectedTool
@@ -870,11 +865,17 @@ modeToGlyph = (tool) ->
   else
     return '  '
 
+magnitudeToGlyph = (tool) ->
+  if typeof selectedTool.maxMagnitude == 'string'
+    return ' '
+  else
+    return selectedTool.magnitude.toString(16).toUpperCase()
+
 drawInformationToolbar1 = ->
   drawStringAsCommandPrompt(toolbar1Context, getColorValue(ctContext, event.clientX - (toolbarWidth + 5) - canvasXOffset, event.clientY - 5 - canvasYOffset).toUpperCase() + ', (' + (event.clientX - (toolbarWidth + 5) - canvasXOffset).toString() + ', ' + (event.clientY - 5 - canvasYOffset).toString() + ')', 0, 191, 12)
 
 drawInformationToolbar0 = ->
-  drawStringAsCommandPrompt(toolbar0Context, selectedTool.magnitude.toString(16).toUpperCase()+modeToGlyph(selectedTool), 0, 6, 104)
+  drawStringAsCommandPrompt(toolbar0Context, magnitudeToGlyph(selectedTool)+modeToGlyph(selectedTool), 0, 6, 104)
 
 getMousePositionOnCanvas = (event) ->
   xSpot = event.clientX - (toolbarWidth+5) - canvasXOffset
