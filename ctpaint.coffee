@@ -324,9 +324,13 @@ circleAction = ( canvas, color, xPos, yPos ) ->
       drawCircle( canvas, color, oldX, oldY, calculatedRadius - magnitudeIncrement, true )
       magnitudeIncrement++
 
-
-
 lineAction = (canvas, color, beginX, beginY, endX, endY) ->
+  lineSlope = undefined
+  if selectedTool.magnitude > 1
+    lineSlope = Math.abs(beginX - endX) / Math.abs(beginY - endY)
+    if lineSlope > 1
+      lineSlope = Math.abs(beginY - endY) / Math.abs(beginX - endX)
+  console.log lineSlope, Math.round(selectedTool.magnitude + (lineSlope * 1.41))
   magnitudeIncrement = 0
   while magnitudeIncrement < selectedTool.magnitude
     drawLine(canvas, color, beginX + magnitudeIncrement, beginY, endX + magnitudeIncrement, endY)
@@ -335,7 +339,7 @@ lineAction = (canvas, color, beginX, beginY, endX, endY) ->
     drawLine(canvas, color, beginX, beginY - magnitudeIncrement, endX, endY - magnitudeIncrement)
     magnitudeIncrement++
   if selectedTool.magnitude > 1
-    calculatedRadius = Math.round(selectedTool.magnitude * Math.pow(2, 0.5)/2)
+    calculatedRadius = (selectedTool.magnitude - 2) - Math.round(lineSlope * 1.21)
     magnitudeIncrement = 0
     while magnitudeIncrement < calculatedRadius
       drawCircle( canvas, color, beginX, beginY, calculatedRadius - magnitudeIncrement, true )
@@ -893,10 +897,6 @@ $(document).ready ()->
     positionZoom()
     canvasAsData = ctCanvas.toDataURL()
   , 2000)
-
-  #setTimeout( ()->
-  #  drawSelectLine(ctContext, 10, 10, 100, 50)
-  #, 4000)
 
   $('body').keydown (event) ->
     if event.keyCode == keysToKeyCodes['1']
