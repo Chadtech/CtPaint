@@ -885,68 +885,38 @@ getMousePositionOnZoom = (event) ->
   xSpotZoom = event.clientX - (toolbarWidth)
   ySpotZoom = event.clientY - (toolbarHeight)
 
-scaleImageBigger = (imageData,factor) ->
-  console.log '0'
-  imageHeight = imageData.height
-  imageWidth = imageData.width
-  imageDatasData = imageData.data
+scaleImageBigger = ( imageToScale, factor ) ->
 
-  outputsHeight = imageHeight*factor
-  outputsWidth = imageWidth*factor
-
-  outputImage = []
-  arrayOfPixels = []
-  arrayOfRows = []
-  singleRow = []
-  singlePixel = []
-
-  datumIndex = 0
-  while datumIndex < imageDatasData.length
-    singlePixel.push imageDatasData[datumIndex]
-    if singlePixel.length == 4
-      singleRow.push singlePixel
-      singlePixel = []
-    if singleRow.length == imageWidth
-      arrayOfRows.push singleRow
-      singleRow = []
-    datumIndex++
+  scaledBigger = []
 
   rowIndex = 0
-  while rowIndex < arrayOfRows.length
-    throwAwayArray = []
-    pixelIndex = 0
-    while pixelIndex < arrayOfRows[rowIndex].length
-      pixelIteration = 0
-      while pixelIteration < factor
-        throwAwayArray.push arrayOfRows[rowIndex][pixelIndex]
-        pixelIteration++
-      pixelIndex++
-    arrayOfRows[rowIndex] = throwAwayArray
-    rowIndex++
-
-  rowIndex = 0
-  while rowIndex < arrayOfRows.length
-    rowIteration = 0
-    while rowIteration < factor
-      pixelIndex = 0
-      while pixelIndex < arrayOfRows[rowIndex].length
-        colorDatumIndex = 0
-        while colorDatumIndex < 4
-          outputImage.push arrayOfRows[rowIndex][pixelIndex][colorDatumIndex]
-          colorDatumIndex++
-        pixelIndex++
-      rowIteration++
+  while rowIndex < imageToScale.height
+    heightFactorIndex = 0
+    while heightFactorIndex < factor
+      columnIndex = 0
+      while columnIndex < imageToScale.width
+        widthFactorIndex = 0
+        while widthFactorIndex < factor
+          singlePixelIndex = 0
+          while singlePixelIndex < 4
+            scaledBigger.push imageToScale.data[(rowIndex * imageToScale.width * 4) + (columnIndex * 4) + singlePixelIndex]
+            singlePixelIndex++
+          widthFactorIndex++
+        columnIndex++
+      heightFactorIndex++
     rowIndex++
 
   scaledImage = document.createElement('canvas')
-  scaledImageData = scaledImage.getContext('2d').createImageData(outputsWidth, outputsHeight)
+  scaledImage = scaledImage.getContext('2d').createImageData(imageToScale.width * factor, imageToScale.height * factor)
 
-  outputImageIndex = 0
-  while outputImageIndex < outputImage.length
-    scaledImageData.data[outputImageIndex] = outputImage[outputImageIndex]
-    outputImageIndex++
+  scaledImageIndex = 0
+  while scaledImageIndex < scaledBigger.length
+    scaledImage.data[scaledImageIndex] = scaledBigger[scaledImageIndex]
+    scaledImageIndex++
 
-  return scaledImageData
+  return scaledImage
+
+
 
 $(document).ready ()->
   setTimeout( ()->
