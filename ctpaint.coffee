@@ -331,11 +331,9 @@ lineAction = (canvas, color, beginX, beginY, endX, endY) ->
   while magnitudeIncrement < selectedTool.magnitude
     drawLine(canvas, color, beginX + magnitudeIncrement, beginY, endX + magnitudeIncrement, endY)
     drawLine(canvas, color, beginX - magnitudeIncrement, beginY, endX - magnitudeIncrement, endY)
-
     drawLine(canvas, color, beginX, beginY + magnitudeIncrement, endX, endY + magnitudeIncrement)
     drawLine(canvas, color, beginX, beginY - magnitudeIncrement, endX, endY - magnitudeIncrement)
     magnitudeIncrement++
-
   if selectedTool.magnitude > 1
     calculatedRadius = Math.round(selectedTool.magnitude * Math.pow(2, 0.5)/2)
     magnitudeIncrement = 0
