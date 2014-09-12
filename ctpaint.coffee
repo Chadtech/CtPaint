@@ -207,6 +207,41 @@ toolNames = [
   'undo', 'redo'
 ]
 
+toolMaxMagnitudes = [
+  4, ''
+  '', ''
+  15, 15
+  6, 15
+
+  '', ''
+
+  '', ''
+  '', ''
+  '', ''
+  '', ''
+  '', ''
+  '', ''
+  '', ''
+]
+
+toolModeCapacity = [
+  false, false
+  false, false
+  true, true
+  false, false
+
+  false, false
+
+  false, false
+  false, false
+  false, false
+  false, false
+  false, false
+  false, false
+  false, false
+]
+
+
 zoomTransition = ->
   positionZoom()
   positionCorners()
@@ -346,7 +381,28 @@ lineAction = (canvas, color, beginX, beginY, endX, endY) ->
       magnitudeIncrement++
 
 pointAction = (canvas, color, beginX, beginY, endX, endY) ->
-  drawLine(canvas, color, beginX, beginY, endX, endY)
+  if selectedTool.magnitude < 2
+    drawLine(canvas, color, beginX, beginY, endX, endY)
+  else
+    lineSlope = undefined
+    if selectedTool.magnitude > 1
+      lineSlope = Math.abs(beginX - endX) / Math.abs(beginY - endY)
+      if lineSlope > 1
+        lineSlope = Math.abs(beginY - endY) / Math.abs(beginX - endX)
+    magnitudeIncrement = 0
+    while magnitudeIncrement < selectedTool.magnitude
+      drawLine(canvas, color, beginX + magnitudeIncrement, beginY, endX + magnitudeIncrement, endY)
+      drawLine(canvas, color, beginX - magnitudeIncrement, beginY, endX - magnitudeIncrement, endY)
+      drawLine(canvas, color, beginX, beginY + magnitudeIncrement, endX, endY + magnitudeIncrement)
+      drawLine(canvas, color, beginX, beginY - magnitudeIncrement, endX, endY - magnitudeIncrement)
+      magnitudeIncrement++
+    if selectedTool.magnitude > 1
+      calculatedRadius = (selectedTool.magnitude - 2) - Math.round(lineSlope * 1.21)
+      magnitudeIncrement = 0
+      while magnitudeIncrement < calculatedRadius
+        drawCircle( canvas, color, beginX, beginY, calculatedRadius - magnitudeIncrement, true )
+        drawCircle( canvas, color, endX, endY, calculatedRadius - magnitudeIncrement, true )
+        magnitudeIncrement++
 
 horizontalColorSwap = () ->
   previouslySelectedTool = selectedTool
@@ -385,6 +441,8 @@ while iteration < numberOfTools
     clickRegion: [((iteration%2)*25),(Math.floor(iteration/2))*25]
     pressedImage: [new Image(), new Image()]
     magnitude: 1
+    maxMagnitude: toolMaxMagnitudes[iteration]
+    modeCapable: toolModeCapacity[iteration]
     mode: false
     toolsAction: ->
       console.log toolNames, iteration, thisIteration
@@ -803,17 +861,20 @@ drawToolbars = ->
 
   drawInformationToolbar0()
 
-modeToGlyph = (toolsMode) ->
-  if toolsMode
-    return 'T'
+modeToGlyph = (tool) ->
+  if tool.modeCapable
+    if tool.mode
+      return ',T'
+    else
+      return ',F'
   else
-    return 'F'
+    return '  '
 
 drawInformationToolbar1 = ->
   drawStringAsCommandPrompt(toolbar1Context, getColorValue(ctContext, event.clientX - (toolbarWidth + 5) - canvasXOffset, event.clientY - 5 - canvasYOffset).toUpperCase() + ', (' + (event.clientX - (toolbarWidth + 5) - canvasXOffset).toString() + ', ' + (event.clientY - 5 - canvasYOffset).toString() + ')', 0, 191, 12)
 
 drawInformationToolbar0 = ->
-  drawStringAsCommandPrompt(toolbar0Context, modeToGlyph(selectedTool.mode)+','+selectedTool.magnitude.toString() , 0, 6, 104)
+  drawStringAsCommandPrompt(toolbar0Context, selectedTool.magnitude.toString(16).toUpperCase()+modeToGlyph(selectedTool), 0, 6, 104)
 
 getMousePositionOnCanvas = (event) ->
   xSpot = event.clientX - (toolbarWidth+5) - canvasXOffset
@@ -965,7 +1026,7 @@ $(document).ready ()->
       else
         selectedTool.mode = true
     if event.keyCode == keysToKeyCodes['equals']
-      if selectedTool.magnitude < 9
+      if selectedTool.magnitude < selectedTool.maxMagnitude
         selectedTool.magnitude++
         drawInformationToolbar0()
     if event.keyCode == keysToKeyCodes['minus']
