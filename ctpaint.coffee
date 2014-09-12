@@ -235,18 +235,32 @@ fillAction = (canvas, context, colorToChangeTo, xPos, yPos) ->
   floodFill(canvas, context, colorToChangeTo, xPos, yPos)
 
 squareAction = (canvas, color, beginX, beginY, endX, endY) ->
-  drawLine(canvas, color, beginX, beginY, endX, beginY)
-  drawLine(canvas, color, beginX, beginY, beginX, endY)
-  drawLine(canvas, color, endX, beginY, endX, endY)
-  drawLine(canvas, color, beginX, endY, endX, endY)
+  magnitudeIncrement = 0
+  while magnitudeIncrement < selectedTool.magnitude
+    drawLine(canvas, color, beginX + magnitudeIncrement, beginY + magnitudeIncrement, endX - magnitudeIncrement, beginY + magnitudeIncrement)
+    drawLine(canvas, color, beginX + magnitudeIncrement, beginY + magnitudeIncrement, beginX + magnitudeIncrement, endY - magnitudeIncrement )
+    drawLine(canvas, color, endX - magnitudeIncrement, beginY + magnitudeIncrement, endX - magnitudeIncrement, endY - magnitudeIncrement)
+    drawLine(canvas, color, beginX + magnitudeIncrement, endY - magnitudeIncrement, endX - magnitudeIncrement, endY - magnitudeIncrement)
+    magnitudeIncrement++
 
 circleAction = ( canvas, color, xPos, yPos ) ->
-  calculatedRadius = Math.pow(Math.pow(xPos - oldX, 2) + Math.pow(yPos - oldY, 2), 0.5)
-  calculatedRadius = Math.round(calculatedRadius)
-  drawCircle( canvas, color, oldX, oldY, calculatedRadius)
+  magnitudeIncrement = 0
+  while magnitudeIncrement < selectedTool.magnitude
+    calculatedRadius = Math.pow(Math.pow(xPos - oldX, 2) + Math.pow(yPos - oldY, 2), 0.5)
+    calculatedRadius = Math.round(calculatedRadius) - magnitudeIncrement
+    drawCircle( canvas, color, oldX, oldY, calculatedRadius )
+    magnitudeIncrement++
+
 
 lineAction = (canvas, color, beginX, beginY, endX, endY) ->
-  drawLine(canvas, color, beginX, beginY, endX, endY)
+  magnitudeIncrement = 0
+  while magnitudeIncrement < selectedTool.magnitude
+    drawLine(canvas, color, beginX + magnitudeIncrement, beginY, endX + magnitudeIncrement, endY)
+    drawLine(canvas, color, beginX - magnitudeIncrement, beginY, endX - magnitudeIncrement, endY)
+
+    drawLine(canvas, color, beginX, beginY + magnitudeIncrement, endX, endY + magnitudeIncrement)
+    drawLine(canvas, color, beginX, beginY - magnitudeIncrement, endX, endY - magnitudeIncrement)
+    magnitudeIncrement++
 
 pointAction = (canvas, color, beginX, beginY, endX, endY) ->
   drawLine(canvas, color, beginX, beginY, endX, endY)
@@ -287,7 +301,8 @@ while iteration < numberOfTools
     name: toolNames[iteration]
     clickRegion: [((iteration%2)*25),(Math.floor(iteration/2))*25]
     pressedImage: [new Image(), new Image()]
-    magnitude:1
+    magnitude: 1
+    mode: false
     toolsAction: ->
       console.log toolNames, iteration, thisIteration
       console.log 'did a '+toolNames[@number]
@@ -966,7 +981,6 @@ $(document).ready ()->
           selectionToPaste.data[datumIndex] = selection.data[datumIndex]
           datumIndex++
         ctContext.putImageData(selectionToPaste ,0 ,0)
-
       when 'fill'
         canvasAsData = ctCanvas.toDataURL()
       when 'square'
