@@ -685,8 +685,19 @@ drawToolbars = ->
   toolbar1Context.fillStyle = rgbToHex(colorSwatches[3])
   toolbar1Context.fillRect(33,21,14,14)
 
-drawInformation = ->
+  drawInformationToolbar0()
+
+modeToGlyph = (toolsMode) ->
+  if toolsMode
+    return 'T'
+  else
+    return 'F'
+
+drawInformationToolbar1 = ->
   drawStringAsCommandPrompt(toolbar1Context, getColorValue(ctContext, event.clientX - (toolbarWidth + 5) - canvasXOffset, event.clientY - 5 - canvasYOffset).toUpperCase() + ', (' + (event.clientX - (toolbarWidth + 5) - canvasXOffset).toString() + ', ' + (event.clientY - 5 - canvasYOffset).toString() + ')', 0, 191, 12)
+
+drawInformationToolbar0 = ->
+  drawStringAsCommandPrompt(toolbar0Context, modeToGlyph(selectedTool.mode)+','+selectedTool.magnitude.toString() , 0, 6, 104)
 
 getMousePositionOnCanvas = (event) ->
   xSpot = event.clientX - (toolbarWidth+5) - canvasXOffset
@@ -836,10 +847,19 @@ $(document).ready ()->
       toolViewMode++
       toolViewMode = toolViewMode%2
       drawToolbars()
+    if event.keyCode == keysToKeyCodes['space']
+      if selectedTool.mode
+        selectedTool.mode = false
+      else
+        selectedTool.mode = true
     if event.keyCode == keysToKeyCodes['equals']
-      selectedTool.magnitude++
+      if selectedTool.magnitude < 10
+        selectedTool.magnitude++
+        drawInformationToolbar0()
     if event.keyCode == keysToKeyCodes['minus']
-      selectedTool.magnitude--
+      if selectedTool.magnitude > 0
+        selectedTool.magnitude--
+        drawInformationToolbar0()
     if event.keyCode == keysToKeyCodes['q']
       ctPaintTools[16].toolsAction()
     if event.keyCode == keysToKeyCodes['b']
@@ -905,7 +925,8 @@ $(document).ready ()->
 
   $('#CtPaint').mousemove (event)->
     toolbar1Context.drawImage(toolbar1sImage1,188,3)   
-    drawInformation()
+    drawInformationToolbar0()
+    drawInformationToolbar1()
     switch selectedTool.name
       when 'select'
         if mousePressed
