@@ -244,15 +244,24 @@ squareAction = (canvas, color, beginX, beginY, endX, endY) ->
     magnitudeIncrement++
 
 circleAction = ( canvas, color, xPos, yPos ) ->
-  whetherCornerBlocks = false
-  if selectedTool.magnitude > 1
-    whetherCornerBlocks = true
-  magnitudeIncrement = 0
-  while magnitudeIncrement < selectedTool.magnitude
+  if not selectedTool.mode
+    whetherCornerBlocks = false
+    if selectedTool.magnitude > 1
+      whetherCornerBlocks = true
     calculatedRadius = Math.pow(Math.pow(xPos - oldX, 2) + Math.pow(yPos - oldY, 2), 0.5)
-    calculatedRadius = Math.round(calculatedRadius) - magnitudeIncrement
-    drawCircle( canvas, color, oldX, oldY, calculatedRadius, whetherCornerBlocks )
-    magnitudeIncrement++
+    calculatedRadius = Math.round(calculatedRadius)
+    magnitudeIncrement = 0
+    while magnitudeIncrement < selectedTool.magnitude
+      drawCircle( canvas, color, oldX, oldY, calculatedRadius - magnitudeIncrement, whetherCornerBlocks )
+      magnitudeIncrement++
+  else
+    calculatedRadius = Math.pow(Math.pow(xPos - oldX, 2) + Math.pow(yPos - oldY, 2), 0.5)
+    calculatedRadius = Math.round(calculatedRadius)
+    magnitudeIncrement = 0
+    while magnitudeIncrement < calculatedRadius
+      drawCircle( canvas, color, oldX, oldY, calculatedRadius - magnitudeIncrement, true )
+      magnitudeIncrement++
+
 
 
 lineAction = (canvas, color, beginX, beginY, endX, endY) ->
@@ -423,7 +432,6 @@ drawLine = (canvas, color, beginX, beginY, endX, endY) ->
       beginY += directionY
 
 drawCircle = ( canvas, color, centerX, centerY, radius, cornerBlock) ->
-  console.log color
   radiusError = 1 - radius
   xOffset = 0
   yOffset = radius
