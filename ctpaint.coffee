@@ -885,6 +885,7 @@ getMousePositionOnZoom = (event) ->
   ySpotZoom = event.clientY - (toolbarHeight)
 
 scaleImageBigger = (imageData,factor) ->
+  console.log '0'
   imageHeight = imageData.height
   imageWidth = imageData.width
   imageDatasData = imageData.data
