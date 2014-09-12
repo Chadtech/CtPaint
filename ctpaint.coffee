@@ -244,11 +244,14 @@ squareAction = (canvas, color, beginX, beginY, endX, endY) ->
     magnitudeIncrement++
 
 circleAction = ( canvas, color, xPos, yPos ) ->
+  whetherCornerBlocks = false
+  if selectedTool.magnitude > 1
+    whetherCornerBlocks = true
   magnitudeIncrement = 0
   while magnitudeIncrement < selectedTool.magnitude
     calculatedRadius = Math.pow(Math.pow(xPos - oldX, 2) + Math.pow(yPos - oldY, 2), 0.5)
     calculatedRadius = Math.round(calculatedRadius) - magnitudeIncrement
-    drawCircle( canvas, color, oldX, oldY, calculatedRadius )
+    drawCircle( canvas, color, oldX, oldY, calculatedRadius, whetherCornerBlocks )
     magnitudeIncrement++
 
 
@@ -419,7 +422,8 @@ drawLine = (canvas, color, beginX, beginY, endX, endY) ->
       errorOne += deltaX
       beginY += directionY
 
-drawCircle = ( canvas, color, centerX, centerY, radius) ->
+drawCircle = ( canvas, color, centerX, centerY, radius, cornerBlock) ->
+  console.log color
   radiusError = 1 - radius
   xOffset = 0
   yOffset = radius
@@ -431,25 +435,58 @@ drawCircle = ( canvas, color, centerX, centerY, radius) ->
   putPixel(canvas, color, centerX + radius, centerY)
   putPixel(canvas, color, centerX - radius, centerY)
 
-  while xOffset < yOffset
-    if radiusError >= 0
-      yOffset--
-      yDelta += 2
-      radiusError += yDelta
-    xOffset++
-    xDelta += 2
-    radiusError += (xDelta + 1)
+  if not cornerBlock
+    while xOffset < yOffset
+      if radiusError >= 0
+        yOffset--
+        yDelta += 2
+        radiusError += yDelta
+      xOffset++
+      xDelta += 2
+      radiusError += (xDelta + 1)
 
-    putPixel( canvas, color, centerX + xOffset, centerY + yOffset)
-    putPixel( canvas, color, centerX - xOffset, centerY + yOffset)
-    putPixel( canvas, color, centerX + xOffset, centerY - yOffset)
-    putPixel( canvas, color, centerX - xOffset, centerY - yOffset)
+      putPixel( canvas, color, centerX + xOffset, centerY + yOffset)
+      putPixel( canvas, color, centerX - xOffset, centerY + yOffset)
+      putPixel( canvas, color, centerX + xOffset, centerY - yOffset)
+      putPixel( canvas, color, centerX - xOffset, centerY - yOffset)
 
-    putPixel( canvas, color, centerX + yOffset, centerY + xOffset)
-    putPixel( canvas, color, centerX - yOffset, centerY + xOffset)
-    putPixel( canvas, color, centerX + yOffset, centerY - xOffset)
-    putPixel( canvas, color, centerX - yOffset, centerY - xOffset)
+      putPixel( canvas, color, centerX + yOffset, centerY + xOffset)
+      putPixel( canvas, color, centerX - yOffset, centerY + xOffset)
+      putPixel( canvas, color, centerX + yOffset, centerY - xOffset)
+      putPixel( canvas, color, centerX - yOffset, centerY - xOffset)
+  else
+    doACornerBlock = false
+    while xOffset < yOffset
+      if radiusError >= 0
+        yOffset--
+        yDelta += 2
+        radiusError += yDelta
+        doACornerBlock = true
+      xOffset++
+      xDelta += 2
+      radiusError += (xDelta + 1)
 
+      putPixel( canvas, color, centerX + xOffset, centerY + yOffset)
+      putPixel( canvas, color, centerX - xOffset, centerY + yOffset)
+      putPixel( canvas, color, centerX + xOffset, centerY - yOffset)
+      putPixel( canvas, color, centerX - xOffset, centerY - yOffset)
+
+      putPixel( canvas, color, centerX + yOffset, centerY + xOffset)
+      putPixel( canvas, color, centerX - yOffset, centerY + xOffset)
+      putPixel( canvas, color, centerX + yOffset, centerY - xOffset)
+      putPixel( canvas, color, centerX - yOffset, centerY - xOffset)
+      
+      if doACornerBlock
+        putPixel( canvas, color, centerX + xOffset - 1, centerY + yOffset)
+        putPixel( canvas, color, centerX - xOffset + 1, centerY + yOffset)
+        putPixel( canvas, color, centerX + xOffset - 1, centerY - yOffset)
+        putPixel( canvas, color, centerX - xOffset + 1, centerY - yOffset)
+
+        putPixel( canvas, color, centerX + yOffset, centerY + xOffset - 1)
+        putPixel( canvas, color, centerX - yOffset, centerY + xOffset - 1)
+        putPixel( canvas, color, centerX + yOffset, centerY - xOffset + 1)
+        putPixel( canvas, color, centerX - yOffset, centerY - xOffset + 1)
+        doACornerBlock = false
 
 
 floodFill = (canvas, context, colorToChangeTo, xPosition, yPosition) ->
@@ -853,11 +890,11 @@ $(document).ready ()->
       else
         selectedTool.mode = true
     if event.keyCode == keysToKeyCodes['equals']
-      if selectedTool.magnitude < 10
+      if selectedTool.magnitude < 9
         selectedTool.magnitude++
         drawInformationToolbar0()
     if event.keyCode == keysToKeyCodes['minus']
-      if selectedTool.magnitude > 0
+      if selectedTool.magnitude > 1
         selectedTool.magnitude--
         drawInformationToolbar0()
     if event.keyCode == keysToKeyCodes['q']
