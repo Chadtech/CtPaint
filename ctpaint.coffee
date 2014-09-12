@@ -336,6 +336,14 @@ lineAction = (canvas, color, beginX, beginY, endX, endY) ->
     drawLine(canvas, color, beginX, beginY - magnitudeIncrement, endX, endY - magnitudeIncrement)
     magnitudeIncrement++
 
+  if selectedTool.magnitude > 1
+    calculatedRadius = Math.round(selectedTool.magnitude * Math.pow(2, 0.5)/2)
+    magnitudeIncrement = 0
+    while magnitudeIncrement < calculatedRadius
+      drawCircle( canvas, color, beginX, beginY, calculatedRadius - magnitudeIncrement, true )
+      drawCircle( canvas, color, endX, endY, calculatedRadius - magnitudeIncrement, true )
+      magnitudeIncrement++
+
 pointAction = (canvas, color, beginX, beginY, endX, endY) ->
   drawLine(canvas, color, beginX, beginY, endX, endY)
 
