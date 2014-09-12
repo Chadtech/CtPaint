@@ -330,7 +330,6 @@ lineAction = (canvas, color, beginX, beginY, endX, endY) ->
     lineSlope = Math.abs(beginX - endX) / Math.abs(beginY - endY)
     if lineSlope > 1
       lineSlope = Math.abs(beginY - endY) / Math.abs(beginX - endX)
-  console.log lineSlope, Math.round(selectedTool.magnitude + (lineSlope * 1.41))
   magnitudeIncrement = 0
   while magnitudeIncrement < selectedTool.magnitude
     drawLine(canvas, color, beginX + magnitudeIncrement, beginY, endX + magnitudeIncrement, endY)
