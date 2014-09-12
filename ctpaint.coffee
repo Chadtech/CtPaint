@@ -22,6 +22,8 @@ draggingBorder = false
 zoomActivate = false
 cornersVisible = true
 
+areaSelected = false
+
 fillPermission = true
 
 colorSwatches = [ [192,192,192],[0,0,0],[64,64,64],[255,255,255] ]
@@ -956,8 +958,15 @@ $(document).ready ()->
     mousePressed = false
     switch selectedTool.name
       when 'select'
-        console.log 'BARK'
-        #canvasAsData = ctCanvas.t
+        areaSelected = true
+        selection = ctContext.getImageData(oldX + 1, oldY + 1, Math.abs((oldX + 1) - xSpot), Math.abs((oldY + 1) - ySpot))
+        selectionToPaste = document.createElement('canvas').getContext('2d').createImageData(selection.width, selection.height)
+        datumIndex = 0
+        while datumIndex < selection.data.length
+          selectionToPaste.data[datumIndex] = selection.data[datumIndex]
+          datumIndex++
+        ctContext.putImageData(selectionToPaste ,0 ,0)
+
       when 'fill'
         canvasAsData = ctCanvas.toDataURL()
       when 'square'
