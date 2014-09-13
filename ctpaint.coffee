@@ -28,6 +28,29 @@ fillPermission = true
 
 colorSwatches = [ [192,192,192],[0,0,0],[64,64,64],[255,255,255] ]
 horizontalColorSwapKeyDown = false
+colorPallete = [
+  [ 0, 0, 0 ] #0
+  [ 64, 64, 64 ] #1
+  [ 128, 128, 128 ] #2
+  [ 192, 192, 192 ] #3
+  [ 255, 255, 255 ] #4
+  [ 50, 54, 128 ] #7
+
+  [ 85, 96, 45 ] #5
+  [ 0, 47, 167 ] #8
+  [ 221, 201, 142 ] #13
+  [ 10, 186, 181 ] #9
+
+  [ 243, 211, 27 ] #6
+
+  [ 159, 170, 210 ] #11
+  [ 255, 91, 49 ] #10
+
+
+  [ 157, 212, 147 ] #11
+  [ 212, 51, 29 ] #12
+  [ 10, 202, 26 ] #15
+]
 
 xSpot = undefined
 ySpot = undefined
@@ -250,14 +273,13 @@ zoomAction = ->
   if zoomActivate
     zoomActivate = false
     cornersVisible = true
-    #zoomTransition()
+    ctCanvas.style.width = (canvasWidth).toString()+'px'
+    ctCanvas.style.height = (canvasWidth).toString()+'px'
   else
     zoomActivate = true
     cornersVisible = false
-    #zoomTransition()
     canvasSectionToZoomAt = ctContext.getImageData(xSpot, ySpot, xSpot+Math.floor((window.innerWidth-toolbarWidth)/Math.pow(2,selectedTool.magnitude)), ySpot+Math.floor((window.innerHeight-toolbarHeight)/Math.pow(2,selectedTool.magnitude)) )
-    #zoomContext.putImageData(scaleImageBigger(canvasSectionToZoomAt,Math.pow(2,selectedTool.magnitude)),0,0)
-    scaleImageBigger(canvasSectionToZoomAt,Math.pow(2,selectedTool.magnitude))
+    scaleImageBigger(canvasSectionToZoomAt, Math.pow(2,selectedTool.magnitude))
   selectedTool = previouslySelectedTool
   drawToolbars()
 
@@ -858,6 +880,12 @@ drawToolbars = ->
   toolbar1Context.fillStyle = rgbToHex(colorSwatches[3])
   toolbar1Context.fillRect(33,21,14,14)
 
+  palleteIndex = 0
+  while palleteIndex < colorPallete.length
+    toolbar1Context.fillStyle = rgbToHex(colorPallete[palleteIndex])
+    toolbar1Context.fillRect(52 + (17 * Math.floor(palleteIndex/2)), 4 + (17 * (palleteIndex%2)),14,14)
+    palleteIndex++
+
   drawInformationToolbar0()
 
 modeToGlyph = (tool) ->
@@ -908,53 +936,6 @@ scaleImageBigger = ( imageToScale, factor ) ->
     ctContext.drawImage(scaledImageToPaste, 0, 0)
   scaledImageToPaste.src = canvasAsData
 
-
-  # DRAW IMAGE METHOD ----------------------------------
-  ### 
-  scaledImageCanvas = document.createElement('canvas')
-  scaledImage = scaledImageCanvas.getContext('2d').createImageData(imageToScale.width, imageToScale.height)
-
-  scaledImageIndex = 0
-  while scaledImageIndex < imageToScale.data.length
-    scaledImage.data[scaledImageIndex] = imageToScale.data[scaledImageIndex]
-    scaledImageIndex++
-
-  scaledImageToPaste = new Image()
-  scaledImageToPaste.onload = ->
-    ctContext.drawImage(scaledImageToPaste, 0, 0, 256 * factor, 256 * factor)
-  scaledImageToPaste.src = canvasAsData
-  ###
-  ###
-  # SCALE IMAGE DATA METHOD ----------------------------
-  scaledBigger = []
-
-  rowIndex = 0
-  while rowIndex < imageToScale.height
-    heightFactorIndex = 0
-    while heightFactorIndex < factor
-      columnIndex = 0
-      while columnIndex < imageToScale.width
-        widthFactorIndex = 0
-        while widthFactorIndex < factor
-          singlePixelIndex = 0
-          while singlePixelIndex < 4
-            scaledBigger.push imageToScale.data[(rowIndex * imageToScale.width * 4) + (columnIndex * 4) + singlePixelIndex]
-            singlePixelIndex++
-          widthFactorIndex++
-        columnIndex++
-      heightFactorIndex++
-    rowIndex++
-
-  scaledImage = document.createElement('canvas')
-  scaledImage = scaledImage.getContext('2d').createImageData(imageToScale.width * factor, imageToScale.height * factor)
-
-  scaledImageIndex = 0
-  while scaledImageIndex < scaledBigger.length
-    scaledImage.data[scaledImageIndex] = scaledBigger[scaledImageIndex]
-    scaledImageIndex++
-
-  return scaledImage
-  ###
 $(document).ready ()->
   setTimeout( ()->
     ctContext.imageSmoothingEnabled = false
@@ -1214,6 +1195,15 @@ $(document).ready ()->
             ctPaintTools[toolIndex].toolsAction()
       toolIndex++
     drawToolbars()
+
+  $('#toolbar1').mousedown (event)->
+    toolbar1X = event.clientX
+    toolbar1Y = event.clientY - (window.innerHeight - toolbarHeight)
+
+    if 52 < toolbar1X and toolbar1X < 188
+      if 4 < toolbar1Y and toolbar1Y < 35
+        colorSwatches[0] = colorPallete[(((toolbar1X - 52 ) // 17) * 2) + ((toolbar1Y - 4) // 16)]
+        drawToolbars()
 
 
 
