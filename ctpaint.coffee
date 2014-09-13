@@ -274,8 +274,7 @@ zoomAction = ->
   else
     zoomActivate = true
     cornersVisible = false
-    canvasSectionToZoomAt = ctContext.getImageData(xSpot, ySpot, xSpot+Math.floor((window.innerWidth-toolbarWidth)/Math.pow(2,selectedTool.magnitude)), ySpot+Math.floor((window.innerHeight-toolbarHeight)/Math.pow(2,selectedTool.magnitude)) )
-    scaleImageBigger(canvasSectionToZoomAt, Math.pow(2,selectedTool.magnitude))
+    scaleCanvasBigger( 2 ** selectedTool.magnitude )
   selectedTool = previouslySelectedTool
   positionCorners()
   drawToolbars()
@@ -913,25 +912,12 @@ getMousePositionOnZoom = (event) ->
   xSpotZoom = event.clientX - (toolbarWidth)
   ySpotZoom = event.clientY - (toolbarHeight)
 
-scaleImageBigger = ( imageToScale, factor ) ->
+scaleCanvasBigger = ( factor ) ->
 
   # CSS METHOD ---------------------------------------
   $('#wholeWindow').css('image-rendering','pixelated')
   ctCanvas.style.width = (factor * ctCanvas.width).toString()+'px'
   ctCanvas.style.height = (factor * ctCanvas.height).toString()+'px'
-
-  scaledImageCanvas = document.createElement('canvas')
-  scaledImage = scaledImageCanvas.getContext('2d').createImageData(imageToScale.width, imageToScale.height)
-
-  scaledImageIndex = 0
-  while scaledImageIndex < imageToScale.data.length
-    scaledImage.data[scaledImageIndex] = imageToScale.data[scaledImageIndex]
-    scaledImageIndex++
-
-  scaledImageToPaste = new Image()
-  scaledImageToPaste.onload = ->
-    ctContext.drawImage(scaledImageToPaste, 0, 0)
-  scaledImageToPaste.src = canvasAsData
 
 $(document).ready ()->
   setTimeout( ()->
