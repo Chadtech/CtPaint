@@ -28,6 +28,7 @@ fillPermission = true
 
 colorSwatches = [ [192,192,192],[0,0,0],[64,64,64],[255,255,255] ]
 horizontalColorSwapKeyDown = false
+colorModify = false
 colorPallete = [
   [ 0, 0, 0 ] #0
   [ 64, 64, 64 ] #1
@@ -234,7 +235,7 @@ toolMaxMagnitudes = [
   4, ''
   '', ''
   15, 15
-  6, 15
+  6, 9
 
   '', ''
 
@@ -274,13 +275,14 @@ zoomAction = ->
     zoomActivate = false
     cornersVisible = true
     ctCanvas.style.width = (canvasWidth).toString()+'px'
-    ctCanvas.style.height = (canvasWidth).toString()+'px'
+    ctCanvas.style.height = (canvasHeight).toString()+'px'
   else
     zoomActivate = true
     cornersVisible = false
     canvasSectionToZoomAt = ctContext.getImageData(xSpot, ySpot, xSpot+Math.floor((window.innerWidth-toolbarWidth)/Math.pow(2,selectedTool.magnitude)), ySpot+Math.floor((window.innerHeight-toolbarHeight)/Math.pow(2,selectedTool.magnitude)) )
     scaleImageBigger(canvasSectionToZoomAt, Math.pow(2,selectedTool.magnitude))
   selectedTool = previouslySelectedTool
+  positionCorners()
   drawToolbars()
 
 selectAction = (canvas, beginX, beginY, endX, endY) ->
@@ -780,6 +782,7 @@ floodFill = (canvas, context, colorToChangeTo, xPosition, yPosition) ->
   context.putImageData(revisedCanvasToPaste,0,0)
   
 positionCorners = ->
+  $('#wholeWindow').css('image-rendering','pixelated')
   if cornersVisible
     $('#border0Div').css('top',(canvasYPos-1+canvasYOffset).toString())
     $('#border0Div').css('left',(canvasXPos-1+canvasXOffset).toString())
@@ -920,6 +923,7 @@ getMousePositionOnZoom = (event) ->
 scaleImageBigger = ( imageToScale, factor ) ->
 
   # CSS METHOD ---------------------------------------
+  $('#wholeWindow').css('image-rendering','pixelated')
   ctCanvas.style.width = (factor * ctCanvas.width).toString()+'px'
   ctCanvas.style.height = (factor * ctCanvas.height).toString()+'px'
 
@@ -1028,6 +1032,12 @@ $(document).ready ()->
       ctPaintTools[16].toolsAction()
     if event.keyCode == keysToKeyCodes['b']
       ctPaintTools[17].toolsAction()
+    if event.keyCode == keysToKeyCodes['shift']
+      colorModify = true
+
+  $('body').keyup (event) ->
+    if event.keyCode == keysToKeyCodes['shift']
+      colorModify = false
 
   $(window).resize ()->
     if canvasWidth < (window.innerWidth - toolbarWidth - 5)
@@ -1081,6 +1091,9 @@ $(document).ready ()->
         ctContext.fillRect(0, canvasHeight, ctContext.canvas.width, ctContext.canvas.height)
       canvasWidth = ctContext.canvas.width
       canvasHeight = ctContext.canvas.height
+      $('#wholeWindow').css('image-rendering','pixelated')
+      ctCanvas.style.width = (canvasWidth).toString()+'px'
+      ctCanvas.style.height = (canvasHeight).toString()+'px'
       positionCorners()
       $('#wholeWindow').css 'cursor', 'default'   
 
@@ -1199,11 +1212,14 @@ $(document).ready ()->
   $('#toolbar1').mousedown (event)->
     toolbar1X = event.clientX
     toolbar1Y = event.clientY - (window.innerHeight - toolbarHeight)
+    if not colorModify
+      if 52 < toolbar1X and toolbar1X < 188
+        if 4 < toolbar1Y and toolbar1Y < 35
+          colorSwatches[0] = colorPallete[(((toolbar1X - 52 ) // 17) * 2) + ((toolbar1Y - 4) // 16)]
+          drawToolbars()
 
-    if 52 < toolbar1X and toolbar1X < 188
-      if 4 < toolbar1Y and toolbar1Y < 35
-        colorSwatches[0] = colorPallete[(((toolbar1X - 52 ) // 17) * 2) + ((toolbar1Y - 4) // 16)]
-        drawToolbars()
+  $('#toolbar1').keydown (event) ->
+
 
 
 
