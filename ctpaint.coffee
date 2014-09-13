@@ -265,11 +265,6 @@ toolModeCapacity = [
   false, false
 ]
 
-
-zoomTransition = ->
-  positionZoom()
-  positionCorners()
-
 zoomAction = ->
   if zoomActivate
     zoomActivate = false
@@ -489,8 +484,6 @@ toolbar1sImage1 = new Image()
 toolbar1sImage1.src = 'toolbar11.png'
 backgroundCanvas = document.getElementById('background')
 backgroundContext = backgroundCanvas.getContext('2d')
-zoomCanvas = document.getElementById('zoomWindow')
-zoomContext = zoomCanvas.getContext('2d')
 
 border0Canvas = document.getElementById('border0')
 border0Context = border0Canvas.getContext('2d')
@@ -949,7 +942,6 @@ $(document).ready ()->
     selectedTool = ctPaintTools[7]
     previouslySelectedTool = ctPaintTools[7]
     drawToolbars()
-    positionZoom()
     canvasAsData = ctCanvas.toDataURL()
   , 2000)
 
@@ -1049,7 +1041,6 @@ $(document).ready ()->
     setCanvasSizes()
     placeToolbars()
     drawToolbars()
-    positionZoom()
 
   $(window).scroll ()->
     window.scroll(0,0)
