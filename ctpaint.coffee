@@ -250,13 +250,14 @@ zoomAction = ->
   if zoomActivate
     zoomActivate = false
     cornersVisible = true
-    zoomTransition()
+    #zoomTransition()
   else
     zoomActivate = true
     cornersVisible = false
-    zoomTransition()
+    #zoomTransition()
     canvasSectionToZoomAt = ctContext.getImageData(xSpot, ySpot, xSpot+Math.floor((window.innerWidth-toolbarWidth)/Math.pow(2,selectedTool.magnitude)), ySpot+Math.floor((window.innerHeight-toolbarHeight)/Math.pow(2,selectedTool.magnitude)) )
-    zoomContext.putImageData(scaleImageBigger(canvasSectionToZoomAt,Math.pow(2,selectedTool.magnitude)),0,0)
+    #zoomContext.putImageData(scaleImageBigger(canvasSectionToZoomAt,Math.pow(2,selectedTool.magnitude)),0,0)
+    scaleImageBigger(canvasSectionToZoomAt,Math.pow(2,selectedTool.magnitude))
   selectedTool = previouslySelectedTool
   drawToolbars()
 
@@ -788,6 +789,9 @@ positionCanvas = ->
   $('#ctpaintDiv').css('left',(canvasXPos+canvasXOffset).toString())
 
 prepareCanvas = ->
+  $('#CtPaint').css('image-rendering', 'pixelated')
+  $('#wholeWindow').css('image-rendering','pixelated')
+
   ctContext.canvas.width = canvasWidth
   ctContext.canvas.height = canvasHeight
 
@@ -887,13 +891,41 @@ getMousePositionOnZoom = (event) ->
 
 scaleImageBigger = ( imageToScale, factor ) ->
 
-  ###
+  # CSS METHOD ---------------------------------------
+  ctCanvas.style.width = (factor * ctCanvas.width).toString()+'px'
+  ctCanvas.style.height = (factor * ctCanvas.height).toString()+'px'
+
+  scaledImageCanvas = document.createElement('canvas')
+  scaledImage = scaledImageCanvas.getContext('2d').createImageData(imageToScale.width, imageToScale.height)
+
+  scaledImageIndex = 0
+  while scaledImageIndex < imageToScale.data.length
+    scaledImage.data[scaledImageIndex] = imageToScale.data[scaledImageIndex]
+    scaledImageIndex++
+
+  scaledImageToPaste = new Image()
+  scaledImageToPaste.onload = ->
+    ctContext.drawImage(scaledImageToPaste, 0, 0)
+  scaledImageToPaste.src = canvasAsData
+
+
+  # DRAW IMAGE METHOD ----------------------------------
+  ### 
+  scaledImageCanvas = document.createElement('canvas')
+  scaledImage = scaledImageCanvas.getContext('2d').createImageData(imageToScale.width, imageToScale.height)
+
+  scaledImageIndex = 0
+  while scaledImageIndex < imageToScale.data.length
+    scaledImage.data[scaledImageIndex] = imageToScale.data[scaledImageIndex]
+    scaledImageIndex++
+
   scaledImageToPaste = new Image()
   scaledImageToPaste.onload = ->
     ctContext.drawImage(scaledImageToPaste, 0, 0, 256 * factor, 256 * factor)
   scaledImageToPaste.src = canvasAsData
   ###
-
+  ###
+  # SCALE IMAGE DATA METHOD ----------------------------
   scaledBigger = []
 
   rowIndex = 0
@@ -922,7 +954,7 @@ scaleImageBigger = ( imageToScale, factor ) ->
     scaledImageIndex++
 
   return scaledImage
-
+  ###
 $(document).ready ()->
   setTimeout( ()->
     ctContext.imageSmoothingEnabled = false
