@@ -26,9 +26,20 @@ areaSelected = false
 
 fillPermission = true
 
-colorSwatches = [ [192,192,192],[0,0,0],[64,64,64],[255,255,255] ]
+menuUp = false
+whatSortOfDataSorting = undefined
+menuDatumZero = undefined
+spotInMenuZeroDatum = 0
+menuDatumOne = undefined
+spotInMenuOneDatum = 0
+
+normalCircumstance = true
+
+colorSwatches = [ [192,192,192], [0,0,0], [64,64,64], [255,255,255] ]
 horizontalColorSwapKeyDown = false
 colorModify = false
+colorMenuImage = new Image()
+colorMenuImage.src = 't00.png'
 colorPallete = [
   [ 0, 0, 0 ] #0
   [ 64, 64, 64 ] #1
@@ -88,6 +99,9 @@ zeroPadder = (number,zerosToFill) ->
   while numberAsString.length < zerosToFill
     numberAsString = '0'+numberAsString
   return numberAsString
+
+replaceAt = (string, replacement, stringsIndex) ->
+  return string.substr(0,stringsIndex) + replacement + string.substr(stringsIndex + 1)
 
 rgbToHex = (rgb) ->
   return '#' + zeroPadder(rgb[0].toString(16),2) + zeroPadder(rgb[1].toString(16),2) + zeroPadder(rgb[2].toString(16),2)
@@ -445,7 +459,7 @@ toolMaxMagnitudes = [
 ]
 
 toolModeCapacity = [
-  false, false
+  false, true
   false, false
   true, true
   false, false
@@ -547,6 +561,9 @@ border2Context.canvas.width = 1
 border2Context.canvas.height = 1
 border3Context.canvas.width = 1
 border3Context.canvas.height = 1
+
+menuCanvas = document.getElementById('menu')
+menuContext = menuCanvas.getContext('2d')
 
 getColorValue = (canvas, whereAtX, whereAtY) ->
   return rgbToHex(canvas.getImageData(whereAtX, whereAtY, 1, 1).data)
@@ -864,20 +881,23 @@ prepareCanvas = ->
   positionCanvas()
   positionCorners()
 
-positionZoom = ->
-  if zoomActivate
-    $('#zoomDiv').css('top', '0')
-    $('#zoomDiv').css('left', toolbarWidth.toString())
+positionMenu = () ->
+  if not menuUp
+    $('#menuDiv').css('top',(window.innerHeight).toString())
 
-    zoomContext.canvas.width = window.innerWidth - toolbarWidth
-    zoomContext.canvas.height = window.innerHeight - toolbarHeight
+colorMenu = ( whichPalleteSpot )->
+  menuUp = true
+  normalCircumstance = false
+  $('#menuDiv').css('top', (window.innerHeight - toolbarHeight - 45).toString())
+  $('#menuDiv').css('left', (toolbarWidth + 10).toString())
 
-  else
-    $('#zoomDiv').css('top', window.innerHeight)
-    $('#zoomDiv').css('left', toolbarWidth.toString())
+  menuContext.canvas.width = 255
+  menuContext.canvas.height = 35
 
-    zoomContext.canvas.width = 1
-    zoomContext.canvas.height = 1
+  menuContext.drawImage(colorMenuImage, 0, 0)
+
+  colorDataSortingInitialize()
+  whatSortOfDataSorting = colorDataSorting
 
 setCanvasSizes = ->
   toolbar0Context.canvas.width = toolbarWidth
@@ -959,11 +979,128 @@ getMousePositionOnZoom = (event) ->
   ySpotZoom = event.clientY - (toolbarHeight)
 
 scaleCanvasBigger = ( factor ) ->
-
   # CSS METHOD ---------------------------------------
   $('#wholeWindow').css('image-rendering','pixelated')
   ctCanvas.style.width = (factor * ctCanvas.width).toString()+'px'
   ctCanvas.style.height = (factor * ctCanvas.height).toString()+'px'
+
+keyListeningUnderNormalCircumstance = (event) ->
+  if event.keyCode == keysToKeyCodes['1']
+    previouslySelectedTool = selectedTool
+    selectedTool = ctPaintTools[0]
+    drawToolbars()
+  if event.keyCode == keysToKeyCodes['2']
+    previouslySelectedTool = selectedTool
+    selectedTool = ctPaintTools[1]
+    drawToolbars()
+  if event.keyCode == keysToKeyCodes['3']
+    previouslySelectedTool = selectedTool
+    selectedTool = ctPaintTools[2]
+    drawToolbars()
+  if event.keyCode == keysToKeyCodes['4']
+    previouslySelectedTool = selectedTool
+    selectedTool = ctPaintTools[3]
+    drawToolbars()
+  if event.keyCode == keysToKeyCodes['5']
+    previouslySelectedTool = selectedTool
+    selectedTool = ctPaintTools[4]
+    drawToolbars()
+  if event.keyCode == keysToKeyCodes['6']
+    previouslySelectedTool = selectedTool
+    selectedTool = ctPaintTools[5]
+    drawToolbars()
+  if event.keyCode == keysToKeyCodes['7']
+    previouslySelectedTool = selectedTool
+    selectedTool = ctPaintTools[6]
+    drawToolbars()
+  if event.keyCode == keysToKeyCodes['8']
+    previouslySelectedTool = selectedTool
+    selectedTool = ctPaintTools[7]
+    drawToolbars()
+  if event.keyCode == keysToKeyCodes['q']
+    ctPaintTools[16].toolsAction()
+  if event.keyCode == keysToKeyCodes['b']
+    ctPaintTools[17].toolsAction()
+  if event.keyCode == keysToKeyCodes['right']
+    if canvasWidth > (window.innerWidth - toolbarWidth - 5)
+      if (-1 * canvasXOffset) < ((canvasWidth + 10) - (window.innerWidth - toolbarWidth))
+        canvasXOffset-=3
+        positionCanvas()
+        positionCorners()
+  if event.keyCode == keysToKeyCodes['left']
+    if canvasWidth > (window.innerWidth - toolbarWidth - 5)
+      if canvasXOffset < 0
+        canvasXOffset+=3
+        positionCanvas()
+        positionCorners()
+
+keyListeningUnderAbnormalCircumstance = (event) ->
+  if event.keyCode is keysToKeyCodes['1']
+    return '1'
+  if event.keyCode is keysToKeyCodes['2']
+    return '2'
+  if event.keyCode is keysToKeyCodes['3']
+    return '3'
+  if event.keyCode is keysToKeyCodes['4']
+    return '4'
+  if event.keyCode is keysToKeyCodes['5']
+    return '5'
+  if event.keyCode is keysToKeyCodes['6']
+    return '6'
+  if event.keyCode is keysToKeyCodes['7']
+    return '7'
+  if event.keyCode is keysToKeyCodes['8']
+    return '8'
+  if event.keyCode is keysToKeyCodes['9']
+    return '9'
+  if event.keyCode is keysToKeyCodes['a']
+    return 'a'
+  if event.keyCode is keysToKeyCodes['b']
+    return 'b'
+  if event.keyCode is keysToKeyCodes['c']
+    return 'c'
+  if event.keyCode is keysToKeyCodes['d']
+    return 'd'
+  if event.keyCode is keysToKeyCodes['e']
+    return 'e'
+  if event.keyCode is keysToKeyCodes['f']
+    return 'f'
+  if event.keyCode is keysToKeyCodes['x']
+    return 'x'
+  if event.keyCode is keysToKeyCodes['y']
+    return 'y'
+  if event.keyCode is keysToKeyCodes['backspace']
+    return 'backspace'
+  if event.keyCode is keysToKeyCodes['left']
+    return 'left'
+  if event.keyCode is keysToKeyCodes['right']
+    return 'right'
+
+colorDataSortingInitialize = () ->
+  menuDatumZero = '000000'
+  spotInMenuZeroDatum = 0
+
+colorDataSorting = ( inputMaterial ) ->
+  if (inputMaterial isnt 'backspace') or (inputMaterial isnt 'left') or (inputMaterial isnt 'right')
+    replaceAt(menuDatumZero, inputMaterial, spotInMenuZeroDatum )
+    if spotInMenuZeroDatum < 6
+      spotInMenuZeroDatum++
+  else
+    switch inputMaterial
+      when 'backspace'
+        replaceAt(menuDatumZero, '0', spotInMenuZeroDatum)
+        if 0 < spotInMenuZeroDatum
+          spotInMenuZeroDatum--
+      when 'left'
+        if 0 < spotInMenuZeroDatum
+          spotInMenuZeroDatum--
+      when 'right'
+        if spotInMenuZeroDatum < 6
+          spotInMenuZeroDatum++
+  drawColorMenu()
+
+drawColorMenu = () ->
+  console.log 'BARK'
 
 $(document).ready ()->
   setTimeout( ()->
@@ -974,43 +1111,15 @@ $(document).ready ()->
     selectedTool = ctPaintTools[7]
     previouslySelectedTool = ctPaintTools[7]
     drawToolbars()
+    positionMenu()
     canvasAsData = ctCanvas.toDataURL()
   , 2000)
 
   $('body').keydown (event) ->
-    if event.keyCode == keysToKeyCodes['1']
-      previouslySelectedTool = selectedTool
-      selectedTool = ctPaintTools[0]
-      drawToolbars()
-    if event.keyCode == keysToKeyCodes['2']
-      previouslySelectedTool = selectedTool
-      selectedTool = ctPaintTools[1]
-      drawToolbars()
-    if event.keyCode == keysToKeyCodes['3']
-      previouslySelectedTool = selectedTool
-      selectedTool = ctPaintTools[2]
-      drawToolbars()
-    if event.keyCode == keysToKeyCodes['4']
-      previouslySelectedTool = selectedTool
-      selectedTool = ctPaintTools[3]
-      drawToolbars()
-    if event.keyCode == keysToKeyCodes['5']
-      previouslySelectedTool = selectedTool
-      selectedTool = ctPaintTools[4]
-      drawToolbars()
-    if event.keyCode == keysToKeyCodes['6']
-      previouslySelectedTool = selectedTool
-      selectedTool = ctPaintTools[5]
-      drawToolbars()
-    if event.keyCode == keysToKeyCodes['7']
-      previouslySelectedTool = selectedTool
-      selectedTool = ctPaintTools[6]
-      drawToolbars()
-    if event.keyCode == keysToKeyCodes['8']
-      previouslySelectedTool = selectedTool
-      selectedTool = ctPaintTools[7]
-      drawToolbars()
-
+    if normalCircumstance
+      keyListeningUnderNormalCircumstance(event)
+    else
+      whatSortOfDataSorting( keyListeningUnderAbnormalCircumstance(event) )
     if event.keyCode == keysToKeyCodes['up']
       if canvasHeight > (window.innerHeight - toolbarHeight - 5)
         if canvasYOffset < 0 
@@ -1021,18 +1130,6 @@ $(document).ready ()->
       if canvasHeight > (window.innerHeight - toolbarHeight - 5)
         if (-1 * canvasYOffset) < ((canvasHeight + 10) - (window.innerHeight - toolbarHeight))
           canvasYOffset-=3
-          positionCanvas()
-          positionCorners()
-    if event.keyCode == keysToKeyCodes['right']
-      if canvasWidth > (window.innerWidth - toolbarWidth - 5)
-        if (-1 * canvasXOffset) < ((canvasWidth + 10) - (window.innerWidth - toolbarWidth))
-          canvasXOffset-=3
-          positionCanvas()
-          positionCorners()
-    if event.keyCode == keysToKeyCodes['left']
-      if canvasWidth > (window.innerWidth - toolbarWidth - 5)
-        if canvasXOffset < 0
-          canvasXOffset+=3
           positionCanvas()
           positionCorners()
     if event.keyCode == keysToKeyCodes['alt']
@@ -1052,12 +1149,9 @@ $(document).ready ()->
       if selectedTool.magnitude > 1
         selectedTool.magnitude--
         drawInformationToolbar0()
-    if event.keyCode == keysToKeyCodes['q']
-      ctPaintTools[16].toolsAction()
-    if event.keyCode == keysToKeyCodes['b']
-      ctPaintTools[17].toolsAction()
     if event.keyCode == keysToKeyCodes['shift']
       colorModify = true
+
 
   $('body').keyup (event) ->
     if event.keyCode == keysToKeyCodes['shift']
@@ -1235,13 +1329,13 @@ $(document).ready ()->
   $('#toolbar1').mousedown (event)->
     toolbar1X = event.clientX
     toolbar1Y = event.clientY - (window.innerHeight - toolbarHeight)
-    if not colorModify
-      if 52 < toolbar1X and toolbar1X < 188
-        if 4 < toolbar1Y and toolbar1Y < 35
+    if 52 < toolbar1X and toolbar1X < 188
+      if 4 < toolbar1Y and toolbar1Y < 35
+        if colorModify
+          colorMenu( (((toolbar1X - 52 ) // 17) * 2) + ((toolbar1Y - 4) // 16) )
+        else
           colorSwatches[0] = colorPallete[(((toolbar1X - 52 ) // 17) * 2) + ((toolbar1Y - 4) // 16)]
-          drawToolbars()
-
-  $('#toolbar1').keydown (event) ->
+        drawToolbars()
 
 
 
