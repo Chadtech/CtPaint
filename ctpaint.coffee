@@ -36,18 +36,13 @@ colorPallete = [
   [ 192, 192, 192 ] #3
   [ 255, 255, 255 ] #4
   [ 50, 54, 128 ] #7
-
   [ 85, 96, 45 ] #5
   [ 0, 47, 167 ] #8
   [ 221, 201, 142 ] #13
   [ 10, 186, 181 ] #9
-
   [ 243, 211, 27 ] #6
-
   [ 159, 170, 210 ] #11
   [ 255, 91, 49 ] #10
-
-
   [ 157, 212, 147 ] #11
   [ 212, 51, 29 ] #12
   [ 10, 202, 26 ] #15
@@ -215,57 +210,11 @@ drawStringAsCommandPrompt = (canvas, stringToDraw, coloration, whereAtX, whereAt
     canvas.drawImage(stringsToGlyphs[stringToDraw[stringIndex]][coloration], whereAtX + (12 * stringIndex), whereAtY)
     stringIndex++
 
-# organized as they are in the 2 x 11 tool bar grid
-toolNames = [
-  'zoom', 'select'
-  'sample', 'fill'
-  'square', 'circle'
-  'line', 'point'
-  'NOT A TOOL', 'NOT A TOOL'
-  'flip', 'rotate'
-  'invert', 'displace'
-  'scale', 'resize'
-  'horizontalSwap', 'verticalSwap'
-  'copy', 'paste'
-  'cut', 'view'
-  'undo', 'redo'
-]
-
-toolMaxMagnitudes = [
-  4, ''
-  '', ''
-  15, 15
-  6, 9
-
-  '', ''
-
-  '', ''
-  '', ''
-  '', ''
-  '', ''
-  '', ''
-  '', ''
-  '', ''
-]
-
-toolModeCapacity = [
-  false, false
-  false, false
-  true, true
-  false, false
-
-  false, false
-
-  false, false
-  false, false
-  false, false
-  false, false
-  false, false
-  false, false
-  false, false
-]
-
 zoomAction = ->
+  ###
+  If the user zooms in while the canvas width or height exceeds 256, the css anti aliasing 
+  will be turned on. No idea why.
+  ###
   if zoomActivate
     zoomActivate = false
     cornersVisible = true
@@ -418,6 +367,24 @@ pointAction = (canvas, color, beginX, beginY, endX, endY) ->
       drawCircle( canvas, color, endX, endY, calculatedRadius - magnitudeIncrement, true )
       magnitudeIncrement++
 
+flipAction = () ->
+  console.log 'FLIP ACTION'
+
+rotateAction = () ->
+  console.log 'ROTATE ACTION'
+
+invertAction = () ->
+  console.log 'INVERT ACTION'
+
+replaceAction = () ->
+  console.log 'REPLACE ACTION'
+
+scaleAction = () ->
+  console.log 'SCALE ACTION'
+
+resizeAction = () ->
+  console.log 'RESIZE ACTION'
+
 horizontalColorSwap = () ->
   previouslySelectedTool = selectedTool
   selectedTool = ctPaintTools[16]
@@ -444,6 +411,73 @@ verticalColorSwap = () ->
     drawToolbars()
   ,20)
 
+# organized as they are in the 2 x 11 tool bar grid
+toolNames = [
+  'zoom', 'select'
+  'sample', 'fill'
+  'square', 'circle'
+  'line', 'point'
+  'NOT A TOOL', 'NOT A TOOL'
+  'flip', 'rotate'
+  'invert', 'displace'
+  'scale', 'resize'
+  'horizontalSwap', 'verticalSwap'
+  'copy', 'paste'
+  'cut', 'view'
+  'undo', 'redo'
+]
+
+toolMaxMagnitudes = [
+  4, ''
+  '', ''
+  15, 15
+  6, 9
+
+  '', ''
+
+  '', ''
+  '', ''
+  '', ''
+  '', ''
+  '', ''
+  '', ''
+  '', ''
+]
+
+toolModeCapacity = [
+  false, false
+  false, false
+  true, true
+  false, false
+
+  false, false
+
+  false, false
+  false, false
+  false, false
+  false, false
+  false, false
+  false, false
+  false, false
+]
+
+toolMenuImages = [
+  '', ''
+  '', ''
+  '', ''
+  '', ''
+
+  '', ''
+
+  new Image(), new Image()
+  '', new Image()
+  new Image(), new Image()
+  '', ''
+  '', ''
+  '', ''
+  '', ''
+]
+
 ctPaintTools = {}
 
 iteration = 0
@@ -458,6 +492,7 @@ while iteration < numberOfTools
     maxMagnitude: toolMaxMagnitudes[iteration]
     modeCapable: toolModeCapacity[iteration]
     mode: false
+    menuImage: toolMenuImages[iteration]
     toolsAction: ->
       console.log toolNames, iteration, thisIteration
       console.log 'did a '+toolNames[@number]
@@ -472,6 +507,17 @@ ctPaintTools[4].toolsAction = squareAction
 ctPaintTools[5].toolsAction = circleAction
 ctPaintTools[6].toolsAction = lineAction
 ctPaintTools[7].toolsAction = pointAction
+ctPaintTools[8].toolsAction = flipAction
+ctPaintTools[8].menuImage.src = 't01.png'
+ctPaintTools[9].toolsAction = rotateAction
+ctPaintTools[10].menuImage.src = 't04.png'
+ctPaintTools[11].toolsAction = invertAction
+ctPaintTools[12].toolsAction = replaceAction
+ctPaintTools[13].menuImage.src = 't02.png'
+ctPaintTools[14].toolsAction = scaleAction
+ctPaintTools[15].menuImage.src = 't05.png'
+ctPaintTools[16].toolsAction = resizeAction
+ctPaintTools[16].menuImage.src = 't03.png'
 ctPaintTools[16].toolsAction = horizontalColorSwap
 ctPaintTools[17].toolsAction = verticalColorSwap
 
