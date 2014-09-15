@@ -4,7 +4,7 @@ toolbarWidth = 52
 canvasWidth = 256
 canvasHeight = 256
 
-canvasXPos = toolbarWidth+5
+canvasXPos = toolbarWidth + 5
 canvasYPos = 5
 canvasXOffset = 0
 canvasYOffset = 0
@@ -40,6 +40,7 @@ horizontalColorSwapKeyDown = false
 colorModify = false
 colorMenuImage = new Image()
 colorMenuImage.src = 't00.png'
+spotInColorPallete = undefined
 colorPallete = [
   [ 0, 0, 0 ] #0
   [ 64, 64, 64 ] #1
@@ -105,6 +106,9 @@ replaceAt = (string, replacement, stringsIndex) ->
 
 rgbToHex = (rgb) ->
   return '#' + zeroPadder(rgb[0].toString(16),2) + zeroPadder(rgb[1].toString(16),2) + zeroPadder(rgb[2].toString(16),2)
+
+hexToRGB = (hex) ->
+  return [parseInt(hex[0] + hex[1], 16), parseInt(hex[2] + hex[3], 16), parseInt(hex[4] + hex[5], 16)]
 
 ctCanvas = document.getElementById('CtPaint')
 ctContext = ctCanvas.getContext('2d')
@@ -885,7 +889,7 @@ positionMenu = () ->
   if not menuUp
     $('#menuDiv').css('top',(window.innerHeight).toString())
 
-colorMenu = ( whichPalleteSpot )->
+colorMenu = ()->
   menuUp = true
   normalCircumstance = false
   $('#menuDiv').css('top', (window.innerHeight - toolbarHeight - 45).toString())
@@ -1035,72 +1039,84 @@ keyListeningUnderNormalCircumstance = (event) ->
         positionCorners()
 
 keyListeningUnderAbnormalCircumstance = (event) ->
-  if event.keyCode is keysToKeyCodes['1']
-    return '1'
-  if event.keyCode is keysToKeyCodes['2']
-    return '2'
-  if event.keyCode is keysToKeyCodes['3']
-    return '3'
-  if event.keyCode is keysToKeyCodes['4']
-    return '4'
-  if event.keyCode is keysToKeyCodes['5']
-    return '5'
-  if event.keyCode is keysToKeyCodes['6']
-    return '6'
-  if event.keyCode is keysToKeyCodes['7']
-    return '7'
-  if event.keyCode is keysToKeyCodes['8']
-    return '8'
-  if event.keyCode is keysToKeyCodes['9']
-    return '9'
-  if event.keyCode is keysToKeyCodes['a']
-    return 'a'
-  if event.keyCode is keysToKeyCodes['b']
-    return 'b'
-  if event.keyCode is keysToKeyCodes['c']
-    return 'c'
-  if event.keyCode is keysToKeyCodes['d']
-    return 'd'
-  if event.keyCode is keysToKeyCodes['e']
-    return 'e'
-  if event.keyCode is keysToKeyCodes['f']
-    return 'f'
-  if event.keyCode is keysToKeyCodes['x']
-    return 'x'
-  if event.keyCode is keysToKeyCodes['y']
-    return 'y'
-  if event.keyCode is keysToKeyCodes['backspace']
-    return 'backspace'
-  if event.keyCode is keysToKeyCodes['left']
-    return 'left'
-  if event.keyCode is keysToKeyCodes['right']
-    return 'right'
+  switch event.keyCode
+    when keysToKeyCodes['0']
+      return '0'
+    when keysToKeyCodes['1']
+      return '1'
+    when keysToKeyCodes['2']
+      return '2'
+    when keysToKeyCodes['3']
+      return '3'
+    when keysToKeyCodes['4']
+      return '4'
+    when keysToKeyCodes['5']
+      return '5'
+    when keysToKeyCodes['6']
+      return '6'
+    when keysToKeyCodes['7']
+      return '7'
+    when keysToKeyCodes['8']
+      return '8'
+    when keysToKeyCodes['9']
+      return '9'
+    when keysToKeyCodes['a']
+      return 'a'
+    when keysToKeyCodes['b']
+      return 'b'
+    when keysToKeyCodes['c']
+      return 'c'
+    when keysToKeyCodes['d']
+      return 'd'
+    when keysToKeyCodes['e']
+      return 'e'
+    when keysToKeyCodes['f']
+      return 'f'
+    when keysToKeyCodes['x']
+      return 'x'
+    when keysToKeyCodes['y']
+      return 'y'
+    when keysToKeyCodes['backspace']
+      return 'backspace'
+    when keysToKeyCodes['left']
+      return 'left'
+    when keysToKeyCodes['right']
+      return 'right'
+    when keysToKeyCodes['enter']
+      return 'enter'
 
 colorDataSortingInitialize = () ->
-  menuDatumZero = '000000'
+  menuDatumZero = rgbToHex(colorPallete[spotInColorPallete]).substr(1)
   spotInMenuZeroDatum = 0
-
-colorDataSorting = ( inputMaterial ) ->
-  if (inputMaterial isnt 'backspace') or (inputMaterial isnt 'left') or (inputMaterial isnt 'right')
-    replaceAt(menuDatumZero, inputMaterial, spotInMenuZeroDatum )
-    if spotInMenuZeroDatum < 6
-      spotInMenuZeroDatum++
-  else
-    switch inputMaterial
-      when 'backspace'
-        replaceAt(menuDatumZero, '0', spotInMenuZeroDatum)
-        if 0 < spotInMenuZeroDatum
-          spotInMenuZeroDatum--
-      when 'left'
-        if 0 < spotInMenuZeroDatum
-          spotInMenuZeroDatum--
-      when 'right'
-        if spotInMenuZeroDatum < 6
-          spotInMenuZeroDatum++
   drawColorMenu()
 
+colorDataSorting = ( inputMaterial ) ->
+  if inputMaterial isnt undefined
+    if (inputMaterial isnt 'backspace') and (inputMaterial isnt 'left') and (inputMaterial isnt 'right') and (inputMaterial isnt 'enter')
+      menuDatumZero = replaceAt(menuDatumZero, inputMaterial, spotInMenuZeroDatum )
+      if spotInMenuZeroDatum < 5
+        spotInMenuZeroDatum++
+    else
+      switch inputMaterial
+        when 'backspace'
+          menuDatumZero = replaceAt(menuDatumZero, '0', spotInMenuZeroDatum)
+          if 0 < spotInMenuZeroDatum
+            spotInMenuZeroDatum--
+        when 'left'
+          if 0 < spotInMenuZeroDatum
+            spotInMenuZeroDatum--
+        when 'right'
+          if spotInMenuZeroDatum < 5
+            spotInMenuZeroDatum++
+        when 'enter'
+          colorPallete[spotInColorPallete] =  hexToRGB(menuDatumZero)
+          drawToolbars()
+          $('#menuDiv').css('top',(window.innerHeight).toString())
+    drawColorMenu()
+
 drawColorMenu = () ->
-  console.log 'BARK'
+  drawStringAsCommandPrompt( menuContext, menuDatumZero.toUpperCase(), 1, 91, 10 )
+  drawStringAsCommandPrompt( menuContext, menuDatumZero[spotInMenuZeroDatum].toUpperCase(), 2, 91+(12*spotInMenuZeroDatum), 10 )
 
 $(document).ready ()->
   setTimeout( ()->
@@ -1332,7 +1348,8 @@ $(document).ready ()->
     if 52 < toolbar1X and toolbar1X < 188
       if 4 < toolbar1Y and toolbar1Y < 35
         if colorModify
-          colorMenu( (((toolbar1X - 52 ) // 17) * 2) + ((toolbar1Y - 4) // 16) )
+          spotInColorPallete = (((toolbar1X - 52 ) // 17) * 2) + ((toolbar1Y - 4) // 16)
+          colorMenu()
         else
           colorSwatches[0] = colorPallete[(((toolbar1X - 52 ) // 17) * 2) + ((toolbar1Y - 4) // 16)]
         drawToolbars()
