@@ -420,8 +420,10 @@ resizeAction = () ->
   menuContext.canvas.width = 390
   menuContext.canvas.height = 35
 
-  console.log 'A', selectedTool
-  menuContext.drawImage(ctPaintTools[15].menuImage, 0, 0)
+  previouslySelectedTool = selectedTool
+  selectedTool = ctPaintTools[15]
+  menuContext.drawImage(selectedTool.menuImage, 0, 0)
+  drawToolbars()
 
   resizeDataSortingInitialize(canvasWidth, canvasHeight)
   whatSortOfDataSorting = resizeDataSorting
@@ -1195,6 +1197,8 @@ resizeDataSorting = ( inputMaterial ) ->
           ctCanvas.style.width = (canvasWidth).toString()+'px'
           ctCanvas.style.height = (canvasHeight).toString()+'px'
           positionCorners()
+          selectedTool = previouslySelectedTool
+          drawToolbars()
     drawResizeMenu()
 
 
