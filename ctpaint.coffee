@@ -866,7 +866,6 @@ floodFill = (canvas, context, colorToChangeTo, xPosition, yPosition) ->
   context.putImageData(revisedCanvasToPaste,0,0)
   
 positionCorners = ->
-  #$('#wholeWindow').css('image-rendering','ƒ')
   if cornersVisible
     $('#border0Div').css('top',(canvasYPos-1+canvasYOffset).toString())
     $('#border0Div').css('left',(canvasXPos-1+canvasXOffset).toString())
@@ -1318,7 +1317,6 @@ $(document).ready ()->
         ctContext.fillRect(0, canvasHeight, ctContext.canvas.width, ctContext.canvas.height)
       canvasWidth = ctContext.canvas.width
       canvasHeight = ctContext.canvas.height
-      console.log 'IN GRAB', canvasWidth, canvasHeight
       ctCanvas.style.width = (canvasWidth).toString()+'px'
       ctCanvas.style.height = (canvasHeight).toString()+'px'
       positionCorners()
