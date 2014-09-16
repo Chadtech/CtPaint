@@ -898,9 +898,6 @@ positionCanvas = ->
   $('#ctpaintDiv').css('left',(canvasXPos+canvasXOffset).toString())
 
 prepareCanvas = ->
-  #$('#CtPaint').css('image-rendering', 'pixelated')
-  #$('#wholeWindow').css('image-rendering','pixelated')
-
   ctContext.canvas.width = canvasWidth
   ctContext.canvas.height = canvasHeight
 
@@ -1008,8 +1005,7 @@ getMousePositionOnZoom = (event) ->
   ySpotZoom = event.clientY - (toolbarHeight)
 
 scaleCanvasBigger = ( factor ) ->
-  # CSS METHOD ---------------------------------------
-  #$('#wholeWindow').css('image-rendering','pixelated')
+  console.log 'FACTOR * DIMENSION', factor * ctCanvas.width, factor * ctCanvas.height
   ctCanvas.style.width = (factor * ctCanvas.width).toString()+'px'
   ctCanvas.style.height = (factor * ctCanvas.height).toString()+'px'
 
@@ -1145,6 +1141,7 @@ colorDataSorting = ( inputMaterial ) ->
           drawToolbars()
           $('#menuDiv').css('top',(window.innerHeight).toString())
           normalCircumstance = true
+          menuUp = false
     drawColorMenu()
 
 drawColorMenu = () ->
@@ -1173,6 +1170,7 @@ resizeDataSorting = ( inputMaterial ) ->
         when 'enter'
           $('#menuDiv').css('top',(window.innerHeight).toString())
           normalCircumstance = true
+          menuUp = false
           newWidth = menuDatumZero.substr(0,4)
           newHeight = menuDatumZero.substr(4,4)
           ctContext.canvas.width = parseInt(newWidth)
@@ -1269,6 +1267,11 @@ $(document).ready ()->
       canvasXOffset = 0
     if canvasHeight < (window.innerHeight - toolbarHeight - 5)
       canvasYOffset = 0
+    if menuUp
+      $('#menuDiv').css('top', (window.innerHeight - toolbarHeight - 45).toString())
+      $('#menuDiv').css('left', (toolbarWidth + 10).toString())
+    else
+      $('#menuDiv').css('top', (window.innerHeight).toString())
     positionCanvas()
     positionCorners()
     setCanvasSizes()
@@ -1315,6 +1318,7 @@ $(document).ready ()->
         ctContext.fillRect(0, canvasHeight, ctContext.canvas.width, ctContext.canvas.height)
       canvasWidth = ctContext.canvas.width
       canvasHeight = ctContext.canvas.height
+      console.log 'IN GRAB', canvasWidth, canvasHeight
       ctCanvas.style.width = (canvasWidth).toString()+'px'
       ctCanvas.style.height = (canvasHeight).toString()+'px'
       positionCorners()
