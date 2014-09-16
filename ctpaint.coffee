@@ -986,7 +986,6 @@ modeToGlyph = (tool) ->
     return '  '
 
 magnitudeToGlyph = (tool) ->
-  #console.log selectedTool
   if typeof selectedTool.maxMagnitude == 'string'
     return ' '
   else
@@ -1045,6 +1044,8 @@ keyListeningUnderNormalCircumstance = (event) ->
     previouslySelectedTool = selectedTool
     selectedTool = ctPaintTools[7]
     drawToolbars()
+  if event.keyCode == keysToKeyCodes['e']
+    ctPaintTools[15].toolsAction()
   if event.keyCode == keysToKeyCodes['q']
     ctPaintTools[16].toolsAction()
   if event.keyCode == keysToKeyCodes['b']
@@ -1200,7 +1201,6 @@ resizeDataSorting = ( inputMaterial ) ->
 drawResizeMenu = () ->
   drawStringAsCommandPrompt( menuContext, menuDatumZero.substr(0,4), 1, 116, 10 )
   drawStringAsCommandPrompt( menuContext, menuDatumZero.substr(4,4), 1, 228, 10 )
-  console.log 'IN DRAW', 116 + ((spotInMenuZeroDatum // 4) * 112) + ( 12 * ( spotInMenuZeroDatum %% 4 ) )
   drawStringAsCommandPrompt( menuContext, menuDatumZero[spotInMenuZeroDatum], 2, 116 + ((spotInMenuZeroDatum // 4) * 112) + ( 12 * ( spotInMenuZeroDatum %% 4 ) ), 10 )
 
 
