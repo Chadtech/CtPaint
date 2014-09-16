@@ -22,7 +22,16 @@ draggingBorder = false
 zoomActivate = false
 cornersVisible = true
 
+selection = undefined
 areaSelected = false
+areaSelectedsWidth = 0
+areaSelectedsHeight = 0
+areasXSpot = 0
+areasYSpot = 0
+areaXOffset = 0
+areaYOffset = 0
+areaOldX = 0
+areaOldY = 0
 
 fillPermission = true
 
@@ -255,8 +264,8 @@ sampleAction = ->
 fillAction = (canvas, context, colorToChangeTo, xPos, yPos) ->
   floodFill(canvas, context, colorToChangeTo, xPos, yPos)
 
-squareAction = (canvas, color, beginX, beginY, endX, endY) ->
-  if not selectedTool.mode
+squareAction = (canvas, color, beginX, beginY, endX, endY, fillOrNot) ->
+  if not selectedTool.mode and not fillOrNot
     magnitudeIncrement = 0
     if (beginX < endX) == (beginY < endY)
       if (beginX < endX)
@@ -579,7 +588,7 @@ putPixel = (canvas, color, whereAtX, whereAtY) ->
   newPixelsColor[1] = color[1]
   newPixelsColor[2] = color[2]
   newPixelsColor[3] = 255
-  canvas.putImageData(newPixel,whereAtX,whereAtY)
+  canvas.putImageData(newPixel, whereAtX, whereAtY)
 
 drawSelectBox = (canvas, beginX, beginY, endX, endY) ->
   if beginX > endX
@@ -841,7 +850,7 @@ floodFill = (canvas, context, colorToChangeTo, xPosition, yPosition) ->
   context.putImageData(revisedCanvasToPaste,0,0)
   
 positionCorners = ->
-  $('#wholeWindow').css('image-rendering','pixelated')
+  #$('#wholeWindow').css('image-rendering','ƒ')
   if cornersVisible
     $('#border0Div').css('top',(canvasYPos-1+canvasYOffset).toString())
     $('#border0Div').css('left',(canvasXPos-1+canvasXOffset).toString())
@@ -873,8 +882,8 @@ positionCanvas = ->
   $('#ctpaintDiv').css('left',(canvasXPos+canvasXOffset).toString())
 
 prepareCanvas = ->
-  $('#CtPaint').css('image-rendering', 'pixelated')
-  $('#wholeWindow').css('image-rendering','pixelated')
+  #$('#CtPaint').css('image-rendering', 'pixelated')
+  #$('#wholeWindow').css('image-rendering','pixelated')
 
   ctContext.canvas.width = canvasWidth
   ctContext.canvas.height = canvasHeight
@@ -963,6 +972,7 @@ modeToGlyph = (tool) ->
     return '  '
 
 magnitudeToGlyph = (tool) ->
+  #console.log selectedTool
   if typeof selectedTool.maxMagnitude == 'string'
     return ' '
   else
@@ -984,7 +994,7 @@ getMousePositionOnZoom = (event) ->
 
 scaleCanvasBigger = ( factor ) ->
   # CSS METHOD ---------------------------------------
-  $('#wholeWindow').css('image-rendering','pixelated')
+  #$('#wholeWindow').css('image-rendering','pixelated')
   ctCanvas.style.width = (factor * ctCanvas.width).toString()+'px'
   ctCanvas.style.height = (factor * ctCanvas.height).toString()+'px'
 
@@ -1112,6 +1122,7 @@ colorDataSorting = ( inputMaterial ) ->
           colorPallete[spotInColorPallete] =  hexToRGB(menuDatumZero)
           drawToolbars()
           $('#menuDiv').css('top',(window.innerHeight).toString())
+          normalCircumstance = true
     drawColorMenu()
 
 drawColorMenu = () ->
@@ -1120,7 +1131,7 @@ drawColorMenu = () ->
 
 $(document).ready ()->
   setTimeout( ()->
-    ctContext.imageSmoothingEnabled = false
+    #ctContext.imageSmoothingEnabled = false
     setCanvasSizes()
     prepareCanvas()
     placeToolbars()
@@ -1224,7 +1235,7 @@ $(document).ready ()->
         ctContext.fillRect(0, canvasHeight, ctContext.canvas.width, ctContext.canvas.height)
       canvasWidth = ctContext.canvas.width
       canvasHeight = ctContext.canvas.height
-      $('#wholeWindow').css('image-rendering','pixelated')
+      #$('#wholeWindow').css('image-rendering','pixelated')
       ctCanvas.style.width = (canvasWidth).toString()+'px'
       ctCanvas.style.height = (canvasHeight).toString()+'px'
       positionCorners()
@@ -1237,81 +1248,113 @@ $(document).ready ()->
     toolbar1Context.drawImage(toolbar1sImage1,188,3)   
     drawInformationToolbar0()
     drawInformationToolbar1()
-    switch selectedTool.name
-      when 'select'
-        if mousePressed
-          getMousePositionOnCanvas(event)
-          canvasDataAsImage = new Image()
-          canvasDataAsImage.onload = ->
-            ctContext.drawImage(canvasDataAsImage,0,0)
-            selectedTool.toolsAction(ctContext, oldX, oldY, xSpot, ySpot)
-          canvasDataAsImage.src = canvasAsData
-      when 'square'
-        if mousePressed
-          getMousePositionOnCanvas(event)
-          canvasDataAsImage = new Image()
-          canvasDataAsImage.onload = ->
-            ctContext.drawImage(canvasDataAsImage,0,0)
-            selectedTool.toolsAction(ctContext, colorSwatches[0], oldX, oldY, xSpot, ySpot)
-          canvasDataAsImage.src = canvasAsData
-      when 'circle'
-        if mousePressed
-          getMousePositionOnCanvas(event)
-          canvasDataAsImage = new Image()
-          canvasDataAsImage.onload = ->
-            ctContext.drawImage(canvasDataAsImage,0,0)
-            selectedTool.toolsAction(ctContext, colorSwatches[0], xSpot, ySpot)
-          canvasDataAsImage.src = canvasAsData
-      when 'line'
-        if mousePressed
-          getMousePositionOnCanvas(event)
-          canvasDataAsImage = new Image()
-          canvasDataAsImage.onload = ->
-            ctContext.drawImage(canvasDataAsImage,0,0)
-            selectedTool.toolsAction(ctContext, colorSwatches[0], oldX, oldY, xSpot, ySpot)
-          canvasDataAsImage.src = canvasAsData
-      when 'point'
-        if mousePressed
-          oldX = xSpot
-          oldY = ySpot
-          getMousePositionOnCanvas(event)
-          selectedTool.toolsAction(ctContext, colorSwatches[0], xSpot, ySpot, oldX, oldY)
+    if not areaSelected
+      switch selectedTool.name
+        when 'select'
+          if mousePressed
+            if not areaSelected
+              getMousePositionOnCanvas(event)
+              canvasDataAsImage = new Image()
+              canvasDataAsImage.onload = ->
+                ctContext.drawImage(canvasDataAsImage,0,0)
+                selectedTool.toolsAction(ctContext, oldX, oldY, xSpot, ySpot)
+              canvasDataAsImage.src = canvasAsData
+        when 'square'
+          if mousePressed
+            getMousePositionOnCanvas(event)
+            canvasDataAsImage = new Image()
+            canvasDataAsImage.onload = ->
+              ctContext.drawImage(canvasDataAsImage,0,0)
+              selectedTool.toolsAction(ctContext, colorSwatches[0], oldX, oldY, xSpot, ySpot)
+            canvasDataAsImage.src = canvasAsData
+        when 'circle'
+          if mousePressed
+            getMousePositionOnCanvas(event)
+            canvasDataAsImage = new Image()
+            canvasDataAsImage.onload = ->
+              ctContext.drawImage(canvasDataAsImage,0,0)
+              selectedTool.toolsAction(ctContext, colorSwatches[0], xSpot, ySpot)
+            canvasDataAsImage.src = canvasAsData
+        when 'line'
+          if mousePressed
+            getMousePositionOnCanvas(event)
+            canvasDataAsImage = new Image()
+            canvasDataAsImage.onload = ->
+              ctContext.drawImage(canvasDataAsImage,0,0)
+              selectedTool.toolsAction(ctContext, colorSwatches[0], oldX, oldY, xSpot, ySpot)
+            canvasDataAsImage.src = canvasAsData
+        when 'point'
+          if mousePressed
+            oldX = xSpot
+            oldY = ySpot
+            getMousePositionOnCanvas(event)
+            selectedTool.toolsAction(ctContext, colorSwatches[0], xSpot, ySpot, oldX, oldY)
+    else
+      getMousePositionOnCanvas(event)
+      areaXOffset = xSpot - areaOldX
+      areaYOffset = ySpot - areaOldY
+      selectedTool.toolsAction(ctContext, oldX, oldY, xSpot, ySpot)
+
 
   $('#CtPaint').mousedown (event)->
     mousePressed = true
     getMousePositionOnCanvas(event)
-    switch selectedTool.name
-      when 'zoom'
-        selectedTool.toolsAction()
-      when 'select'
-        oldX = xSpot
-        oldY = ySpot
-      when 'fill'
-        selectedTool.toolsAction(ctCanvas, ctContext, colorSwatches[0], xSpot, ySpot)
-      when 'circle'
-        oldX = xSpot
-        oldY = ySpot
-      when 'square'
-        oldX = xSpot
-        oldY = ySpot
-      when 'line'
-        oldX = xSpot
-        oldY = ySpot
-      when 'point'
-       selectedTool.toolsAction(ctContext, colorSwatches[0], xSpot, ySpot, xSpot, ySpot)
+    if not areaSelected
+      switch selectedTool.name
+        when 'zoom'
+          selectedTool.toolsAction()
+        when 'select'
+          oldX = xSpot
+          oldY = ySpot
+        when 'fill'
+          selectedTool.toolsAction(ctCanvas, ctContext, colorSwatches[0], xSpot, ySpot)
+        when 'circle'
+          oldX = xSpot
+          oldY = ySpot
+        when 'square'
+          oldX = xSpot
+          oldY = ySpot
+        when 'line'
+          oldX = xSpot
+          oldY = ySpot
+        when 'point'
+          selectedTool.toolsAction(ctContext, colorSwatches[0], xSpot, ySpot, xSpot, ySpot)
+    else
+      console.log 'A', areasXSpot < xSpot, xSpot < (areasXSpot + areaSelectedsWidth)
+      console.log 'A.1', areasXSpot, areaSelectedsWidth, areasXSpot + areaSelectedsWidth
+      if areasXSpot < xSpot and xSpot < (areasXSpot + areaSelectedsWidth) and areasYSpot < ySpot and ySpot < (areasYSpot + areaSelectedsHeight)
+        areaOldX = xSpot
+        areaOldY = xSpot
+      #else
+      #  ctContext.drawImage(canvasDataAsImage,0,0)
+
 
   $('#CtPaint').mouseup (event)->
     mousePressed = false
     switch selectedTool.name
       when 'select'
-        areaSelected = true
-        selection = ctContext.getImageData(oldX + 1, oldY + 1, Math.abs((oldX + 1) - xSpot), Math.abs((oldY + 1) - ySpot))
-        selectionToPaste = document.createElement('canvas').getContext('2d').createImageData(selection.width, selection.height)
-        datumIndex = 0
-        while datumIndex < selection.data.length
-          selectionToPaste.data[datumIndex] = selection.data[datumIndex]
-          datumIndex++
-        ctContext.putImageData(selectionToPaste ,0 ,0)
+        if not areaSelected
+          areaSelected = true
+          areasXSpot = oldX
+          areasYSpot = oldY
+          areaSelectedsHeight = Math.abs(oldY - ySpot)
+          areaSelectedsWidth = Math.abs(oldX - xSpot)
+          selection = ctContext.getImageData(oldX + 1, oldY + 1, Math.abs((oldX + 1) - xSpot), Math.abs((oldY + 1) - ySpot))
+          selectionToPaste = document.createElement('canvas').getContext('2d').createImageData(selection.width, selection.height)
+          datumIndex = 0
+          while datumIndex < selection.data.length
+            selectionToPaste.data[datumIndex] = selection.data[datumIndex]
+            datumIndex++
+          #squareAction = (canvas, color, beginX, beginY, endX, endY)
+          squareAction(ctContext, colorSwatches[2], oldX + 1, oldY + 1, xSpot - 1, ySpot - 1, true)
+          #canvasAsData = ctCanvas.toDataURL()
+          ctContext.putImageData(selectionToPaste, oldX + 1, oldY + 1 )
+          #drawSelectBox(ctContext, oldX, oldY, xSpot, ySpot)
+        else
+          squareAction(ctContext, colorSwatches[2], oldX + 1, oldY + 1, xSpot - 1, ySpot - 1, true)
+          ctContext.putImageData(selectionToPaste, oldX + 1 + areaXOffset, oldY + 1 + areaYOffset)
+
+
       when 'fill'
         canvasAsData = ctCanvas.toDataURL()
       when 'square'
