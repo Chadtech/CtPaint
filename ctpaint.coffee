@@ -243,6 +243,9 @@ zoomAction = ->
   ###
   If the user zooms in while the canvas width or height exceeds 256, the css anti aliasing 
   will be turned on. No idea why.
+
+  New solution idea : destroy the canvas when it is scaled bigger, 
+  and paste data onto a new canvas
   ###
   if zoomActivate
     zoomActivate = false
@@ -537,7 +540,6 @@ while iteration < numberOfTools
     mode: false
     menuImage: toolMenuImages[iteration]
     toolsAction: ->
-      console.log toolNames, iteration, thisIteration
       console.log 'did a '+toolNames[@number]
   ctPaintTools[iteration].pressedImage[0].src = 'u'+zeroPadder(iteration,2)+'.PNG'
   ctPaintTools[iteration].pressedImage[1].src = 'v'+zeroPadder(iteration,2)+'.PNG'
@@ -862,7 +864,6 @@ floodFill = (canvas, context, colorToChangeTo, xPosition, yPosition) ->
       revisedCanvasToPaste.data[(pixelInCanvasIndex * 4) + colorValueIndex] = wholeCanvas[pixelInCanvasIndex][colorValueIndex]
       colorValueIndex++
     pixelInCanvasIndex++
-
   context.putImageData(revisedCanvasToPaste,0,0)
   
 positionCorners = ->
@@ -1493,6 +1494,13 @@ $(document).ready ()->
             ctPaintTools[toolIndex].toolsAction()
       toolIndex++
     drawToolbars()
+
+  $('#toolbar1').mousemove (event)->
+    drawStringAsCommandPrompt(toolbar1Context, getColorValue(toolbar1Context, event.clientX, event.clientY - window.innerHeight + toolbarHeight).toUpperCase() + ', (#,#) ', 0, 191, 12)
+
+  $('#toolbar1').mouseleave ()->  
+    toolbar1Context.drawImage(toolbar1sImage1,188,3)  
+
 
   $('#toolbar1').mousedown (event)->
     toolbar1X = event.clientX
