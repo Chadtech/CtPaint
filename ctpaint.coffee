@@ -46,6 +46,20 @@ spotInMenuOneDatum = 0
 
 normalCircumstance = true
 
+xSpot = undefined
+ySpot = undefined
+
+oldX = undefined
+oldY = undefined
+
+xSpotZoom = undefined
+ySpotZoom = undefined
+
+oldXZoom = undefined
+oldYZoom = undefined
+
+buttonWidth = 24
+buttonHeight = 24
 colorSwatches = [ [192,192,192], [0,0,0], [64,64,64], [255,255,255] ]
 horizontalColorSwapKeyDown = false
 colorModify = false
@@ -70,19 +84,6 @@ colorPallete = [
   [ 212, 51, 29 ] #12
   [ 10, 202, 26 ] #15
 ]
-
-xSpot = undefined
-ySpot = undefined
-
-oldX = undefined
-oldY = undefined
-
-xSpotZoom = undefined
-ySpotZoom = undefined
-
-oldXZoom = undefined
-oldYZoom = undefined
-
 selectLinesOfLengthX = []
 selectLinesOfLengthY = []
 dataToGive = [
@@ -105,7 +106,6 @@ while lineIndex < dataToGive.length
       eachColorIndex++
     dataIndex++
   lineIndex++
-
 zeroPadder = (number,zerosToFill) ->
   numberAsString = number+''
   while numberAsString.length < zerosToFill
@@ -131,9 +131,35 @@ toolbar0sImages = [new Image(), new Image()]
 toolbar0sImages[0].src = 'assets\\toolbar0v.PNG'
 toolbar0sImages[1].src = 'assets\\toolbar0u.PNG'
 
-buttonWidth = 24
-buttonHeight = 24
+toolbar1Canvas = document.getElementById('toolbar1')
+toolbar1Context = toolbar1Canvas.getContext('2d')
+toolbar1sImage0 = new Image()
+toolbar1sImage0.src = 'assets\\toolbar10.png'
+toolbar1sImage1 = new Image()
+toolbar1sImage1.src = 'assets\\toolbar11.png'
+backgroundCanvas = document.getElementById('background')
+backgroundContext = backgroundCanvas.getContext('2d')
 
+border0Canvas = document.getElementById('border0')
+border0Context = border0Canvas.getContext('2d')
+border1Canvas = document.getElementById('border1')
+border1Context = border1Canvas.getContext('2d')
+border2Canvas = document.getElementById('border2')
+border2Context = border2Canvas.getContext('2d')
+border3Canvas = document.getElementById('border3')
+border3Context = border3Canvas.getContext('2d')
+
+border0Context.canvas.width = 1
+border0Context.canvas.height = 1
+border1Context.canvas.width = 1
+border1Context.canvas.height = 1
+border2Context.canvas.width = 1
+border2Context.canvas.height = 1
+border3Context.canvas.width = 1
+border3Context.canvas.height = 1
+
+menuCanvas = document.getElementById('menu')
+menuContext = menuCanvas.getContext('2d')
 keysToKeyCodes = 
   'backspace':8
   'tab':9
@@ -259,354 +285,8 @@ zoomAction = ->
   selectedTool = previouslySelectedTool
   positionCorners()
   drawToolbars()
-
 selectAction = (canvas, beginX, beginY, endX, endY) ->
   drawSelectBox(canvas, beginX, beginY, endX, endY)
-
-sampleAction = ->
-  console.log '2'
-
-fillAction = (canvas, context, colorToChangeTo, xPos, yPos) ->
-  floodFill(canvas, context, colorToChangeTo, xPos, yPos)
-
-squareAction = (canvas, color, beginX, beginY, endX, endY, fillOrNot) ->
-  if not selectedTool.mode and not fillOrNot
-    magnitudeIncrement = 0
-    if (beginX < endX) == (beginY < endY)
-      if (beginX < endX)
-        while magnitudeIncrement < selectedTool.magnitude
-          drawLine(canvas, color, beginX + magnitudeIncrement, beginY + magnitudeIncrement, endX - magnitudeIncrement, beginY + magnitudeIncrement)
-          drawLine(canvas, color, beginX + magnitudeIncrement, beginY + magnitudeIncrement, beginX + magnitudeIncrement, endY - magnitudeIncrement )
-          drawLine(canvas, color, endX - magnitudeIncrement, beginY + magnitudeIncrement, endX - magnitudeIncrement, endY - magnitudeIncrement)
-          drawLine(canvas, color, beginX + magnitudeIncrement, endY - magnitudeIncrement, endX - magnitudeIncrement, endY - magnitudeIncrement)
-          magnitudeIncrement++
-      else
-        while magnitudeIncrement < selectedTool.magnitude
-          drawLine(canvas, color, beginX - magnitudeIncrement, beginY - magnitudeIncrement, endX + magnitudeIncrement, beginY - magnitudeIncrement)
-          drawLine(canvas, color, beginX - magnitudeIncrement, beginY - magnitudeIncrement, beginX - magnitudeIncrement, endY + magnitudeIncrement )
-          drawLine(canvas, color, endX + magnitudeIncrement, beginY - magnitudeIncrement, endX + magnitudeIncrement, endY + magnitudeIncrement)
-          drawLine(canvas, color, beginX - magnitudeIncrement, endY + magnitudeIncrement, endX + magnitudeIncrement, endY + magnitudeIncrement)
-          magnitudeIncrement++
-    else
-      if (endY < beginY)
-        while magnitudeIncrement < selectedTool.magnitude
-          drawLine(canvas, color, beginX + magnitudeIncrement, beginY - magnitudeIncrement, endX - magnitudeIncrement, beginY - magnitudeIncrement)
-          drawLine(canvas, color, beginX + magnitudeIncrement, beginY - magnitudeIncrement, beginX + magnitudeIncrement, endY + magnitudeIncrement )
-          drawLine(canvas, color, endX - magnitudeIncrement, beginY - magnitudeIncrement, endX - magnitudeIncrement, endY + magnitudeIncrement)
-          drawLine(canvas, color, beginX + magnitudeIncrement, endY + magnitudeIncrement, endX - magnitudeIncrement, endY + magnitudeIncrement)
-          magnitudeIncrement++
-      else
-        while magnitudeIncrement < selectedTool.magnitude
-          drawLine(canvas, color, beginX - magnitudeIncrement, beginY + magnitudeIncrement, endX + magnitudeIncrement, beginY + magnitudeIncrement)
-          drawLine(canvas, color, beginX - magnitudeIncrement, beginY + magnitudeIncrement, beginX - magnitudeIncrement, endY - magnitudeIncrement )
-          drawLine(canvas, color, endX + magnitudeIncrement, beginY + magnitudeIncrement, endX + magnitudeIncrement, endY - magnitudeIncrement)
-          drawLine(canvas, color, beginX - magnitudeIncrement, endY - magnitudeIncrement, endX + magnitudeIncrement, endY - magnitudeIncrement)
-          magnitudeIncrement++
-  else
-    numberOfIterationsNecessary = 0
-    if Math.abs(beginX - endX) > Math.abs(beginY - endY)
-      numberOfIterationsNecessary = Math.abs(beginY - endY)
-    else
-      numberOfIterationsNecessary = Math.abs(beginX - endX)
-    magnitudeIncrement = 0
-    if (beginX < endX) == (beginY < endY)
-      if (beginX < endX)
-        while magnitudeIncrement < numberOfIterationsNecessary
-          drawLine(canvas, color, beginX + magnitudeIncrement, beginY + magnitudeIncrement, endX - magnitudeIncrement, beginY + magnitudeIncrement)
-          drawLine(canvas, color, beginX + magnitudeIncrement, beginY + magnitudeIncrement, beginX + magnitudeIncrement, endY - magnitudeIncrement )
-          drawLine(canvas, color, endX - magnitudeIncrement, beginY + magnitudeIncrement, endX - magnitudeIncrement, endY - magnitudeIncrement)
-          drawLine(canvas, color, beginX + magnitudeIncrement, endY - magnitudeIncrement, endX - magnitudeIncrement, endY - magnitudeIncrement)
-          magnitudeIncrement++
-      else
-        while magnitudeIncrement < numberOfIterationsNecessary
-          drawLine(canvas, color, beginX - magnitudeIncrement, beginY - magnitudeIncrement, endX + magnitudeIncrement, beginY - magnitudeIncrement)
-          drawLine(canvas, color, beginX - magnitudeIncrement, beginY - magnitudeIncrement, beginX - magnitudeIncrement, endY + magnitudeIncrement )
-          drawLine(canvas, color, endX + magnitudeIncrement, beginY - magnitudeIncrement, endX + magnitudeIncrement, endY + magnitudeIncrement)
-          drawLine(canvas, color, beginX - magnitudeIncrement, endY + magnitudeIncrement, endX + magnitudeIncrement, endY + magnitudeIncrement)
-          magnitudeIncrement++
-    else
-      if (endY < beginY)
-        while magnitudeIncrement < numberOfIterationsNecessary
-          drawLine(canvas, color, beginX + magnitudeIncrement, beginY - magnitudeIncrement, endX - magnitudeIncrement, beginY - magnitudeIncrement)
-          drawLine(canvas, color, beginX + magnitudeIncrement, beginY - magnitudeIncrement, beginX + magnitudeIncrement, endY + magnitudeIncrement )
-          drawLine(canvas, color, endX - magnitudeIncrement, beginY - magnitudeIncrement, endX - magnitudeIncrement, endY + magnitudeIncrement)
-          drawLine(canvas, color, beginX + magnitudeIncrement, endY + magnitudeIncrement, endX - magnitudeIncrement, endY + magnitudeIncrement)
-          magnitudeIncrement++
-      else
-        while magnitudeIncrement < numberOfIterationsNecessary
-          drawLine(canvas, color, beginX - magnitudeIncrement, beginY + magnitudeIncrement, endX + magnitudeIncrement, beginY + magnitudeIncrement)
-          drawLine(canvas, color, beginX - magnitudeIncrement, beginY + magnitudeIncrement, beginX - magnitudeIncrement, endY - magnitudeIncrement )
-          drawLine(canvas, color, endX + magnitudeIncrement, beginY + magnitudeIncrement, endX + magnitudeIncrement, endY - magnitudeIncrement)
-          drawLine(canvas, color, beginX - magnitudeIncrement, endY - magnitudeIncrement, endX + magnitudeIncrement, endY - magnitudeIncrement)
-          magnitudeIncrement++
-
-circleAction = ( canvas, color, xPos, yPos ) ->
-  if not selectedTool.mode
-    whetherCornerBlocks = false
-    if selectedTool.magnitude > 1
-      whetherCornerBlocks = true
-    calculatedRadius = Math.pow(Math.pow(xPos - oldX, 2) + Math.pow(yPos - oldY, 2), 0.5)
-    calculatedRadius = Math.round(calculatedRadius)
-    magnitudeIncrement = 0
-    while magnitudeIncrement < selectedTool.magnitude
-      drawCircle( canvas, color, oldX, oldY, calculatedRadius - magnitudeIncrement, whetherCornerBlocks )
-      magnitudeIncrement++
-  else
-    calculatedRadius = Math.pow(Math.pow(xPos - oldX, 2) + Math.pow(yPos - oldY, 2), 0.5)
-    calculatedRadius = Math.round(calculatedRadius)
-    magnitudeIncrement = 0
-    while magnitudeIncrement < calculatedRadius
-      drawCircle( canvas, color, oldX, oldY, calculatedRadius - magnitudeIncrement, true )
-      magnitudeIncrement++
-
-lineAction = (canvas, color, beginX, beginY, endX, endY) ->
-  lineSlope = undefined
-  if selectedTool.magnitude > 1
-    lineSlope = Math.abs(beginX - endX) / Math.abs(beginY - endY)
-    if lineSlope > 1
-      lineSlope = Math.abs(beginY - endY) / Math.abs(beginX - endX)
-  magnitudeIncrement = 0
-  while magnitudeIncrement < selectedTool.magnitude
-    drawLine(canvas, color, beginX + magnitudeIncrement, beginY, endX + magnitudeIncrement, endY)
-    drawLine(canvas, color, beginX - magnitudeIncrement, beginY, endX - magnitudeIncrement, endY)
-    drawLine(canvas, color, beginX, beginY + magnitudeIncrement, endX, endY + magnitudeIncrement)
-    drawLine(canvas, color, beginX, beginY - magnitudeIncrement, endX, endY - magnitudeIncrement)
-    magnitudeIncrement++
-  if selectedTool.magnitude > 1
-    calculatedRadius = (selectedTool.magnitude - 2) - Math.round(lineSlope * 1.21)
-    magnitudeIncrement = 0
-    while magnitudeIncrement < calculatedRadius
-      drawCircle( canvas, color, beginX, beginY, calculatedRadius - magnitudeIncrement, true )
-      drawCircle( canvas, color, endX, endY, calculatedRadius - magnitudeIncrement, true )
-      magnitudeIncrement++
-
-pointAction = (canvas, color, beginX, beginY, endX, endY) ->
-  if selectedTool.magnitude < 2
-    drawLine(canvas, color, beginX, beginY, endX, endY)
-  else
-    magnitudeIncrement = 0
-    while magnitudeIncrement < selectedTool.magnitude
-      drawLine(canvas, color, beginX + magnitudeIncrement, beginY, endX + magnitudeIncrement, endY)
-      drawLine(canvas, color, beginX - magnitudeIncrement, beginY, endX - magnitudeIncrement, endY)
-      drawLine(canvas, color, beginX, beginY + magnitudeIncrement, endX, endY + magnitudeIncrement)
-      drawLine(canvas, color, beginX, beginY - magnitudeIncrement, endX, endY - magnitudeIncrement)
-      magnitudeIncrement++
-  if selectedTool.magnitude > 1
-    calculatedRadius = (selectedTool.magnitude - 2)
-    magnitudeIncrement = 0
-    while magnitudeIncrement < calculatedRadius
-      drawCircle( canvas, color, beginX, beginY, calculatedRadius - magnitudeIncrement, true )
-      drawCircle( canvas, color, endX, endY, calculatedRadius - magnitudeIncrement, true )
-      magnitudeIncrement++
-
-flipAction = () ->
-  console.log 'FLIP ACTION'
-
-rotateAction = () ->
-  console.log 'ROTATE ACTION'
-
-invertAction = () ->
-  console.log 'INVERT ACTION'
-
-replaceAction = () ->
-  console.log 'REPLACE ACTION'
-
-scaleAction = () ->
-  console.log 'SCALE ACTION'
-
-resizeAction = () ->
-  menuUp = true
-  normalCircumstance = false
-  $('#menuDiv').css('top', (window.innerHeight - toolbarHeight - 45).toString())
-  $('#menuDiv').css('left', (toolbarWidth + 10).toString())
-
-  menuContext.canvas.width = 390
-  menuContext.canvas.height = 35
-
-  previouslySelectedTool = selectedTool
-  selectedTool = ctPaintTools[15]
-  menuContext.drawImage(selectedTool.menuImage, 0, 0)
-  drawToolbars()
-
-  resizeDataSortingInitialize(canvasWidth, canvasHeight)
-  whatSortOfDataSorting = resizeDataSorting
-
-horizontalColorSwap = () ->
-  previouslySelectedTool = selectedTool
-  selectedTool = ctPaintTools[16]
-  drawToolbars()
-
-  rearrangedSwatches = [ colorSwatches[1], colorSwatches[0], colorSwatches[3], colorSwatches[2] ]
-  colorSwatches = rearrangedSwatches
-
-  setTimeout( ()->
-    selectedTool = previouslySelectedTool
-    drawToolbars()
-  ,20)
-
-verticalColorSwap = () ->
-  previouslySelectedTool = selectedTool
-  selectedTool = ctPaintTools[17]
-  drawToolbars()
-
-  rearrangedSwatches = [ colorSwatches[2], colorSwatches[3], colorSwatches[0], colorSwatches[1] ]
-  colorSwatches = rearrangedSwatches
-
-  setTimeout( ()->
-    selectedTool = previouslySelectedTool
-    drawToolbars()
-  ,20)
-
-# organized as they are in the 2 x 11 tool bar grid
-toolNames = [
-  'zoom', 'select'
-  'sample', 'fill'
-  'square', 'circle'
-  'line', 'point'
-  'NOT A TOOL', 'NOT A TOOL'
-  'flip', 'rotate'
-  'invert', 'displace'
-  'scale', 'resize'
-  'horizontalSwap', 'verticalSwap'
-  'copy', 'paste'
-  'cut', 'view'
-  'undo', 'redo'
-]
-
-toolMaxMagnitudes = [
-  4, ''
-  '', ''
-  15, 15
-  6, 9
-
-  '', ''
-
-  '', ''
-  '', ''
-  '', ''
-  '', ''
-  '', ''
-  '', ''
-  '', ''
-]
-
-toolModeCapacity = [
-  false, true
-  false, false
-  true, true
-  false, false
-
-  false, false
-
-  false, false
-  false, false
-  false, false
-  false, false
-  false, false
-  false, false
-  false, false
-]
-
-toolMenuImages = [
-  '', ''
-  '', ''
-  '', ''
-  '', ''
-
-  '', ''
-
-  new Image(), new Image()
-  '', new Image()
-  new Image(), new Image()
-  '', ''
-  '', ''
-  '', ''
-  '', ''
-]
-
-ctPaintTools = {}
-
-iteration = 0
-while iteration < numberOfTools
-  thisIteration = iteration
-  ctPaintTools[iteration] =
-    number: iteration
-    name: toolNames[iteration]
-    clickRegion: [((iteration%2)*25),(Math.floor(iteration/2))*25]
-    pressedImage: [new Image(), new Image()]
-    magnitude: 1
-    maxMagnitude: toolMaxMagnitudes[iteration]
-    modeCapable: toolModeCapacity[iteration]
-    mode: false
-    menuImage: toolMenuImages[iteration]
-    toolsAction: ->
-      console.log 'did a '+toolNames[@number]
-  ctPaintTools[iteration].pressedImage[0].src = 'assets\\u'+zeroPadder(iteration,2)+'.PNG'
-  ctPaintTools[iteration].pressedImage[1].src = 'assets\\v'+zeroPadder(iteration,2)+'.PNG'
-  iteration++
-
-ctPaintTools[0].toolsAction = zoomAction
-ctPaintTools[1].toolsAction = selectAction
-ctPaintTools[3].toolsAction = fillAction
-ctPaintTools[4].toolsAction = squareAction
-ctPaintTools[5].toolsAction = circleAction
-ctPaintTools[6].toolsAction = lineAction
-ctPaintTools[7].toolsAction = pointAction
-ctPaintTools[10].toolsAction = flipAction
-ctPaintTools[10].menuImage.src = 'assets\\t01.png'
-ctPaintTools[11].toolsAction = rotateAction
-ctPaintTools[11].menuImage.src = 'assets\\t04.png'
-ctPaintTools[12].toolsAction = invertAction
-ctPaintTools[13].toolsAction = replaceAction
-ctPaintTools[13].menuImage.src = 'assets\\t02.png'
-ctPaintTools[14].toolsAction = scaleAction
-ctPaintTools[14].menuImage.src = 'assets\\t05.png'
-ctPaintTools[15].toolsAction = resizeAction
-ctPaintTools[15].menuImage.src = 'assets\\t03.png'
-ctPaintTools[16].toolsAction = horizontalColorSwap
-ctPaintTools[17].toolsAction = verticalColorSwap
-
-toolbar1Canvas = document.getElementById('toolbar1')
-toolbar1Context = toolbar1Canvas.getContext('2d')
-toolbar1sImage0 = new Image()
-toolbar1sImage0.src = 'assets\\toolbar10.png'
-toolbar1sImage1 = new Image()
-toolbar1sImage1.src = 'assets\\toolbar11.png'
-backgroundCanvas = document.getElementById('background')
-backgroundContext = backgroundCanvas.getContext('2d')
-
-border0Canvas = document.getElementById('border0')
-border0Context = border0Canvas.getContext('2d')
-border1Canvas = document.getElementById('border1')
-border1Context = border1Canvas.getContext('2d')
-border2Canvas = document.getElementById('border2')
-border2Context = border2Canvas.getContext('2d')
-border3Canvas = document.getElementById('border3')
-border3Context = border3Canvas.getContext('2d')
-
-border0Context.canvas.width = 1
-border0Context.canvas.height = 1
-border1Context.canvas.width = 1
-border1Context.canvas.height = 1
-border2Context.canvas.width = 1
-border2Context.canvas.height = 1
-border3Context.canvas.width = 1
-border3Context.canvas.height = 1
-
-menuCanvas = document.getElementById('menu')
-menuContext = menuCanvas.getContext('2d')
-
-getColorValue = (canvas, whereAtX, whereAtY) ->
-  return rgbToHex(canvas.getImageData(whereAtX, whereAtY, 1, 1).data)
-
-putPixel = (canvas, color, whereAtX, whereAtY) ->
-  newPixel = canvas.createImageData(1,1)
-  newPixelsColor = newPixel.data
-  newPixelsColor[0] = color[0]
-  newPixelsColor[1] = color[1]
-  newPixelsColor[2] = color[2]
-  newPixelsColor[3] = 255
-  canvas.putImageData(newPixel, whereAtX, whereAtY)
 
 drawSelectBox = (canvas, beginX, beginY, endX, endY) ->
   if beginX > endX
@@ -638,99 +318,14 @@ drawSelectBox = (canvas, beginX, beginY, endX, endY) ->
       canvas.putImageData(selectLinesOfLengthY[distanceY - 1], endX, endY - distanceY)
       distanceY-=distanceY
 
-drawLine = (canvas, color, beginX, beginY, endX, endY) ->
-  deltaX = Math.abs(endX - beginX)
-  if beginX < endX
-    directionX = 1
-  else
-    directionX = -1
-  deltaY = Math.abs(endY - beginY)
-  if beginY < endY
-    directionY = 1
-  else
-    directionY = -1
-  if deltaX > deltaY
-    errorOne = deltaX/2
-  else
-    errorOne = -deltaY/2
-  keepGoin = true
-  while keepGoin
-    putPixel(canvas,color,beginX,beginY)
-    if (beginX == endX) and (beginY == endY)
-      keepGoin = false
-    errorTwo = errorOne
-    if errorTwo > -deltaX
-      errorOne -= deltaY
-      beginX += directionX
-    if errorTwo < deltaY
-      errorOne += deltaX
-      beginY += directionY
+sampleAction = ->
+  console.log '2'
 
-drawCircle = ( canvas, color, centerX, centerY, radius, cornerBlock) ->
-  radiusError = 1 - radius
-  xOffset = 0
-  yOffset = radius
-  xDelta = 0
-  yDelta = -2 * radius
+getColorValue = (canvas, whereAtX, whereAtY) ->
+  return rgbToHex(canvas.getImageData(whereAtX, whereAtY, 1, 1).data)
 
-  putPixel(canvas, color, centerX, centerY + radius)
-  putPixel(canvas, color, centerX, centerY - radius)
-  putPixel(canvas, color, centerX + radius, centerY)
-  putPixel(canvas, color, centerX - radius, centerY)
-
-  if not cornerBlock
-    while xOffset < yOffset
-      if radiusError >= 0
-        yOffset--
-        yDelta += 2
-        radiusError += yDelta
-      xOffset++
-      xDelta += 2
-      radiusError += (xDelta + 1)
-
-      putPixel( canvas, color, centerX + xOffset, centerY + yOffset)
-      putPixel( canvas, color, centerX - xOffset, centerY + yOffset)
-      putPixel( canvas, color, centerX + xOffset, centerY - yOffset)
-      putPixel( canvas, color, centerX - xOffset, centerY - yOffset)
-
-      putPixel( canvas, color, centerX + yOffset, centerY + xOffset)
-      putPixel( canvas, color, centerX - yOffset, centerY + xOffset)
-      putPixel( canvas, color, centerX + yOffset, centerY - xOffset)
-      putPixel( canvas, color, centerX - yOffset, centerY - xOffset)
-  else
-    doACornerBlock = false
-    while xOffset < yOffset
-      if radiusError >= 0
-        yOffset--
-        yDelta += 2
-        radiusError += yDelta
-        doACornerBlock = true
-      xOffset++
-      xDelta += 2
-      radiusError += (xDelta + 1)
-
-      putPixel( canvas, color, centerX + xOffset, centerY + yOffset)
-      putPixel( canvas, color, centerX - xOffset, centerY + yOffset)
-      putPixel( canvas, color, centerX + xOffset, centerY - yOffset)
-      putPixel( canvas, color, centerX - xOffset, centerY - yOffset)
-
-      putPixel( canvas, color, centerX + yOffset, centerY + xOffset)
-      putPixel( canvas, color, centerX - yOffset, centerY + xOffset)
-      putPixel( canvas, color, centerX + yOffset, centerY - xOffset)
-      putPixel( canvas, color, centerX - yOffset, centerY - xOffset)
-      
-      if doACornerBlock
-        putPixel( canvas, color, centerX + xOffset - 1, centerY + yOffset)
-        putPixel( canvas, color, centerX - xOffset + 1, centerY + yOffset)
-        putPixel( canvas, color, centerX + xOffset - 1, centerY - yOffset)
-        putPixel( canvas, color, centerX - xOffset + 1, centerY - yOffset)
-
-        putPixel( canvas, color, centerX + yOffset, centerY + xOffset - 1)
-        putPixel( canvas, color, centerX - yOffset, centerY + xOffset - 1)
-        putPixel( canvas, color, centerX + yOffset, centerY - xOffset + 1)
-        putPixel( canvas, color, centerX - yOffset, centerY - xOffset + 1)
-        doACornerBlock = false
-
+fillAction = (canvas, context, colorToChangeTo, xPos, yPos) ->
+  floodFill(canvas, context, colorToChangeTo, xPos, yPos)
 
 floodFill = (canvas, context, colorToChangeTo, xPosition, yPosition) ->
   # The argument context is the context of the argument canvas.
@@ -865,7 +460,511 @@ floodFill = (canvas, context, colorToChangeTo, xPosition, yPosition) ->
       colorValueIndex++
     pixelInCanvasIndex++
   context.putImageData(revisedCanvasToPaste,0,0)
-  
+
+squareAction = (canvas, color, beginX, beginY, endX, endY, fillOrNot) ->
+  if not selectedTool.mode and not fillOrNot
+    magnitudeIncrement = 0
+    if (beginX < endX) == (beginY < endY)
+      if (beginX < endX)
+        while magnitudeIncrement < selectedTool.magnitude
+          drawLine(canvas, color, beginX + magnitudeIncrement, beginY + magnitudeIncrement, endX - magnitudeIncrement, beginY + magnitudeIncrement)
+          drawLine(canvas, color, beginX + magnitudeIncrement, beginY + magnitudeIncrement, beginX + magnitudeIncrement, endY - magnitudeIncrement )
+          drawLine(canvas, color, endX - magnitudeIncrement, beginY + magnitudeIncrement, endX - magnitudeIncrement, endY - magnitudeIncrement)
+          drawLine(canvas, color, beginX + magnitudeIncrement, endY - magnitudeIncrement, endX - magnitudeIncrement, endY - magnitudeIncrement)
+          magnitudeIncrement++
+      else
+        while magnitudeIncrement < selectedTool.magnitude
+          drawLine(canvas, color, beginX - magnitudeIncrement, beginY - magnitudeIncrement, endX + magnitudeIncrement, beginY - magnitudeIncrement)
+          drawLine(canvas, color, beginX - magnitudeIncrement, beginY - magnitudeIncrement, beginX - magnitudeIncrement, endY + magnitudeIncrement )
+          drawLine(canvas, color, endX + magnitudeIncrement, beginY - magnitudeIncrement, endX + magnitudeIncrement, endY + magnitudeIncrement)
+          drawLine(canvas, color, beginX - magnitudeIncrement, endY + magnitudeIncrement, endX + magnitudeIncrement, endY + magnitudeIncrement)
+          magnitudeIncrement++
+    else
+      if (endY < beginY)
+        while magnitudeIncrement < selectedTool.magnitude
+          drawLine(canvas, color, beginX + magnitudeIncrement, beginY - magnitudeIncrement, endX - magnitudeIncrement, beginY - magnitudeIncrement)
+          drawLine(canvas, color, beginX + magnitudeIncrement, beginY - magnitudeIncrement, beginX + magnitudeIncrement, endY + magnitudeIncrement )
+          drawLine(canvas, color, endX - magnitudeIncrement, beginY - magnitudeIncrement, endX - magnitudeIncrement, endY + magnitudeIncrement)
+          drawLine(canvas, color, beginX + magnitudeIncrement, endY + magnitudeIncrement, endX - magnitudeIncrement, endY + magnitudeIncrement)
+          magnitudeIncrement++
+      else
+        while magnitudeIncrement < selectedTool.magnitude
+          drawLine(canvas, color, beginX - magnitudeIncrement, beginY + magnitudeIncrement, endX + magnitudeIncrement, beginY + magnitudeIncrement)
+          drawLine(canvas, color, beginX - magnitudeIncrement, beginY + magnitudeIncrement, beginX - magnitudeIncrement, endY - magnitudeIncrement )
+          drawLine(canvas, color, endX + magnitudeIncrement, beginY + magnitudeIncrement, endX + magnitudeIncrement, endY - magnitudeIncrement)
+          drawLine(canvas, color, beginX - magnitudeIncrement, endY - magnitudeIncrement, endX + magnitudeIncrement, endY - magnitudeIncrement)
+          magnitudeIncrement++
+  else
+    numberOfIterationsNecessary = 0
+    if Math.abs(beginX - endX) > Math.abs(beginY - endY)
+      numberOfIterationsNecessary = Math.abs(beginY - endY)
+    else
+      numberOfIterationsNecessary = Math.abs(beginX - endX)
+    magnitudeIncrement = 0
+    if (beginX < endX) == (beginY < endY)
+      if (beginX < endX)
+        while magnitudeIncrement < numberOfIterationsNecessary
+          drawLine(canvas, color, beginX + magnitudeIncrement, beginY + magnitudeIncrement, endX - magnitudeIncrement, beginY + magnitudeIncrement)
+          drawLine(canvas, color, beginX + magnitudeIncrement, beginY + magnitudeIncrement, beginX + magnitudeIncrement, endY - magnitudeIncrement )
+          drawLine(canvas, color, endX - magnitudeIncrement, beginY + magnitudeIncrement, endX - magnitudeIncrement, endY - magnitudeIncrement)
+          drawLine(canvas, color, beginX + magnitudeIncrement, endY - magnitudeIncrement, endX - magnitudeIncrement, endY - magnitudeIncrement)
+          magnitudeIncrement++
+      else
+        while magnitudeIncrement < numberOfIterationsNecessary
+          drawLine(canvas, color, beginX - magnitudeIncrement, beginY - magnitudeIncrement, endX + magnitudeIncrement, beginY - magnitudeIncrement)
+          drawLine(canvas, color, beginX - magnitudeIncrement, beginY - magnitudeIncrement, beginX - magnitudeIncrement, endY + magnitudeIncrement )
+          drawLine(canvas, color, endX + magnitudeIncrement, beginY - magnitudeIncrement, endX + magnitudeIncrement, endY + magnitudeIncrement)
+          drawLine(canvas, color, beginX - magnitudeIncrement, endY + magnitudeIncrement, endX + magnitudeIncrement, endY + magnitudeIncrement)
+          magnitudeIncrement++
+    else
+      if (endY < beginY)
+        while magnitudeIncrement < numberOfIterationsNecessary
+          drawLine(canvas, color, beginX + magnitudeIncrement, beginY - magnitudeIncrement, endX - magnitudeIncrement, beginY - magnitudeIncrement)
+          drawLine(canvas, color, beginX + magnitudeIncrement, beginY - magnitudeIncrement, beginX + magnitudeIncrement, endY + magnitudeIncrement )
+          drawLine(canvas, color, endX - magnitudeIncrement, beginY - magnitudeIncrement, endX - magnitudeIncrement, endY + magnitudeIncrement)
+          drawLine(canvas, color, beginX + magnitudeIncrement, endY + magnitudeIncrement, endX - magnitudeIncrement, endY + magnitudeIncrement)
+          magnitudeIncrement++
+      else
+        while magnitudeIncrement < numberOfIterationsNecessary
+          drawLine(canvas, color, beginX - magnitudeIncrement, beginY + magnitudeIncrement, endX + magnitudeIncrement, beginY + magnitudeIncrement)
+          drawLine(canvas, color, beginX - magnitudeIncrement, beginY + magnitudeIncrement, beginX - magnitudeIncrement, endY - magnitudeIncrement )
+          drawLine(canvas, color, endX + magnitudeIncrement, beginY + magnitudeIncrement, endX + magnitudeIncrement, endY - magnitudeIncrement)
+          drawLine(canvas, color, beginX - magnitudeIncrement, endY - magnitudeIncrement, endX + magnitudeIncrement, endY - magnitudeIncrement)
+          magnitudeIncrement++
+
+circleAction = ( canvas, color, xPos, yPos ) ->
+  if not selectedTool.mode
+    whetherCornerBlocks = false
+    if selectedTool.magnitude > 1
+      whetherCornerBlocks = true
+    calculatedRadius = Math.pow(Math.pow(xPos - oldX, 2) + Math.pow(yPos - oldY, 2), 0.5)
+    calculatedRadius = Math.round(calculatedRadius)
+    magnitudeIncrement = 0
+    while magnitudeIncrement < selectedTool.magnitude
+      drawCircle( canvas, color, oldX, oldY, calculatedRadius - magnitudeIncrement, whetherCornerBlocks )
+      magnitudeIncrement++
+  else
+    calculatedRadius = Math.pow(Math.pow(xPos - oldX, 2) + Math.pow(yPos - oldY, 2), 0.5)
+    calculatedRadius = Math.round(calculatedRadius)
+    magnitudeIncrement = 0
+    while magnitudeIncrement < calculatedRadius
+      drawCircle( canvas, color, oldX, oldY, calculatedRadius - magnitudeIncrement, true )
+      magnitudeIncrement++
+      
+drawCircle = ( canvas, color, centerX, centerY, radius, cornerBlock) ->
+  radiusError = 1 - radius
+  xOffset = 0
+  yOffset = radius
+  xDelta = 0
+  yDelta = -2 * radius
+
+  putPixel(canvas, color, centerX, centerY + radius)
+  putPixel(canvas, color, centerX, centerY - radius)
+  putPixel(canvas, color, centerX + radius, centerY)
+  putPixel(canvas, color, centerX - radius, centerY)
+
+  if not cornerBlock
+    while xOffset < yOffset
+      if radiusError >= 0
+        yOffset--
+        yDelta += 2
+        radiusError += yDelta
+      xOffset++
+      xDelta += 2
+      radiusError += (xDelta + 1)
+
+      putPixel( canvas, color, centerX + xOffset, centerY + yOffset)
+      putPixel( canvas, color, centerX - xOffset, centerY + yOffset)
+      putPixel( canvas, color, centerX + xOffset, centerY - yOffset)
+      putPixel( canvas, color, centerX - xOffset, centerY - yOffset)
+
+      putPixel( canvas, color, centerX + yOffset, centerY + xOffset)
+      putPixel( canvas, color, centerX - yOffset, centerY + xOffset)
+      putPixel( canvas, color, centerX + yOffset, centerY - xOffset)
+      putPixel( canvas, color, centerX - yOffset, centerY - xOffset)
+  else
+    doACornerBlock = false
+    while xOffset < yOffset
+      if radiusError >= 0
+        yOffset--
+        yDelta += 2
+        radiusError += yDelta
+        doACornerBlock = true
+      xOffset++
+      xDelta += 2
+      radiusError += (xDelta + 1)
+
+      putPixel( canvas, color, centerX + xOffset, centerY + yOffset)
+      putPixel( canvas, color, centerX - xOffset, centerY + yOffset)
+      putPixel( canvas, color, centerX + xOffset, centerY - yOffset)
+      putPixel( canvas, color, centerX - xOffset, centerY - yOffset)
+
+      putPixel( canvas, color, centerX + yOffset, centerY + xOffset)
+      putPixel( canvas, color, centerX - yOffset, centerY + xOffset)
+      putPixel( canvas, color, centerX + yOffset, centerY - xOffset)
+      putPixel( canvas, color, centerX - yOffset, centerY - xOffset)
+      
+      if doACornerBlock
+        putPixel( canvas, color, centerX + xOffset - 1, centerY + yOffset)
+        putPixel( canvas, color, centerX - xOffset + 1, centerY + yOffset)
+        putPixel( canvas, color, centerX + xOffset - 1, centerY - yOffset)
+        putPixel( canvas, color, centerX - xOffset + 1, centerY - yOffset)
+
+        putPixel( canvas, color, centerX + yOffset, centerY + xOffset - 1)
+        putPixel( canvas, color, centerX - yOffset, centerY + xOffset - 1)
+        putPixel( canvas, color, centerX + yOffset, centerY - xOffset + 1)
+        putPixel( canvas, color, centerX - yOffset, centerY - xOffset + 1)
+        doACornerBlock = false
+
+lineAction = (canvas, color, beginX, beginY, endX, endY) ->
+  lineSlope = undefined
+  if selectedTool.magnitude > 1
+    lineSlope = Math.abs(beginX - endX) / Math.abs(beginY - endY)
+    if lineSlope > 1
+      lineSlope = Math.abs(beginY - endY) / Math.abs(beginX - endX)
+  magnitudeIncrement = 0
+  while magnitudeIncrement < selectedTool.magnitude
+    drawLine(canvas, color, beginX + magnitudeIncrement, beginY, endX + magnitudeIncrement, endY)
+    drawLine(canvas, color, beginX - magnitudeIncrement, beginY, endX - magnitudeIncrement, endY)
+    drawLine(canvas, color, beginX, beginY + magnitudeIncrement, endX, endY + magnitudeIncrement)
+    drawLine(canvas, color, beginX, beginY - magnitudeIncrement, endX, endY - magnitudeIncrement)
+    magnitudeIncrement++
+  if selectedTool.magnitude > 1
+    calculatedRadius = (selectedTool.magnitude - 2) - Math.round(lineSlope * 1.21)
+    magnitudeIncrement = 0
+    while magnitudeIncrement < calculatedRadius
+      drawCircle( canvas, color, beginX, beginY, calculatedRadius - magnitudeIncrement, true )
+      drawCircle( canvas, color, endX, endY, calculatedRadius - magnitudeIncrement, true )
+      magnitudeIncrement++
+
+drawLine = (canvas, color, beginX, beginY, endX, endY) ->
+  deltaX = Math.abs(endX - beginX)
+  if beginX < endX
+    directionX = 1
+  else
+    directionX = -1
+  deltaY = Math.abs(endY - beginY)
+  if beginY < endY
+    directionY = 1
+  else
+    directionY = -1
+  if deltaX > deltaY
+    errorOne = deltaX/2
+  else
+    errorOne = -deltaY/2
+  keepGoin = true
+  while keepGoin
+    putPixel(canvas,color,beginX,beginY)
+    if (beginX == endX) and (beginY == endY)
+      keepGoin = false
+    errorTwo = errorOne
+    if errorTwo > -deltaX
+      errorOne -= deltaY
+      beginX += directionX
+    if errorTwo < deltaY
+      errorOne += deltaX
+      beginY += directionY
+
+pointAction = (canvas, color, beginX, beginY, endX, endY) ->
+  if selectedTool.magnitude < 2
+    drawLine(canvas, color, beginX, beginY, endX, endY)
+  else
+    magnitudeIncrement = 0
+    while magnitudeIncrement < selectedTool.magnitude
+      drawLine(canvas, color, beginX + magnitudeIncrement, beginY, endX + magnitudeIncrement, endY)
+      drawLine(canvas, color, beginX - magnitudeIncrement, beginY, endX - magnitudeIncrement, endY)
+      drawLine(canvas, color, beginX, beginY + magnitudeIncrement, endX, endY + magnitudeIncrement)
+      drawLine(canvas, color, beginX, beginY - magnitudeIncrement, endX, endY - magnitudeIncrement)
+      magnitudeIncrement++
+  if selectedTool.magnitude > 1
+    calculatedRadius = (selectedTool.magnitude - 2)
+    magnitudeIncrement = 0
+    while magnitudeIncrement < calculatedRadius
+      drawCircle( canvas, color, beginX, beginY, calculatedRadius - magnitudeIncrement, true )
+      drawCircle( canvas, color, endX, endY, calculatedRadius - magnitudeIncrement, true )
+      magnitudeIncrement++
+
+putPixel = (canvas, color, whereAtX, whereAtY) ->
+  newPixel = canvas.createImageData(1,1)
+  newPixelsColor = newPixel.data
+  newPixelsColor[0] = color[0]
+  newPixelsColor[1] = color[1]
+  newPixelsColor[2] = color[2]
+  newPixelsColor[3] = 255
+  canvas.putImageData(newPixel, whereAtX, whereAtY)
+flipAction = () ->
+  console.log 'FLIP ACTION'
+rotateAction = () ->
+  console.log 'ROTATE ACTION'
+invertAction = () ->
+  console.log 'INVERT ACTION'
+replaceAction = () ->
+  console.log 'REPLACE ACTION'
+scaleAction = () ->
+  console.log 'SCALE ACTION'
+resizeAction = () ->
+  menuUp = true
+  normalCircumstance = false
+  $('#menuDiv').css('top', (window.innerHeight - toolbarHeight - 45).toString())
+  $('#menuDiv').css('left', (toolbarWidth + 10).toString())
+
+  menuContext.canvas.width = 390
+  menuContext.canvas.height = 35
+
+  previouslySelectedTool = selectedTool
+  selectedTool = ctPaintTools[15]
+  menuContext.drawImage(selectedTool.menuImage, 0, 0)
+  drawToolbars()
+
+  resizeDataSortingInitialize(canvasWidth, canvasHeight)
+  whatSortOfDataSorting = resizeDataSorting
+
+resizeDataSortingInitialize = (width, height) ->
+  menuDatumZero = zeroPadder(width, 4) + zeroPadder(height, 4)
+  spotInMenuZeroDatum = 0
+  drawResizeMenu()
+
+
+resizeDataSorting = ( inputMaterial ) ->
+  if inputMaterial isnt undefined
+    if (inputMaterial isnt 'backspace') and (inputMaterial isnt 'left') and (inputMaterial isnt 'right') and (inputMaterial isnt 'enter')
+      if not isNaN(inputMaterial)
+        menuDatumZero = replaceAt(menuDatumZero, inputMaterial, spotInMenuZeroDatum )
+        if spotInMenuZeroDatum < 7
+          spotInMenuZeroDatum++
+    else
+      switch inputMaterial
+        when 'backspace'
+          menuDatumZero = replaceAt(menuDatumZero, '0', spotInMenuZeroDatum)
+          if 0 < spotInMenuZeroDatum
+            spotInMenuZeroDatum--
+        when 'left'
+          if 0 < spotInMenuZeroDatum
+            spotInMenuZeroDatum--
+        when 'right'
+          if spotInMenuZeroDatum < 7
+            spotInMenuZeroDatum++
+        when 'enter'
+          $('#menuDiv').css('top',(window.innerHeight).toString())
+          normalCircumstance = true
+          menuUp = false
+          newWidth = menuDatumZero.substr(0,4)
+          newHeight = menuDatumZero.substr(4,4)
+          ctContext.canvas.width = parseInt(newWidth)
+          ctContext.canvas.height = parseInt(newHeight)
+          canvasDataAsImage = new Image()
+          canvasDataAsImage.onload = ->
+            ctContext.drawImage(canvasDataAsImage,0,0)
+            canvasAsData = ctCanvas.toDataURL()
+            canvasDataAsImage = new Image()
+            canvasDataAsImage.src = canvasAsData
+          canvasDataAsImage.src = canvasAsData
+          ctContext.fillStyle = rgbToHex(colorSwatches[1])
+          if (ctContext.canvas.width > canvasWidth) and (ctContext.canvas.height > canvasHeight)
+            ctContext.fillRect(canvasWidth, 0, ctContext.canvas.width, ctContext.canvas.height)
+            ctContext.fillRect(0, canvasHeight, canvasWidth, ctContext.canvas.height)
+          else if (ctContext.canvas.width > canvasWidth)
+            ctContext.fillRect(canvasWidth, 0, ctContext.canvas.width, ctContext.canvas.height)
+          else if (ctContext.canvas.height > canvasHeight)
+            ctContext.fillRect(0, canvasHeight, ctContext.canvas.width, ctContext.canvas.height)
+          canvasWidth = ctContext.canvas.width
+          canvasHeight = ctContext.canvas.height
+          ctCanvas.style.width = (canvasWidth).toString()+'px'
+          ctCanvas.style.height = (canvasHeight).toString()+'px'
+          positionCorners()
+          selectedTool = previouslySelectedTool
+          drawToolbars()
+    drawResizeMenu()
+
+drawResizeMenu = () ->
+  drawStringAsCommandPrompt( menuContext, menuDatumZero.substr(0,4), 1, 116, 10 )
+  drawStringAsCommandPrompt( menuContext, menuDatumZero.substr(4,4), 1, 228, 10 )
+  drawStringAsCommandPrompt( menuContext, menuDatumZero[spotInMenuZeroDatum], 2, 116 + ((spotInMenuZeroDatum // 4) * 112) + ( 12 * ( spotInMenuZeroDatum %% 4 ) ), 10 )
+
+
+horizontalColorSwap = () ->
+  previouslySelectedTool = selectedTool
+  selectedTool = ctPaintTools[16]
+  drawToolbars()
+
+  rearrangedSwatches = [ colorSwatches[1], colorSwatches[0], colorSwatches[3], colorSwatches[2] ]
+  colorSwatches = rearrangedSwatches
+
+  setTimeout( ()->
+    selectedTool = previouslySelectedTool
+    drawToolbars()
+  ,20)
+
+verticalColorSwap = () ->
+  previouslySelectedTool = selectedTool
+  selectedTool = ctPaintTools[17]
+  drawToolbars()
+
+  rearrangedSwatches = [ colorSwatches[2], colorSwatches[3], colorSwatches[0], colorSwatches[1] ]
+  colorSwatches = rearrangedSwatches
+
+  setTimeout( ()->
+    selectedTool = previouslySelectedTool
+    drawToolbars()
+  ,20)
+
+colorMenu = ()->
+  menuUp = true
+  normalCircumstance = false
+  $('#menuDiv').css('top', (window.innerHeight - toolbarHeight - 45).toString())
+  $('#menuDiv').css('left', (toolbarWidth + 10).toString())
+
+  menuContext.canvas.width = 255
+  menuContext.canvas.height = 35
+
+  menuContext.drawImage(colorMenuImage, 0, 0)
+
+  colorDataSortingInitialize()
+  whatSortOfDataSorting = colorDataSorting
+
+colorDataSortingInitialize = () ->
+  menuDatumZero = rgbToHex(colorPallete[spotInColorPallete]).substr(1)
+  spotInMenuZeroDatum = 0
+  drawColorMenu()
+
+colorDataSorting = ( inputMaterial ) ->
+  if inputMaterial isnt undefined
+    if (inputMaterial isnt 'backspace') and (inputMaterial isnt 'left') and (inputMaterial isnt 'right') and (inputMaterial isnt 'enter')
+      menuDatumZero = replaceAt(menuDatumZero, inputMaterial, spotInMenuZeroDatum )
+      if spotInMenuZeroDatum < 5
+        spotInMenuZeroDatum++
+    else
+      switch inputMaterial
+        when 'backspace'
+          menuDatumZero = replaceAt(menuDatumZero, '0', spotInMenuZeroDatum)
+          if 0 < spotInMenuZeroDatum
+            spotInMenuZeroDatum--
+        when 'left'
+          if 0 < spotInMenuZeroDatum
+            spotInMenuZeroDatum--
+        when 'right'
+          if spotInMenuZeroDatum < 5
+            spotInMenuZeroDatum++
+        when 'enter'
+          colorPallete[spotInColorPallete] =  hexToRGB(menuDatumZero)
+          drawToolbars()
+          $('#menuDiv').css('top',(window.innerHeight).toString())
+          normalCircumstance = true
+          menuUp = false
+    drawColorMenu()
+
+drawColorMenu = () ->
+  drawStringAsCommandPrompt( menuContext, menuDatumZero.toUpperCase(), 1, 91, 10 )
+  drawStringAsCommandPrompt( menuContext, menuDatumZero[spotInMenuZeroDatum].toUpperCase(), 2, 91+(12*spotInMenuZeroDatum), 10 )
+
+# organized as they are in the 2 x 11 tool bar grid
+toolNames = [
+  'zoom', 'select'
+  'sample', 'fill'
+  'square', 'circle'
+  'line', 'point'
+  'NOT A TOOL', 'NOT A TOOL'
+  'flip', 'rotate'
+  'invert', 'displace'
+  'scale', 'resize'
+  'horizontalSwap', 'verticalSwap'
+  'copy', 'paste'
+  'cut', 'view'
+  'undo', 'redo'
+]
+
+toolMaxMagnitudes = [
+  4, ''
+  '', ''
+  15, 15
+  6, 9
+
+  '', ''
+
+  '', ''
+  '', ''
+  '', ''
+  '', ''
+  '', ''
+  '', ''
+  '', ''
+]
+
+toolModeCapacity = [
+  false, true
+  false, false
+  true, true
+  false, false
+
+  false, false
+
+  false, false
+  false, false
+  false, false
+  false, false
+  false, false
+  false, false
+  false, false
+]
+
+toolMenuImages = [
+  '', ''
+  '', ''
+  '', ''
+  '', ''
+
+  '', ''
+
+  new Image(), new Image()
+  '', new Image()
+  new Image(), new Image()
+  '', ''
+  '', ''
+  '', ''
+  '', ''
+]
+
+ctPaintTools = {}
+
+iteration = 0
+while iteration < numberOfTools
+  thisIteration = iteration
+  ctPaintTools[iteration] =
+    number: iteration
+    name: toolNames[iteration]
+    clickRegion: [((iteration%2)*25),(Math.floor(iteration/2))*25]
+    pressedImage: [new Image(), new Image()]
+    magnitude: 1
+    maxMagnitude: toolMaxMagnitudes[iteration]
+    modeCapable: toolModeCapacity[iteration]
+    mode: false
+    menuImage: toolMenuImages[iteration]
+    toolsAction: ->
+      console.log 'did a '+toolNames[@number]
+  ctPaintTools[iteration].pressedImage[0].src = 'assets\\u'+zeroPadder(iteration,2)+'.PNG'
+  ctPaintTools[iteration].pressedImage[1].src = 'assets\\v'+zeroPadder(iteration,2)+'.PNG'
+  iteration++
+
+ctPaintTools[0].toolsAction = zoomAction
+ctPaintTools[1].toolsAction = selectAction
+ctPaintTools[3].toolsAction = fillAction
+ctPaintTools[4].toolsAction = squareAction
+ctPaintTools[5].toolsAction = circleAction
+ctPaintTools[6].toolsAction = lineAction
+ctPaintTools[7].toolsAction = pointAction
+ctPaintTools[10].toolsAction = flipAction
+ctPaintTools[10].menuImage.src = 'assets\\t01.png'
+ctPaintTools[11].toolsAction = rotateAction
+ctPaintTools[11].menuImage.src = 'assets\\t04.png'
+ctPaintTools[12].toolsAction = invertAction
+ctPaintTools[13].toolsAction = replaceAction
+ctPaintTools[13].menuImage.src = 'assets\\t02.png'
+ctPaintTools[14].toolsAction = scaleAction
+ctPaintTools[14].menuImage.src = 'assets\\t05.png'
+ctPaintTools[15].toolsAction = resizeAction
+ctPaintTools[15].menuImage.src = 'assets\\t03.png'
+ctPaintTools[16].toolsAction = horizontalColorSwap
+ctPaintTools[17].toolsAction = verticalColorSwap
 positionCorners = ->
   if cornersVisible
     $('#border0Div').css('top',(canvasYPos-1+canvasYOffset).toString())
@@ -910,20 +1009,6 @@ prepareCanvas = ->
 positionMenu = () ->
   if not menuUp
     $('#menuDiv').css('top',(window.innerHeight).toString())
-
-colorMenu = ()->
-  menuUp = true
-  normalCircumstance = false
-  $('#menuDiv').css('top', (window.innerHeight - toolbarHeight - 45).toString())
-  $('#menuDiv').css('left', (toolbarWidth + 10).toString())
-
-  menuContext.canvas.width = 255
-  menuContext.canvas.height = 35
-
-  menuContext.drawImage(colorMenuImage, 0, 0)
-
-  colorDataSortingInitialize()
-  whatSortOfDataSorting = colorDataSorting
 
 setCanvasSizes = ->
   toolbar0Context.canvas.width = toolbarWidth
@@ -1107,105 +1192,6 @@ keyListeningUnderAbnormalCircumstance = (event) ->
       return 'right'
     when keysToKeyCodes['enter']
       return 'enter'
-
-colorDataSortingInitialize = () ->
-  menuDatumZero = rgbToHex(colorPallete[spotInColorPallete]).substr(1)
-  spotInMenuZeroDatum = 0
-  drawColorMenu()
-
-resizeDataSortingInitialize = (width, height) ->
-  menuDatumZero = zeroPadder(width, 4) + zeroPadder(height, 4)
-  spotInMenuZeroDatum = 0
-  drawResizeMenu()
-
-colorDataSorting = ( inputMaterial ) ->
-  if inputMaterial isnt undefined
-    if (inputMaterial isnt 'backspace') and (inputMaterial isnt 'left') and (inputMaterial isnt 'right') and (inputMaterial isnt 'enter')
-      menuDatumZero = replaceAt(menuDatumZero, inputMaterial, spotInMenuZeroDatum )
-      if spotInMenuZeroDatum < 5
-        spotInMenuZeroDatum++
-    else
-      switch inputMaterial
-        when 'backspace'
-          menuDatumZero = replaceAt(menuDatumZero, '0', spotInMenuZeroDatum)
-          if 0 < spotInMenuZeroDatum
-            spotInMenuZeroDatum--
-        when 'left'
-          if 0 < spotInMenuZeroDatum
-            spotInMenuZeroDatum--
-        when 'right'
-          if spotInMenuZeroDatum < 5
-            spotInMenuZeroDatum++
-        when 'enter'
-          colorPallete[spotInColorPallete] =  hexToRGB(menuDatumZero)
-          drawToolbars()
-          $('#menuDiv').css('top',(window.innerHeight).toString())
-          normalCircumstance = true
-          menuUp = false
-    drawColorMenu()
-
-drawColorMenu = () ->
-  drawStringAsCommandPrompt( menuContext, menuDatumZero.toUpperCase(), 1, 91, 10 )
-  drawStringAsCommandPrompt( menuContext, menuDatumZero[spotInMenuZeroDatum].toUpperCase(), 2, 91+(12*spotInMenuZeroDatum), 10 )
-
-resizeDataSorting = ( inputMaterial ) ->
-  if inputMaterial isnt undefined
-    if (inputMaterial isnt 'backspace') and (inputMaterial isnt 'left') and (inputMaterial isnt 'right') and (inputMaterial isnt 'enter')
-      if not isNaN(inputMaterial)
-        menuDatumZero = replaceAt(menuDatumZero, inputMaterial, spotInMenuZeroDatum )
-        if spotInMenuZeroDatum < 7
-          spotInMenuZeroDatum++
-    else
-      switch inputMaterial
-        when 'backspace'
-          menuDatumZero = replaceAt(menuDatumZero, '0', spotInMenuZeroDatum)
-          if 0 < spotInMenuZeroDatum
-            spotInMenuZeroDatum--
-        when 'left'
-          if 0 < spotInMenuZeroDatum
-            spotInMenuZeroDatum--
-        when 'right'
-          if spotInMenuZeroDatum < 7
-            spotInMenuZeroDatum++
-        when 'enter'
-          $('#menuDiv').css('top',(window.innerHeight).toString())
-          normalCircumstance = true
-          menuUp = false
-          newWidth = menuDatumZero.substr(0,4)
-          newHeight = menuDatumZero.substr(4,4)
-          ctContext.canvas.width = parseInt(newWidth)
-          ctContext.canvas.height = parseInt(newHeight)
-          canvasDataAsImage = new Image()
-          canvasDataAsImage.onload = ->
-            ctContext.drawImage(canvasDataAsImage,0,0)
-            canvasAsData = ctCanvas.toDataURL()
-            canvasDataAsImage = new Image()
-            canvasDataAsImage.src = canvasAsData
-          canvasDataAsImage.src = canvasAsData
-          ctContext.fillStyle = rgbToHex(colorSwatches[1])
-          if (ctContext.canvas.width > canvasWidth) and (ctContext.canvas.height > canvasHeight)
-            ctContext.fillRect(canvasWidth, 0, ctContext.canvas.width, ctContext.canvas.height)
-            ctContext.fillRect(0, canvasHeight, canvasWidth, ctContext.canvas.height)
-          else if (ctContext.canvas.width > canvasWidth)
-            ctContext.fillRect(canvasWidth, 0, ctContext.canvas.width, ctContext.canvas.height)
-          else if (ctContext.canvas.height > canvasHeight)
-            ctContext.fillRect(0, canvasHeight, ctContext.canvas.width, ctContext.canvas.height)
-          canvasWidth = ctContext.canvas.width
-          canvasHeight = ctContext.canvas.height
-          ctCanvas.style.width = (canvasWidth).toString()+'px'
-          ctCanvas.style.height = (canvasHeight).toString()+'px'
-          positionCorners()
-          selectedTool = previouslySelectedTool
-          drawToolbars()
-    drawResizeMenu()
-
-
-drawResizeMenu = () ->
-  drawStringAsCommandPrompt( menuContext, menuDatumZero.substr(0,4), 1, 116, 10 )
-  drawStringAsCommandPrompt( menuContext, menuDatumZero.substr(4,4), 1, 228, 10 )
-  drawStringAsCommandPrompt( menuContext, menuDatumZero[spotInMenuZeroDatum], 2, 116 + ((spotInMenuZeroDatum // 4) * 112) + ( 12 * ( spotInMenuZeroDatum %% 4 ) ), 10 )
-
-
 
 $(document).ready ()->
   setTimeout( ()->
@@ -1513,17 +1499,3 @@ $(document).ready ()->
         else
           colorSwatches[0] = colorPallete[(((toolbar1X - 52 ) // 17) * 2) + ((toolbar1Y - 4) // 16)]
         drawToolbars()
-
-
-
-
-    
-
-
-
-
-
-
-
-
-
