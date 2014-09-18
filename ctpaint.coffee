@@ -50,7 +50,7 @@ colorSwatches = [ [192,192,192], [0,0,0], [64,64,64], [255,255,255] ]
 horizontalColorSwapKeyDown = false
 colorModify = false
 colorMenuImage = new Image()
-colorMenuImage.src = 't00.png'
+colorMenuImage.src = 'assets\\t00.png'
 spotInColorPallete = undefined
 colorPallete = [
   [ 0, 0, 0 ] #0
@@ -128,8 +128,8 @@ toolbar0Canvas = document.getElementById('toolbar0')
 toolbar0Context = toolbar0Canvas.getContext('2d')
 
 toolbar0sImages = [new Image(), new Image()]
-toolbar0sImages[0].src = 'toolbar0v.PNG'
-toolbar0sImages[1].src = 'toolbar0u.PNG'
+toolbar0sImages[0].src = 'assets\\toolbar0v.PNG'
+toolbar0sImages[1].src = 'assets\\toolbar0u.PNG'
 
 buttonWidth = 24
 buttonHeight = 24
@@ -229,7 +229,7 @@ while stringOfCharactersIndex < stringOfCharacters.length
   stringsToGlyphs[stringOfCharacters[stringOfCharactersIndex]] = [ new Image(), new Image(), new Image() ]
   imageVariety = 0
   while imageVariety < 3
-    stringsToGlyphs[stringOfCharacters[stringOfCharactersIndex]][imageVariety].src = varietyCodes[imageVariety]+zeroPadder(stringOfCharactersIndex,4)+'.PNG'
+    stringsToGlyphs[stringOfCharacters[stringOfCharactersIndex]][imageVariety].src = 'assets\\' + varietyCodes[imageVariety]+zeroPadder(stringOfCharactersIndex,4)+'.PNG'
     imageVariety++
   stringOfCharactersIndex++
 
@@ -541,8 +541,8 @@ while iteration < numberOfTools
     menuImage: toolMenuImages[iteration]
     toolsAction: ->
       console.log 'did a '+toolNames[@number]
-  ctPaintTools[iteration].pressedImage[0].src = 'u'+zeroPadder(iteration,2)+'.PNG'
-  ctPaintTools[iteration].pressedImage[1].src = 'v'+zeroPadder(iteration,2)+'.PNG'
+  ctPaintTools[iteration].pressedImage[0].src = 'assets\\u'+zeroPadder(iteration,2)+'.PNG'
+  ctPaintTools[iteration].pressedImage[1].src = 'assets\\v'+zeroPadder(iteration,2)+'.PNG'
   iteration++
 
 ctPaintTools[0].toolsAction = zoomAction
@@ -553,25 +553,25 @@ ctPaintTools[5].toolsAction = circleAction
 ctPaintTools[6].toolsAction = lineAction
 ctPaintTools[7].toolsAction = pointAction
 ctPaintTools[10].toolsAction = flipAction
-ctPaintTools[10].menuImage.src = 't01.png'
+ctPaintTools[10].menuImage.src = 'assets\\t01.png'
 ctPaintTools[11].toolsAction = rotateAction
-ctPaintTools[11].menuImage.src = 't04.png'
+ctPaintTools[11].menuImage.src = 'assets\\t04.png'
 ctPaintTools[12].toolsAction = invertAction
 ctPaintTools[13].toolsAction = replaceAction
-ctPaintTools[13].menuImage.src = 't02.png'
+ctPaintTools[13].menuImage.src = 'assets\\t02.png'
 ctPaintTools[14].toolsAction = scaleAction
-ctPaintTools[14].menuImage.src = 't05.png'
+ctPaintTools[14].menuImage.src = 'assets\\t05.png'
 ctPaintTools[15].toolsAction = resizeAction
-ctPaintTools[15].menuImage.src = 't03.png'
+ctPaintTools[15].menuImage.src = 'assets\\t03.png'
 ctPaintTools[16].toolsAction = horizontalColorSwap
 ctPaintTools[17].toolsAction = verticalColorSwap
 
 toolbar1Canvas = document.getElementById('toolbar1')
 toolbar1Context = toolbar1Canvas.getContext('2d')
 toolbar1sImage0 = new Image()
-toolbar1sImage0.src = 'toolbar10.png'
+toolbar1sImage0.src = 'assets\\toolbar10.png'
 toolbar1sImage1 = new Image()
-toolbar1sImage1.src = 'toolbar11.png'
+toolbar1sImage1.src = 'assets\\toolbar11.png'
 backgroundCanvas = document.getElementById('background')
 backgroundContext = backgroundCanvas.getContext('2d')
 
@@ -1500,7 +1500,6 @@ $(document).ready ()->
 
   $('#toolbar1').mouseleave ()->  
     toolbar1Context.drawImage(toolbar1sImage1,188,3)  
-
 
   $('#toolbar1').mousedown (event)->
     toolbar1X = event.clientX
