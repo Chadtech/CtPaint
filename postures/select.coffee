@@ -1,5 +1,5 @@
-selectPosture = ->
-  $('#CtPaint').mousemove (event)->
+selectPosture = [
+  () ->
     toolbar1Context.drawImage(toolbar1sImage1,188,3)   
     drawInformationToolbar0()
     drawInformationToolbar1()
@@ -10,14 +10,12 @@ selectPosture = ->
         ctContext.drawImage(canvasDataAsImage,0,0)
         drawSelectBox(ctContext, oldX, oldY, xSpot, ySpot)
         canvasDataAsImage.src = canvasAsData
-        
-  $('#CtPaint').mousedown (event)->
+  () ->
     mousePressed = true
     getMousePositionOnCanvas(event)
     oldX = xSpot
     oldY = ySpot
-
-  $('#CtPaint').mouseup (event)->
+  () ->
     mousePressed = false
     getMousePositionOnCanvas(event)
     areaSelected = true
@@ -40,3 +38,4 @@ selectPosture = ->
       ctContext.putImageData(selectionToPaste, oldX + 1, oldY + 1)
       drawSelectBox(ctContext, oldX, oldY, xSpot, ySpot)
     canvasDataAsImage.src = canvasAsData
+]

@@ -121,7 +121,14 @@ $(document).ready ()->
   $('#CtPaint').mouseleave ()->  
     toolbar1Context.drawImage(toolbar1sImage1,188,3)   
 
-  selectedTool.posture()
+  $('#CtPaint').mousemove (event)->
+    selectedTool.posture[0]()
+
+  $('#CtPaint').mousedown (event)->
+    selectedTool.posture[1]()
+
+  $('#CtPaint').mouseup (event)->
+    selectedTool.posture[2]()
   
   $('#zoomWindow').mousedown (event)->
     mousePressed = true

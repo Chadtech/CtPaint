@@ -1,5 +1,5 @@
-pointPosture = ->
-  $('#CtPaint').mousemove (event)->
+pointPosture = [
+  () ->
     toolbar1Context.drawImage(toolbar1sImage1,188,3)   
     drawInformationToolbar0()
     drawInformationToolbar1()
@@ -8,12 +8,11 @@ pointPosture = ->
       oldY = ySpot
       getMousePositionOnCanvas(event)
       pointAction(ctContext, colorSwatches[0], xSpot, ySpot, oldX, oldY)
-
-  $('#CtPaint').mousedown (event)->
+  () ->
     mousePressed = true
     getMousePositionOnCanvas(event)
     pointAction(ctContext, colorSwatches[0], xSpot, ySpot, xSpot, ySpot)
-
-  $('#CtPaint').mouseup (event)->
+  () ->
     mousePressed = false
     canvasAsData = ctCanvas.toDataURL()
+]

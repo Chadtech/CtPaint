@@ -125,8 +125,9 @@ floodFill = (canvas, context, colorToChangeTo, xPosition, yPosition) ->
   ###
 
   revisedCanvasToPaste = document.createElement('canvas')
-  revisedCanvasToPaste.getContext('2d').createImageData(canvas.width, canvas.height)
-
+  revisedCanvasToPaste = revisedCanvasToPaste.getContext('2d')
+  revisedCanvasToPaste = revisedCanvasToPaste.createImageData(canvas.width, canvas.height)
+  
   pixelInCanvasIndex = 0
   while pixelInCanvasIndex < wholeCanvas.length
     colorValueIndex = 0

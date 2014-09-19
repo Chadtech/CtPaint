@@ -627,8 +627,9 @@ floodFill = (canvas, context, colorToChangeTo, xPosition, yPosition) ->
   ###
 
   revisedCanvasToPaste = document.createElement('canvas')
-  revisedCanvasToPaste.getContext('2d').createImageData(canvas.width, canvas.height)
-
+  revisedCanvasToPaste = revisedCanvasToPaste.getContext('2d')
+  revisedCanvasToPaste = revisedCanvasToPaste.createImageData(canvas.width, canvas.height)
+  
   pixelInCanvasIndex = 0
   while pixelInCanvasIndex < wholeCanvas.length
     colorValueIndex = 0
@@ -1223,13 +1224,12 @@ keyListeningUnderAbnormalCircumstance = (event) ->
     when keysToKeyCodes['enter']
       return 'enter'
 
-zoomPosture = ->
-  $('#CtPaint').mousemove (event)->
+zoomPosture = [
+  () ->
     toolbar1Context.drawImage(toolbar1sImage1,188,3)   
     drawInformationToolbar0()
     drawInformationToolbar1()
-
-  $('#CtPaint').mousedown (event)->
+  () ->
     mousePressed = true
     getMousePositionOnCanvas(event)
     if zoomActivate
@@ -1244,13 +1244,11 @@ zoomPosture = ->
     selectedTool = previouslySelectedTool
     positionCorners()
     drawToolbars()
-
-  $('#CtPaint').mouseup (event)->
+  () ->
     mousePressed = false
-   
-
-selectPosture = ->
-  $('#CtPaint').mousemove (event)->
+]
+selectPosture = [
+  () ->
     toolbar1Context.drawImage(toolbar1sImage1,188,3)   
     drawInformationToolbar0()
     drawInformationToolbar1()
@@ -1261,14 +1259,12 @@ selectPosture = ->
         ctContext.drawImage(canvasDataAsImage,0,0)
         drawSelectBox(ctContext, oldX, oldY, xSpot, ySpot)
         canvasDataAsImage.src = canvasAsData
-        
-  $('#CtPaint').mousedown (event)->
+  () ->
     mousePressed = true
     getMousePositionOnCanvas(event)
     oldX = xSpot
     oldY = ySpot
-
-  $('#CtPaint').mouseup (event)->
+  () ->
     mousePressed = false
     getMousePositionOnCanvas(event)
     areaSelected = true
@@ -1291,22 +1287,22 @@ selectPosture = ->
       ctContext.putImageData(selectionToPaste, oldX + 1, oldY + 1)
       drawSelectBox(ctContext, oldX, oldY, xSpot, ySpot)
     canvasDataAsImage.src = canvasAsData
-fillPosture= ->
-  $('#CtPaint').mousemove (event)->
+]
+fillPosture = [
+  () ->
     toolbar1Context.drawImage(toolbar1sImage1,188,3)   
     drawInformationToolbar0()
     drawInformationToolbar1()
-
-  $('#CtPaint').mousedown (event)->
+  () ->
     mousePressed = true
     getMousePositionOnCanvas(event)
     floodFill(ctCanvas, ctContext, colorSwatches[0], xSpot, ySpot)
-
-  $('#CtPaint').mouseup (event)->
+  () ->
     mousePressed = false
     canvasAsData = ctCanvas.toDataURL()
-squarePosture = ->
-  $('#CtPaint').mousemove (event)->
+]
+squarePosture = [
+  () ->
     toolbar1Context.drawImage(toolbar1sImage1,188,3)   
     drawInformationToolbar0()
     drawInformationToolbar1()
@@ -1317,40 +1313,38 @@ squarePosture = ->
         ctContext.drawImage(canvasDataAsImage,0,0)
         squareAction(ctContext, colorSwatches[0], oldX, oldY, xSpot, ySpot)
       canvasDataAsImage.src = canvasAsData
-   
-  $('#CtPaint').mousedown (event)->
+  () ->
     mousePressed = true
     getMousePositionOnCanvas(event)
     oldX = xSpot
     oldY = ySpot
-
-  $('#CtPaint').mouseup (event)->
+  () ->
     mousePressed = false
     canvasAsData = ctCanvas.toDataURL()
-circlePosture = ->
-  $('#CtPaint').mousemove (event)->
-      toolbar1Context.drawImage(toolbar1sImage1,188,3)   
-      drawInformationToolbar0()
-      drawInformationToolbar1()
-      if mousePressed
-        getMousePositionOnCanvas(event)
-        canvasDataAsImage = new Image()
-        canvasDataAsImage.onload = ->
-          ctContext.drawImage(canvasDataAsImage,0,0)
-          circleAction(ctContext, colorSwatches[0], xSpot, ySpot)
-        canvasDataAsImage.src = canvasAsData
-
-  $('#CtPaint').mousedown (event)->
+]
+circlePosture = [
+  () ->
+    toolbar1Context.drawImage(toolbar1sImage1,188,3)   
+    drawInformationToolbar0()
+    drawInformationToolbar1()
+    if mousePressed
+      getMousePositionOnCanvas(event)
+      canvasDataAsImage = new Image()
+      canvasDataAsImage.onload = ->
+        ctContext.drawImage(canvasDataAsImage,0,0)
+        circleAction(ctContext, colorSwatches[0], xSpot, ySpot)
+      canvasDataAsImage.src = canvasAsData
+  () ->
     mousePressed = true
     getMousePositionOnCanvas(event)
     oldX = xSpot
     oldY = ySpot
-
-  $('#CtPaint').mouseup (event)->
+  () ->
     mousePressed = false
     canvasAsData = ctCanvas.toDataURL()
-linePosture = ->
-  $('#CtPaint').mousemove (event)->
+]
+linePosture = [
+  () ->
     toolbar1Context.drawImage(toolbar1sImage1,188,3)   
     drawInformationToolbar0()
     drawInformationToolbar1()
@@ -1361,19 +1355,18 @@ linePosture = ->
         ctContext.drawImage(canvasDataAsImage,0,0)
         lineAction(ctContext, colorSwatches[0], oldX, oldY, xSpot, ySpot)
       canvasDataAsImage.src = canvasAsData
-
-  $('#CtPaint').mousedown (event)->
+  () ->
     mousePressed = true
     getMousePositionOnCanvas(event)
     oldX = xSpot
     oldY = ySpot
-
-  $('#CtPaint').mouseup (event)->
+  () ->
     mousePressed = false
     canvasAsData = ctCanvas.toDataURL()
+]
 
-pointPosture = ->
-  $('#CtPaint').mousemove (event)->
+pointPosture = [
+  () ->
     toolbar1Context.drawImage(toolbar1sImage1,188,3)   
     drawInformationToolbar0()
     drawInformationToolbar1()
@@ -1382,15 +1375,14 @@ pointPosture = ->
       oldY = ySpot
       getMousePositionOnCanvas(event)
       pointAction(ctContext, colorSwatches[0], xSpot, ySpot, oldX, oldY)
-
-  $('#CtPaint').mousedown (event)->
+  () ->
     mousePressed = true
     getMousePositionOnCanvas(event)
     pointAction(ctContext, colorSwatches[0], xSpot, ySpot, xSpot, ySpot)
-
-  $('#CtPaint').mouseup (event)->
+  () ->
     mousePressed = false
     canvasAsData = ctCanvas.toDataURL()
+]
 # organized as they are in the 2 x 11 tool bar grid
 toolNames = [
   'zoom', 'select'
@@ -1540,7 +1532,6 @@ $(document).ready ()->
     positionMenu()
     canvasAsData = ctCanvas.toDataURL()
   , 2000)
-  selectedTool.posture()
 
   $('body').keydown (event) ->
     if normalCircumstance
@@ -1652,7 +1643,14 @@ $(document).ready ()->
   $('#CtPaint').mouseleave ()->  
     toolbar1Context.drawImage(toolbar1sImage1,188,3)   
 
+  $('#CtPaint').mousemove (event)->
+    selectedTool.posture[0]()
 
+  $('#CtPaint').mousedown (event)->
+    selectedTool.posture[1]()
+
+  $('#CtPaint').mouseup (event)->
+    selectedTool.posture[2]()
   
   $('#zoomWindow').mousedown (event)->
     mousePressed = true
@@ -1668,9 +1666,6 @@ $(document).ready ()->
           if toolIndex < 8 
             previouslySelectedTool = selectedTool
             selectedTool = ctPaintTools[toolIndex]
-            selectedTool.posture()
-            console.log 'A', ctPaintTools[toolIndex]
-            console.log 'B', ctPaintTools[toolIndex].posture
           else
             ctPaintTools[toolIndex].toolsAction()
       toolIndex++
