@@ -79,6 +79,7 @@ while iteration < numberOfTools
     maxMagnitude: toolMaxMagnitudes[iteration]
     modeCapable: toolModeCapacity[iteration]
     mode: false
+    posture: ''
     menuImage: toolMenuImages[iteration]
     toolsAction: ->
       console.log 'did a '+toolNames[@number]
