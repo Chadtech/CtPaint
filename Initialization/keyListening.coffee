@@ -34,9 +34,9 @@ keyListeningUnderNormalCircumstance = (event) ->
   if event.keyCode == keysToKeyCodes['e']
     ctPaintTools[15].toolsAction()
   if event.keyCode == keysToKeyCodes['q']
-    ctPaintTools[16].toolsAction()
+    horizontalColorSwap()
   if event.keyCode == keysToKeyCodes['b']
-    ctPaintTools[17].toolsAction()
+    verticalColorSwap()
   if event.keyCode == keysToKeyCodes['right']
     if canvasWidth > (window.innerWidth - toolbarWidth - 5)
       if (-1 * canvasXOffset) < ((canvasWidth + 10) - (window.innerWidth - toolbarWidth))

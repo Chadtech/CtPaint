@@ -1161,9 +1161,9 @@ keyListeningUnderNormalCircumstance = (event) ->
   if event.keyCode == keysToKeyCodes['e']
     ctPaintTools[15].toolsAction()
   if event.keyCode == keysToKeyCodes['q']
-    ctPaintTools[16].toolsAction()
+    horizontalColorSwap()
   if event.keyCode == keysToKeyCodes['b']
-    ctPaintTools[17].toolsAction()
+    verticalColorSwap()
   if event.keyCode == keysToKeyCodes['right']
     if canvasWidth > (window.innerWidth - toolbarWidth - 5)
       if (-1 * canvasXOffset) < ((canvasWidth + 10) - (window.innerWidth - toolbarWidth))
@@ -1397,6 +1397,28 @@ pointPosture = [
     mousePressed = false
     canvasAsData = ctCanvas.toDataURL()
 ]
+horizontalColorSwapPosture = [
+  () ->
+    toolbar1Context.drawImage(toolbar1sImage1,188,3)   
+    drawInformationToolbar0()
+    drawInformationToolbar1()
+  () ->
+    mousePressed = true
+  () ->
+    mousePressed = false
+    drawToolbars()
+]
+verticalColorSwapPosture = [
+  () ->
+    toolbar1Context.drawImage(toolbar1sImage1,188,3)   
+    drawInformationToolbar0()
+    drawInformationToolbar1()
+  () ->
+    mousePressed = true
+  () ->
+    mousePressed = false
+    drawToolbars()
+]
 # organized as they are in the 2 x 11 tool bar grid
 toolNames = [
   'zoom', 'select'
@@ -1522,7 +1544,8 @@ ctPaintTools[7].posture = pointPosture
 #ctPaintTools[13].posture = invertPosture
 #ctpaintTools[14].posture = replacePosture
 #ctPaintTools[15].posture = resizePosture
-#ctPaintTools[16]
+ctPaintTools[16].posture = horizontalColorSwapPosture
+ctPaintTools[17].posture = verticalColorSwapPosture
 
 
 ctPaintTools[10].menuImage.src = 'assets\\t01.png'

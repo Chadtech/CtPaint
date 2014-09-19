@@ -123,7 +123,8 @@ ctPaintTools[7].posture = pointPosture
 #ctPaintTools[13].posture = invertPosture
 #ctpaintTools[14].posture = replacePosture
 #ctPaintTools[15].posture = resizePosture
-#ctPaintTools[16]
+ctPaintTools[16].posture = horizontalColorSwapPosture
+ctPaintTools[17].posture = verticalColorSwapPosture
 
 
 ctPaintTools[10].menuImage.src = 'assets\\t01.png'
