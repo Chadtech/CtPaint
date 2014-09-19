@@ -48,7 +48,6 @@ $(document).ready ()->
     if event.keyCode == keysToKeyCodes['shift']
       colorModify = true
 
-
   $('body').keyup (event) ->
     if event.keyCode == keysToKeyCodes['shift']
       colorModify = false
@@ -130,12 +129,6 @@ $(document).ready ()->
   $('#CtPaint').mouseup (event)->
     selectedTool.posture[2]()
   
-  $('#zoomWindow').mousedown (event)->
-    mousePressed = true
-    switch selectedTool.name
-      when 'zoom'
-        selectedTool.toolsAction()
-
   $('#toolbar0').mousedown (event)->
     toolIndex = 0
     while toolIndex < numberOfTools
@@ -163,7 +156,6 @@ $(document).ready ()->
         if colorModify
           spotInColorPallete = (((toolbar1X - 52 ) // 17) * 2) + ((toolbar1Y - 4) // 16)
           colorMenu()
-          console.log 'D'
         else
           colorSwatches[0] = colorPallete[(((toolbar1X - 52 ) // 17) * 2) + ((toolbar1Y - 4) // 16)]
         drawToolbars()
