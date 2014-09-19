@@ -131,53 +131,56 @@ colorPallete = [
   [ 212, 51, 29 ] 
   [ 10, 202, 26 ] 
 ]
-###
-  When a region is selected, it is outlined by a box. The outline
-  has a very particular pattern, and the declaration of the
-  relevant program components is very complicated. The pattern
-  is four pixels long. The variable dataToGive contains the color
-  pattern along the outline. 
+colorMenu = ()->
+  menuUp = true
+  normalCircumstance = false
+  $('#menuDiv').css('top', (window.innerHeight - toolbarHeight - 45).toString())
+  $('#menuDiv').css('left', (toolbarWidth + 10).toString())
 
-  selectLinesOfLengthX contains four canvas elements, each 1 pixel
-  tall. Each canvas element is its index number + 1 wide. When the
-  outline is drawn, a the canvas of length 4 (index 3) is repeatedly
-  pasted until there is less than four pixels left. At which point,
-  a canvas of the remaining length is pasted (1, 2 or 3). 
-  selectLinesOfLengthY is the vertical version of this technique.
-###
+  menuContext.canvas.width = 255
+  menuContext.canvas.height = 35
 
-selectLinesOfLengthX = []
-selectLinesOfLengthY = []
-dataToGive = [
-  [224, 96, 128, 255] 
-  [128, 128, 128, 255] 
-  [128, 128, 128, 255] 
-  [192, 192, 0, 255] 
-]
+  menuContext.drawImage(colorMenuImage, 0, 0)
 
-lineIndex = 0
-while lineIndex < dataToGive.length
+  colorDataSortingInitialize()
+  whatSortOfDataSorting = colorDataSorting
 
-  horizontalCanvasElement = document.createElement('canvas')
-  horizontalCanvasElement = horizontalCanvasElement.getContext('2d').createImageData(lineIndex+1, 1)
-  selectLinesOfLengthX.push horizontalCanvasElement
+colorDataSortingInitialize = () ->
+  menuDatumZero = rgbToHex(colorPallete[spotInColorPallete]).substr(1)
+  spotInMenuZeroDatum = 0
+  drawColorMenu()
 
-  verticalCanvasElement = document.createElement('canvas')
-  verticalCanvasElement = verticalCanvasElement.getContext('2d').createImageData(1, lineIndex+1)
-  selectLinesOfLengthY.push verticalCanvasElement
-  
-  dataIndex = 0
-  while dataIndex < (lineIndex+1)
-    eachColorIndex = 0
-    while eachColorIndex < dataToGive.length
-      colorIndexOfDatum = eachColorIndex + (dataIndex * 4)
-      selectLinesOfLengthX[selectLinesOfLengthX.length-1].data[colorIndexOfDatum] = 
-        dataToGive[dataIndex][eachColorIndex]
-      selectLinesOfLengthY[selectLinesOfLengthY.length-1].data[colorIndexOfDatum] = 
-        dataToGive[dataIndex][eachColorIndex]
-      eachColorIndex++
-    dataIndex++
-  lineIndex++
+colorDataSorting = ( inputMaterial ) ->
+  if inputMaterial isnt undefined
+    keysThatDontAddData = ['backspace', 'left', 'right', 'enter']
+    if not inputMaterial in keysThatDontAddData
+      menuDatumZero = replaceAt(menuDatumZero, inputMaterial, spotInMenuZeroDatum )
+      if spotInMenuZeroDatum < 5
+        spotInMenuZeroDatum++
+    else
+      switch inputMaterial
+        when 'backspace'
+          menuDatumZero = replaceAt(menuDatumZero, '0', spotInMenuZeroDatum)
+          if 0 < spotInMenuZeroDatum
+            spotInMenuZeroDatum--
+        when 'left'
+          if 0 < spotInMenuZeroDatum
+            spotInMenuZeroDatum--
+        when 'right'
+          if spotInMenuZeroDatum < 5
+            spotInMenuZeroDatum++
+        when 'enter'
+          colorPallete[spotInColorPallete] =  hexToRGB(menuDatumZero)
+          drawToolbars()
+          $('#menuDiv').css('top',(window.innerHeight).toString())
+          normalCircumstance = true
+          menuUp = false
+    drawColorMenu()
+
+drawColorMenu = () ->
+  currentlyHighlighted = menuDatumZero[spotInMenuZeroDatum].toUpperCase()
+  drawStringAsCommandPrompt( menuContext, menuDatumZero.toUpperCase(), 1, 91, 10 )
+  drawStringAsCommandPrompt( menuContext, currentlyHighlighted, 2, 91+(12*spotInMenuZeroDatum), 10 )
 
 ###
   Given a number, zero padder returns a string of that number
@@ -416,28 +419,53 @@ drawStringAsCommandPrompt = (canvas, stringToDraw, coloration, whereAtX, whereAt
     canvas.drawImage(glyph, whereAtX + (12 * stringIndex), whereAtY)
     stringIndex++
 
-zoomAction = ->
-  ###
-  If the user zooms in while the canvas width or height exceeds 256, the css anti aliasing 
-  will be turned on. No idea why.
+###
+  When a region is selected, it is outlined by a box. The outline
+  has a very particular pattern, and the declaration of the
+  relevant program components is very complicated. The pattern
+  is four pixels long. The variable dataToGive contains the color
+  pattern along the outline. 
 
-  New solution idea : destroy the canvas when it is scaled bigger, 
-  and paste data onto a new canvas
-  ###
-  if zoomActivate
-    zoomActivate = false
-    cornersVisible = true
-    ctCanvas.style.width = (canvasWidth).toString()+'px'
-    ctCanvas.style.height = (canvasHeight).toString()+'px'
-  else
-    zoomActivate = true
-    cornersVisible = false
-    scaleCanvasBigger( 2 ** selectedTool.magnitude )
-  selectedTool = previouslySelectedTool
-  positionCorners()
-  drawToolbars()
-selectAction = (canvas, beginX, beginY, endX, endY) ->
-  drawSelectBox(canvas, beginX, beginY, endX, endY)
+  selectLinesOfLengthX contains four canvas elements, each 1 pixel
+  tall. Each canvas element is its index number + 1 wide. When the
+  outline is drawn, a the canvas of length 4 (index 3) is repeatedly
+  pasted until there is less than four pixels left. At which point,
+  a canvas of the remaining length is pasted (1, 2 or 3). 
+  selectLinesOfLengthY is the vertical version of this technique.
+###
+
+selectLinesOfLengthX = []
+selectLinesOfLengthY = []
+dataToGive = [
+  [224, 96, 128, 255] 
+  [128, 128, 128, 255] 
+  [128, 128, 128, 255] 
+  [192, 192, 0, 255] 
+]
+
+lineIndex = 0
+while lineIndex < dataToGive.length
+
+  horizontalCanvasElement = document.createElement('canvas')
+  horizontalCanvasElement = horizontalCanvasElement.getContext('2d').createImageData(lineIndex+1, 1)
+  selectLinesOfLengthX.push horizontalCanvasElement
+
+  verticalCanvasElement = document.createElement('canvas')
+  verticalCanvasElement = verticalCanvasElement.getContext('2d').createImageData(1, lineIndex+1)
+  selectLinesOfLengthY.push verticalCanvasElement
+
+  dataIndex = 0
+  while dataIndex < (lineIndex+1)
+    eachColorIndex = 0
+    while eachColorIndex < dataToGive.length
+      colorIndexOfDatum = eachColorIndex + (dataIndex * 4)
+      selectLinesOfLengthX[selectLinesOfLengthX.length-1].data[colorIndexOfDatum] = 
+        dataToGive[dataIndex][eachColorIndex]
+      selectLinesOfLengthY[selectLinesOfLengthY.length-1].data[colorIndexOfDatum] = 
+        dataToGive[dataIndex][eachColorIndex]
+      eachColorIndex++
+    dataIndex++
+  lineIndex++
 
 drawSelectBox = (canvas, beginX, beginY, endX, endY) ->
   if beginX > endX
@@ -469,14 +497,8 @@ drawSelectBox = (canvas, beginX, beginY, endX, endY) ->
       canvas.putImageData(selectLinesOfLengthY[distanceY - 1], endX, endY - distanceY)
       distanceY-=distanceY
 
-sampleAction = ->
-  console.log '2'
-
 getColorValue = (canvas, whereAtX, whereAtY) ->
   return rgbToHex(canvas.getImageData(whereAtX, whereAtY, 1, 1).data)
-
-fillAction = (canvas, context, colorToChangeTo, xPos, yPos) ->
-  floodFill(canvas, context, colorToChangeTo, xPos, yPos)
 
 floodFill = (canvas, context, colorToChangeTo, xPosition, yPosition) ->
   # The argument context is the context of the argument canvas.
@@ -857,16 +879,6 @@ putPixel = (canvas, color, whereAtX, whereAtY) ->
   newPixelsColor[2] = color[2]
   newPixelsColor[3] = 255
   canvas.putImageData(newPixel, whereAtX, whereAtY)
-flipAction = () ->
-  console.log 'FLIP ACTION'
-rotateAction = () ->
-  console.log 'ROTATE ACTION'
-invertAction = () ->
-  console.log 'INVERT ACTION'
-replaceAction = () ->
-  console.log 'REPLACE ACTION'
-scaleAction = () ->
-  console.log 'SCALE ACTION'
 resizeAction = () ->
   menuUp = true
   normalCircumstance = false
@@ -888,7 +900,6 @@ resizeDataSortingInitialize = (width, height) ->
   menuDatumZero = zeroPadder(width, 4) + zeroPadder(height, 4)
   spotInMenuZeroDatum = 0
   drawResizeMenu()
-
 
 resizeDataSorting = ( inputMaterial ) ->
   if inputMaterial isnt undefined
@@ -975,165 +986,6 @@ verticalColorSwap = () ->
     drawToolbars()
   ,20)
 
-colorMenu = ()->
-  menuUp = true
-  normalCircumstance = false
-  $('#menuDiv').css('top', (window.innerHeight - toolbarHeight - 45).toString())
-  $('#menuDiv').css('left', (toolbarWidth + 10).toString())
-
-  menuContext.canvas.width = 255
-  menuContext.canvas.height = 35
-
-  menuContext.drawImage(colorMenuImage, 0, 0)
-
-  colorDataSortingInitialize()
-  whatSortOfDataSorting = colorDataSorting
-
-colorDataSortingInitialize = () ->
-  menuDatumZero = rgbToHex(colorPallete[spotInColorPallete]).substr(1)
-  spotInMenuZeroDatum = 0
-  drawColorMenu()
-
-colorDataSorting = ( inputMaterial ) ->
-  if inputMaterial isnt undefined
-    keysThatDontAddData = ['backspace', 'left', 'right', 'enter']
-    if not inputMaterial in keysThatDontAddData
-      menuDatumZero = replaceAt(menuDatumZero, inputMaterial, spotInMenuZeroDatum )
-      if spotInMenuZeroDatum < 5
-        spotInMenuZeroDatum++
-    else
-      switch inputMaterial
-        when 'backspace'
-          menuDatumZero = replaceAt(menuDatumZero, '0', spotInMenuZeroDatum)
-          if 0 < spotInMenuZeroDatum
-            spotInMenuZeroDatum--
-        when 'left'
-          if 0 < spotInMenuZeroDatum
-            spotInMenuZeroDatum--
-        when 'right'
-          if spotInMenuZeroDatum < 5
-            spotInMenuZeroDatum++
-        when 'enter'
-          colorPallete[spotInColorPallete] =  hexToRGB(menuDatumZero)
-          drawToolbars()
-          $('#menuDiv').css('top',(window.innerHeight).toString())
-          normalCircumstance = true
-          menuUp = false
-    drawColorMenu()
-
-drawColorMenu = () ->
-  currentlyHighlighted = menuDatumZero[spotInMenuZeroDatum].toUpperCase()
-  drawStringAsCommandPrompt( menuContext, menuDatumZero.toUpperCase(), 1, 91, 10 )
-  drawStringAsCommandPrompt( menuContext, currentlyHighlighted, 2, 91+(12*spotInMenuZeroDatum), 10 )
-
-# organized as they are in the 2 x 11 tool bar grid
-toolNames = [
-  'zoom', 'select'
-  'sample', 'fill'
-  'square', 'circle'
-  'line', 'point'
-  'NOT A TOOL', 'NOT A TOOL'
-  'flip', 'rotate'
-  'invert', 'displace'
-  'scale', 'resize'
-  'horizontalSwap', 'verticalSwap'
-  'copy', 'paste'
-  'cut', 'view'
-  'undo', 'redo'
-]
-
-toolMaxMagnitudes = [
-  4, ''
-  '', ''
-  15, 15
-  6, 9
-
-  '', ''
-
-  '', ''
-  '', ''
-  '', ''
-  '', ''
-  '', ''
-  '', ''
-  '', ''
-]
-
-toolModeCapacity = [
-  false, true
-  false, false
-  true, true
-  false, false
-
-  false, false
-
-  false, false
-  false, false
-  false, false
-  false, false
-  false, false
-  false, false
-  false, false
-]
-
-toolMenuImages = [
-  '', ''
-  '', ''
-  '', ''
-  '', ''
-
-  '', ''
-
-  new Image(), new Image()
-  '', new Image()
-  new Image(), new Image()
-  '', ''
-  '', ''
-  '', ''
-  '', ''
-]
-
-ctPaintTools = {}
-
-iteration = 0
-while iteration < numberOfTools
-  thisIteration = iteration
-  ctPaintTools[iteration] =
-    number: iteration
-    name: toolNames[iteration]
-    clickRegion: [((iteration%2)*25),(Math.floor(iteration/2))*25]
-    pressedImage: [new Image(), new Image()]
-    magnitude: 1
-    maxMagnitude: toolMaxMagnitudes[iteration]
-    modeCapable: toolModeCapacity[iteration]
-    mode: false
-    menuImage: toolMenuImages[iteration]
-    toolsAction: ->
-      console.log 'did a '+toolNames[@number]
-  ctPaintTools[iteration].pressedImage[0].src = 'assets\\u'+zeroPadder(iteration,2)+'.PNG'
-  ctPaintTools[iteration].pressedImage[1].src = 'assets\\v'+zeroPadder(iteration,2)+'.PNG'
-  iteration++
-
-ctPaintTools[0].toolsAction = zoomAction
-ctPaintTools[1].toolsAction = selectAction
-ctPaintTools[3].toolsAction = fillAction
-ctPaintTools[4].toolsAction = squareAction
-ctPaintTools[5].toolsAction = circleAction
-ctPaintTools[6].toolsAction = lineAction
-ctPaintTools[7].toolsAction = pointAction
-ctPaintTools[10].toolsAction = flipAction
-ctPaintTools[10].menuImage.src = 'assets\\t01.png'
-ctPaintTools[11].toolsAction = rotateAction
-ctPaintTools[11].menuImage.src = 'assets\\t04.png'
-ctPaintTools[12].toolsAction = invertAction
-ctPaintTools[13].toolsAction = replaceAction
-ctPaintTools[13].menuImage.src = 'assets\\t02.png'
-ctPaintTools[14].toolsAction = scaleAction
-ctPaintTools[14].menuImage.src = 'assets\\t05.png'
-ctPaintTools[15].toolsAction = resizeAction
-ctPaintTools[15].menuImage.src = 'assets\\t03.png'
-ctPaintTools[16].toolsAction = horizontalColorSwap
-ctPaintTools[17].toolsAction = verticalColorSwap
 positionCorners = ->
   if cornersVisible
     $('#border0Div').css('top',(canvasYPos-1+canvasYOffset).toString())
@@ -1371,6 +1223,311 @@ keyListeningUnderAbnormalCircumstance = (event) ->
     when keysToKeyCodes['enter']
       return 'enter'
 
+zoomPosture = ->
+  $('#CtPaint').mousemove (event)->
+    toolbar1Context.drawImage(toolbar1sImage1,188,3)   
+    drawInformationToolbar0()
+    drawInformationToolbar1()
+
+  $('#CtPaint').mousedown (event)->
+    mousePressed = true
+    getMousePositionOnCanvas(event)
+    if zoomActivate
+      zoomActivate = false
+      cornersVisible = true
+      ctCanvas.style.width = (canvasWidth).toString()+'px'
+      ctCanvas.style.height = (canvasHeight).toString()+'px'
+    else
+      zoomActivate = true
+      cornersVisible = false
+      scaleCanvasBigger( 2 ** selectedTool.magnitude )
+    selectedTool = previouslySelectedTool
+    positionCorners()
+    drawToolbars()
+
+  $('#CtPaint').mouseup (event)->
+    mousePressed = false
+   
+
+selectPosture = ->
+  $('#CtPaint').mousemove (event)->
+    toolbar1Context.drawImage(toolbar1sImage1,188,3)   
+    drawInformationToolbar0()
+    drawInformationToolbar1()
+    if mousePressed
+      getMousePositionOnCanvas(event)
+      canvasDataAsImage = new Image()
+      canvasDataAsImage.onload = ->
+        ctContext.drawImage(canvasDataAsImage,0,0)
+        drawSelectBox(ctContext, oldX, oldY, xSpot, ySpot)
+        canvasDataAsImage.src = canvasAsData
+        
+  $('#CtPaint').mousedown (event)->
+    mousePressed = true
+    getMousePositionOnCanvas(event)
+    oldX = xSpot
+    oldY = ySpot
+
+  $('#CtPaint').mouseup (event)->
+    mousePressed = false
+    getMousePositionOnCanvas(event)
+    areaSelected = true
+    areasXSpot = oldX
+    areasYSpot = oldY
+    areaSelectedsHeight = Math.abs(oldY - ySpot)
+    areaSelectedsWidth = Math.abs(oldX - xSpot)
+    selection = ctContext.getImageData(oldX + 1, oldY + 1, Math.abs((oldX + 1) - xSpot), Math.abs((oldY + 1) - ySpot))
+    selectionToPaste = document.createElement('canvas').getContext('2d').createImageData(selection.width, selection.height)
+    datumIndex = 0
+    while datumIndex < selection.data.length
+      selectionToPaste.data[datumIndex] = selection.data[datumIndex]
+      datumIndex++
+    #squareAction = (canvas, color, beginX, beginY, endX, endY)
+    canvasDataAsImage = new Image()
+    canvasDataAsImage.onload = ->
+      ctContext.drawImage(canvasDataAsImage,0,0)
+      squareAction(ctContext, colorSwatches[1], oldX + 1, oldY + 1, xSpot - 1, ySpot - 1, true)
+      canvasAsData = ctCanvas.toDataURL()
+      ctContext.putImageData(selectionToPaste, oldX + 1, oldY + 1)
+      drawSelectBox(ctContext, oldX, oldY, xSpot, ySpot)
+    canvasDataAsImage.src = canvasAsData
+fillPosture= ->
+  $('#CtPaint').mousemove (event)->
+    toolbar1Context.drawImage(toolbar1sImage1,188,3)   
+    drawInformationToolbar0()
+    drawInformationToolbar1()
+
+  $('#CtPaint').mousedown (event)->
+    mousePressed = true
+    getMousePositionOnCanvas(event)
+    floodFill(ctCanvas, ctContext, colorSwatches[0], xSpot, ySpot)
+
+  $('#CtPaint').mouseup (event)->
+    mousePressed = false
+    canvasAsData = ctCanvas.toDataURL()
+squarePosture = ->
+  $('#CtPaint').mousemove (event)->
+    toolbar1Context.drawImage(toolbar1sImage1,188,3)   
+    drawInformationToolbar0()
+    drawInformationToolbar1()
+    if mousePressed
+      getMousePositionOnCanvas(event)
+      canvasDataAsImage = new Image()
+      canvasDataAsImage.onload = ->
+        ctContext.drawImage(canvasDataAsImage,0,0)
+        squareAction(ctContext, colorSwatches[0], oldX, oldY, xSpot, ySpot)
+      canvasDataAsImage.src = canvasAsData
+   
+  $('#CtPaint').mousedown (event)->
+    mousePressed = true
+    getMousePositionOnCanvas(event)
+    oldX = xSpot
+    oldY = ySpot
+
+  $('#CtPaint').mouseup (event)->
+    mousePressed = false
+    canvasAsData = ctCanvas.toDataURL()
+circlePosture = ->
+  $('#CtPaint').mousemove (event)->
+      toolbar1Context.drawImage(toolbar1sImage1,188,3)   
+      drawInformationToolbar0()
+      drawInformationToolbar1()
+      if mousePressed
+        getMousePositionOnCanvas(event)
+        canvasDataAsImage = new Image()
+        canvasDataAsImage.onload = ->
+          ctContext.drawImage(canvasDataAsImage,0,0)
+          circleAction(ctContext, colorSwatches[0], xSpot, ySpot)
+        canvasDataAsImage.src = canvasAsData
+
+  $('#CtPaint').mousedown (event)->
+    mousePressed = true
+    getMousePositionOnCanvas(event)
+    oldX = xSpot
+    oldY = ySpot
+
+  $('#CtPaint').mouseup (event)->
+    mousePressed = false
+    canvasAsData = ctCanvas.toDataURL()
+linePosture = ->
+  $('#CtPaint').mousemove (event)->
+    toolbar1Context.drawImage(toolbar1sImage1,188,3)   
+    drawInformationToolbar0()
+    drawInformationToolbar1()
+    if mousePressed
+      getMousePositionOnCanvas(event)
+      canvasDataAsImage = new Image()
+      canvasDataAsImage.onload = ->
+        ctContext.drawImage(canvasDataAsImage,0,0)
+        lineAction(ctContext, colorSwatches[0], oldX, oldY, xSpot, ySpot)
+      canvasDataAsImage.src = canvasAsData
+
+  $('#CtPaint').mousedown (event)->
+    mousePressed = true
+    getMousePositionOnCanvas(event)
+    oldX = xSpot
+    oldY = ySpot
+
+  $('#CtPaint').mouseup (event)->
+    mousePressed = false
+    canvasAsData = ctCanvas.toDataURL()
+
+pointPosture = ->
+  $('#CtPaint').mousemove (event)->
+    toolbar1Context.drawImage(toolbar1sImage1,188,3)   
+    drawInformationToolbar0()
+    drawInformationToolbar1()
+    if mousePressed
+      oldX = xSpot
+      oldY = ySpot
+      getMousePositionOnCanvas(event)
+      pointAction(ctContext, colorSwatches[0], xSpot, ySpot, oldX, oldY)
+
+  $('#CtPaint').mousedown (event)->
+    mousePressed = true
+    getMousePositionOnCanvas(event)
+    pointAction(ctContext, colorSwatches[0], xSpot, ySpot, xSpot, ySpot)
+
+  $('#CtPaint').mouseup (event)->
+    mousePressed = false
+    canvasAsData = ctCanvas.toDataURL()
+# organized as they are in the 2 x 11 tool bar grid
+toolNames = [
+  'zoom', 'select'
+  'sample', 'fill'
+  'square', 'circle'
+  'line', 'point'
+  'NOT A TOOL0', 'NOT A TOOL1'
+  'flip', 'rotate'
+  'invert', 'displace'
+  'scale', 'resize'
+  'horizontalSwap', 'verticalSwap'
+  'copy', 'paste'
+  'cut', 'view'
+  'undo', 'redo'
+]
+
+toolMaxMagnitudes = [
+  4, ''
+  '', ''
+  15, 15
+  6, 9
+
+  '', ''
+
+  '', ''
+  '', ''
+  '', ''
+  '', ''
+  '', ''
+  '', ''
+  '', ''
+]
+
+toolModeCapacity = [
+  false, true
+  false, false
+  true, true
+  false, false
+
+  false, false
+
+  false, false
+  false, false
+  false, false
+  false, false
+  false, false
+  false, false
+  false, false
+]
+
+toolMenuImages = [
+  '', ''
+  '', ''
+  '', ''
+  '', ''
+
+  '', ''
+
+  new Image(), new Image()
+  '', new Image()
+  new Image(), new Image()
+  '', ''
+  '', ''
+  '', ''
+  '', ''
+]
+
+ctPaintTools = {}
+
+iteration = 0
+while iteration < numberOfTools
+  thisIteration = iteration
+  ctPaintTools[iteration] =
+    number: iteration
+    name: toolNames[iteration]
+    clickRegion: [((iteration%2)*25),(Math.floor(iteration/2))*25]
+    pressedImage: [new Image(), new Image()]
+    magnitude: 1
+    maxMagnitude: toolMaxMagnitudes[iteration]
+    modeCapable: toolModeCapacity[iteration]
+    mode: false
+    posture: ''
+    menuImage: toolMenuImages[iteration]
+    toolsAction: ->
+      console.log 'did a '+toolNames[@number]
+  ctPaintTools[iteration].pressedImage[0].src = 'assets\\u'+zeroPadder(iteration,2)+'.PNG'
+  ctPaintTools[iteration].pressedImage[1].src = 'assets\\v'+zeroPadder(iteration,2)+'.PNG'
+  iteration++
+###
+ctPaintTools[0].toolsAction = zoomAction
+ctPaintTools[1].toolsAction = selectAction
+ctPaintTools[3].toolsAction = fillAction
+ctPaintTools[4].toolsAction = squareAction
+ctPaintTools[5].toolsAction = circleAction
+ctPaintTools[6].toolsAction = lineAction
+ctPaintTools[7].toolsAction = pointAction
+ctPaintTools[10].toolsAction = flipAction
+ctPaintTools[11].toolsAction = rotateAction
+ctPaintTools[12].toolsAction = invertAction
+ctPaintTools[13].toolsAction = replaceAction
+ctPaintTools[14].toolsAction = scaleAction
+ctPaintTools[15].toolsAction = resizeAction
+ctPaintTools[16].toolsAction = horizontalColorSwap
+ctPaintTools[17].toolsAction = verticalColorSwap
+###
+
+ctPaintTools[0].posture = zoomPosture
+ctPaintTools[1].posture = selectPosture
+#ctPaintTools[2].posture = samplePosture
+ctPaintTools[3].posture = fillPosture
+ctPaintTools[4].posture = squarePosture
+ctPaintTools[5].posture = circlePosture
+ctPaintTools[6].posture = linePosture
+ctPaintTools[7].posture = pointPosture
+#ctPaintTools[8].posture = NOPE
+#ctPaintTools[9].posture = NOPE
+###
+  Actually, I am thinking the tools below
+  wont even have postures.
+###
+#ctPaintTools[10].posture = flipPosture
+#ctPaintTools[11].posture = rotatePosture
+#ctPaintTools[13].posture = invertPosture
+#ctpaintTools[14].posture = replacePosture
+#ctPaintTools[15].posture = resizePosture
+#ctPaintTools[16]
+
+
+ctPaintTools[10].menuImage.src = 'assets\\t01.png'
+ctPaintTools[13].menuImage.src = 'assets\\t02.png'
+ctPaintTools[11].menuImage.src = 'assets\\t04.png'
+ctPaintTools[14].menuImage.src = 'assets\\t05.png'
+ctPaintTools[15].menuImage.src = 'assets\\t03.png'
+
+selectedTool = ctPaintTools[7]
+
+
 $(document).ready ()->
   setTimeout( ()->
     #ctContext.imageSmoothingEnabled = false
@@ -1383,6 +1540,7 @@ $(document).ready ()->
     positionMenu()
     canvasAsData = ctCanvas.toDataURL()
   , 2000)
+  selectedTool.posture()
 
   $('body').keydown (event) ->
     if normalCircumstance
@@ -1494,155 +1652,8 @@ $(document).ready ()->
   $('#CtPaint').mouseleave ()->  
     toolbar1Context.drawImage(toolbar1sImage1,188,3)   
 
-  $('#CtPaint').mousemove (event)->
-    toolbar1Context.drawImage(toolbar1sImage1,188,3)   
-    drawInformationToolbar0()
-    drawInformationToolbar1()
-    if not areaSelected
-      switch selectedTool.name
-        when 'select'
-          if mousePressed
-            if not areaSelected
-              getMousePositionOnCanvas(event)
-              canvasDataAsImage = new Image()
-              canvasDataAsImage.onload = ->
-                ctContext.drawImage(canvasDataAsImage,0,0)
-                selectedTool.toolsAction(ctContext, oldX, oldY, xSpot, ySpot)
-              canvasDataAsImage.src = canvasAsData
-            else
 
-        when 'square'
-          if mousePressed
-            getMousePositionOnCanvas(event)
-            canvasDataAsImage = new Image()
-            canvasDataAsImage.onload = ->
-              ctContext.drawImage(canvasDataAsImage,0,0)
-              selectedTool.toolsAction(ctContext, colorSwatches[0], oldX, oldY, xSpot, ySpot)
-            canvasDataAsImage.src = canvasAsData
-        when 'circle'
-          if mousePressed
-            getMousePositionOnCanvas(event)
-            canvasDataAsImage = new Image()
-            canvasDataAsImage.onload = ->
-              ctContext.drawImage(canvasDataAsImage,0,0)
-              selectedTool.toolsAction(ctContext, colorSwatches[0], xSpot, ySpot)
-            canvasDataAsImage.src = canvasAsData
-        when 'line'
-          if mousePressed
-            getMousePositionOnCanvas(event)
-            canvasDataAsImage = new Image()
-            canvasDataAsImage.onload = ->
-              ctContext.drawImage(canvasDataAsImage,0,0)
-              selectedTool.toolsAction(ctContext, colorSwatches[0], oldX, oldY, xSpot, ySpot)
-            canvasDataAsImage.src = canvasAsData
-        when 'point'
-          if mousePressed
-            oldX = xSpot
-            oldY = ySpot
-            getMousePositionOnCanvas(event)
-            selectedTool.toolsAction(ctContext, colorSwatches[0], xSpot, ySpot, oldX, oldY)
-    else
-      getMousePositionOnCanvas(event)
-      areaXOffset = xSpot - areaOldX
-      areaYOffset = ySpot - areaOldY
-      canvasDataAsImage = new Image()
-      canvasDataAsImage.onload = ->
-        ctContext.drawImage(canvasDataAsImage,0,0)
-        console.log 'C', selectionToPaste
-        ctContext.putImageData(selectionToPaste, oldX + 1 + areaXOffset, oldY + 1 + areaYOffset)
-      canvasDataAsImage.src = canvasAsData
-      #selectedTool.toolsAction(ctContext, oldX, oldY, xSpot, ySpot)
-
-
-  $('#CtPaint').mousedown (event)->
-    mousePressed = true
-    getMousePositionOnCanvas(event)
-    if not areaSelected
-      switch selectedTool.name
-        when 'zoom'
-          selectedTool.toolsAction()
-        when 'select'
-          oldX = xSpot
-          oldY = ySpot
-        when 'fill'
-          selectedTool.toolsAction(ctCanvas, ctContext, colorSwatches[0], xSpot, ySpot)
-        when 'circle'
-          oldX = xSpot
-          oldY = ySpot
-        when 'square'
-          oldX = xSpot
-          oldY = ySpot
-        when 'line'
-          oldX = xSpot
-          oldY = ySpot
-        when 'point'
-          selectedTool.toolsAction(ctContext, colorSwatches[0], xSpot, ySpot, xSpot, ySpot)
-    else
-      #console.log 'A', areasXSpot < xSpot, xSpot < (areasXSpot + areaSelectedsWidth)
-      #console.log 'A.1', areasXSpot, areaSelectedsWidth, areasXSpot + areaSelectedsWidth
-      if areasXSpot < xSpot and xSpot < (areasXSpot + areaSelectedsWidth) and areasYSpot < ySpot and ySpot < (areasYSpot + areaSelectedsHeight)
-        areaOldX = xSpot
-        areaOldY = xSpot
-      else
-        canvasDataAsImage = new Image()
-        canvasDataAsImage.onload = ->
-          ctContext.drawImage(canvasDataAsImage,0,0)
-          console.log 'C', selectionToPaste
-          ctContext.putImageData(selectionToPaste, oldX + 1, oldY + 1)
-          canvasAsData = ctCanvas.toDataURL()
-        canvasDataAsImage.src = canvasAsData
-        areaSelected = false
-        justUp = true
-
-
-  $('#CtPaint').mouseup (event)->
-    mousePressed = false
-    switch selectedTool.name
-      when 'select'
-        if not areaSelected
-          if not justUp
-            getMousePositionOnCanvas(event)
-            areaSelected = true
-            areasXSpot = oldX
-            areasYSpot = oldY
-            areaSelectedsHeight = Math.abs(oldY - ySpot)
-            areaSelectedsWidth = Math.abs(oldX - xSpot)
-            selection = ctContext.getImageData(oldX + 1, oldY + 1, Math.abs((oldX + 1) - xSpot), Math.abs((oldY + 1) - ySpot))
-            selectionToPaste = document.createElement('canvas').getContext('2d').createImageData(selection.width, selection.height)
-            datumIndex = 0
-            while datumIndex < selection.data.length
-              selectionToPaste.data[datumIndex] = selection.data[datumIndex]
-              datumIndex++
-            #squareAction = (canvas, color, beginX, beginY, endX, endY)
-            canvasDataAsImage = new Image()
-            canvasDataAsImage.onload = ->
-              ctContext.drawImage(canvasDataAsImage,0,0)
-              squareAction(ctContext, colorSwatches[1], oldX + 1, oldY + 1, xSpot - 1, ySpot - 1, true)
-              canvasAsData = ctCanvas.toDataURL()
-              ctContext.putImageData(selectionToPaste, oldX + 1, oldY + 1)
-              selectedTool.toolsAction(ctContext, oldX, oldY, xSpot, ySpot)
-            canvasDataAsImage.src = canvasAsData
-          else
-            justUp = false
-
-          #ctContext.putImageData(selectionToPaste, oldX + 1, oldY + 1 )
-          #drawSelectBox(ctContext, oldX, oldY, xSpot, ySpot)
-        #else
-          #squareAction(ctContext, colorSwatches[2], oldX + 1, oldY + 1, xSpot - 1, ySpot - 1, true)
-          #ctContext.putImageData(selectionToPaste, oldX + 1 + areaXOffset, oldY + 1 + areaYOffset)
-
-
-      when 'fill'
-        canvasAsData = ctCanvas.toDataURL()
-      when 'square'
-        canvasAsData = ctCanvas.toDataURL()
-      when 'circle'
-        canvasAsData = ctCanvas.toDataURL()
-      when 'line'
-        canvasAsData = ctCanvas.toDataURL()
-      when 'point'
-        canvasAsData = ctCanvas.toDataURL()
-
+  
   $('#zoomWindow').mousedown (event)->
     mousePressed = true
     switch selectedTool.name
@@ -1657,8 +1668,10 @@ $(document).ready ()->
           if toolIndex < 8 
             previouslySelectedTool = selectedTool
             selectedTool = ctPaintTools[toolIndex]
+            selectedTool.posture()
+            console.log 'A', ctPaintTools[toolIndex]
+            console.log 'B', ctPaintTools[toolIndex].posture
           else
-            console.log 'C', ctPaintTools[toolIndex]
             ctPaintTools[toolIndex].toolsAction()
       toolIndex++
     drawToolbars()

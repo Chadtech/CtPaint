@@ -6,33 +6,41 @@ gulp.task('doAllTheScriptsTogether', function() {
   return gulp.src([
     './initialization/globalVariables.coffee',
     './initialization/palette.coffee',
-    './initialization/select.coffee',
+    './initialization/colorChange.coffee',
+
     './initialization/functionsOfConvenience.coffee',
     './initialization/globalDeclarationOfCanvases.coffee',
     './initialization/glyphsAndStrings.coffee',
 
-    './tools/zoom.coffee',
-    './tools/select.coffee',
-    './tools/sample.coffee',
-    './tools/fill.coffee',
-    './tools/square.coffee',
-    './tools/circle.coffee',
-    './tools/line.coffee',
-    './tools/point.coffee',
-    './tools/flip.coffee',
-    './tools/rotate.coffee',
-    './tools/invert.coffee',
-    './tools/replace.coffee',
-    './tools/scale.coffee',
-    './tools/resize.coffee',
-    './tools/horizontalColorSwap.coffee',
-    './tools/verticalColorSwap.coffee',
-    './tools/colorChange.coffee',
-    './initialization/tool.coffee',
+    './initialization/select.coffee',
+    './initialization/sample.coffee',
+    './initialization/fill.coffee',
+    './initialization/square.coffee',
+    './initialization/circle.coffee',
+    './initialization/line.coffee',
+    './initialization/point.coffee',
+    './initialization/resize.coffee',
+    './initialization/horizontalColorSwap.coffee',
+    './initialization/verticalColorSwap.coffee',
 
-    'renderingDrawingAndOrganizing.coffee',
-    'keyListening.coffee',
-    'bodyAndJquery.coffee',
+    './initialization/resize.coffee',
+
+    './initialization/rendering.coffee',
+    './initialization/keyListening.coffee',
+
+    './postures/zoom.coffee',
+    './postures/select.coffee',
+    //'./postures/sample.coffee',
+    './postures/fill.coffee',
+    './postures/square.coffee',
+    './postures/circle.coffee',
+    './postures/line.coffee',
+    './postures/point.coffee',
+
+    './initialization/toolDeclaration.coffee',
+
+    './mainAct/mainAct.coffee',
+
     ])
     .pipe(concatenation('ctpaint.coffee'))
     .pipe(gulp.dest(''));

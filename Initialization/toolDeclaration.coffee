@@ -132,3 +132,5 @@ ctPaintTools[11].menuImage.src = 'assets\\t04.png'
 ctPaintTools[14].menuImage.src = 'assets\\t05.png'
 ctPaintTools[15].menuImage.src = 'assets\\t03.png'
 
+selectedTool = ctPaintTools[7]
+

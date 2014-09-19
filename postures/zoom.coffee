@@ -7,7 +7,6 @@ zoomPosture = ->
   $('#CtPaint').mousedown (event)->
     mousePressed = true
     getMousePositionOnCanvas(event)
-    selectedTool.toolsAction()
     if zoomActivate
       zoomActivate = false
       cornersVisible = true

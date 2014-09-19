@@ -1,4 +1,3 @@
-
 ###
   Given a number, zero padder returns a string of that number
   padded with zeros in front of it.

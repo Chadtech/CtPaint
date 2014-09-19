@@ -8,7 +8,7 @@ linePosture = ->
       canvasDataAsImage = new Image()
       canvasDataAsImage.onload = ->
         ctContext.drawImage(canvasDataAsImage,0,0)
-        selectedTool.toolsAction(ctContext, colorSwatches[0], oldX, oldY, xSpot, ySpot)
+        lineAction(ctContext, colorSwatches[0], oldX, oldY, xSpot, ySpot)
       canvasDataAsImage.src = canvasAsData
 
   $('#CtPaint').mousedown (event)->

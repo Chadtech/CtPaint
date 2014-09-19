@@ -38,5 +38,5 @@ selectPosture = ->
       squareAction(ctContext, colorSwatches[1], oldX + 1, oldY + 1, xSpot - 1, ySpot - 1, true)
       canvasAsData = ctCanvas.toDataURL()
       ctContext.putImageData(selectionToPaste, oldX + 1, oldY + 1)
-      selectedTool.toolsAction(ctContext, oldX, oldY, xSpot, ySpot)
+      drawSelectBox(ctContext, oldX, oldY, xSpot, ySpot)
     canvasDataAsImage.src = canvasAsData
