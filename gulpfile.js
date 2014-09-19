@@ -30,7 +30,7 @@ gulp.task('doAllTheScriptsTogether', function() {
 
     './postures/zoom.coffee',
     './postures/select.coffee',
-    //'./postures/sample.coffee',
+    './postures/sample.coffee',
     './postures/fill.coffee',
     './postures/square.coffee',
     './postures/circle.coffee',

@@ -1288,6 +1288,20 @@ selectPosture = [
       drawSelectBox(ctContext, oldX, oldY, xSpot, ySpot)
     canvasDataAsImage.src = canvasAsData
 ]
+samplePosture = [
+  () ->
+    toolbar1Context.drawImage(toolbar1sImage1,188,3)   
+    drawInformationToolbar0()
+    drawInformationToolbar1()
+  () ->
+    mousePressed = true
+  () ->
+    mousePressed = false
+    getMousePositionOnCanvas(event)
+    colorSwatches[0] = hexToRGB(getColorValue(ctContext, xSpot, ySpot).substr(1))
+    selectedTool = previouslySelectedTool
+    drawToolbars()
+]
 fillPosture = [
   () ->
     toolbar1Context.drawImage(toolbar1sImage1,188,3)   
@@ -1491,7 +1505,7 @@ ctPaintTools[17].toolsAction = verticalColorSwap
 
 ctPaintTools[0].posture = zoomPosture
 ctPaintTools[1].posture = selectPosture
-#ctPaintTools[2].posture = samplePosture
+ctPaintTools[2].posture = samplePosture
 ctPaintTools[3].posture = fillPosture
 ctPaintTools[4].posture = squarePosture
 ctPaintTools[5].posture = circlePosture

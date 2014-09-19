@@ -106,7 +106,7 @@ ctPaintTools[17].toolsAction = verticalColorSwap
 
 ctPaintTools[0].posture = zoomPosture
 ctPaintTools[1].posture = selectPosture
-#ctPaintTools[2].posture = samplePosture
+ctPaintTools[2].posture = samplePosture
 ctPaintTools[3].posture = fillPosture
 ctPaintTools[4].posture = squarePosture
 ctPaintTools[5].posture = circlePosture
