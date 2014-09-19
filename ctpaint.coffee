@@ -1,20 +1,47 @@
+###
+  the height of the horizontal tool bar, and the width of the vertical toolbar
+###
 toolbarHeight = 37
 toolbarWidth = 52
 
+###
+  The main canvases width and height, declared at their default values
+###
 canvasWidth = 256
 canvasHeight = 256
+
+###
+  canvasYPos and canvasXPos is the upper left corner of the canvas relative to the window.
+
+  canvasXOffset and canvasYOffset is how much the canvas is 'scrolled' away for when the canvas
+  is larger than can fit in the window
+###
 
 canvasXPos = toolbarWidth + 5
 canvasYPos = 5
 canvasXOffset = 0
 canvasYOffset = 0
 
+###
+  canvasAsData is the canvas stored as data. This is useful when the canvas needs to be changed
+  temporarily, such as between when you have clicked on the line draw tool, but not released.
+  The canvas is constantly refreshed with the data during these moments.
+###
 canvasAsData = undefined
 
+###
+  selectedTool is the currently selected tool, updated when a new one is selected so the code
+  regarding the selected tool can be static. previouslySelectedTool stores a value that
+  selectedTool is sometimes reset to, for tools that should automatically go back to the
+  previously selected one (sample)
+###
 selectedTool = undefined
 previouslySelectedTool = undefined
+# useful during tool declaration
 numberOfTools = 24
+# Refers to whether toolbar0 is in view mode 0 or 1
 toolViewMode = 0
+
 
 mousePressed = false
 draggingBorder = false
@@ -60,30 +87,65 @@ oldYZoom = undefined
 
 buttonWidth = 24
 buttonHeight = 24
+###
+  Color swatches are the four colors in the very lower left corner of the window
+  They are the colors you have immediate access to drawing with
+###
 colorSwatches = [ [192,192,192], [0,0,0], [64,64,64], [255,255,255] ]
-horizontalColorSwapKeyDown = false
+###
+  True when the menu has popped up to change a color in the color pallete
+###
 colorModify = false
+###
+  The static image of the color menu that gives the impression of
+  deep functionality
+###
 colorMenuImage = new Image()
 colorMenuImage.src = 'assets\\t00.png'
+###
+  defined as an index number once a color has been shift clicked
+###
 spotInColorPallete = undefined
+###
+  The color pallete. Even numbered pallete elements are on the top row,
+  odds on the bottom row. That aside the colors ascend from left to right
+
+  The colors were largely ripped out of the youtube video of Tom Sach's
+  video 'colors'. Some minor adjustments.
+###
 colorPallete = [
-  [ 0, 0, 0 ] #0
-  [ 64, 64, 64 ] #1
-  [ 128, 128, 128 ] #2
-  [ 192, 192, 192 ] #3
-  [ 255, 255, 255 ] #4
-  [ 50, 54, 128 ] #7
-  [ 85, 96, 45 ] #5
-  [ 0, 47, 167 ] #8
-  [ 221, 201, 142 ] #13
-  [ 10, 186, 181 ] #9
-  [ 243, 211, 27 ] #6
-  [ 159, 170, 210 ] #11
-  [ 255, 91, 49 ] #10
-  [ 157, 212, 147 ] #11
-  [ 212, 51, 29 ] #12
-  [ 10, 202, 26 ] #15
+  [ 0, 0, 0 ] 
+  [ 64, 64, 64 ] 
+  [ 128, 128, 128 ] 
+  [ 192, 192, 192 ] 
+  [ 255, 255, 255 ] 
+  [ 50, 54, 128 ] 
+  [ 85, 96, 45 ] 
+  [ 0, 47, 167 ] 
+  [ 221, 201, 142 ] 
+  [ 10, 186, 181 ] 
+  [ 243, 211, 27 ] 
+  [ 159, 170, 210 ]
+  [ 255, 91, 49 ] 
+  [ 157, 212, 147 ] 
+  [ 212, 51, 29 ] 
+  [ 10, 202, 26 ] 
 ]
+###
+  When a region is selected, it is outlined by a box. The outline
+  has a very particular pattern, and the declaration of the
+  relevant program components is very complicated. The pattern
+  is four pixels long. The variable dataToGive contains the color
+  pattern along the outline. 
+
+  selectLinesOfLengthX contains four canvas elements, each 1 pixel
+  tall. Each canvas element is its index number + 1 wide. When the
+  outline is drawn, a the canvas of length 4 (index 3) is repeatedly
+  pasted until there is less than four pixels left. At which point,
+  a canvas of the remaining length is pasted (1, 2 or 3). 
+  selectLinesOfLengthY is the vertical version of this technique.
+###
+
 selectLinesOfLengthX = []
 selectLinesOfLengthY = []
 dataToGive = [
@@ -95,71 +157,136 @@ dataToGive = [
 
 lineIndex = 0
 while lineIndex < dataToGive.length
-  selectLinesOfLengthX.push document.createElement('canvas').getContext('2d').createImageData(lineIndex+1, 1)
-  selectLinesOfLengthY.push document.createElement('canvas').getContext('2d').createImageData(1, lineIndex+1)
+
+  horizontalCanvasElement = document.createElement('canvas')
+  horizontalCanvasElement = horizontalCanvasElement.getContext('2d').createImageData(lineIndex+1, 1)
+  selectLinesOfLengthX.push horizontalCanvasElement
+
+  verticalCanvasElement = document.createElement('canvas')
+  verticalCanvasElement = verticalCanvasElement.getContext('2d').createImageData(1, lineIndex+1)
+  selectLinesOfLengthY.push verticalCanvasElement
+  
   dataIndex = 0
   while dataIndex < (lineIndex+1)
     eachColorIndex = 0
     while eachColorIndex < dataToGive.length
-      selectLinesOfLengthX[selectLinesOfLengthX.length-1].data[eachColorIndex + (dataIndex * 4)] = dataToGive[dataIndex][eachColorIndex]
-      selectLinesOfLengthY[selectLinesOfLengthY.length-1].data[eachColorIndex + (dataIndex * 4)] = dataToGive[dataIndex][eachColorIndex]
+      colorIndexOfDatum = eachColorIndex + (dataIndex * 4)
+      selectLinesOfLengthX[selectLinesOfLengthX.length-1].data[colorIndexOfDatum] = 
+        dataToGive[dataIndex][eachColorIndex]
+      selectLinesOfLengthY[selectLinesOfLengthY.length-1].data[colorIndexOfDatum] = 
+        dataToGive[dataIndex][eachColorIndex]
       eachColorIndex++
     dataIndex++
   lineIndex++
-zeroPadder = (number,zerosToFill) ->
+
+###
+  Given a number, zero padder returns a string of that number
+  padded with zeros in front of it.
+###
+zeroPadder = (number,numberOfZerosToFill) ->
   numberAsString = number+''
-  while numberAsString.length < zerosToFill
+  while numberAsString.length < numberOfZerosToFill
     numberAsString = '0'+numberAsString
   return numberAsString
-
+###
+  replaceAt replaces the element at stringsIndex in a string
+  with one given as an argument (replacement)
+###
 replaceAt = (string, replacement, stringsIndex) ->
   return string.substr(0,stringsIndex) + replacement + string.substr(stringsIndex + 1)
 
-rgbToHex = (rgb) ->
-  return '#' + zeroPadder(rgb[0].toString(16),2) + zeroPadder(rgb[1].toString(16),2) + zeroPadder(rgb[2].toString(16),2)
+###
+  rgbToHex and hexToRGB convert between the two standards
+  of color expression.
+###
+
+rgbToHex = (rgb, hashtag) ->
+  if hashtag == undefined or hashtag
+    return '#' + 
+      zeroPadder(rgb[0].toString(16),2) + 
+      zeroPadder(rgb[1].toString(16),2) + 
+      zeroPadder(rgb[2].toString(16),2)
+  else
+    return zeroPadder(rgb[0].toString(16),2) + 
+      zeroPadder(rgb[1].toString(16),2) + 
+      zeroPadder(rgb[2].toString(16),2)
 
 hexToRGB = (hex) ->
-  return [parseInt(hex[0] + hex[1], 16), parseInt(hex[2] + hex[3], 16), parseInt(hex[4] + hex[5], 16)]
+  return [parseInt(hex[0] + hex[1], 16)
+    parseInt(hex[2] + hex[3], 16)
+    parseInt(hex[4] + hex[5], 16)
+  ]
 
+# The main Canvas
 ctCanvas = document.getElementById('CtPaint')
 ctContext = ctCanvas.getContext('2d')
 
+# The vertical toolbar
 toolbar0Canvas = document.getElementById('toolbar0')
 toolbar0Context = toolbar0Canvas.getContext('2d')
 
+###
+  toolbar0 has two images, that are switched by pressing the alt key. One shows the tools icon
+  the other the shortkey to that tool
+###
 toolbar0sImages = [new Image(), new Image()]
 toolbar0sImages[0].src = 'assets\\toolbar0v.PNG'
 toolbar0sImages[1].src = 'assets\\toolbar0u.PNG'
 
+###
+  toolbar1 is the horizontal toolbar. It has two images. The first of the color palette and color 
+  swatches, the second of the information board
+###
 toolbar1Canvas = document.getElementById('toolbar1')
 toolbar1Context = toolbar1Canvas.getContext('2d')
 toolbar1sImage0 = new Image()
 toolbar1sImage0.src = 'assets\\toolbar10.png'
 toolbar1sImage1 = new Image()
 toolbar1sImage1.src = 'assets\\toolbar11.png'
+
+###
+  The background canvas is just a gray expanse behind everything
+###
 backgroundCanvas = document.getElementById('background')
 backgroundContext = backgroundCanvas.getContext('2d')
 
-border0Canvas = document.getElementById('border0')
-border0Context = border0Canvas.getContext('2d')
-border1Canvas = document.getElementById('border1')
-border1Context = border1Canvas.getContext('2d')
-border2Canvas = document.getElementById('border2')
-border2Context = border2Canvas.getContext('2d')
-border3Canvas = document.getElementById('border3')
-border3Context = border3Canvas.getContext('2d')
+###
+  The corners are the four small dots at the corners of the main canvas. They give an impression of
+  boundary, and resizeability. One of them can be clicked on to resize the canvas,
+  which is the lower right one.
+###
+corner0Canvas = document.getElementById('corner0')
+corner0Context = corner0Canvas.getContext('2d')
+corner1Canvas = document.getElementById('corner1')
+corner1Context = corner1Canvas.getContext('2d')
+corner2Canvas = document.getElementById('corner2')
+corner2Context = corner2Canvas.getContext('2d')
+corner3Canvas = document.getElementById('corner3')
+corner3Context = corner3Canvas.getContext('2d')
 
-border0Context.canvas.width = 1
-border0Context.canvas.height = 1
-border1Context.canvas.width = 1
-border1Context.canvas.height = 1
-border2Context.canvas.width = 1
-border2Context.canvas.height = 1
-border3Context.canvas.width = 1
-border3Context.canvas.height = 1
+corner0Context.canvas.width = 1
+corner0Context.canvas.height = 1
+corner1Context.canvas.width = 1
+corner1Context.canvas.height = 1
+corner2Context.canvas.width = 1
+corner2Context.canvas.height = 1
+corner3Context.canvas.width = 1
+corner3Context.canvas.height = 1
 
+###
+  The menucanvas is a canvas that displays whatever menu is currently active. Menus such as resize
+  and scale. When inactive it sits off screen. When activated its updated with the correct 
+  appearanceand location
+###
 menuCanvas = document.getElementById('menu')
 menuContext = menuCanvas.getContext('2d')
+
+
+###
+ keysToKeyCodes correlates the keycode of a key, with the keys name.
+ That way I can just type in the name of the key to get the key code.
+###
+
 keysToKeyCodes = 
   'backspace':8
   'tab':9
@@ -247,22 +374,46 @@ keysToKeyCodes =
   'right bracket':221
   'single quote':222
 
-stringOfCharacters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ `.,;:'+"'"+'"?!0123456789@#$%^&*(){}[]'
+###
+  In this section, I declare an object to connect each character as a string, to 
+  an array of images of that character. These images can be drawn onto the canvas.
+
+  (A)
+  The letters 'm', 'n', and 'o', are arbitrary codes assigned to three different
+  colorations of each character. The files of the images themselves are designated
+  with the code. One they are organized into the stringsToGlyph object, they are
+  referenced by index of the array element of stringsToGlyph. m is of a dark character
+  on a dark background. n is a medium coloration, where the chracter is adequately
+  bright. o has a brighter background, and a brighter character, for when a letter
+  must be highlighted.
+###
+stringOfCharacters = 
+  'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ `.,;:'+"'"+'"?!0123456789@#$%^&*(){}[]'
 stringsToGlyphs = {}
 stringOfCharactersIndex = 0
+# (A)
 varietyCodes = [ 'm', 'n', 'o' ]
 while stringOfCharactersIndex < stringOfCharacters.length
-  stringsToGlyphs[stringOfCharacters[stringOfCharactersIndex]] = [ new Image(), new Image(), new Image() ]
+  stringsToGlyphs[stringOfCharacters[stringOfCharactersIndex]] = [ 
+    new Image()
+    new Image()
+    new Image()]
   imageVariety = 0
   while imageVariety < 3
-    stringsToGlyphs[stringOfCharacters[stringOfCharactersIndex]][imageVariety].src = 'assets\\' + varietyCodes[imageVariety]+zeroPadder(stringOfCharactersIndex,4)+'.PNG'
+    asset = 'assets\\' + varietyCodes[imageVariety]+zeroPadder(stringOfCharactersIndex,4)+'.PNG'
+    stringsToGlyphs[stringOfCharacters[stringOfCharactersIndex]][imageVariety].src = asset
     imageVariety++
   stringOfCharactersIndex++
+
+###
+  This function draws the letters onto the canvas.
+###
 
 drawStringAsCommandPrompt = (canvas, stringToDraw, coloration, whereAtX, whereAtY) ->
   stringIndex = 0
   while stringIndex < stringToDraw.length
-    canvas.drawImage(stringsToGlyphs[stringToDraw[stringIndex]][coloration], whereAtX + (12 * stringIndex), whereAtY)
+    glyph = stringsToGlyphs[stringToDraw[stringIndex]][coloration]
+    canvas.drawImage(glyph, whereAtX + (12 * stringIndex), whereAtY)
     stringIndex++
 
 zoomAction = ->
@@ -334,10 +485,11 @@ floodFill = (canvas, context, colorToChangeTo, xPosition, yPosition) ->
   # ( where the user clicks in my case )
 
   ###
-  In my code, colors are given as (R,G,B), but the pixels in the canvas have an alpha channel, so I need
-  to add an alpha value of 255. In my code I found that if floodFill is used quickly in succession,
-  colorToChangeTo, could retain the pushed 255, and become a RGB pixel with several 255s after it.
-  To enture its in the form of [R,G,B,255], I take only the first three values of colorToChangeTo.
+  In my code, colors are given as (R,G,B), but the pixels in the canvas have an alpha channel, so I 
+  need to add an alpha value of 255. In my code I found that if floodFill is used quickly in 
+  succession, colorToChangeTo, could retain the pushed 255, and become a RGB pixel with several 255s
+  after it. To enture its in the form of [R,G,B,255], I take only the first three values of 
+  colorToChangeTo.
   ###
 
   colorToChangeTo = [colorToChangeTo[0], colorToChangeTo[1], colorToChangeTo[2], 255]
@@ -348,8 +500,8 @@ floodFill = (canvas, context, colorToChangeTo, xPosition, yPosition) ->
   I can compare to values of the arrays to verify their equality.
   ###
 
-  sameColorCheck = (firstColor, secondColor) ->
-    return firstColor[0] == secondColor[0] and firstColor[1] == secondColor[1] and firstColor[2] == secondColor[2]
+  sameColorCheck = (colorA, colorB) ->
+    return colorA[0] == colorB[0] and colorA[1] == colorB[1] and colorA[2] == colorB[2]
   ###
 
   (A)
@@ -358,15 +510,17 @@ floodFill = (canvas, context, colorToChangeTo, xPosition, yPosition) ->
   Its far faster to manipulate an array than it is to manipulate the canvas element directly.
 
   (B)
-  The canvas elements data is just an array of color values. If the pixels are numbered, and 'R0' refers to the red value
-  of pixel one. The canvases data looks like [ R0, G0, B0, A0, R1, G1, B1, A1, R2 ]. I decided to convert the array into
-  an array of pixels for ease of coding, though I wonder if the program would be significantly faster if I worked with 
+  The canvas elements data is just an array of color values. If the pixels are numbered, and 'R0' 
+  refers to the red value of pixel one. The canvases data looks like 
+  [ R0, G0, B0, A0, R1, G1, B1, A1, R2 ]. I decided to convert the array into an array of pixels for
+  ease of coding, though I wonder if the program would be significantly faster if I worked with 
   just the array.
 
   (C)
-  Since we are working with a one dimensional array of pixels. The (x,y) coordinates no longer make sense.
-  originalPosition is the position in the one dimensional array translated from the two dimenstional (x,y)
-  coordinates. colorToReplace is the color we are replacing, and its the color at originalPosition.
+  Since we are working with a one dimensional array of pixels. The (x,y) coordinates no longer make 
+  sense. originalPosition is the position in the one dimensional array translated from the two 
+  dimenstional (x,y) coordinates. colorToReplace is the color we are replacing, and its the color at
+  originalPosition.
 
   ###
 
@@ -450,13 +604,15 @@ floodFill = (canvas, context, colorToChangeTo, xPosition, yPosition) ->
   revised canvas is pasted over the old.
   ###
 
-  revisedCanvasToPaste = document.createElement('canvas').getContext('2d').createImageData(canvas.width, canvas.height)
+  revisedCanvasToPaste = document.createElement('canvas')
+  revisedCanvasToPaste.getContext('2d').createImageData(canvas.width, canvas.height)
 
   pixelInCanvasIndex = 0
   while pixelInCanvasIndex < wholeCanvas.length
     colorValueIndex = 0
     while colorValueIndex < wholeCanvas[pixelInCanvasIndex].length
-      revisedCanvasToPaste.data[(pixelInCanvasIndex * 4) + colorValueIndex] = wholeCanvas[pixelInCanvasIndex][colorValueIndex]
+      revisedCanvasToPaste.data[(pixelInCanvasIndex * 4) + colorValueIndex] = 
+        wholeCanvas[pixelInCanvasIndex][colorValueIndex]
       colorValueIndex++
     pixelInCanvasIndex++
   context.putImageData(revisedCanvasToPaste,0,0)
@@ -467,32 +623,36 @@ squareAction = (canvas, color, beginX, beginY, endX, endY, fillOrNot) ->
     if (beginX < endX) == (beginY < endY)
       if (beginX < endX)
         while magnitudeIncrement < selectedTool.magnitude
-          drawLine(canvas, color, beginX + magnitudeIncrement, beginY + magnitudeIncrement, endX - magnitudeIncrement, beginY + magnitudeIncrement)
-          drawLine(canvas, color, beginX + magnitudeIncrement, beginY + magnitudeIncrement, beginX + magnitudeIncrement, endY - magnitudeIncrement )
-          drawLine(canvas, color, endX - magnitudeIncrement, beginY + magnitudeIncrement, endX - magnitudeIncrement, endY - magnitudeIncrement)
-          drawLine(canvas, color, beginX + magnitudeIncrement, endY - magnitudeIncrement, endX - magnitudeIncrement, endY - magnitudeIncrement)
+          mi = magnitudeIncrement
+          drawLine(canvas, color, beginX + mi, beginY + mi, endX - mi, beginY + mi)
+          drawLine(canvas, color, beginX + mi, beginY + mi, beginX + mi, endY - mi )
+          drawLine(canvas, color, endX - mi, beginY + mi, endX - mi, endY - mi)
+          drawLine(canvas, color, beginX + mi, endY - mi, endX - mi, endY - mi)
           magnitudeIncrement++
       else
         while magnitudeIncrement < selectedTool.magnitude
-          drawLine(canvas, color, beginX - magnitudeIncrement, beginY - magnitudeIncrement, endX + magnitudeIncrement, beginY - magnitudeIncrement)
-          drawLine(canvas, color, beginX - magnitudeIncrement, beginY - magnitudeIncrement, beginX - magnitudeIncrement, endY + magnitudeIncrement )
-          drawLine(canvas, color, endX + magnitudeIncrement, beginY - magnitudeIncrement, endX + magnitudeIncrement, endY + magnitudeIncrement)
-          drawLine(canvas, color, beginX - magnitudeIncrement, endY + magnitudeIncrement, endX + magnitudeIncrement, endY + magnitudeIncrement)
+          mi = magnitudeIncrement
+          drawLine(canvas, color, beginX - mi, beginY - mi, endX + mi, beginY - mi)
+          drawLine(canvas, color, beginX - mi, beginY - mi, beginX - mi, endY + mi )
+          drawLine(canvas, color, endX + mi, beginY - mi, endX + mi, endY + mi)
+          drawLine(canvas, color, beginX - mi, endY + mi, endX + mi, endY + mi)
           magnitudeIncrement++
     else
       if (endY < beginY)
         while magnitudeIncrement < selectedTool.magnitude
-          drawLine(canvas, color, beginX + magnitudeIncrement, beginY - magnitudeIncrement, endX - magnitudeIncrement, beginY - magnitudeIncrement)
-          drawLine(canvas, color, beginX + magnitudeIncrement, beginY - magnitudeIncrement, beginX + magnitudeIncrement, endY + magnitudeIncrement )
-          drawLine(canvas, color, endX - magnitudeIncrement, beginY - magnitudeIncrement, endX - magnitudeIncrement, endY + magnitudeIncrement)
-          drawLine(canvas, color, beginX + magnitudeIncrement, endY + magnitudeIncrement, endX - magnitudeIncrement, endY + magnitudeIncrement)
+          mi = magnitudeIncrement
+          drawLine(canvas, color, beginX + mi, beginY - mi, endX - mi, beginY - mi)
+          drawLine(canvas, color, beginX + mi, beginY - mi, beginX + mi, endY + mi )
+          drawLine(canvas, color, endX - mi, beginY - mi, endX - mi, endY + mi)
+          drawLine(canvas, color, beginX + mi, endY + mi, endX - mi, endY + mi)
           magnitudeIncrement++
       else
         while magnitudeIncrement < selectedTool.magnitude
-          drawLine(canvas, color, beginX - magnitudeIncrement, beginY + magnitudeIncrement, endX + magnitudeIncrement, beginY + magnitudeIncrement)
-          drawLine(canvas, color, beginX - magnitudeIncrement, beginY + magnitudeIncrement, beginX - magnitudeIncrement, endY - magnitudeIncrement )
-          drawLine(canvas, color, endX + magnitudeIncrement, beginY + magnitudeIncrement, endX + magnitudeIncrement, endY - magnitudeIncrement)
-          drawLine(canvas, color, beginX - magnitudeIncrement, endY - magnitudeIncrement, endX + magnitudeIncrement, endY - magnitudeIncrement)
+          mi = magnitudeIncrement
+          drawLine(canvas, color, beginX - mi, beginY + mi, endX + mi, beginY + mi)
+          drawLine(canvas, color, beginX - mi, beginY + mi, beginX - mi, endY - mi )
+          drawLine(canvas, color, endX + mi, beginY + mi, endX + mi, endY - mi)
+          drawLine(canvas, color, beginX - mi, endY - mi, endX + mi, endY - mi)
           magnitudeIncrement++
   else
     numberOfIterationsNecessary = 0
@@ -504,32 +664,36 @@ squareAction = (canvas, color, beginX, beginY, endX, endY, fillOrNot) ->
     if (beginX < endX) == (beginY < endY)
       if (beginX < endX)
         while magnitudeIncrement < numberOfIterationsNecessary
-          drawLine(canvas, color, beginX + magnitudeIncrement, beginY + magnitudeIncrement, endX - magnitudeIncrement, beginY + magnitudeIncrement)
-          drawLine(canvas, color, beginX + magnitudeIncrement, beginY + magnitudeIncrement, beginX + magnitudeIncrement, endY - magnitudeIncrement )
-          drawLine(canvas, color, endX - magnitudeIncrement, beginY + magnitudeIncrement, endX - magnitudeIncrement, endY - magnitudeIncrement)
-          drawLine(canvas, color, beginX + magnitudeIncrement, endY - magnitudeIncrement, endX - magnitudeIncrement, endY - magnitudeIncrement)
+          mi = magnitudeIncrement
+          drawLine(canvas, color, beginX + mi, beginY + mi, endX - mi, beginY + mi)
+          drawLine(canvas, color, beginX + mi, beginY + mi, beginX + mi, endY - mi )
+          drawLine(canvas, color, endX - mi, beginY + mi, endX - mi, endY - mi)
+          drawLine(canvas, color, beginX + mi, endY - mi, endX - mi, endY - mi)
           magnitudeIncrement++
       else
         while magnitudeIncrement < numberOfIterationsNecessary
-          drawLine(canvas, color, beginX - magnitudeIncrement, beginY - magnitudeIncrement, endX + magnitudeIncrement, beginY - magnitudeIncrement)
-          drawLine(canvas, color, beginX - magnitudeIncrement, beginY - magnitudeIncrement, beginX - magnitudeIncrement, endY + magnitudeIncrement )
-          drawLine(canvas, color, endX + magnitudeIncrement, beginY - magnitudeIncrement, endX + magnitudeIncrement, endY + magnitudeIncrement)
-          drawLine(canvas, color, beginX - magnitudeIncrement, endY + magnitudeIncrement, endX + magnitudeIncrement, endY + magnitudeIncrement)
+          mi = magnitudeIncrement
+          drawLine(canvas, color, beginX - mi, beginY - mi, endX + mi, beginY - mi)
+          drawLine(canvas, color, beginX - mi, beginY - mi, beginX - mi, endY + mi )
+          drawLine(canvas, color, endX + mi, beginY - mi, endX + mi, endY + mi)
+          drawLine(canvas, color, beginX - mi, endY + mi, endX + mi, endY + mi)
           magnitudeIncrement++
     else
       if (endY < beginY)
         while magnitudeIncrement < numberOfIterationsNecessary
-          drawLine(canvas, color, beginX + magnitudeIncrement, beginY - magnitudeIncrement, endX - magnitudeIncrement, beginY - magnitudeIncrement)
-          drawLine(canvas, color, beginX + magnitudeIncrement, beginY - magnitudeIncrement, beginX + magnitudeIncrement, endY + magnitudeIncrement )
-          drawLine(canvas, color, endX - magnitudeIncrement, beginY - magnitudeIncrement, endX - magnitudeIncrement, endY + magnitudeIncrement)
-          drawLine(canvas, color, beginX + magnitudeIncrement, endY + magnitudeIncrement, endX - magnitudeIncrement, endY + magnitudeIncrement)
+          mi = magnitudeIncrement
+          drawLine(canvas, color, beginX + mi, beginY - mi, endX - mi, beginY - mi)
+          drawLine(canvas, color, beginX + mi, beginY - mi, beginX + mi, endY + mi )
+          drawLine(canvas, color, endX - mi, beginY - mi, endX - mi, endY + mi)
+          drawLine(canvas, color, beginX + mi, endY + mi, endX - mi, endY + mi)
           magnitudeIncrement++
       else
         while magnitudeIncrement < numberOfIterationsNecessary
-          drawLine(canvas, color, beginX - magnitudeIncrement, beginY + magnitudeIncrement, endX + magnitudeIncrement, beginY + magnitudeIncrement)
-          drawLine(canvas, color, beginX - magnitudeIncrement, beginY + magnitudeIncrement, beginX - magnitudeIncrement, endY - magnitudeIncrement )
-          drawLine(canvas, color, endX + magnitudeIncrement, beginY + magnitudeIncrement, endX + magnitudeIncrement, endY - magnitudeIncrement)
-          drawLine(canvas, color, beginX - magnitudeIncrement, endY - magnitudeIncrement, endX + magnitudeIncrement, endY - magnitudeIncrement)
+          mi = magnitudeIncrement
+          drawLine(canvas, color, beginX - mi, beginY + mi, endX + mi, beginY + mi)
+          drawLine(canvas, color, beginX - mi, beginY + mi, beginX - mi, endY - mi )
+          drawLine(canvas, color, endX + mi, beginY + mi, endX + mi, endY - mi)
+          drawLine(canvas, color, beginX - mi, endY - mi, endX + mi, endY - mi)
           magnitudeIncrement++
 
 circleAction = ( canvas, color, xPos, yPos ) ->
@@ -541,7 +705,8 @@ circleAction = ( canvas, color, xPos, yPos ) ->
     calculatedRadius = Math.round(calculatedRadius)
     magnitudeIncrement = 0
     while magnitudeIncrement < selectedTool.magnitude
-      drawCircle( canvas, color, oldX, oldY, calculatedRadius - magnitudeIncrement, whetherCornerBlocks )
+      thisIncrementsRadius = calculatedRadius - magnitudeIncrement
+      drawCircle( canvas, color, oldX, oldY, thisIncrementsRadius, whetherCornerBlocks )
       magnitudeIncrement++
   else
     calculatedRadius = Math.pow(Math.pow(xPos - oldX, 2) + Math.pow(yPos - oldY, 2), 0.5)
@@ -727,7 +892,8 @@ resizeDataSortingInitialize = (width, height) ->
 
 resizeDataSorting = ( inputMaterial ) ->
   if inputMaterial isnt undefined
-    if (inputMaterial isnt 'backspace') and (inputMaterial isnt 'left') and (inputMaterial isnt 'right') and (inputMaterial isnt 'enter')
+    keysThatDontAddData = ['backspace', 'left', 'right', 'enter']
+    if not inputMaterial in keysThatDontAddData
       if not isNaN(inputMaterial)
         menuDatumZero = replaceAt(menuDatumZero, inputMaterial, spotInMenuZeroDatum )
         if spotInMenuZeroDatum < 7
@@ -779,7 +945,8 @@ resizeDataSorting = ( inputMaterial ) ->
 drawResizeMenu = () ->
   drawStringAsCommandPrompt( menuContext, menuDatumZero.substr(0,4), 1, 116, 10 )
   drawStringAsCommandPrompt( menuContext, menuDatumZero.substr(4,4), 1, 228, 10 )
-  drawStringAsCommandPrompt( menuContext, menuDatumZero[spotInMenuZeroDatum], 2, 116 + ((spotInMenuZeroDatum // 4) * 112) + ( 12 * ( spotInMenuZeroDatum %% 4 ) ), 10 )
+  xPos = 116 + ((spotInMenuZeroDatum // 4) * 112) + ( 12 * ( spotInMenuZeroDatum %% 4 ) )
+  drawStringAsCommandPrompt( menuContext, menuDatumZero[spotInMenuZeroDatum], 2, xPos, 10 )
 
 
 horizontalColorSwap = () ->
@@ -829,7 +996,8 @@ colorDataSortingInitialize = () ->
 
 colorDataSorting = ( inputMaterial ) ->
   if inputMaterial isnt undefined
-    if (inputMaterial isnt 'backspace') and (inputMaterial isnt 'left') and (inputMaterial isnt 'right') and (inputMaterial isnt 'enter')
+    keysThatDontAddData = ['backspace', 'left', 'right', 'enter']
+    if not inputMaterial in keysThatDontAddData
       menuDatumZero = replaceAt(menuDatumZero, inputMaterial, spotInMenuZeroDatum )
       if spotInMenuZeroDatum < 5
         spotInMenuZeroDatum++
@@ -854,8 +1022,9 @@ colorDataSorting = ( inputMaterial ) ->
     drawColorMenu()
 
 drawColorMenu = () ->
+  currentlyHighlighted = menuDatumZero[spotInMenuZeroDatum].toUpperCase()
   drawStringAsCommandPrompt( menuContext, menuDatumZero.toUpperCase(), 1, 91, 10 )
-  drawStringAsCommandPrompt( menuContext, menuDatumZero[spotInMenuZeroDatum].toUpperCase(), 2, 91+(12*spotInMenuZeroDatum), 10 )
+  drawStringAsCommandPrompt( menuContext, currentlyHighlighted, 2, 91+(12*spotInMenuZeroDatum), 10 )
 
 # organized as they are in the 2 x 11 tool bar grid
 toolNames = [
@@ -1030,7 +1199,10 @@ drawToolbars = ->
   toolbar0Context.drawImage(toolbar0sImages[toolViewMode],0,0)
   drawLine(toolbar0Context,[16,20,8],toolbarWidth-1,0,toolbarWidth-1,window.innerHeight-toolbarHeight)
   if selectedTool
-    toolbar0Context.drawImage(selectedTool.pressedImage[toolViewMode],selectedTool.clickRegion[0],selectedTool.clickRegion[1])
+    toolbar0Context.drawImage(
+      selectedTool.pressedImage[toolViewMode],
+      selectedTool.clickRegion[0],
+      selectedTool.clickRegion[1])
 
   toolbar1Context.fillStyle = '#202020'
   toolbar1Context.fillRect(0,0,window.innerWidth,toolbarHeight)
@@ -1055,7 +1227,7 @@ drawToolbars = ->
   palleteIndex = 0
   while palleteIndex < colorPallete.length
     toolbar1Context.fillStyle = rgbToHex(colorPallete[palleteIndex])
-    toolbar1Context.fillRect(52 + (17 * Math.floor(palleteIndex/2)), 4 + (17 * (palleteIndex%2)),14,14)
+    toolbar1Context.fillRect(52 + (17 * (palleteIndex // 2)), 4 + (17 * (palleteIndex % 2)),14,14)
     palleteIndex++
 
   drawInformationToolbar0()
@@ -1076,10 +1248,16 @@ magnitudeToGlyph = (tool) ->
     return selectedTool.magnitude.toString(16).toUpperCase()
 
 drawInformationToolbar1 = ->
-  drawStringAsCommandPrompt(toolbar1Context, getColorValue(ctContext, event.clientX - (toolbarWidth + 5) - canvasXOffset, event.clientY - 5 - canvasYOffset).toUpperCase() + ', (' + (event.clientX - (toolbarWidth + 5) - canvasXOffset).toString() + ', ' + (event.clientY - 5 - canvasYOffset).toString() + ')', 0, 191, 12)
+  xPos = event.clientX - (toolbarWidth + 5) - canvasXOffset
+  yPos = event.clientY - 5 - canvasYOffset
+  colorValue = getColorValue(ctContext, xPos, yPos).toUpperCase()
+  coordinates = ', (' + xPos.toString() + ', ' + yPos.toString() + ')'
+  colorAndCoordinates = colorValue + coordinates
+  drawStringAsCommandPrompt(toolbar1Context, colorAndCoordinates, 0, 191, 12)
 
 drawInformationToolbar0 = ->
-  drawStringAsCommandPrompt(toolbar0Context, magnitudeToGlyph(selectedTool)+modeToGlyph(selectedTool), 0, 6, 104)
+  toolbarInformation = magnitudeToGlyph(selectedTool)+modeToGlyph(selectedTool)
+  drawStringAsCommandPrompt(toolbar0Context, toolbarInformation, 0, 6, 104)
 
 getMousePositionOnCanvas = (event) ->
   xSpot = event.clientX - (toolbarWidth+5) - canvasXOffset
@@ -1268,14 +1446,18 @@ $(document).ready ()->
     window.scroll(0,0)
 
   window.onmousemove = () ->
-    if (event.clientX < (canvasWidth + 5 + toolbarWidth + 20)) and ((canvasWidth + 5 + toolbarWidth) < event.clientX)
+    rightBoundary = (canvasWidth + 5 + toolbarWidth + 20)
+    leftBoundary = (canvasWidth + 5 + toolbarWidth)
+    if (event.clientX < rightBoundary) and (leftBoundary < event.clientX)
       if (event.clientY < (canvasHeight + 5 + 20)) and ((canvasHeight + 5) < event.clientY)
         $('#wholeWindow').css 'cursor', 'se-resize'
     else
       $('#wholeWindow').css 'cursor', 'default'
 
   window.onmousedown = (event)->
-    if (event.clientX < (canvasWidth + 5 + toolbarWidth + 20)) and ((canvasWidth + 5 + toolbarWidth) < event.clientX)
+    rightBoundary = (canvasWidth + 5 + toolbarWidth + 20)
+    leftBoundary = (canvasWidth + 5 + toolbarWidth)
+    if (event.clientX < rightBoundary) and (leftBoundary < event.clientX)
       if (event.clientY < (canvasHeight + 5 + 20)) and ((canvasHeight + 5) < event.clientY)
         canvasAsData = ctCanvas.toDataURL()
         oldX = event.clientX

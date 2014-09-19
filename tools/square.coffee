@@ -4,32 +4,36 @@ squareAction = (canvas, color, beginX, beginY, endX, endY, fillOrNot) ->
     if (beginX < endX) == (beginY < endY)
       if (beginX < endX)
         while magnitudeIncrement < selectedTool.magnitude
-          drawLine(canvas, color, beginX + magnitudeIncrement, beginY + magnitudeIncrement, endX - magnitudeIncrement, beginY + magnitudeIncrement)
-          drawLine(canvas, color, beginX + magnitudeIncrement, beginY + magnitudeIncrement, beginX + magnitudeIncrement, endY - magnitudeIncrement )
-          drawLine(canvas, color, endX - magnitudeIncrement, beginY + magnitudeIncrement, endX - magnitudeIncrement, endY - magnitudeIncrement)
-          drawLine(canvas, color, beginX + magnitudeIncrement, endY - magnitudeIncrement, endX - magnitudeIncrement, endY - magnitudeIncrement)
+          mi = magnitudeIncrement
+          drawLine(canvas, color, beginX + mi, beginY + mi, endX - mi, beginY + mi)
+          drawLine(canvas, color, beginX + mi, beginY + mi, beginX + mi, endY - mi )
+          drawLine(canvas, color, endX - mi, beginY + mi, endX - mi, endY - mi)
+          drawLine(canvas, color, beginX + mi, endY - mi, endX - mi, endY - mi)
           magnitudeIncrement++
       else
         while magnitudeIncrement < selectedTool.magnitude
-          drawLine(canvas, color, beginX - magnitudeIncrement, beginY - magnitudeIncrement, endX + magnitudeIncrement, beginY - magnitudeIncrement)
-          drawLine(canvas, color, beginX - magnitudeIncrement, beginY - magnitudeIncrement, beginX - magnitudeIncrement, endY + magnitudeIncrement )
-          drawLine(canvas, color, endX + magnitudeIncrement, beginY - magnitudeIncrement, endX + magnitudeIncrement, endY + magnitudeIncrement)
-          drawLine(canvas, color, beginX - magnitudeIncrement, endY + magnitudeIncrement, endX + magnitudeIncrement, endY + magnitudeIncrement)
+          mi = magnitudeIncrement
+          drawLine(canvas, color, beginX - mi, beginY - mi, endX + mi, beginY - mi)
+          drawLine(canvas, color, beginX - mi, beginY - mi, beginX - mi, endY + mi )
+          drawLine(canvas, color, endX + mi, beginY - mi, endX + mi, endY + mi)
+          drawLine(canvas, color, beginX - mi, endY + mi, endX + mi, endY + mi)
           magnitudeIncrement++
     else
       if (endY < beginY)
         while magnitudeIncrement < selectedTool.magnitude
-          drawLine(canvas, color, beginX + magnitudeIncrement, beginY - magnitudeIncrement, endX - magnitudeIncrement, beginY - magnitudeIncrement)
-          drawLine(canvas, color, beginX + magnitudeIncrement, beginY - magnitudeIncrement, beginX + magnitudeIncrement, endY + magnitudeIncrement )
-          drawLine(canvas, color, endX - magnitudeIncrement, beginY - magnitudeIncrement, endX - magnitudeIncrement, endY + magnitudeIncrement)
-          drawLine(canvas, color, beginX + magnitudeIncrement, endY + magnitudeIncrement, endX - magnitudeIncrement, endY + magnitudeIncrement)
+          mi = magnitudeIncrement
+          drawLine(canvas, color, beginX + mi, beginY - mi, endX - mi, beginY - mi)
+          drawLine(canvas, color, beginX + mi, beginY - mi, beginX + mi, endY + mi )
+          drawLine(canvas, color, endX - mi, beginY - mi, endX - mi, endY + mi)
+          drawLine(canvas, color, beginX + mi, endY + mi, endX - mi, endY + mi)
           magnitudeIncrement++
       else
         while magnitudeIncrement < selectedTool.magnitude
-          drawLine(canvas, color, beginX - magnitudeIncrement, beginY + magnitudeIncrement, endX + magnitudeIncrement, beginY + magnitudeIncrement)
-          drawLine(canvas, color, beginX - magnitudeIncrement, beginY + magnitudeIncrement, beginX - magnitudeIncrement, endY - magnitudeIncrement )
-          drawLine(canvas, color, endX + magnitudeIncrement, beginY + magnitudeIncrement, endX + magnitudeIncrement, endY - magnitudeIncrement)
-          drawLine(canvas, color, beginX - magnitudeIncrement, endY - magnitudeIncrement, endX + magnitudeIncrement, endY - magnitudeIncrement)
+          mi = magnitudeIncrement
+          drawLine(canvas, color, beginX - mi, beginY + mi, endX + mi, beginY + mi)
+          drawLine(canvas, color, beginX - mi, beginY + mi, beginX - mi, endY - mi )
+          drawLine(canvas, color, endX + mi, beginY + mi, endX + mi, endY - mi)
+          drawLine(canvas, color, beginX - mi, endY - mi, endX + mi, endY - mi)
           magnitudeIncrement++
   else
     numberOfIterationsNecessary = 0
@@ -41,30 +45,34 @@ squareAction = (canvas, color, beginX, beginY, endX, endY, fillOrNot) ->
     if (beginX < endX) == (beginY < endY)
       if (beginX < endX)
         while magnitudeIncrement < numberOfIterationsNecessary
-          drawLine(canvas, color, beginX + magnitudeIncrement, beginY + magnitudeIncrement, endX - magnitudeIncrement, beginY + magnitudeIncrement)
-          drawLine(canvas, color, beginX + magnitudeIncrement, beginY + magnitudeIncrement, beginX + magnitudeIncrement, endY - magnitudeIncrement )
-          drawLine(canvas, color, endX - magnitudeIncrement, beginY + magnitudeIncrement, endX - magnitudeIncrement, endY - magnitudeIncrement)
-          drawLine(canvas, color, beginX + magnitudeIncrement, endY - magnitudeIncrement, endX - magnitudeIncrement, endY - magnitudeIncrement)
+          mi = magnitudeIncrement
+          drawLine(canvas, color, beginX + mi, beginY + mi, endX - mi, beginY + mi)
+          drawLine(canvas, color, beginX + mi, beginY + mi, beginX + mi, endY - mi )
+          drawLine(canvas, color, endX - mi, beginY + mi, endX - mi, endY - mi)
+          drawLine(canvas, color, beginX + mi, endY - mi, endX - mi, endY - mi)
           magnitudeIncrement++
       else
         while magnitudeIncrement < numberOfIterationsNecessary
-          drawLine(canvas, color, beginX - magnitudeIncrement, beginY - magnitudeIncrement, endX + magnitudeIncrement, beginY - magnitudeIncrement)
-          drawLine(canvas, color, beginX - magnitudeIncrement, beginY - magnitudeIncrement, beginX - magnitudeIncrement, endY + magnitudeIncrement )
-          drawLine(canvas, color, endX + magnitudeIncrement, beginY - magnitudeIncrement, endX + magnitudeIncrement, endY + magnitudeIncrement)
-          drawLine(canvas, color, beginX - magnitudeIncrement, endY + magnitudeIncrement, endX + magnitudeIncrement, endY + magnitudeIncrement)
+          mi = magnitudeIncrement
+          drawLine(canvas, color, beginX - mi, beginY - mi, endX + mi, beginY - mi)
+          drawLine(canvas, color, beginX - mi, beginY - mi, beginX - mi, endY + mi )
+          drawLine(canvas, color, endX + mi, beginY - mi, endX + mi, endY + mi)
+          drawLine(canvas, color, beginX - mi, endY + mi, endX + mi, endY + mi)
           magnitudeIncrement++
     else
       if (endY < beginY)
         while magnitudeIncrement < numberOfIterationsNecessary
-          drawLine(canvas, color, beginX + magnitudeIncrement, beginY - magnitudeIncrement, endX - magnitudeIncrement, beginY - magnitudeIncrement)
-          drawLine(canvas, color, beginX + magnitudeIncrement, beginY - magnitudeIncrement, beginX + magnitudeIncrement, endY + magnitudeIncrement )
-          drawLine(canvas, color, endX - magnitudeIncrement, beginY - magnitudeIncrement, endX - magnitudeIncrement, endY + magnitudeIncrement)
-          drawLine(canvas, color, beginX + magnitudeIncrement, endY + magnitudeIncrement, endX - magnitudeIncrement, endY + magnitudeIncrement)
+          mi = magnitudeIncrement
+          drawLine(canvas, color, beginX + mi, beginY - mi, endX - mi, beginY - mi)
+          drawLine(canvas, color, beginX + mi, beginY - mi, beginX + mi, endY + mi )
+          drawLine(canvas, color, endX - mi, beginY - mi, endX - mi, endY + mi)
+          drawLine(canvas, color, beginX + mi, endY + mi, endX - mi, endY + mi)
           magnitudeIncrement++
       else
         while magnitudeIncrement < numberOfIterationsNecessary
-          drawLine(canvas, color, beginX - magnitudeIncrement, beginY + magnitudeIncrement, endX + magnitudeIncrement, beginY + magnitudeIncrement)
-          drawLine(canvas, color, beginX - magnitudeIncrement, beginY + magnitudeIncrement, beginX - magnitudeIncrement, endY - magnitudeIncrement )
-          drawLine(canvas, color, endX + magnitudeIncrement, beginY + magnitudeIncrement, endX + magnitudeIncrement, endY - magnitudeIncrement)
-          drawLine(canvas, color, beginX - magnitudeIncrement, endY - magnitudeIncrement, endX + magnitudeIncrement, endY - magnitudeIncrement)
+          mi = magnitudeIncrement
+          drawLine(canvas, color, beginX - mi, beginY + mi, endX + mi, beginY + mi)
+          drawLine(canvas, color, beginX - mi, beginY + mi, beginX - mi, endY - mi )
+          drawLine(canvas, color, endX + mi, beginY + mi, endX + mi, endY - mi)
+          drawLine(canvas, color, beginX - mi, endY - mi, endX + mi, endY - mi)
           magnitudeIncrement++

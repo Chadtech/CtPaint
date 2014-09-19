@@ -73,14 +73,18 @@ $(document).ready ()->
     window.scroll(0,0)
 
   window.onmousemove = () ->
-    if (event.clientX < (canvasWidth + 5 + toolbarWidth + 20)) and ((canvasWidth + 5 + toolbarWidth) < event.clientX)
+    rightBoundary = (canvasWidth + 5 + toolbarWidth + 20)
+    leftBoundary = (canvasWidth + 5 + toolbarWidth)
+    if (event.clientX < rightBoundary) and (leftBoundary < event.clientX)
       if (event.clientY < (canvasHeight + 5 + 20)) and ((canvasHeight + 5) < event.clientY)
         $('#wholeWindow').css 'cursor', 'se-resize'
     else
       $('#wholeWindow').css 'cursor', 'default'
 
   window.onmousedown = (event)->
-    if (event.clientX < (canvasWidth + 5 + toolbarWidth + 20)) and ((canvasWidth + 5 + toolbarWidth) < event.clientX)
+    rightBoundary = (canvasWidth + 5 + toolbarWidth + 20)
+    leftBoundary = (canvasWidth + 5 + toolbarWidth)
+    if (event.clientX < rightBoundary) and (leftBoundary < event.clientX)
       if (event.clientY < (canvasHeight + 5 + 20)) and ((canvasHeight + 5) < event.clientY)
         canvasAsData = ctCanvas.toDataURL()
         oldX = event.clientX

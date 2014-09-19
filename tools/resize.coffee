@@ -23,7 +23,8 @@ resizeDataSortingInitialize = (width, height) ->
 
 resizeDataSorting = ( inputMaterial ) ->
   if inputMaterial isnt undefined
-    if (inputMaterial isnt 'backspace') and (inputMaterial isnt 'left') and (inputMaterial isnt 'right') and (inputMaterial isnt 'enter')
+    keysThatDontAddData = ['backspace', 'left', 'right', 'enter']
+    if not inputMaterial in keysThatDontAddData
       if not isNaN(inputMaterial)
         menuDatumZero = replaceAt(menuDatumZero, inputMaterial, spotInMenuZeroDatum )
         if spotInMenuZeroDatum < 7
@@ -75,5 +76,6 @@ resizeDataSorting = ( inputMaterial ) ->
 drawResizeMenu = () ->
   drawStringAsCommandPrompt( menuContext, menuDatumZero.substr(0,4), 1, 116, 10 )
   drawStringAsCommandPrompt( menuContext, menuDatumZero.substr(4,4), 1, 228, 10 )
-  drawStringAsCommandPrompt( menuContext, menuDatumZero[spotInMenuZeroDatum], 2, 116 + ((spotInMenuZeroDatum // 4) * 112) + ( 12 * ( spotInMenuZeroDatum %% 4 ) ), 10 )
+  xPos = 116 + ((spotInMenuZeroDatum // 4) * 112) + ( 12 * ( spotInMenuZeroDatum %% 4 ) )
+  drawStringAsCommandPrompt( menuContext, menuDatumZero[spotInMenuZeroDatum], 2, xPos, 10 )
 

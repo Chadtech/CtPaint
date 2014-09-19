@@ -19,7 +19,8 @@ colorDataSortingInitialize = () ->
 
 colorDataSorting = ( inputMaterial ) ->
   if inputMaterial isnt undefined
-    if (inputMaterial isnt 'backspace') and (inputMaterial isnt 'left') and (inputMaterial isnt 'right') and (inputMaterial isnt 'enter')
+    keysThatDontAddData = ['backspace', 'left', 'right', 'enter']
+    if not inputMaterial in keysThatDontAddData
       menuDatumZero = replaceAt(menuDatumZero, inputMaterial, spotInMenuZeroDatum )
       if spotInMenuZeroDatum < 5
         spotInMenuZeroDatum++
@@ -44,5 +45,6 @@ colorDataSorting = ( inputMaterial ) ->
     drawColorMenu()
 
 drawColorMenu = () ->
+  currentlyHighlighted = menuDatumZero[spotInMenuZeroDatum].toUpperCase()
   drawStringAsCommandPrompt( menuContext, menuDatumZero.toUpperCase(), 1, 91, 10 )
-  drawStringAsCommandPrompt( menuContext, menuDatumZero[spotInMenuZeroDatum].toUpperCase(), 2, 91+(12*spotInMenuZeroDatum), 10 )
+  drawStringAsCommandPrompt( menuContext, currentlyHighlighted, 2, 91+(12*spotInMenuZeroDatum), 10 )

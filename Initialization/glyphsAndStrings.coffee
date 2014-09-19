@@ -1,3 +1,8 @@
+###
+ keysToKeyCodes correlates the keycode of a key, with the keys name.
+ That way I can just type in the name of the key to get the key code.
+###
+
 keysToKeyCodes = 
   'backspace':8
   'tab':9
@@ -85,20 +90,44 @@ keysToKeyCodes =
   'right bracket':221
   'single quote':222
 
-stringOfCharacters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ `.,;:'+"'"+'"?!0123456789@#$%^&*(){}[]'
+###
+  In this section, I declare an object to connect each character as a string, to 
+  an array of images of that character. These images can be drawn onto the canvas.
+
+  (A)
+  The letters 'm', 'n', and 'o', are arbitrary codes assigned to three different
+  colorations of each character. The files of the images themselves are designated
+  with the code. One they are organized into the stringsToGlyph object, they are
+  referenced by index of the array element of stringsToGlyph. m is of a dark character
+  on a dark background. n is a medium coloration, where the chracter is adequately
+  bright. o has a brighter background, and a brighter character, for when a letter
+  must be highlighted.
+###
+stringOfCharacters = 
+  'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ `.,;:'+"'"+'"?!0123456789@#$%^&*(){}[]'
 stringsToGlyphs = {}
 stringOfCharactersIndex = 0
+# (A)
 varietyCodes = [ 'm', 'n', 'o' ]
 while stringOfCharactersIndex < stringOfCharacters.length
-  stringsToGlyphs[stringOfCharacters[stringOfCharactersIndex]] = [ new Image(), new Image(), new Image() ]
+  stringsToGlyphs[stringOfCharacters[stringOfCharactersIndex]] = [ 
+    new Image()
+    new Image()
+    new Image()]
   imageVariety = 0
   while imageVariety < 3
-    stringsToGlyphs[stringOfCharacters[stringOfCharactersIndex]][imageVariety].src = 'assets\\' + varietyCodes[imageVariety]+zeroPadder(stringOfCharactersIndex,4)+'.PNG'
+    asset = 'assets\\' + varietyCodes[imageVariety]+zeroPadder(stringOfCharactersIndex,4)+'.PNG'
+    stringsToGlyphs[stringOfCharacters[stringOfCharactersIndex]][imageVariety].src = asset
     imageVariety++
   stringOfCharactersIndex++
+
+###
+  This function draws the letters onto the canvas.
+###
 
 drawStringAsCommandPrompt = (canvas, stringToDraw, coloration, whereAtX, whereAtY) ->
   stringIndex = 0
   while stringIndex < stringToDraw.length
-    canvas.drawImage(stringsToGlyphs[stringToDraw[stringIndex]][coloration], whereAtX + (12 * stringIndex), whereAtY)
+    glyph = stringsToGlyphs[stringToDraw[stringIndex]][coloration]
+    canvas.drawImage(glyph, whereAtX + (12 * stringIndex), whereAtY)
     stringIndex++

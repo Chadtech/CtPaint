@@ -34,8 +34,8 @@ gulp.task('doAllTheScriptsTogether', function() {
     'keyListening.coffee',
     'bodyAndJquery.coffee',
     ])
-    .pipe(concatenation('ctPaint.coffee'))
-    .pipe(gulp.dest('./'));
+    .pipe(concatenation('ctpaint.coffee'))
+    .pipe(gulp.dest(''));
 });
 
 gulp.task('default', ['doAllTheScriptsTogether'], function(){});

@@ -63,7 +63,10 @@ drawToolbars = ->
   toolbar0Context.drawImage(toolbar0sImages[toolViewMode],0,0)
   drawLine(toolbar0Context,[16,20,8],toolbarWidth-1,0,toolbarWidth-1,window.innerHeight-toolbarHeight)
   if selectedTool
-    toolbar0Context.drawImage(selectedTool.pressedImage[toolViewMode],selectedTool.clickRegion[0],selectedTool.clickRegion[1])
+    toolbar0Context.drawImage(
+      selectedTool.pressedImage[toolViewMode],
+      selectedTool.clickRegion[0],
+      selectedTool.clickRegion[1])
 
   toolbar1Context.fillStyle = '#202020'
   toolbar1Context.fillRect(0,0,window.innerWidth,toolbarHeight)
@@ -88,7 +91,7 @@ drawToolbars = ->
   palleteIndex = 0
   while palleteIndex < colorPallete.length
     toolbar1Context.fillStyle = rgbToHex(colorPallete[palleteIndex])
-    toolbar1Context.fillRect(52 + (17 * Math.floor(palleteIndex/2)), 4 + (17 * (palleteIndex%2)),14,14)
+    toolbar1Context.fillRect(52 + (17 * (palleteIndex // 2)), 4 + (17 * (palleteIndex % 2)),14,14)
     palleteIndex++
 
   drawInformationToolbar0()
@@ -109,10 +112,16 @@ magnitudeToGlyph = (tool) ->
     return selectedTool.magnitude.toString(16).toUpperCase()
 
 drawInformationToolbar1 = ->
-  drawStringAsCommandPrompt(toolbar1Context, getColorValue(ctContext, event.clientX - (toolbarWidth + 5) - canvasXOffset, event.clientY - 5 - canvasYOffset).toUpperCase() + ', (' + (event.clientX - (toolbarWidth + 5) - canvasXOffset).toString() + ', ' + (event.clientY - 5 - canvasYOffset).toString() + ')', 0, 191, 12)
+  xPos = event.clientX - (toolbarWidth + 5) - canvasXOffset
+  yPos = event.clientY - 5 - canvasYOffset
+  colorValue = getColorValue(ctContext, xPos, yPos).toUpperCase()
+  coordinates = ', (' + xPos.toString() + ', ' + yPos.toString() + ')'
+  colorAndCoordinates = colorValue + coordinates
+  drawStringAsCommandPrompt(toolbar1Context, colorAndCoordinates, 0, 191, 12)
 
 drawInformationToolbar0 = ->
-  drawStringAsCommandPrompt(toolbar0Context, magnitudeToGlyph(selectedTool)+modeToGlyph(selectedTool), 0, 6, 104)
+  toolbarInformation = magnitudeToGlyph(selectedTool)+modeToGlyph(selectedTool)
+  drawStringAsCommandPrompt(toolbar0Context, toolbarInformation, 0, 6, 104)
 
 getMousePositionOnCanvas = (event) ->
   xSpot = event.clientX - (toolbarWidth+5) - canvasXOffset

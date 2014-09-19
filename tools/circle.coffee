@@ -7,7 +7,8 @@ circleAction = ( canvas, color, xPos, yPos ) ->
     calculatedRadius = Math.round(calculatedRadius)
     magnitudeIncrement = 0
     while magnitudeIncrement < selectedTool.magnitude
-      drawCircle( canvas, color, oldX, oldY, calculatedRadius - magnitudeIncrement, whetherCornerBlocks )
+      thisIncrementsRadius = calculatedRadius - magnitudeIncrement
+      drawCircle( canvas, color, oldX, oldY, thisIncrementsRadius, whetherCornerBlocks )
       magnitudeIncrement++
   else
     calculatedRadius = Math.pow(Math.pow(xPos - oldX, 2) + Math.pow(yPos - oldY, 2), 0.5)
