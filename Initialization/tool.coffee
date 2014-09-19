@@ -4,7 +4,7 @@ toolNames = [
   'sample', 'fill'
   'square', 'circle'
   'line', 'point'
-  'NOT A TOOL', 'NOT A TOOL'
+  'NOT A TOOL0', 'NOT A TOOL1'
   'flip', 'rotate'
   'invert', 'displace'
   'scale', 'resize'
@@ -94,15 +94,17 @@ ctPaintTools[5].toolsAction = circleAction
 ctPaintTools[6].toolsAction = lineAction
 ctPaintTools[7].toolsAction = pointAction
 ctPaintTools[10].toolsAction = flipAction
-ctPaintTools[10].menuImage.src = 'assets\\t01.png'
 ctPaintTools[11].toolsAction = rotateAction
-ctPaintTools[11].menuImage.src = 'assets\\t04.png'
 ctPaintTools[12].toolsAction = invertAction
 ctPaintTools[13].toolsAction = replaceAction
-ctPaintTools[13].menuImage.src = 'assets\\t02.png'
 ctPaintTools[14].toolsAction = scaleAction
-ctPaintTools[14].menuImage.src = 'assets\\t05.png'
 ctPaintTools[15].toolsAction = resizeAction
-ctPaintTools[15].menuImage.src = 'assets\\t03.png'
 ctPaintTools[16].toolsAction = horizontalColorSwap
 ctPaintTools[17].toolsAction = verticalColorSwap
+
+ctPaintTools[10].menuImage.src = 'assets\\t01.png'
+ctPaintTools[13].menuImage.src = 'assets\\t02.png'
+ctPaintTools[11].menuImage.src = 'assets\\t04.png'
+ctPaintTools[14].menuImage.src = 'assets\\t05.png'
+ctPaintTools[15].menuImage.src = 'assets\\t03.png'
+
