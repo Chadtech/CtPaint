@@ -53,14 +53,12 @@ selection = undefined
 selectionToPaste = undefined
 areaSelected = false
 justUp = false
-areaSelectedsWidth = 0
-areaSelectedsHeight = 0
-areasXSpot = 0
-areasYSpot = 0
-areaXOffset = 0
-areaYOffset = 0
-areaOldX = 0
-areaOldY = 0
+selectionX = 0
+selectionY = 0
+gripX = 0
+gripY = 0
+selectionsWidth = 0
+selectionsHeight = 0
 
 fillPermission = true
 
@@ -1258,10 +1256,24 @@ selectPosture = [
         canvasDataAsImage = new Image()
         canvasDataAsImage.onload = ->
           ctContext.drawImage(canvasDataAsImage,0,0)
-          drawSelectBox(ctContext, oldX, oldY, xSpot, ySpot)
+          drawSelectBox(ctContext, oldX - 1, oldY - 1, xSpot + 1, ySpot + 1)
         canvasDataAsImage.src = canvasAsData
     else
-      console.log 'Mouse Move, area selected'
+      if mousePressed
+        getMousePositionOnCanvas(event)
+        xOffset = xSpot - oldX
+        yOffset = ySpot - oldY
+        gripX = selectionX + xOffset
+        gripY = selectionY + yOffset
+        rightEdge = gripX + selectionsWidth
+        bottomEdge = gripY + selectionsHeight
+        canvasDataAsImage = new Image()
+        canvasDataAsImage.onload = ->
+          ctContext.drawImage(canvasDataAsImage,0,0)
+          canvasAsData = ctCanvas.toDataURL()
+          ctContext.putImageData(selection, gripX, gripY)
+          drawSelectBox(ctContext, gripX - 1, gripY - 1, rightEdge, bottomEdge)
+        canvasDataAsImage.src = canvasAsData
   () ->
     mousePressed = true
     if not areaSelected
@@ -1269,27 +1281,42 @@ selectPosture = [
       oldX = xSpot
       oldY = ySpot
     else
-      console.log 'Mouse Down, area selected'
+      getMousePositionOnCanvas(event)
+      oldX = xSpot
+      oldY = ySpot
+      withinXBoundaries = selectionX < xSpot and xSpot < (selectionX + selectionsWidth)
+      withinYBoundaries = selectionY < ySpot and ySpot < (selectionY + selectionsHeight)
+      if not withinXBoundaries and withinYBoundaries
+        areaSelected = false
+        canvasDataAsImage = new Image()
+        canvasDataAsImage.onload = ->
+          ctContext.drawImage(canvasDataAsImage,0,0)
+          canvasAsData = ctCanvas.toDataURL()
+        canvasDataAsImage.src = canvasAsData
   () ->
     mousePressed = false
     if not areaSelected
-      sortedXs = [xSpot, oldX].sort()
-      sortedYs = [ySpot, oldY].sort()
+      sortedXs = [ Math.min(xSpot, oldX), Math.max(xSpot, oldX) ]
+      sortedYs = [ Math.min(ySpot, oldY), Math.max(ySpot, oldY) ]
       selectionsWidth = Math.abs(xSpot - oldX)
       selectionsHeight = Math.abs(ySpot - oldY)
+      selectionX = sortedXs[0]
+      selectionY = sortedYs[0]
       selection = 
         ctContext.getImageData( sortedXs[0], sortedYs[0], selectionsWidth, selectionsHeight)
-      selection = selection.data
+      #selection = selection.data
       canvasDataAsImage = new Image()
       canvasDataAsImage.onload = ->
         ctContext.drawImage(canvasDataAsImage,0,0)
-        console.log 'A', colorSwatches[1]
-        squareAction(ctContext, colorSwatches[1], oldX, oldY, xSpot, ySpot, true)
-
+        squareAction(ctContext, colorSwatches[1], oldX, oldY, xSpot - 1, ySpot - 1, true)
         canvasAsData = ctCanvas.toDataURL()
+        ctContext.putImageData(selection, selectionX, selectionY)
+        drawSelectBox(ctContext, oldX - 1, oldY - 1, xSpot + 1, ySpot + 1)
       canvasDataAsImage.src = canvasAsData
+      areaSelected = true
     else
-      console.log 'Mouse Up, area selected'
+      selectionX = gripX
+      selectionY = gripY
 ]
 samplePosture = [
   () ->

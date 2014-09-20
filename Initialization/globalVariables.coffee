@@ -53,14 +53,12 @@ selection = undefined
 selectionToPaste = undefined
 areaSelected = false
 justUp = false
-areaSelectedsWidth = 0
-areaSelectedsHeight = 0
-areasXSpot = 0
-areasYSpot = 0
-areaXOffset = 0
-areaYOffset = 0
-areaOldX = 0
-areaOldY = 0
+selectionX = 0
+selectionY = 0
+gripX = 0
+gripY = 0
+selectionsWidth = 0
+selectionsHeight = 0
 
 fillPermission = true
 
