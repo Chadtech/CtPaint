@@ -32,7 +32,7 @@ keyListeningUnderNormalCircumstance = (event) ->
     selectedTool = ctPaintTools[7]
     drawToolbars()
   if event.keyCode == keysToKeyCodes['e']
-    ctPaintTools[15].toolsAction()
+    resizeAction()
   if event.keyCode == keysToKeyCodes['q']
     horizontalColorSwap()
   if event.keyCode == keysToKeyCodes['b']
@@ -52,47 +52,25 @@ keyListeningUnderNormalCircumstance = (event) ->
 
 keyListeningUnderAbnormalCircumstance = (event) ->
   switch event.keyCode
-    when keysToKeyCodes['0']
-      return '0'
-    when keysToKeyCodes['1']
-      return '1'
-    when keysToKeyCodes['2']
-      return '2'
-    when keysToKeyCodes['3']
-      return '3'
-    when keysToKeyCodes['4']
-      return '4'
-    when keysToKeyCodes['5']
-      return '5'
-    when keysToKeyCodes['6']
-      return '6'
-    when keysToKeyCodes['7']
-      return '7'
-    when keysToKeyCodes['8']
-      return '8'
-    when keysToKeyCodes['9']
-      return '9'
-    when keysToKeyCodes['a']
-      return 'a'
-    when keysToKeyCodes['b']
-      return 'b'
-    when keysToKeyCodes['c']
-      return 'c'
-    when keysToKeyCodes['d']
-      return 'd'
-    when keysToKeyCodes['e']
-      return 'e'
-    when keysToKeyCodes['f']
-      return 'f'
-    when keysToKeyCodes['x']
-      return 'x'
-    when keysToKeyCodes['y']
-      return 'y'
-    when keysToKeyCodes['backspace']
-      return 'backspace'
-    when keysToKeyCodes['left']
-      return 'left'
-    when keysToKeyCodes['right']
-      return 'right'
-    when keysToKeyCodes['enter']
-      return 'enter'
+    when keysToKeyCodes['0'] then '0'
+    when keysToKeyCodes['1'] then '1'
+    when keysToKeyCodes['2'] then '2'
+    when keysToKeyCodes['3'] then '3'
+    when keysToKeyCodes['4'] then '4'
+    when keysToKeyCodes['5'] then '5'
+    when keysToKeyCodes['6'] then '6'
+    when keysToKeyCodes['7'] then '7'
+    when keysToKeyCodes['8'] then '8'
+    when keysToKeyCodes['9'] then '9'
+    when keysToKeyCodes['a'] then 'a'
+    when keysToKeyCodes['b'] then 'b'
+    when keysToKeyCodes['c'] then 'c'
+    when keysToKeyCodes['d'] then 'd'
+    when keysToKeyCodes['e'] then 'e'
+    when keysToKeyCodes['f'] then 'f'
+    when keysToKeyCodes['x'] then 'x'
+    when keysToKeyCodes['y'] then 'y'
+    when keysToKeyCodes['backspace'] then 'backspace'
+    when keysToKeyCodes['left'] then 'left'
+    when keysToKeyCodes['right'] then 'right'
+    when keysToKeyCodes['enter'] then 'enter'

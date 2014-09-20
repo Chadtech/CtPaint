@@ -20,7 +20,7 @@ colorDataSortingInitialize = () ->
 colorDataSorting = ( inputMaterial ) ->
   if inputMaterial isnt undefined
     keysThatDontAddData = ['backspace', 'left', 'right', 'enter']
-    if not inputMaterial in keysThatDontAddData
+    if not (inputMaterial in keysThatDontAddData)
       menuDatumZero = replaceAt(menuDatumZero, inputMaterial, spotInMenuZeroDatum )
       if spotInMenuZeroDatum < 5
         spotInMenuZeroDatum++

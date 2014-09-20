@@ -52,7 +52,6 @@ cornersVisible = true
 selection = undefined
 selectionToPaste = undefined
 areaSelected = false
-justUp = false
 selectionX = 0
 selectionY = 0
 gripX = 0
