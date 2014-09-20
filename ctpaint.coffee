@@ -880,6 +880,37 @@ putPixel = (canvas, color, whereAtX, whereAtY) ->
   newPixelsColor[2] = color[2]
   newPixelsColor[3] = 255
   canvas.putImageData(newPixel, whereAtX, whereAtY)
+flipAction = () ->
+  menuUp = true
+  normalCircumstance = false
+  $('#menuDiv').css('top', (window.innerHeight - toolbarHeight - 45).toString())
+  $('#menuDiv').css('left', (toolbarWidth + 10).toString())
+
+  menuContext.canvas.width = 119
+  menuContext.canvas.height = 35
+
+  previouslySelectedTool = previouslySelectedTool
+  selectedTool = ctPaintTools[10]
+  menuContext.drawImage(selectedTool.menuImage, 0, 0)
+  drawToolbars()
+
+  whatSortOfDataSorting = flipDataSorting
+
+flipDataSorting = ( inputMaterial ) ->
+  if inputMaterial isnt undefined
+    acceptableKeys = ['x','y']
+    if inputMaterial in acceptableKeys
+      switch inputMaterial
+        when 'x'
+          if areaSelected
+            console.log selection.data 
+          else
+            console.log 'NOPE'
+        when 'y'
+          if areaSelected
+            console.log selection.data 
+          else
+            console.log 'NOPE'
 resizeAction = () ->
   menuUp = true
   normalCircumstance = false
@@ -1160,6 +1191,8 @@ keyListeningUnderNormalCircumstance = (event) ->
     drawToolbars()
   if event.keyCode == keysToKeyCodes['e']
     resizeAction()
+  if event.keyCode == keysToKeyCodes['f']
+    flipAction()
   if event.keyCode == keysToKeyCodes['q']
     horizontalColorSwap()
   if event.keyCode == keysToKeyCodes['b']
@@ -1286,6 +1319,7 @@ selectPosture = [
       if 0 < selectionsWidth and 0 < selectionsHeight
         selection = 
           ctContext.getImageData( sortedXs[0], sortedYs[0], selectionsWidth, selectionsHeight)
+        console.log 'A', selection
         canvasDataAsImage = new Image()
         canvasDataAsImage.onload = ->
           ctContext.drawImage(canvasDataAsImage,0,0)

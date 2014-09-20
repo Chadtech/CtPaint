@@ -19,6 +19,7 @@ gulp.task('doAllTheScriptsTogether', function() {
     './initialization/circle.coffee',
     './initialization/line.coffee',
     './initialization/point.coffee',
+    './initialization/flip.coffee',
     './initialization/resize.coffee',
     './initialization/horizontalColorSwap.coffee',
     './initialization/verticalColorSwap.coffee',

@@ -33,6 +33,8 @@ keyListeningUnderNormalCircumstance = (event) ->
     drawToolbars()
   if event.keyCode == keysToKeyCodes['e']
     resizeAction()
+  if event.keyCode == keysToKeyCodes['f']
+    flipAction()
   if event.keyCode == keysToKeyCodes['q']
     horizontalColorSwap()
   if event.keyCode == keysToKeyCodes['b']
