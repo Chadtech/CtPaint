@@ -989,30 +989,30 @@ verticalColorSwap = () ->
 
 positionCorners = ->
   if cornersVisible
-    $('#border0Div').css('top',(canvasYPos-1+canvasYOffset).toString())
-    $('#border0Div').css('left',(canvasXPos-1+canvasXOffset).toString())
+    $('#corner0Div').css('top',(canvasYPos-1+canvasYOffset).toString())
+    $('#corner0Div').css('left',(canvasXPos-1+canvasXOffset).toString())
 
-    $('#border1Div').css('top',(canvasYPos-1+canvasYOffset).toString())
-    $('#border1Div').css('left',(canvasXPos+canvasWidth+1+canvasXOffset).toString())
+    $('#corner1Div').css('top',(canvasYPos-1+canvasYOffset).toString())
+    $('#corner1Div').css('left',(canvasXPos+canvasWidth+1+canvasXOffset).toString())
 
-    $('#border2Div').css('top',(canvasYPos+canvasHeight+1+canvasYOffset).toString())
-    $('#border2Div').css('left',(canvasXPos+canvasWidth+1+canvasXOffset).toString())
+    $('#corner2Div').css('top',(canvasYPos+canvasHeight+1+canvasYOffset).toString())
+    $('#corner2Div').css('left',(canvasXPos+canvasWidth+1+canvasXOffset).toString())
 
-    $('#border3Div').css('top',(canvasYPos+canvasHeight+1+canvasYOffset).toString())
-    $('#border3Div').css('left',(canvasXPos-1+canvasXOffset).toString())
+    $('#corner3Div').css('top',(canvasYPos+canvasHeight+1+canvasYOffset).toString())
+    $('#corner3Div').css('left',(canvasXPos-1+canvasXOffset).toString())
   
   else
-    $('#border0Div').css('top',(window.innerHeight).toString())
-    $('#border0Div').css('left',(canvasXPos-1+canvasXOffset).toString())
+    $('#corner0Div').css('top',(window.innerHeight).toString())
+    $('#corner0Div').css('left',(canvasXPos-1+canvasXOffset).toString())
 
-    $('#border1Div').css('top',(window.innerHeight).toString())
-    $('#border1Div').css('left',(canvasXPos+canvasWidth+1+canvasXOffset).toString())
+    $('#corner1Div').css('top',(window.innerHeight).toString())
+    $('#corner1Div').css('left',(canvasXPos+canvasWidth+1+canvasXOffset).toString())
 
-    $('#border2Div').css('top',(window.innerHeight).toString())
-    $('#border2Div').css('left',(canvasXPos+canvasWidth+1+canvasXOffset).toString())
+    $('#corner2Div').css('top',(window.innerHeight).toString())
+    $('#corner2Div').css('left',(canvasXPos+canvasWidth+1+canvasXOffset).toString())
 
-    $('#border3Div').css('top',(window.innerHeight).toString())
-    $('#border3Div').css('left',(canvasXPos-1+canvasXOffset).toString())  
+    $('#corner3Div').css('top',(window.innerHeight).toString())
+    $('#corner3Div').css('left',(canvasXPos-1+canvasXOffset).toString())  
 
 positionCanvas = ->
   $('#ctpaintDiv').css('top', (canvasYPos+canvasYOffset).toString())
@@ -1249,44 +1249,47 @@ zoomPosture = [
 ]
 selectPosture = [
   () ->
-    toolbar1Context.drawImage(toolbar1sImage1,188,3)   
-    drawInformationToolbar0()
-    drawInformationToolbar1()
-    if mousePressed
+    if not areaSelected
+      toolbar1Context.drawImage(toolbar1sImage1,188,3)   
+      drawInformationToolbar0()
+      drawInformationToolbar1()
+      if mousePressed
+        getMousePositionOnCanvas(event)
+        canvasDataAsImage = new Image()
+        canvasDataAsImage.onload = ->
+          ctContext.drawImage(canvasDataAsImage,0,0)
+          drawSelectBox(ctContext, oldX, oldY, xSpot, ySpot)
+        canvasDataAsImage.src = canvasAsData
+    else
+      console.log 'Mouse Move, area selected'
+  () ->
+    mousePressed = true
+    if not areaSelected
       getMousePositionOnCanvas(event)
+      oldX = xSpot
+      oldY = ySpot
+    else
+      console.log 'Mouse Down, area selected'
+  () ->
+    mousePressed = false
+    if not areaSelected
+      sortedXs = [xSpot, oldX].sort()
+      sortedYs = [ySpot, oldY].sort()
+      selectionsWidth = Math.abs(xSpot - oldX)
+      selectionsHeight = Math.abs(ySpot - oldY)
+      selection = 
+        ctContext.getImageData( sortedXs[0], sortedYs[0], selectionsWidth, selectionsHeight)
+      selection = selection.data
       canvasDataAsImage = new Image()
       canvasDataAsImage.onload = ->
         ctContext.drawImage(canvasDataAsImage,0,0)
-        drawSelectBox(ctContext, oldX, oldY, xSpot, ySpot)
-        canvasDataAsImage.src = canvasAsData
-  () ->
-    mousePressed = true
-    getMousePositionOnCanvas(event)
-    oldX = xSpot
-    oldY = ySpot
-  () ->
-    mousePressed = false
-    getMousePositionOnCanvas(event)
-    areaSelected = true
-    areasXSpot = oldX
-    areasYSpot = oldY
-    areaSelectedsHeight = Math.abs(oldY - ySpot)
-    areaSelectedsWidth = Math.abs(oldX - xSpot)
-    selection = ctContext.getImageData(oldX + 1, oldY + 1, Math.abs((oldX + 1) - xSpot), Math.abs((oldY + 1) - ySpot))
-    selectionToPaste = document.createElement('canvas').getContext('2d').createImageData(selection.width, selection.height)
-    datumIndex = 0
-    while datumIndex < selection.data.length
-      selectionToPaste.data[datumIndex] = selection.data[datumIndex]
-      datumIndex++
-    #squareAction = (canvas, color, beginX, beginY, endX, endY)
-    canvasDataAsImage = new Image()
-    canvasDataAsImage.onload = ->
-      ctContext.drawImage(canvasDataAsImage,0,0)
-      squareAction(ctContext, colorSwatches[1], oldX + 1, oldY + 1, xSpot - 1, ySpot - 1, true)
-      canvasAsData = ctCanvas.toDataURL()
-      ctContext.putImageData(selectionToPaste, oldX + 1, oldY + 1)
-      drawSelectBox(ctContext, oldX, oldY, xSpot, ySpot)
-    canvasDataAsImage.src = canvasAsData
+        console.log 'A', colorSwatches[1]
+        squareAction(ctContext, colorSwatches[1], oldX, oldY, xSpot, ySpot, true)
+
+        canvasAsData = ctCanvas.toDataURL()
+      canvasDataAsImage.src = canvasAsData
+    else
+      console.log 'Mouse Up, area selected'
 ]
 samplePosture = [
   () ->
@@ -1507,6 +1510,7 @@ while iteration < numberOfTools
   ctPaintTools[iteration].pressedImage[0].src = 'assets\\u'+zeroPadder(iteration,2)+'.PNG'
   ctPaintTools[iteration].pressedImage[1].src = 'assets\\v'+zeroPadder(iteration,2)+'.PNG'
   iteration++
+
 ###
 ctPaintTools[0].toolsAction = zoomAction
 ctPaintTools[1].toolsAction = selectAction
@@ -1715,7 +1719,6 @@ $(document).ready ()->
         if colorModify
           spotInColorPallete = (((toolbar1X - 52 ) // 17) * 2) + ((toolbar1Y - 4) // 16)
           colorMenu()
-          console.log 'D'
         else
           colorSwatches[0] = colorPallete[(((toolbar1X - 52 ) // 17) * 2) + ((toolbar1Y - 4) // 16)]
         drawToolbars()

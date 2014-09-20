@@ -86,6 +86,7 @@ while iteration < numberOfTools
   ctPaintTools[iteration].pressedImage[0].src = 'assets\\u'+zeroPadder(iteration,2)+'.PNG'
   ctPaintTools[iteration].pressedImage[1].src = 'assets\\v'+zeroPadder(iteration,2)+'.PNG'
   iteration++
+
 ###
 ctPaintTools[0].toolsAction = zoomAction
 ctPaintTools[1].toolsAction = selectAction

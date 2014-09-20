@@ -1,29 +1,29 @@
 positionCorners = ->
   if cornersVisible
-    $('#border0Div').css('top',(canvasYPos-1+canvasYOffset).toString())
-    $('#border0Div').css('left',(canvasXPos-1+canvasXOffset).toString())
+    $('#corner0Div').css('top',(canvasYPos-1+canvasYOffset).toString())
+    $('#corner0Div').css('left',(canvasXPos-1+canvasXOffset).toString())
 
-    $('#border1Div').css('top',(canvasYPos-1+canvasYOffset).toString())
-    $('#border1Div').css('left',(canvasXPos+canvasWidth+1+canvasXOffset).toString())
+    $('#corner1Div').css('top',(canvasYPos-1+canvasYOffset).toString())
+    $('#corner1Div').css('left',(canvasXPos+canvasWidth+1+canvasXOffset).toString())
 
-    $('#border2Div').css('top',(canvasYPos+canvasHeight+1+canvasYOffset).toString())
-    $('#border2Div').css('left',(canvasXPos+canvasWidth+1+canvasXOffset).toString())
+    $('#corner2Div').css('top',(canvasYPos+canvasHeight+1+canvasYOffset).toString())
+    $('#corner2Div').css('left',(canvasXPos+canvasWidth+1+canvasXOffset).toString())
 
-    $('#border3Div').css('top',(canvasYPos+canvasHeight+1+canvasYOffset).toString())
-    $('#border3Div').css('left',(canvasXPos-1+canvasXOffset).toString())
+    $('#corner3Div').css('top',(canvasYPos+canvasHeight+1+canvasYOffset).toString())
+    $('#corner3Div').css('left',(canvasXPos-1+canvasXOffset).toString())
   
   else
-    $('#border0Div').css('top',(window.innerHeight).toString())
-    $('#border0Div').css('left',(canvasXPos-1+canvasXOffset).toString())
+    $('#corner0Div').css('top',(window.innerHeight).toString())
+    $('#corner0Div').css('left',(canvasXPos-1+canvasXOffset).toString())
 
-    $('#border1Div').css('top',(window.innerHeight).toString())
-    $('#border1Div').css('left',(canvasXPos+canvasWidth+1+canvasXOffset).toString())
+    $('#corner1Div').css('top',(window.innerHeight).toString())
+    $('#corner1Div').css('left',(canvasXPos+canvasWidth+1+canvasXOffset).toString())
 
-    $('#border2Div').css('top',(window.innerHeight).toString())
-    $('#border2Div').css('left',(canvasXPos+canvasWidth+1+canvasXOffset).toString())
+    $('#corner2Div').css('top',(window.innerHeight).toString())
+    $('#corner2Div').css('left',(canvasXPos+canvasWidth+1+canvasXOffset).toString())
 
-    $('#border3Div').css('top',(window.innerHeight).toString())
-    $('#border3Div').css('left',(canvasXPos-1+canvasXOffset).toString())  
+    $('#corner3Div').css('top',(window.innerHeight).toString())
+    $('#corner3Div').css('left',(canvasXPos-1+canvasXOffset).toString())  
 
 positionCanvas = ->
   $('#ctpaintDiv').css('top', (canvasYPos+canvasYOffset).toString())
