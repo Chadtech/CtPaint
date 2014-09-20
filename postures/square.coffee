@@ -19,3 +19,4 @@ squarePosture = [
     mousePressed = false
     canvasAsData = ctCanvas.toDataURL()
 ]
+

@@ -84,6 +84,8 @@ oldYZoom = undefined
 
 buttonWidth = 24
 buttonHeight = 24
+
+
 ###
   Color swatches are the four colors in the very lower left corner of the window
   They are the colors you have immediate access to drawing with
@@ -178,6 +180,7 @@ drawColorMenu = () ->
   currentlyHighlighted = menuDatumZero[spotInMenuZeroDatum].toUpperCase()
   drawStringAsCommandPrompt( menuContext, menuDatumZero.toUpperCase(), 1, 91, 10 )
   drawStringAsCommandPrompt( menuContext, currentlyHighlighted, 2, 91+(12*spotInMenuZeroDatum), 10 )
+
 
 ###
   Given a number, zero padder returns a string of that number
@@ -1296,6 +1299,8 @@ selectPosture = [
       selectionX = gripX
       selectionY = gripY
 ]
+
+
 samplePosture = [
   () ->
     toolbar1Context.drawImage(toolbar1sImage1,188,3)   
@@ -1310,6 +1315,18 @@ samplePosture = [
     selectedTool = previouslySelectedTool
     drawToolbars()
 ]
+
+###
+  Currently, when the sample is taken it often returns to the previously
+  selected tool. However, if one adjusts the color with the vertical
+  or horizontal color swaps, the previouslySelectedTool various is also
+  used, removing the memory of the tool previous to the sample.
+
+  Rather than making a previouslypreviouslyselectedtool variable, I believe
+  the solution will be an array. And selectedTool will be the first element
+  of that array. To return to previous tools, the tool at index 0 will be 
+  'shifted'.
+###
 fillPosture = [
   () ->
     toolbar1Context.drawImage(toolbar1sImage1,188,3)   
@@ -1344,6 +1361,8 @@ squarePosture = [
     mousePressed = false
     canvasAsData = ctCanvas.toDataURL()
 ]
+
+
 circlePosture = [
   () ->
     toolbar1Context.drawImage(toolbar1sImage1,188,3)   
@@ -1416,6 +1435,8 @@ horizontalColorSwapPosture = [
     mousePressed = false
     drawToolbars()
 ]
+
+
 verticalColorSwapPosture = [
   () ->
     toolbar1Context.drawImage(toolbar1sImage1,188,3)   

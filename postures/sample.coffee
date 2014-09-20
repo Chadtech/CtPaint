@@ -12,3 +12,15 @@ samplePosture = [
     selectedTool = previouslySelectedTool
     drawToolbars()
 ]
+
+###
+  Currently, when the sample is taken it often returns to the previously
+  selected tool. However, if one adjusts the color with the vertical
+  or horizontal color swaps, the previouslySelectedTool various is also
+  used, removing the memory of the tool previous to the sample.
+
+  Rather than making a previouslypreviouslyselectedtool variable, I believe
+  the solution will be an array. And selectedTool will be the first element
+  of that array. To return to previous tools, the tool at index 0 will be 
+  'shifted'.
+###

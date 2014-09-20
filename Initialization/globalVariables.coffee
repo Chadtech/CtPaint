@@ -84,3 +84,4 @@ oldYZoom = undefined
 
 buttonWidth = 24
 buttonHeight = 24
+

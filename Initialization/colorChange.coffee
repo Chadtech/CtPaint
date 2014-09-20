@@ -48,3 +48,4 @@ drawColorMenu = () ->
   currentlyHighlighted = menuDatumZero[spotInMenuZeroDatum].toUpperCase()
   drawStringAsCommandPrompt( menuContext, menuDatumZero.toUpperCase(), 1, 91, 10 )
   drawStringAsCommandPrompt( menuContext, currentlyHighlighted, 2, 91+(12*spotInMenuZeroDatum), 10 )
+
