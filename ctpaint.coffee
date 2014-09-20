@@ -1291,6 +1291,7 @@ selectPosture = [
         canvasDataAsImage = new Image()
         canvasDataAsImage.onload = ->
           ctContext.drawImage(canvasDataAsImage,0,0)
+          ctContext.putImageData(selection, selectionX, selectionY)
           canvasAsData = ctCanvas.toDataURL()
         canvasDataAsImage.src = canvasAsData
   () ->
@@ -1304,7 +1305,6 @@ selectPosture = [
       selectionY = sortedYs[0]
       selection = 
         ctContext.getImageData( sortedXs[0], sortedYs[0], selectionsWidth, selectionsHeight)
-      #selection = selection.data
       canvasDataAsImage = new Image()
       canvasDataAsImage.onload = ->
         ctContext.drawImage(canvasDataAsImage,0,0)
