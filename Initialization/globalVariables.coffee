@@ -42,15 +42,24 @@ numberOfTools = 24
 # Refers to whether toolbar0 is in view mode 0 or 1
 toolViewMode = 0
 
-
 mousePressed = false
 draggingBorder = false
 
 zoomActivate = false
 cornersVisible = true
 
+###
+  These variables are all relevant to the selection process, 
+  which is initiated by either using the select tool, or 
+  pasting an image into the canvas. 
+
+  Selection is the actual image data. areaSelected is a global
+  boolean of whether an area is selected. selectionX and 
+  selectionY are its location on the canvas. gripX and gripY
+  is the location of selection while it is being dragged.
+###
+
 selection = undefined
-selectionToPaste = undefined
 areaSelected = false
 selectionX = 0
 selectionY = 0
@@ -59,28 +68,39 @@ gripY = 0
 selectionsWidth = 0
 selectionsHeight = 0
 
-fillPermission = true
+###
+  These variables are useful when any pop up menu shows up.
+  menuUp reflects whether a menu is up. whatSortOfDataSorting
+  is delcared as various functions that have their own processes
+  of data reading. menuDatumZero is a some stored memory
+  relevant to that menu, such as the width of the canvas in the
+  resize menu. spotInMenuZeroDatum is what spot in the stored
+  memory is being modified.
+###
 
 menuUp = false
 whatSortOfDataSorting = undefined
 menuDatumZero = undefined
 spotInMenuZeroDatum = 0
-menuDatumOne = undefined
-spotInMenuOneDatum = 0
 
+###
+  A menu being up is an abnormal circumstance. The key
+  press events are different depending on whether conditions
+  are normal or not.
+### 
 normalCircumstance = true
 
+###
+  xSpot and ySpot are the global variables for the x coordinated.
+  They are only updated by the getMousePositionOnCanvas function.
+  oldX and oldY are used in the many tools that require a memory
+  of where the tool started, or where it was.
+###
 xSpot = undefined
 ySpot = undefined
 
 oldX = undefined
 oldY = undefined
-
-xSpotZoom = undefined
-ySpotZoom = undefined
-
-oldXZoom = undefined
-oldYZoom = undefined
 
 buttonWidth = 24
 buttonHeight = 24

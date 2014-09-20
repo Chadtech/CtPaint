@@ -1,23 +1,7 @@
-lineAction = (canvas, color, beginX, beginY, endX, endY) ->
-  lineSlope = undefined
-  if selectedTool.magnitude > 1
-    lineSlope = Math.abs(beginX - endX) / Math.abs(beginY - endY)
-    if lineSlope > 1
-      lineSlope = Math.abs(beginY - endY) / Math.abs(beginX - endX)
-  magnitudeIncrement = 0
-  while magnitudeIncrement < selectedTool.magnitude
-    drawLine(canvas, color, beginX + magnitudeIncrement, beginY, endX + magnitudeIncrement, endY)
-    drawLine(canvas, color, beginX - magnitudeIncrement, beginY, endX - magnitudeIncrement, endY)
-    drawLine(canvas, color, beginX, beginY + magnitudeIncrement, endX, endY + magnitudeIncrement)
-    drawLine(canvas, color, beginX, beginY - magnitudeIncrement, endX, endY - magnitudeIncrement)
-    magnitudeIncrement++
-  if selectedTool.magnitude > 1
-    calculatedRadius = (selectedTool.magnitude - 2) - Math.round(lineSlope * 1.21)
-    magnitudeIncrement = 0
-    while magnitudeIncrement < calculatedRadius
-      drawCircle( canvas, color, beginX, beginY, calculatedRadius - magnitudeIncrement, true )
-      drawCircle( canvas, color, endX, endY, calculatedRadius - magnitudeIncrement, true )
-      magnitudeIncrement++
+###
+  drawline is the basic line drawing function. Its a
+  bresenham algorithm.
+###
 
 drawLine = (canvas, color, beginX, beginY, endX, endY) ->
   deltaX = Math.abs(endX - beginX)
@@ -46,3 +30,34 @@ drawLine = (canvas, color, beginX, beginY, endX, endY) ->
     if errorTwo < deltaY
       errorOne += deltaX
       beginY += directionY
+
+###
+  Line action is an elaboration using drawine as well as draw
+  circle. The line is made thicker by just drawing several lines,
+  with end points expanding away from a center end point. This
+  does not create a very 'natural' looking end point, but it does
+  make the line bolder. To give the line a more 'natural' end point,
+  a filled circle is drawn on each end.
+###
+
+lineAction = (canvas, color, beginX, beginY, endX, endY) ->
+  lineSlope = undefined
+  if selectedTool.magnitude > 1
+    lineSlope = Math.abs(beginX - endX) / Math.abs(beginY - endY)
+    if lineSlope > 1
+      lineSlope = Math.abs(beginY - endY) / Math.abs(beginX - endX)
+  magnitudeIncrement = 0
+  while magnitudeIncrement < selectedTool.magnitude
+    drawLine(canvas, color, beginX + magnitudeIncrement, beginY, endX + magnitudeIncrement, endY)
+    drawLine(canvas, color, beginX - magnitudeIncrement, beginY, endX - magnitudeIncrement, endY)
+    drawLine(canvas, color, beginX, beginY + magnitudeIncrement, endX, endY + magnitudeIncrement)
+    drawLine(canvas, color, beginX, beginY - magnitudeIncrement, endX, endY - magnitudeIncrement)
+    magnitudeIncrement++
+  if selectedTool.magnitude > 1
+    calculatedRadius = (selectedTool.magnitude - 2) - Math.round(lineSlope * 1.21)
+    magnitudeIncrement = 0
+    while magnitudeIncrement < calculatedRadius
+      drawCircle( canvas, color, beginX, beginY, calculatedRadius - magnitudeIncrement, true )
+      drawCircle( canvas, color, endX, endY, calculatedRadius - magnitudeIncrement, true )
+      magnitudeIncrement++
+

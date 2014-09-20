@@ -42,15 +42,24 @@ numberOfTools = 24
 # Refers to whether toolbar0 is in view mode 0 or 1
 toolViewMode = 0
 
-
 mousePressed = false
 draggingBorder = false
 
 zoomActivate = false
 cornersVisible = true
 
+###
+  These variables are all relevant to the selection process, 
+  which is initiated by either using the select tool, or 
+  pasting an image into the canvas. 
+
+  Selection is the actual image data. areaSelected is a global
+  boolean of whether an area is selected. selectionX and 
+  selectionY are its location on the canvas. gripX and gripY
+  is the location of selection while it is being dragged.
+###
+
 selection = undefined
-selectionToPaste = undefined
 areaSelected = false
 selectionX = 0
 selectionY = 0
@@ -59,28 +68,39 @@ gripY = 0
 selectionsWidth = 0
 selectionsHeight = 0
 
-fillPermission = true
+###
+  These variables are useful when any pop up menu shows up.
+  menuUp reflects whether a menu is up. whatSortOfDataSorting
+  is delcared as various functions that have their own processes
+  of data reading. menuDatumZero is a some stored memory
+  relevant to that menu, such as the width of the canvas in the
+  resize menu. spotInMenuZeroDatum is what spot in the stored
+  memory is being modified.
+###
 
 menuUp = false
 whatSortOfDataSorting = undefined
 menuDatumZero = undefined
 spotInMenuZeroDatum = 0
-menuDatumOne = undefined
-spotInMenuOneDatum = 0
 
+###
+  A menu being up is an abnormal circumstance. The key
+  press events are different depending on whether conditions
+  are normal or not.
+### 
 normalCircumstance = true
 
+###
+  xSpot and ySpot are the global variables for the x coordinated.
+  They are only updated by the getMousePositionOnCanvas function.
+  oldX and oldY are used in the many tools that require a memory
+  of where the tool started, or where it was.
+###
 xSpot = undefined
 ySpot = undefined
 
 oldX = undefined
 oldY = undefined
-
-xSpotZoom = undefined
-ySpotZoom = undefined
-
-oldXZoom = undefined
-oldYZoom = undefined
 
 buttonWidth = 24
 buttonHeight = 24
@@ -804,26 +824,10 @@ drawCircle = ( canvas, color, centerX, centerY, radius, cornerBlock) ->
         putPixel( canvas, color, centerX - yOffset, centerY - xOffset + 1)
         doACornerBlock = false
 
-lineAction = (canvas, color, beginX, beginY, endX, endY) ->
-  lineSlope = undefined
-  if selectedTool.magnitude > 1
-    lineSlope = Math.abs(beginX - endX) / Math.abs(beginY - endY)
-    if lineSlope > 1
-      lineSlope = Math.abs(beginY - endY) / Math.abs(beginX - endX)
-  magnitudeIncrement = 0
-  while magnitudeIncrement < selectedTool.magnitude
-    drawLine(canvas, color, beginX + magnitudeIncrement, beginY, endX + magnitudeIncrement, endY)
-    drawLine(canvas, color, beginX - magnitudeIncrement, beginY, endX - magnitudeIncrement, endY)
-    drawLine(canvas, color, beginX, beginY + magnitudeIncrement, endX, endY + magnitudeIncrement)
-    drawLine(canvas, color, beginX, beginY - magnitudeIncrement, endX, endY - magnitudeIncrement)
-    magnitudeIncrement++
-  if selectedTool.magnitude > 1
-    calculatedRadius = (selectedTool.magnitude - 2) - Math.round(lineSlope * 1.21)
-    magnitudeIncrement = 0
-    while magnitudeIncrement < calculatedRadius
-      drawCircle( canvas, color, beginX, beginY, calculatedRadius - magnitudeIncrement, true )
-      drawCircle( canvas, color, endX, endY, calculatedRadius - magnitudeIncrement, true )
-      magnitudeIncrement++
+###
+  drawline is the basic line drawing function. Its a
+  bresenham algorithm.
+###
 
 drawLine = (canvas, color, beginX, beginY, endX, endY) ->
   deltaX = Math.abs(endX - beginX)
@@ -853,6 +857,74 @@ drawLine = (canvas, color, beginX, beginY, endX, endY) ->
       errorOne += deltaX
       beginY += directionY
 
+###
+  Line action is an elaboration using drawine as well as draw
+  circle. The line is made thicker by just drawing several lines,
+  with end points expanding away from a center end point. This
+  does not create a very 'natural' looking end point, but it does
+  make the line bolder. To give the line a more 'natural' end point,
+  a filled circle is drawn on each end.
+###
+
+lineAction = (canvas, color, beginX, beginY, endX, endY) ->
+  lineSlope = undefined
+  if selectedTool.magnitude > 1
+    lineSlope = Math.abs(beginX - endX) / Math.abs(beginY - endY)
+    if lineSlope > 1
+      lineSlope = Math.abs(beginY - endY) / Math.abs(beginX - endX)
+  magnitudeIncrement = 0
+  while magnitudeIncrement < selectedTool.magnitude
+    drawLine(canvas, color, beginX + magnitudeIncrement, beginY, endX + magnitudeIncrement, endY)
+    drawLine(canvas, color, beginX - magnitudeIncrement, beginY, endX - magnitudeIncrement, endY)
+    drawLine(canvas, color, beginX, beginY + magnitudeIncrement, endX, endY + magnitudeIncrement)
+    drawLine(canvas, color, beginX, beginY - magnitudeIncrement, endX, endY - magnitudeIncrement)
+    magnitudeIncrement++
+  if selectedTool.magnitude > 1
+    calculatedRadius = (selectedTool.magnitude - 2) - Math.round(lineSlope * 1.21)
+    magnitudeIncrement = 0
+    while magnitudeIncrement < calculatedRadius
+      drawCircle( canvas, color, beginX, beginY, calculatedRadius - magnitudeIncrement, true )
+      drawCircle( canvas, color, endX, endY, calculatedRadius - magnitudeIncrement, true )
+      magnitudeIncrement++
+
+
+###
+  Put pixel is a basic drawing function. A pixel of a given
+  color is placed on the canvas as the location given. 
+  The color is given as an rgb array, and translated into
+  image data.
+###
+
+putPixel = (canvas, color, whereAtX, whereAtY) ->
+  newPixel = canvas.createImageData(1,1)
+  newPixelsColor = newPixel.data
+  newPixelsColor[0] = color[0]
+  newPixelsColor[1] = color[1]
+  newPixelsColor[2] = color[2]
+  newPixelsColor[3] = 255
+  canvas.putImageData(newPixel, whereAtX, whereAtY)
+
+###
+  Ironically point action does not utilize the put pixel
+  function. Line and circle drawing form the basis of
+  the point tool. Should putpixel be used to put a pixel
+  where the mouse is clicked, the user could not draw
+  strokes. The browser does not register mouse location 
+  fast enough, resulting in distantly spaced specks, as
+  the mouse might travel 10 or 20 pixels between putpixel
+  actions.
+
+  Instad, lines are drawn. When the typical user decides
+  to change one pixel, they are actually drawing a line
+  of length 1. When strokes are made, the past location
+  of the mouse is continuously remembered, and a line
+  is drawn from that location to the present location.
+
+  When the magnitude of the point tool is increased,
+  it instead continuously draws circles instead of
+  points.
+###
+
 pointAction = (canvas, color, beginX, beginY, endX, endY) ->
   if selectedTool.magnitude < 2
     drawLine(canvas, color, beginX, beginY, endX, endY)
@@ -871,15 +943,6 @@ pointAction = (canvas, color, beginX, beginY, endX, endY) ->
       drawCircle( canvas, color, beginX, beginY, calculatedRadius - magnitudeIncrement, true )
       drawCircle( canvas, color, endX, endY, calculatedRadius - magnitudeIncrement, true )
       magnitudeIncrement++
-
-putPixel = (canvas, color, whereAtX, whereAtY) ->
-  newPixel = canvas.createImageData(1,1)
-  newPixelsColor = newPixel.data
-  newPixelsColor[0] = color[0]
-  newPixelsColor[1] = color[1]
-  newPixelsColor[2] = color[2]
-  newPixelsColor[3] = 255
-  canvas.putImageData(newPixel, whereAtX, whereAtY)
 flipAction = () ->
   menuUp = true
   normalCircumstance = false
@@ -992,6 +1055,20 @@ drawResizeMenu = () ->
   drawStringAsCommandPrompt( menuContext, menuDatumZero[spotInMenuZeroDatum], 2, xPos, 10 )
 
 
+###
+  HorizontalColorSwap swaps the 4 swatch colors horizontally.
+  Meaning if the swatches are:
+
+      *** ***
+      *0* *1*
+      *** ***
+
+        *** ***
+        *2* *3*
+        *** ***
+
+  horizontalColorSwap swaps 0 with 1, and 2 with 3    
+###
 horizontalColorSwap = () ->
   previouslySelectedTool = selectedTool
   selectedTool = ctPaintTools[16]
@@ -1156,6 +1233,20 @@ scaleCanvasBigger = ( factor ) ->
   ctCanvas.style.width = (factor * ctCanvas.width).toString()+'px'
   ctCanvas.style.height = (factor * ctCanvas.height).toString()+'px'
 
+###
+  These functions handle key presses. Under abnormal circumstances,
+  such as when a menu is up, the keys do not trigger the same events.
+  When a menu is up for example, the '1' must input data, instead of
+  act as a shortkey for the zoom tool.
+
+  Since the kinds of abnormal conditions are various, the function
+  keyListeningUnderAbnormalCircumstances simply passed a string
+  of the key pressed. The function act as the argument in a data
+  sorting function corresponding to a menu, and referenced by
+  whatSortOfDataSorting.
+###
+
+
 keyListeningUnderNormalCircumstance = (event) ->
   if event.keyCode == keysToKeyCodes['1']
     previouslySelectedTool = selectedTool
@@ -1319,7 +1410,6 @@ selectPosture = [
       if 0 < selectionsWidth and 0 < selectionsHeight
         selection = 
           ctContext.getImageData( sortedXs[0], sortedYs[0], selectionsWidth, selectionsHeight)
-        console.log 'A', selection
         canvasDataAsImage = new Image()
         canvasDataAsImage.onload = ->
           ctContext.drawImage(canvasDataAsImage,0,0)

@@ -1,3 +1,17 @@
+###
+  These functions handle key presses. Under abnormal circumstances,
+  such as when a menu is up, the keys do not trigger the same events.
+  When a menu is up for example, the '1' must input data, instead of
+  act as a shortkey for the zoom tool.
+
+  Since the kinds of abnormal conditions are various, the function
+  keyListeningUnderAbnormalCircumstances simply passed a string
+  of the key pressed. The function act as the argument in a data
+  sorting function corresponding to a menu, and referenced by
+  whatSortOfDataSorting.
+###
+
+
 keyListeningUnderNormalCircumstance = (event) ->
   if event.keyCode == keysToKeyCodes['1']
     previouslySelectedTool = selectedTool
