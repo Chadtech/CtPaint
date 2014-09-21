@@ -35,8 +35,11 @@ canvasAsData = undefined
   selectedTool is sometimes reset to, for tools that should automatically go back to the
   previously selected one (sample)
 ###
-selectedTool = undefined
-previouslySelectedTool = undefined
+
+#selectedTool = undefined
+#previouslySelectedTool = undefined
+toolHistory = [ undefined, undefined ]
+
 # useful during tool declaration
 numberOfTools = 24
 # Refers to whether toolbar0 is in view mode 0 or 1

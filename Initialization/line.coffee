@@ -42,19 +42,23 @@ drawLine = (canvas, color, beginX, beginY, endX, endY) ->
 
 lineAction = (canvas, color, beginX, beginY, endX, endY) ->
   lineSlope = undefined
-  if selectedTool.magnitude > 1
+  #if selectedTool.magnitude > 1
+  if toolHistory[toolHistory.length - 1].magnitude > 1
     lineSlope = Math.abs(beginX - endX) / Math.abs(beginY - endY)
     if lineSlope > 1
       lineSlope = Math.abs(beginY - endY) / Math.abs(beginX - endX)
   magnitudeIncrement = 0
-  while magnitudeIncrement < selectedTool.magnitude
+  #while magnitudeIncrement < selectedTool.magnitude
+  while magnitudeIncrement < toolHistory[toolHistory.length - 1].magnitude
     drawLine(canvas, color, beginX + magnitudeIncrement, beginY, endX + magnitudeIncrement, endY)
     drawLine(canvas, color, beginX - magnitudeIncrement, beginY, endX - magnitudeIncrement, endY)
     drawLine(canvas, color, beginX, beginY + magnitudeIncrement, endX, endY + magnitudeIncrement)
     drawLine(canvas, color, beginX, beginY - magnitudeIncrement, endX, endY - magnitudeIncrement)
     magnitudeIncrement++
-  if selectedTool.magnitude > 1
-    calculatedRadius = (selectedTool.magnitude - 2) - Math.round(lineSlope * 1.21)
+  #if selectedTool.magnitude > 1
+  if toolHistory[toolHistory.length - 1].magnitude > 1
+    calculatedRadius = (toolHistory[toolHistory.length - 1]) - Math.round(lineSlope * 1.21)
+    #calculatedRadius = (selectedTool.magnitude - 2) - Math.round(lineSlope * 1.21)
     magnitudeIncrement = 0
     while magnitudeIncrement < calculatedRadius
       drawCircle( canvas, color, beginX, beginY, calculatedRadius - magnitudeIncrement, true )

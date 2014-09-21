@@ -13,14 +13,16 @@
   horizontalColorSwap swaps 0 with 1, and 2 with 3    
 ###
 horizontalColorSwap = () ->
-  previouslySelectedTool = selectedTool
-  selectedTool = ctPaintTools[16]
+  #previouslySelectedTool = selectedTool
+  #selectedTool = ctPaintTools[16]
+  toolHistory.push ctPaintTools[16]
   drawToolbars()
 
   rearrangedSwatches = [ colorSwatches[1], colorSwatches[0], colorSwatches[3], colorSwatches[2] ]
   colorSwatches = rearrangedSwatches
 
   setTimeout( ()->
-    selectedTool = previouslySelectedTool
+    toolHistory.pop()
+    #selectedTool = previouslySelectedTool
     drawToolbars()
   ,20)

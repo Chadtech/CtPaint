@@ -1,9 +1,11 @@
 squareAction = (canvas, color, beginX, beginY, endX, endY, fillOrNot) ->
-  if not selectedTool.mode and not fillOrNot
+  #if not selectedTool.mode and not fillOrNot
+  if not toolHistory[toolHistory.length - 1].mode and not fillOrNot
     magnitudeIncrement = 0
     if (beginX < endX) == (beginY < endY)
       if (beginX < endX)
-        while magnitudeIncrement < selectedTool.magnitude
+        #while magnitudeIncrement < selectedTool.magnitude
+        while magnitudeIncrement < toolHistory[toolHistory.length - 1].magnitude
           mi = magnitudeIncrement
           drawLine(canvas, color, beginX + mi, beginY + mi, endX - mi, beginY + mi)
           drawLine(canvas, color, beginX + mi, beginY + mi, beginX + mi, endY - mi )
@@ -11,7 +13,7 @@ squareAction = (canvas, color, beginX, beginY, endX, endY, fillOrNot) ->
           drawLine(canvas, color, beginX + mi, endY - mi, endX - mi, endY - mi)
           magnitudeIncrement++
       else
-        while magnitudeIncrement < selectedTool.magnitude
+        while magnitudeIncrement < toolHistory[toolHistory.length - 1].magnitude
           mi = magnitudeIncrement
           drawLine(canvas, color, beginX - mi, beginY - mi, endX + mi, beginY - mi)
           drawLine(canvas, color, beginX - mi, beginY - mi, beginX - mi, endY + mi )
@@ -20,7 +22,7 @@ squareAction = (canvas, color, beginX, beginY, endX, endY, fillOrNot) ->
           magnitudeIncrement++
     else
       if (endY < beginY)
-        while magnitudeIncrement < selectedTool.magnitude
+        while magnitudeIncrement < toolHistory[toolHistory.length - 1].magnitude
           mi = magnitudeIncrement
           drawLine(canvas, color, beginX + mi, beginY - mi, endX - mi, beginY - mi)
           drawLine(canvas, color, beginX + mi, beginY - mi, beginX + mi, endY + mi )
@@ -28,7 +30,7 @@ squareAction = (canvas, color, beginX, beginY, endX, endY, fillOrNot) ->
           drawLine(canvas, color, beginX + mi, endY + mi, endX - mi, endY + mi)
           magnitudeIncrement++
       else
-        while magnitudeIncrement < selectedTool.magnitude
+        while magnitudeIncrement < toolHistory[toolHistory.length - 1].magnitude
           mi = magnitudeIncrement
           drawLine(canvas, color, beginX - mi, beginY + mi, endX + mi, beginY + mi)
           drawLine(canvas, color, beginX - mi, beginY + mi, beginX - mi, endY - mi )

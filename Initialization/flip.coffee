@@ -7,7 +7,7 @@ flipAction = () ->
   menuContext.canvas.width = 119
   menuContext.canvas.height = 35
 
-  previouslySelectedTool = previouslySelectedTool
+  previouslySelectedTool = SelectedTool
   selectedTool = ctPaintTools[10]
   menuContext.drawImage(selectedTool.menuImage, 0, 0)
   drawToolbars()

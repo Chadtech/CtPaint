@@ -62,11 +62,16 @@ drawToolbars = ->
   toolbar0Context.fillRect(0,0,toolbarWidth,window.innerHeight-toolbarHeight)
   toolbar0Context.drawImage(toolbar0sImages[toolViewMode],0,0)
   drawLine(toolbar0Context,[16,20,8],toolbarWidth-1,0,toolbarWidth-1,window.innerHeight-toolbarHeight)
-  if selectedTool
-    toolbar0Context.drawImage(
-      selectedTool.pressedImage[toolViewMode],
-      selectedTool.clickRegion[0],
-      selectedTool.clickRegion[1])
+  #if selectedTool
+  #  toolbar0Context.drawImage(
+  #    selectedTool.pressedImage[toolViewMode],
+  #    selectedTool.clickRegion[0],
+  #    selectedTool.clickRegion[1])
+
+  toolbar0Context.drawImage(
+    toolHistory[toolHistory.length - 1].pressedImage[toolViewMode]
+    toolHistory[toolHistory.length - 1].clickRegion[0],
+    toolHistory[toolHistory.length - 1].clickRegion[1])
 
   toolbar1Context.fillStyle = '#202020'
   toolbar1Context.fillRect(0,0,window.innerWidth,toolbarHeight)
@@ -96,20 +101,22 @@ drawToolbars = ->
 
   drawInformationToolbar0()
 
-modeToGlyph = (tool) ->
-  if tool.modeCapable
-    if tool.mode
+modeToGlyph = () ->
+  if toolHistory[toolHistory.length - 1].modeCapable
+    if toolHistory[toolHistory.length - 1].mode
       return ',T'
     else
       return ',F'
   else
     return '  '
 
-magnitudeToGlyph = (tool) ->
-  if typeof selectedTool.maxMagnitude == 'string'
+magnitudeToGlyph = () ->
+  #if typeof selectedTool.maxMagnitude == 'string'
+  if typeof toolHistory[toolHistory.length - 1] is 'string'
     return ' '
   else
-    return selectedTool.magnitude.toString(16).toUpperCase()
+    #return selectedTool.magnitude.toString(16).toUpperCase()
+    return toolHistory[toolHistory.length - 1].magnitude.toString(16).toUpperCase()
 
 drawInformationToolbar1 = ->
   xPos = event.clientX - (toolbarWidth + 5) - canvasXOffset
@@ -120,7 +127,7 @@ drawInformationToolbar1 = ->
   drawStringAsCommandPrompt(toolbar1Context, colorAndCoordinates, 0, 191, 12)
 
 drawInformationToolbar0 = ->
-  toolbarInformation = magnitudeToGlyph(selectedTool)+modeToGlyph(selectedTool)
+  toolbarInformation = magnitudeToGlyph()+modeToGlyph()
   drawStringAsCommandPrompt(toolbar0Context, toolbarInformation, 0, 6, 104)
 
 getMousePositionOnCanvas = (event) ->

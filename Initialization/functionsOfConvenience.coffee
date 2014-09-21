@@ -31,7 +31,7 @@ rgbToHex = (rgb, hashtag) ->
       zeroPadder(rgb[2].toString(16),2)
 
 hexToRGB = (hex) ->
-  return [parseInt(hex[0] + hex[1], 16)
-    parseInt(hex[2] + hex[3], 16)
-    parseInt(hex[4] + hex[5], 16)
-  ]
+  red = parseInt(hex[0] + hex[1], 16)
+  green = parseInt(hex[2] + hex[3], 16)
+  blue = parseInt(hex[4] + hex[5], 16)
+  return [red, green, blue]
