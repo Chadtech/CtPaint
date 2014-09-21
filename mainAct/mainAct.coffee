@@ -146,8 +146,9 @@ $(document).ready ()->
       if ctPaintTools[toolIndex].clickRegion[0]<event.clientX and event.clientX<(ctPaintTools[toolIndex].clickRegion[0]+buttonWidth)
         if ctPaintTools[toolIndex].clickRegion[1]<event.clientY and event.clientY<(ctPaintTools[toolIndex].clickRegion[1]+buttonHeight)
           if toolIndex < 8 
-            console.log toolHistory
             toolHistory.push ctPaintTools[toolIndex]
+            toolHistory.shift()
+            console.log toolHistory
           else
             ctPaintTools[toolIndex].toolsAction()
       toolIndex++
