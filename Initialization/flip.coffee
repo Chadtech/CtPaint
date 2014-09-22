@@ -69,5 +69,47 @@ flipDataSorting = ( inputMaterial ) ->
           if areaSelected
             console.log selection.data 
           else
-            console.log 'NOPE'
+            tWidth = ctContext.canvas.width
+            tHeight = ctContext.canvas.height
+            canvasAsWeFoundIt = ctContext.getImageData(0, 0, tWidth, tHeight)
+            canvasData = canvasAsWeFoundIt.data
+            canvasInPixels = []
+
+            canvasIndex = 0
+            colorAtDatum = []
+            while canvasIndex < canvasData.length
+              colorAtDatum.push canvasData[canvasIndex]
+              if canvasIndex % 4 is 3
+                canvasInPixels.push colorAtDatum
+                colorAtDatum = []
+              canvasIndex++
+
+            flippedCanvas = []
+            rowIndex = 0
+            while rowIndex < (canvasInPixels.length // tWidth)
+              thisRow = (canvasInPixels.length // tWidth) - rowIndex - 1
+              rowAt = thisRow * tWidth
+              columnIndex = 0
+              while columnIndex < tWidth
+                flippedCanvas.push canvasInPixels[rowAt + columnIndex]
+                columnIndex++
+              rowIndex++
+
+            pixelIndex = 0
+            while pixelIndex < canvasInPixels.length
+              colorIndex = 0
+              while colorIndex < 4
+                datumIndex = pixelIndex * 4
+                canvasAsWeFoundIt.data[datumIndex + colorIndex] = 
+                  flippedCanvas[pixelIndex][colorIndex]
+                colorIndex++
+              pixelIndex++
+
+            ctContext.putImageData(canvasAsWeFoundIt, 0, 0)
+            canvasAsData = ctCanvas.toDataURL()
+            tH.pop()
+            drawToolbars()
+            $('#menuDiv').css('top',(window.innerHeight).toString())
+            normalCircumstance = true
+            menuUp = false
 
