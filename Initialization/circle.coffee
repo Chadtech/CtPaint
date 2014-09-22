@@ -1,26 +1,20 @@
-circleAction = ( canvas, color, xPos, yPos ) ->
-  #if not selectedTool.mode
-  if not tH[tH.length - 1].mode
-    whetherCornerBlocks = false
-    #if selectedTool.magnitude > 1
-    if tH[tH.length - 1].magnitude > 1
-      whetherCornerBlocks = true
-    calculatedRadius = Math.pow(Math.pow(xPos - oldX, 2) + Math.pow(yPos - oldY, 2), 0.5)
-    calculatedRadius = Math.round(calculatedRadius)
-    magnitudeIncrement = 0
-    #while magnitudeIncrement < selectedTool.magnitude
-    while magnitudeIncrement < tH[tH.length - 1].magnitude
-      thisIncrementsRadius = calculatedRadius - magnitudeIncrement
-      drawCircle( canvas, color, oldX, oldY, thisIncrementsRadius, whetherCornerBlocks )
-      magnitudeIncrement++
-  else
-    calculatedRadius = Math.pow(Math.pow(xPos - oldX, 2) + Math.pow(yPos - oldY, 2), 0.5)
-    calculatedRadius = Math.round(calculatedRadius)
-    magnitudeIncrement = 0
-    while magnitudeIncrement < calculatedRadius
-      drawCircle( canvas, color, oldX, oldY, calculatedRadius - magnitudeIncrement, true )
-      magnitudeIncrement++
-      
+###
+  drawCircle is the basic circle drawing function. The arguments are as
+  you would expect with the exception of cornerBlock. When the circle
+  tool has fill turned on, smaller circles are drawn inside of a largest
+  circle. When ctPaint draws successive circles some of the successors
+  dont put pixels one pixel deeper. There are empty speckles. To avoid
+  that, the corner block argument switches on a mode to bulk out the 
+  'corners' of the circle, meaning, when the next pixel is being drawn
+  diagonally (+1, +1) from the current pixel, draw a pixel vertically 
+  and horizontally (+1, 0) and (0, +1)
+
+  The draw circle function is a bresenham algorithm, which can only
+  draw one eight of a complete circle. If the algorithm is done
+  eight times inverted vertically, horizontally, and across the 
+  axis(?) You can get each section of the circle (2 ^ 3 = 8)
+###
+
 drawCircle = ( canvas, color, centerX, centerY, radius, cornerBlock) ->
   radiusError = 1 - radius
   xOffset = 0
@@ -85,3 +79,25 @@ drawCircle = ( canvas, color, centerX, centerY, radius, cornerBlock) ->
         putPixel( canvas, color, centerX + yOffset, centerY - xOffset + 1)
         putPixel( canvas, color, centerX - yOffset, centerY - xOffset + 1)
         doACornerBlock = false
+
+circleAction = ( canvas, color, xPos, yPos ) ->
+  if not tH[tH.length - 1].mode
+    whetherCornerBlocks = false
+    if tH[tH.length - 1].magnitude > 1
+      whetherCornerBlocks = true
+    calculatedRadius = Math.pow(Math.pow(xPos - oldX, 2) + Math.pow(yPos - oldY, 2), 0.5)
+    calculatedRadius = Math.round(calculatedRadius)
+    magnitudeIncrement = 0
+    while magnitudeIncrement < tH[tH.length - 1].magnitude
+      thisIncrementsRadius = calculatedRadius - magnitudeIncrement
+      drawCircle( canvas, color, oldX, oldY, thisIncrementsRadius, whetherCornerBlocks )
+      magnitudeIncrement++
+  else
+    calculatedRadius = Math.pow(Math.pow(xPos - oldX, 2) + Math.pow(yPos - oldY, 2), 0.5)
+    calculatedRadius = Math.round(calculatedRadius)
+    magnitudeIncrement = 0
+    while magnitudeIncrement < calculatedRadius
+      drawCircle( canvas, color, oldX, oldY, calculatedRadius - magnitudeIncrement, true )
+      magnitudeIncrement++
+
+

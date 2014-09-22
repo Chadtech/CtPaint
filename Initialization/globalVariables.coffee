@@ -30,14 +30,18 @@ canvasYOffset = 0
 canvasAsData = undefined
 
 ###
-  selectedTool is the currently selected tool, updated when a new one is selected so the code
-  regarding the selected tool can be static. previouslySelectedTool stores a value that
-  selectedTool is sometimes reset to, for tools that should automatically go back to the
-  previously selected one (sample)
-###
+  tH is an array containing tools. The last element in the array is the tool the user 
+  is currently using. When he switches to a new tool, its added to the end of tH, and 
+  the first element is removed (shift()).
 
-#selectedTool = undefined
-#previouslySelectedTool = undefined
+  tH is regrettably named. Its short for 'toolHistory'. When I wrote toolHistory into
+  the code, I would frequently reference the last element in toolHistory with
+  toolHistory[toolHistory.length - 1], which was a pain. 
+
+  Originally it was named 'selectedTool' wasnt an array. To get to previously selected
+  tools. I would reference another variable named 'previouslySelectedTool'. I ran into
+  problems, when the relevant history was greater than 1 tool into the past.
+###
 tH = [ undefined, undefined ]
 
 # useful during tool declaration
@@ -83,8 +87,8 @@ selectionsHeight = 0
 
 menuUp = false
 whatSortOfDataSorting = undefined
-menuDatumZero = undefined
-spotInMenuZeroDatum = 0
+menuDatum = undefined
+spotInMenuDatum = 0
 
 ###
   A menu being up is an abnormal circumstance. The key

@@ -1,3 +1,10 @@
+###
+  Color menu is the menu that comes up when you shift click
+  on any color in the color pallete. The color menu has one input,
+  that begin a hexidecimal color. When Enter is pressed, that spot 
+  in the color pallete becomes that hexidecimal color. 
+###
+
 colorMenu = ()->
   menuUp = true
   normalCircumstance = false
@@ -14,28 +21,31 @@ colorMenu = ()->
 
 colorDataSortingInitialize = () ->
   menuDatumZero = rgbToHex(colorPallete[spotInColorPallete]).substr(1)
-  spotInMenuZeroDatum = 0
+  spotInMenuDatum = 0
   drawColorMenu()
 
+###
+  This function takes strings of key names, and decides what to do with them
+###
 colorDataSorting = ( inputMaterial ) ->
   if inputMaterial isnt undefined
     keysThatDontAddData = ['backspace', 'left', 'right', 'enter']
     if not (inputMaterial in keysThatDontAddData)
-      menuDatumZero = replaceAt(menuDatumZero, inputMaterial, spotInMenuZeroDatum )
-      if spotInMenuZeroDatum < 5
-        spotInMenuZeroDatum++
+      menuDatumZero = replaceAt(menuDatumZero, inputMaterial, spotInMenuDatum )
+      if spotInMenuDatum < 5
+        spotInMenuDatum++
     else
       switch inputMaterial
         when 'backspace'
-          menuDatumZero = replaceAt(menuDatumZero, '0', spotInMenuZeroDatum)
-          if 0 < spotInMenuZeroDatum
-            spotInMenuZeroDatum--
+          menuDatumZero = replaceAt(menuDatumZero, '0', spotInMenuDatum)
+          if 0 < spotInMenuDatum
+            spotInMenuDatum--
         when 'left'
-          if 0 < spotInMenuZeroDatum
-            spotInMenuZeroDatum--
+          if 0 < spotInMenuDatum
+            spotInMenuDatum--
         when 'right'
-          if spotInMenuZeroDatum < 5
-            spotInMenuZeroDatum++
+          if spotInMenuDatum < 5
+            spotInMenuDatum++
         when 'enter'
           colorPallete[spotInColorPallete] =  hexToRGB(menuDatumZero)
           drawToolbars()
@@ -45,7 +55,7 @@ colorDataSorting = ( inputMaterial ) ->
     drawColorMenu()
 
 drawColorMenu = () ->
-  currentlyHighlighted = menuDatumZero[spotInMenuZeroDatum].toUpperCase()
+  currentlyHighlighted = menuDatumZero[spotInMenuDatum].toUpperCase()
   drawStringAsCommandPrompt( menuContext, menuDatumZero.toUpperCase(), 1, 91, 10 )
-  drawStringAsCommandPrompt( menuContext, currentlyHighlighted, 2, 91+(12*spotInMenuZeroDatum), 10 )
+  drawStringAsCommandPrompt( menuContext, currentlyHighlighted, 2, 91+(12*spotInMenuDatum), 10 )
 

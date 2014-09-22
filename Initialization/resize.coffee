@@ -7,8 +7,6 @@ resizeAction = () ->
   menuContext.canvas.width = 390
   menuContext.canvas.height = 35
 
-  #previouslySelectedTool = selectedTool
-  #selectedTool = ctPaintTools[15]
   tH.push ctPaintTools[15]
   menuContext.drawImage(tH[tH.length - 1].menuImage, 0, 0)
   drawToolbars()
@@ -17,8 +15,8 @@ resizeAction = () ->
   whatSortOfDataSorting = resizeDataSorting
 
 resizeDataSortingInitialize = (width, height) ->
-  menuDatumZero = zeroPadder(width, 4) + zeroPadder(height, 4)
-  spotInMenuZeroDatum = 0
+  menuDatum = zeroPadder(width, 4) + zeroPadder(height, 4)
+  spotInMenuDatum = 0
   drawResizeMenu()
 
 resizeDataSorting = ( inputMaterial ) ->
@@ -26,27 +24,27 @@ resizeDataSorting = ( inputMaterial ) ->
     keysThatDontAddData = ['backspace', 'left', 'right', 'enter']
     if not (inputMaterial in keysThatDontAddData)
       if not isNaN(inputMaterial)
-        menuDatumZero = replaceAt(menuDatumZero, inputMaterial, spotInMenuZeroDatum )
-        if spotInMenuZeroDatum < 7
-          spotInMenuZeroDatum++
+        menuDatum = replaceAt(menuDatum, inputMaterial, spotInMenuDatum )
+        if spotInMenuDatum < 7
+          spotInMenuDatum++
     else
       switch inputMaterial
         when 'backspace'
-          menuDatumZero = replaceAt(menuDatumZero, '0', spotInMenuZeroDatum)
-          if 0 < spotInMenuZeroDatum
-            spotInMenuZeroDatum--
+          menuDatum = replaceAt(menuDatum, '0', spotInMenuDatum)
+          if 0 < spotInMenuDatum
+            spotInMenuDatum--
         when 'left'
-          if 0 < spotInMenuZeroDatum
-            spotInMenuZeroDatum--
+          if 0 < spotInMenuDatum
+            spotInMenuDatum--
         when 'right'
-          if spotInMenuZeroDatum < 7
-            spotInMenuZeroDatum++
+          if spotInMenuDatum < 7
+            spotInMenuDatum++
         when 'enter'
           $('#menuDiv').css('top',(window.innerHeight).toString())
           normalCircumstance = true
           menuUp = false
-          newWidth = menuDatumZero.substr(0,4)
-          newHeight = menuDatumZero.substr(4,4)
+          newWidth = menuDatum.substr(0,4)
+          newHeight = menuDatum.substr(4,4)
           ctContext.canvas.width = parseInt(newWidth)
           ctContext.canvas.height = parseInt(newHeight)
           canvasDataAsImage = new Image()
@@ -69,14 +67,13 @@ resizeDataSorting = ( inputMaterial ) ->
           ctCanvas.style.width = (canvasWidth).toString()+'px'
           ctCanvas.style.height = (canvasHeight).toString()+'px'
           positionCorners()
-          #selectedTool = previouslySelectedTool
           tH.pop()
           drawToolbars()
     drawResizeMenu()
 
 drawResizeMenu = () ->
-  drawStringAsCommandPrompt( menuContext, menuDatumZero.substr(0,4), 1, 116, 10 )
-  drawStringAsCommandPrompt( menuContext, menuDatumZero.substr(4,4), 1, 228, 10 )
-  xPos = 116 + ((spotInMenuZeroDatum // 4) * 112) + ( 12 * ( spotInMenuZeroDatum %% 4 ) )
-  drawStringAsCommandPrompt( menuContext, menuDatumZero[spotInMenuZeroDatum], 2, xPos, 10 )
+  drawStringAsCommandPrompt( menuContext, menuDatum.substr(0,4), 1, 116, 10 )
+  drawStringAsCommandPrompt( menuContext, menuDatum.substr(4,4), 1, 228, 10 )
+  xPos = 116 + ((spotInMenuDatum // 4) * 112) + ( 12 * ( spotInMenuDatum %% 4 ) )
+  drawStringAsCommandPrompt( menuContext, menuDatum[spotInMenuDatum], 2, xPos, 10 )
 
