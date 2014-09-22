@@ -148,7 +148,6 @@ $(document).ready ()->
           if toolIndex < 8 
             tH.push ctPaintTools[toolIndex]
             tH.shift()
-            console.log tH
           else
             ctPaintTools[toolIndex].toolsAction()
       toolIndex++

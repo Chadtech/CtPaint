@@ -1499,6 +1499,7 @@ samplePosture = [
     colorSwatches[0] = hexToRGB(getColorValue(ctContext, xSpot, ySpot).substr(1))
     #selectedTool = previouslySelectedTool
     tH.pop()
+    tH.push tH[tH.length - 1]
     drawToolbars()
 ]
 
