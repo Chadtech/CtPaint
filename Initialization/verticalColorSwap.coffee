@@ -15,13 +15,13 @@
 verticalColorSwap = () ->
   #previouslySelectedTool = selectedTool
   #selectedTool = ctPaintTools[17]
-  toolHistory.push ctPaintTools[17]
+  tH.push ctPaintTools[17]
   drawToolbars()
 
   rearrangedSwatches = [ colorSwatches[2], colorSwatches[3], colorSwatches[0], colorSwatches[1] ]
   colorSwatches = rearrangedSwatches
 
   setTimeout( ()->
-    toolHistory.pop()
+    tH.pop()
     drawToolbars()
   ,20)

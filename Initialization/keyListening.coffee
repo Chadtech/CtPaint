@@ -16,57 +16,57 @@ keyListeningUnderNormalCircumstance = (event) ->
   if event.keyCode == keysToKeyCodes['1']
     #previouslySelectedTool = selectedTool
     #selectedTool = ctPaintTools[0]
-    toolHistory.push ctPaintTools[0]
-    toolHistory.shift()
+    tH.push ctPaintTools[0]
+    tH.shift()
     drawToolbars()
   if event.keyCode == keysToKeyCodes['2']
     #previouslySelectedTool = selectedTool
     #selectedTool = ctPaintTools[1]
     #selectedTool = ctPaintTools[0]
-    toolHistory.push ctPaintTools[1]
-    toolHistory.shift()
+    tH.push ctPaintTools[1]
+    tH.shift()
     drawToolbars()
   if event.keyCode == keysToKeyCodes['3']
     #previouslySelectedTool = selectedTool
     #selectedTool = ctPaintTools[2]
     #selectedTool = ctPaintTools[0]
-    toolHistory.push ctPaintTools[2]
-    toolHistory.shift()
+    tH.push ctPaintTools[2]
+    tH.shift()
     drawToolbars()
   if event.keyCode == keysToKeyCodes['4']
     #previouslySelectedTool = selectedTool
     #selectedTool = ctPaintTools[3]
     #selectedTool = ctPaintTools[0]
-    toolHistory.push ctPaintTools[3]
-    toolHistory.shift()
+    tH.push ctPaintTools[3]
+    tH.shift()
     drawToolbars()
   if event.keyCode == keysToKeyCodes['5']
     #previouslySelectedTool = selectedTool
     #selectedTool = ctPaintTools[4]
     #selectedTool = ctPaintTools[0]
-    toolHistory.push ctPaintTools[4]
-    toolHistory.shift()
+    tH.push ctPaintTools[4]
+    tH.shift()
     drawToolbars()
   if event.keyCode == keysToKeyCodes['6']
     #previouslySelectedTool = selectedTool
     #selectedTool = ctPaintTools[5]
     #selectedTool = ctPaintTools[0]
-    toolHistory.push ctPaintTools[5]
-    toolHistory.shift()
+    tH.push ctPaintTools[5]
+    tH.shift()
     drawToolbars()
   if event.keyCode == keysToKeyCodes['7']
     #previouslySelectedTool = selectedTool
     #selectedTool = ctPaintTools[6]
     #selectedTool = ctPaintTools[0]
-    toolHistory.push ctPaintTools[6]
-    toolHistory.shift()
+    tH.push ctPaintTools[6]
+    tH.shift()
     drawToolbars()
   if event.keyCode == keysToKeyCodes['8']
     #previouslySelectedTool = selectedTool
     #selectedTool = ctPaintTools[7]
     #selectedTool = ctPaintTools[0]
-    toolHistory.push ctPaintTools[7]
-    toolHistory.shift()
+    tH.push ctPaintTools[7]
+    tH.shift()
     drawToolbars()
   if event.keyCode == keysToKeyCodes['e']
     resizeAction()
@@ -88,7 +88,7 @@ keyListeningUnderNormalCircumstance = (event) ->
         canvasXOffset+=3
         positionCanvas()
         positionCorners()
-  console.log toolHistory
+  console.log tH
 
 keyListeningUnderAbnormalCircumstance = (event) ->
   switch event.keyCode

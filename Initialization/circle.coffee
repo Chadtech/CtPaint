@@ -1,15 +1,15 @@
 circleAction = ( canvas, color, xPos, yPos ) ->
   #if not selectedTool.mode
-  if not toolHistory[toolHistory.length - 1].mode
+  if not tH[tH.length - 1].mode
     whetherCornerBlocks = false
     #if selectedTool.magnitude > 1
-    if toolHistory[toolHistory.length - 1].magnitude > 1
+    if tH[tH.length - 1].magnitude > 1
       whetherCornerBlocks = true
     calculatedRadius = Math.pow(Math.pow(xPos - oldX, 2) + Math.pow(yPos - oldY, 2), 0.5)
     calculatedRadius = Math.round(calculatedRadius)
     magnitudeIncrement = 0
     #while magnitudeIncrement < selectedTool.magnitude
-    while magnitudeIncrement < toolHistory[toolHistory.length - 1].magnitude
+    while magnitudeIncrement < tH[tH.length - 1].magnitude
       thisIncrementsRadius = calculatedRadius - magnitudeIncrement
       drawCircle( canvas, color, oldX, oldY, thisIncrementsRadius, whetherCornerBlocks )
       magnitudeIncrement++

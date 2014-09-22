@@ -69,9 +69,9 @@ drawToolbars = ->
   #    selectedTool.clickRegion[1])
 
   toolbar0Context.drawImage(
-    toolHistory[toolHistory.length - 1].pressedImage[toolViewMode]
-    toolHistory[toolHistory.length - 1].clickRegion[0],
-    toolHistory[toolHistory.length - 1].clickRegion[1])
+    tH[tH.length - 1].pressedImage[toolViewMode]
+    tH[tH.length - 1].clickRegion[0],
+    tH[tH.length - 1].clickRegion[1])
 
   toolbar1Context.fillStyle = '#202020'
   toolbar1Context.fillRect(0,0,window.innerWidth,toolbarHeight)
@@ -102,8 +102,8 @@ drawToolbars = ->
   drawInformationToolbar0()
 
 modeToGlyph = () ->
-  if toolHistory[toolHistory.length - 1].modeCapable
-    if toolHistory[toolHistory.length - 1].mode
+  if tH[tH.length - 1].modeCapable
+    if tH[tH.length - 1].mode
       return ',T'
     else
       return ',F'
@@ -112,11 +112,11 @@ modeToGlyph = () ->
 
 magnitudeToGlyph = () ->
   #if typeof selectedTool.maxMagnitude == 'string'
-  if typeof toolHistory[toolHistory.length - 1] is 'string'
+  if typeof tH[tH.length - 1] is 'string'
     return ' '
   else
     #return selectedTool.magnitude.toString(16).toUpperCase()
-    return toolHistory[toolHistory.length - 1].magnitude.toString(16).toUpperCase()
+    return tH[tH.length - 1].magnitude.toString(16).toUpperCase()
 
 drawInformationToolbar1 = ->
   xPos = event.clientX - (toolbarWidth + 5) - canvasXOffset

@@ -38,7 +38,7 @@ canvasAsData = undefined
 
 #selectedTool = undefined
 #previouslySelectedTool = undefined
-toolHistory = [ undefined, undefined ]
+tH = [ undefined, undefined ]
 
 # useful during tool declaration
 numberOfTools = 24
@@ -665,12 +665,12 @@ floodFill = (canvas, context, colorToChangeTo, xPosition, yPosition) ->
 
 squareAction = (canvas, color, beginX, beginY, endX, endY, fillOrNot) ->
   #if not selectedTool.mode and not fillOrNot
-  if not toolHistory[toolHistory.length - 1].mode and not fillOrNot
+  if not tH[tH.length - 1].mode and not fillOrNot
     magnitudeIncrement = 0
     if (beginX < endX) == (beginY < endY)
       if (beginX < endX)
         #while magnitudeIncrement < selectedTool.magnitude
-        while magnitudeIncrement < toolHistory[toolHistory.length - 1].magnitude
+        while magnitudeIncrement < tH[tH.length - 1].magnitude
           mi = magnitudeIncrement
           drawLine(canvas, color, beginX + mi, beginY + mi, endX - mi, beginY + mi)
           drawLine(canvas, color, beginX + mi, beginY + mi, beginX + mi, endY - mi )
@@ -678,7 +678,7 @@ squareAction = (canvas, color, beginX, beginY, endX, endY, fillOrNot) ->
           drawLine(canvas, color, beginX + mi, endY - mi, endX - mi, endY - mi)
           magnitudeIncrement++
       else
-        while magnitudeIncrement < toolHistory[toolHistory.length - 1].magnitude
+        while magnitudeIncrement < tH[tH.length - 1].magnitude
           mi = magnitudeIncrement
           drawLine(canvas, color, beginX - mi, beginY - mi, endX + mi, beginY - mi)
           drawLine(canvas, color, beginX - mi, beginY - mi, beginX - mi, endY + mi )
@@ -687,7 +687,7 @@ squareAction = (canvas, color, beginX, beginY, endX, endY, fillOrNot) ->
           magnitudeIncrement++
     else
       if (endY < beginY)
-        while magnitudeIncrement < toolHistory[toolHistory.length - 1].magnitude
+        while magnitudeIncrement < tH[tH.length - 1].magnitude
           mi = magnitudeIncrement
           drawLine(canvas, color, beginX + mi, beginY - mi, endX - mi, beginY - mi)
           drawLine(canvas, color, beginX + mi, beginY - mi, beginX + mi, endY + mi )
@@ -695,7 +695,7 @@ squareAction = (canvas, color, beginX, beginY, endX, endY, fillOrNot) ->
           drawLine(canvas, color, beginX + mi, endY + mi, endX - mi, endY + mi)
           magnitudeIncrement++
       else
-        while magnitudeIncrement < toolHistory[toolHistory.length - 1].magnitude
+        while magnitudeIncrement < tH[tH.length - 1].magnitude
           mi = magnitudeIncrement
           drawLine(canvas, color, beginX - mi, beginY + mi, endX + mi, beginY + mi)
           drawLine(canvas, color, beginX - mi, beginY + mi, beginX - mi, endY - mi )
@@ -746,16 +746,16 @@ squareAction = (canvas, color, beginX, beginY, endX, endY, fillOrNot) ->
 
 circleAction = ( canvas, color, xPos, yPos ) ->
   #if not selectedTool.mode
-  if not toolHistory[toolHistory.length - 1].mode
+  if not tH[tH.length - 1].mode
     whetherCornerBlocks = false
     #if selectedTool.magnitude > 1
-    if toolHistory[toolHistory.length - 1].magnitude > 1
+    if tH[tH.length - 1].magnitude > 1
       whetherCornerBlocks = true
     calculatedRadius = Math.pow(Math.pow(xPos - oldX, 2) + Math.pow(yPos - oldY, 2), 0.5)
     calculatedRadius = Math.round(calculatedRadius)
     magnitudeIncrement = 0
     #while magnitudeIncrement < selectedTool.magnitude
-    while magnitudeIncrement < toolHistory[toolHistory.length - 1].magnitude
+    while magnitudeIncrement < tH[tH.length - 1].magnitude
       thisIncrementsRadius = calculatedRadius - magnitudeIncrement
       drawCircle( canvas, color, oldX, oldY, thisIncrementsRadius, whetherCornerBlocks )
       magnitudeIncrement++
@@ -877,21 +877,21 @@ drawLine = (canvas, color, beginX, beginY, endX, endY) ->
 lineAction = (canvas, color, beginX, beginY, endX, endY) ->
   lineSlope = undefined
   #if selectedTool.magnitude > 1
-  if toolHistory[toolHistory.length - 1].magnitude > 1
+  if tH[tH.length - 1].magnitude > 1
     lineSlope = Math.abs(beginX - endX) / Math.abs(beginY - endY)
     if lineSlope > 1
       lineSlope = Math.abs(beginY - endY) / Math.abs(beginX - endX)
   magnitudeIncrement = 0
   #while magnitudeIncrement < selectedTool.magnitude
-  while magnitudeIncrement < toolHistory[toolHistory.length - 1].magnitude
+  while magnitudeIncrement < tH[tH.length - 1].magnitude
     drawLine(canvas, color, beginX + magnitudeIncrement, beginY, endX + magnitudeIncrement, endY)
     drawLine(canvas, color, beginX - magnitudeIncrement, beginY, endX - magnitudeIncrement, endY)
     drawLine(canvas, color, beginX, beginY + magnitudeIncrement, endX, endY + magnitudeIncrement)
     drawLine(canvas, color, beginX, beginY - magnitudeIncrement, endX, endY - magnitudeIncrement)
     magnitudeIncrement++
   #if selectedTool.magnitude > 1
-  if toolHistory[toolHistory.length - 1].magnitude > 1
-    calculatedRadius = (toolHistory[toolHistory.length - 1]) - Math.round(lineSlope * 1.21)
+  if tH[tH.length - 1].magnitude > 1
+    calculatedRadius = (tH[tH.length - 1]) - Math.round(lineSlope * 1.21)
     #calculatedRadius = (selectedTool.magnitude - 2) - Math.round(lineSlope * 1.21)
     magnitudeIncrement = 0
     while magnitudeIncrement < calculatedRadius
@@ -938,18 +938,18 @@ putPixel = (canvas, color, whereAtX, whereAtY) ->
 ###
 
 pointAction = (canvas, color, beginX, beginY, endX, endY) ->
-  if selectedTool.magnitude < 2
+  if tH[tH.length - 1].magnitude < 2
     drawLine(canvas, color, beginX, beginY, endX, endY)
   else
     magnitudeIncrement = 0
-    while magnitudeIncrement < selectedTool.magnitude
+    while magnitudeIncrement < tH[tH.length - 1].magnitude
       drawLine(canvas, color, beginX + magnitudeIncrement, beginY, endX + magnitudeIncrement, endY)
       drawLine(canvas, color, beginX - magnitudeIncrement, beginY, endX - magnitudeIncrement, endY)
       drawLine(canvas, color, beginX, beginY + magnitudeIncrement, endX, endY + magnitudeIncrement)
       drawLine(canvas, color, beginX, beginY - magnitudeIncrement, endX, endY - magnitudeIncrement)
       magnitudeIncrement++
   if selectedTool.magnitude > 1
-    calculatedRadius = (selectedTool.magnitude - 2)
+    calculatedRadius = (tH[tH.length - 1] - 2)
     magnitudeIncrement = 0
     while magnitudeIncrement < calculatedRadius
       drawCircle( canvas, color, beginX, beginY, calculatedRadius - magnitudeIncrement, true )
@@ -997,8 +997,8 @@ resizeAction = () ->
 
   #previouslySelectedTool = selectedTool
   #selectedTool = ctPaintTools[15]
-  toolHistory.push ctPaintTools[15]
-  menuContext.drawImage(toolHistory[toolHistory.length - 1].menuImage, 0, 0)
+  tH.push ctPaintTools[15]
+  menuContext.drawImage(tH[tH.length - 1].menuImage, 0, 0)
   drawToolbars()
 
   resizeDataSortingInitialize(canvasWidth, canvasHeight)
@@ -1058,7 +1058,7 @@ resizeDataSorting = ( inputMaterial ) ->
           ctCanvas.style.height = (canvasHeight).toString()+'px'
           positionCorners()
           #selectedTool = previouslySelectedTool
-          toolHistory.pop()
+          tH.pop()
           drawToolbars()
     drawResizeMenu()
 
@@ -1086,14 +1086,14 @@ drawResizeMenu = () ->
 horizontalColorSwap = () ->
   #previouslySelectedTool = selectedTool
   #selectedTool = ctPaintTools[16]
-  toolHistory.push ctPaintTools[16]
+  tH.push ctPaintTools[16]
   drawToolbars()
 
   rearrangedSwatches = [ colorSwatches[1], colorSwatches[0], colorSwatches[3], colorSwatches[2] ]
   colorSwatches = rearrangedSwatches
 
   setTimeout( ()->
-    toolHistory.pop()
+    tH.pop()
     #selectedTool = previouslySelectedTool
     drawToolbars()
   ,20)
@@ -1115,14 +1115,14 @@ horizontalColorSwap = () ->
 verticalColorSwap = () ->
   #previouslySelectedTool = selectedTool
   #selectedTool = ctPaintTools[17]
-  toolHistory.push ctPaintTools[17]
+  tH.push ctPaintTools[17]
   drawToolbars()
 
   rearrangedSwatches = [ colorSwatches[2], colorSwatches[3], colorSwatches[0], colorSwatches[1] ]
   colorSwatches = rearrangedSwatches
 
   setTimeout( ()->
-    toolHistory.pop()
+    tH.pop()
     drawToolbars()
   ,20)
 
@@ -1197,9 +1197,9 @@ drawToolbars = ->
   #    selectedTool.clickRegion[1])
 
   toolbar0Context.drawImage(
-    toolHistory[toolHistory.length - 1].pressedImage[toolViewMode]
-    toolHistory[toolHistory.length - 1].clickRegion[0],
-    toolHistory[toolHistory.length - 1].clickRegion[1])
+    tH[tH.length - 1].pressedImage[toolViewMode]
+    tH[tH.length - 1].clickRegion[0],
+    tH[tH.length - 1].clickRegion[1])
 
   toolbar1Context.fillStyle = '#202020'
   toolbar1Context.fillRect(0,0,window.innerWidth,toolbarHeight)
@@ -1230,8 +1230,8 @@ drawToolbars = ->
   drawInformationToolbar0()
 
 modeToGlyph = () ->
-  if toolHistory[toolHistory.length - 1].modeCapable
-    if toolHistory[toolHistory.length - 1].mode
+  if tH[tH.length - 1].modeCapable
+    if tH[tH.length - 1].mode
       return ',T'
     else
       return ',F'
@@ -1240,11 +1240,11 @@ modeToGlyph = () ->
 
 magnitudeToGlyph = () ->
   #if typeof selectedTool.maxMagnitude == 'string'
-  if typeof toolHistory[toolHistory.length - 1] is 'string'
+  if typeof tH[tH.length - 1] is 'string'
     return ' '
   else
     #return selectedTool.magnitude.toString(16).toUpperCase()
-    return toolHistory[toolHistory.length - 1].magnitude.toString(16).toUpperCase()
+    return tH[tH.length - 1].magnitude.toString(16).toUpperCase()
 
 drawInformationToolbar1 = ->
   xPos = event.clientX - (toolbarWidth + 5) - canvasXOffset
@@ -1289,57 +1289,57 @@ keyListeningUnderNormalCircumstance = (event) ->
   if event.keyCode == keysToKeyCodes['1']
     #previouslySelectedTool = selectedTool
     #selectedTool = ctPaintTools[0]
-    toolHistory.push ctPaintTools[0]
-    toolHistory.shift()
+    tH.push ctPaintTools[0]
+    tH.shift()
     drawToolbars()
   if event.keyCode == keysToKeyCodes['2']
     #previouslySelectedTool = selectedTool
     #selectedTool = ctPaintTools[1]
     #selectedTool = ctPaintTools[0]
-    toolHistory.push ctPaintTools[1]
-    toolHistory.shift()
+    tH.push ctPaintTools[1]
+    tH.shift()
     drawToolbars()
   if event.keyCode == keysToKeyCodes['3']
     #previouslySelectedTool = selectedTool
     #selectedTool = ctPaintTools[2]
     #selectedTool = ctPaintTools[0]
-    toolHistory.push ctPaintTools[2]
-    toolHistory.shift()
+    tH.push ctPaintTools[2]
+    tH.shift()
     drawToolbars()
   if event.keyCode == keysToKeyCodes['4']
     #previouslySelectedTool = selectedTool
     #selectedTool = ctPaintTools[3]
     #selectedTool = ctPaintTools[0]
-    toolHistory.push ctPaintTools[3]
-    toolHistory.shift()
+    tH.push ctPaintTools[3]
+    tH.shift()
     drawToolbars()
   if event.keyCode == keysToKeyCodes['5']
     #previouslySelectedTool = selectedTool
     #selectedTool = ctPaintTools[4]
     #selectedTool = ctPaintTools[0]
-    toolHistory.push ctPaintTools[4]
-    toolHistory.shift()
+    tH.push ctPaintTools[4]
+    tH.shift()
     drawToolbars()
   if event.keyCode == keysToKeyCodes['6']
     #previouslySelectedTool = selectedTool
     #selectedTool = ctPaintTools[5]
     #selectedTool = ctPaintTools[0]
-    toolHistory.push ctPaintTools[5]
-    toolHistory.shift()
+    tH.push ctPaintTools[5]
+    tH.shift()
     drawToolbars()
   if event.keyCode == keysToKeyCodes['7']
     #previouslySelectedTool = selectedTool
     #selectedTool = ctPaintTools[6]
     #selectedTool = ctPaintTools[0]
-    toolHistory.push ctPaintTools[6]
-    toolHistory.shift()
+    tH.push ctPaintTools[6]
+    tH.shift()
     drawToolbars()
   if event.keyCode == keysToKeyCodes['8']
     #previouslySelectedTool = selectedTool
     #selectedTool = ctPaintTools[7]
     #selectedTool = ctPaintTools[0]
-    toolHistory.push ctPaintTools[7]
-    toolHistory.shift()
+    tH.push ctPaintTools[7]
+    tH.shift()
     drawToolbars()
   if event.keyCode == keysToKeyCodes['e']
     resizeAction()
@@ -1361,7 +1361,7 @@ keyListeningUnderNormalCircumstance = (event) ->
         canvasXOffset+=3
         positionCanvas()
         positionCorners()
-  console.log toolHistory
+  console.log tH
 
 keyListeningUnderAbnormalCircumstance = (event) ->
   switch event.keyCode
@@ -1404,7 +1404,7 @@ zoomPosture = [
     else
       zoomActivate = true
       cornersVisible = false
-      scaleCanvasBigger( 2 ** toolHistory[toolHistory.length - 1].magnitude )
+      scaleCanvasBigger( 2 ** tH[tH.length - 1].magnitude )
     positionCorners()
     drawToolbars()
   () ->
@@ -1498,7 +1498,7 @@ samplePosture = [
     getMousePositionOnCanvas(event)
     colorSwatches[0] = hexToRGB(getColorValue(ctContext, xSpot, ySpot).substr(1))
     #selectedTool = previouslySelectedTool
-    toolHistory.pop()
+    tH.pop()
     drawToolbars()
 ]
 
@@ -1781,10 +1781,10 @@ $(document).ready ()->
     placeToolbars()
     #selectedTool = ctPaintTools[7]
     #previouslySelectedTool = ctPaintTools[7]
-    toolHistory.push ctPaintTools[7]
-    toolHistory.shift()
-    toolHistory.push ctPaintTools[7]
-    toolHistory.shift()
+    tH.push ctPaintTools[7]
+    tH.shift()
+    tH.push ctPaintTools[7]
+    tH.shift()
     drawToolbars()
     positionMenu()
     canvasAsData = ctCanvas.toDataURL()
@@ -1814,22 +1814,22 @@ $(document).ready ()->
     if event.keyCode == keysToKeyCodes['space']
       #if selectedTool.mode
       #  selectedTool.mode = false
-      if toolHistory[toolHistory.length - 1].mode
-        toolHistory[toolHistory.length - 1].mode = false
+      if tH[tH.length - 1].mode
+        tH[tH.length - 1].mode = false
       else
         #selectedTool.mode = true
-        toolHistory[toolHistory.length - 1].mode = true
+        tH[tH.length - 1].mode = true
     if event.keyCode == keysToKeyCodes['equals']
       #if selectedTool.magnitude < selectedTool.maxMagnitude
       #  selectedTool.magnitude++
-      if toolHistory[toolHistory.length - 1].magnitude < toolHistory[toolHistory.length - 1].maxMagnitude
-        selectedTool[toolHistory.length - 1].magnitude--
+      if tH[tH.length - 1].magnitude < tH[tH.length - 1].maxMagnitude
+        selectedTool[tH.length - 1].magnitude--
         drawInformationToolbar0()
     if event.keyCode == keysToKeyCodes['minus']
       #if selectedTool.magnitude > 1
       #  selectedTool.magnitude--
-      if toolHistory[toolHistory.length - 1].magnitude > 1
-        toolHistory[toolHistory.length - 1]--
+      if tH[tH.length - 1].magnitude > 1
+        tH[tH.length - 1]--
         drawInformationToolbar0()
     if event.keyCode == keysToKeyCodes['shift']
       colorModify = true
@@ -1907,13 +1907,13 @@ $(document).ready ()->
     toolbar1Context.drawImage(toolbar1sImage1,188,3)   
 
   $('#CtPaint').mousemove (event)->
-    toolHistory[toolHistory.length - 1].posture[0]()
+    tH[tH.length - 1].posture[0]()
 
   $('#CtPaint').mousedown (event)->
-    toolHistory[toolHistory.length - 1].posture[1]()
+    tH[tH.length - 1].posture[1]()
 
   $('#CtPaint').mouseup (event)->
-    toolHistory[toolHistory.length - 1].posture[2]()
+    tH[tH.length - 1].posture[2]()
   
   $('#toolbar0').mousedown (event)->
     toolIndex = 0
@@ -1921,9 +1921,9 @@ $(document).ready ()->
       if ctPaintTools[toolIndex].clickRegion[0]<event.clientX and event.clientX<(ctPaintTools[toolIndex].clickRegion[0]+buttonWidth)
         if ctPaintTools[toolIndex].clickRegion[1]<event.clientY and event.clientY<(ctPaintTools[toolIndex].clickRegion[1]+buttonHeight)
           if toolIndex < 8 
-            toolHistory.push ctPaintTools[toolIndex]
-            toolHistory.shift()
-            console.log toolHistory
+            tH.push ctPaintTools[toolIndex]
+            tH.shift()
+            console.log tH
           else
             ctPaintTools[toolIndex].toolsAction()
       toolIndex++

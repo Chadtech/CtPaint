@@ -14,7 +14,7 @@ zoomPosture = [
     else
       zoomActivate = true
       cornersVisible = false
-      scaleCanvasBigger( 2 ** toolHistory[toolHistory.length - 1].magnitude )
+      scaleCanvasBigger( 2 ** tH[tH.length - 1].magnitude )
     positionCorners()
     drawToolbars()
   () ->

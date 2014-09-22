@@ -9,8 +9,8 @@ resizeAction = () ->
 
   #previouslySelectedTool = selectedTool
   #selectedTool = ctPaintTools[15]
-  toolHistory.push ctPaintTools[15]
-  menuContext.drawImage(toolHistory[toolHistory.length - 1].menuImage, 0, 0)
+  tH.push ctPaintTools[15]
+  menuContext.drawImage(tH[tH.length - 1].menuImage, 0, 0)
   drawToolbars()
 
   resizeDataSortingInitialize(canvasWidth, canvasHeight)
@@ -70,7 +70,7 @@ resizeDataSorting = ( inputMaterial ) ->
           ctCanvas.style.height = (canvasHeight).toString()+'px'
           positionCorners()
           #selectedTool = previouslySelectedTool
-          toolHistory.pop()
+          tH.pop()
           drawToolbars()
     drawResizeMenu()
 

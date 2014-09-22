@@ -10,7 +10,7 @@ samplePosture = [
     getMousePositionOnCanvas(event)
     colorSwatches[0] = hexToRGB(getColorValue(ctContext, xSpot, ySpot).substr(1))
     #selectedTool = previouslySelectedTool
-    toolHistory.pop()
+    tH.pop()
     drawToolbars()
 ]
 

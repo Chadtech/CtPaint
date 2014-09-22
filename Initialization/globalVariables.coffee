@@ -38,7 +38,7 @@ canvasAsData = undefined
 
 #selectedTool = undefined
 #previouslySelectedTool = undefined
-toolHistory = [ undefined, undefined ]
+tH = [ undefined, undefined ]
 
 # useful during tool declaration
 numberOfTools = 24

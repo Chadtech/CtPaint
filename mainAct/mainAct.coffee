@@ -6,10 +6,10 @@ $(document).ready ()->
     placeToolbars()
     #selectedTool = ctPaintTools[7]
     #previouslySelectedTool = ctPaintTools[7]
-    toolHistory.push ctPaintTools[7]
-    toolHistory.shift()
-    toolHistory.push ctPaintTools[7]
-    toolHistory.shift()
+    tH.push ctPaintTools[7]
+    tH.shift()
+    tH.push ctPaintTools[7]
+    tH.shift()
     drawToolbars()
     positionMenu()
     canvasAsData = ctCanvas.toDataURL()
@@ -39,22 +39,22 @@ $(document).ready ()->
     if event.keyCode == keysToKeyCodes['space']
       #if selectedTool.mode
       #  selectedTool.mode = false
-      if toolHistory[toolHistory.length - 1].mode
-        toolHistory[toolHistory.length - 1].mode = false
+      if tH[tH.length - 1].mode
+        tH[tH.length - 1].mode = false
       else
         #selectedTool.mode = true
-        toolHistory[toolHistory.length - 1].mode = true
+        tH[tH.length - 1].mode = true
     if event.keyCode == keysToKeyCodes['equals']
       #if selectedTool.magnitude < selectedTool.maxMagnitude
       #  selectedTool.magnitude++
-      if toolHistory[toolHistory.length - 1].magnitude < toolHistory[toolHistory.length - 1].maxMagnitude
-        selectedTool[toolHistory.length - 1].magnitude--
+      if tH[tH.length - 1].magnitude < tH[tH.length - 1].maxMagnitude
+        selectedTool[tH.length - 1].magnitude--
         drawInformationToolbar0()
     if event.keyCode == keysToKeyCodes['minus']
       #if selectedTool.magnitude > 1
       #  selectedTool.magnitude--
-      if toolHistory[toolHistory.length - 1].magnitude > 1
-        toolHistory[toolHistory.length - 1]--
+      if tH[tH.length - 1].magnitude > 1
+        tH[tH.length - 1]--
         drawInformationToolbar0()
     if event.keyCode == keysToKeyCodes['shift']
       colorModify = true
@@ -132,13 +132,13 @@ $(document).ready ()->
     toolbar1Context.drawImage(toolbar1sImage1,188,3)   
 
   $('#CtPaint').mousemove (event)->
-    toolHistory[toolHistory.length - 1].posture[0]()
+    tH[tH.length - 1].posture[0]()
 
   $('#CtPaint').mousedown (event)->
-    toolHistory[toolHistory.length - 1].posture[1]()
+    tH[tH.length - 1].posture[1]()
 
   $('#CtPaint').mouseup (event)->
-    toolHistory[toolHistory.length - 1].posture[2]()
+    tH[tH.length - 1].posture[2]()
   
   $('#toolbar0').mousedown (event)->
     toolIndex = 0
@@ -146,9 +146,9 @@ $(document).ready ()->
       if ctPaintTools[toolIndex].clickRegion[0]<event.clientX and event.clientX<(ctPaintTools[toolIndex].clickRegion[0]+buttonWidth)
         if ctPaintTools[toolIndex].clickRegion[1]<event.clientY and event.clientY<(ctPaintTools[toolIndex].clickRegion[1]+buttonHeight)
           if toolIndex < 8 
-            toolHistory.push ctPaintTools[toolIndex]
-            toolHistory.shift()
-            console.log toolHistory
+            tH.push ctPaintTools[toolIndex]
+            tH.shift()
+            console.log tH
           else
             ctPaintTools[toolIndex].toolsAction()
       toolIndex++
