@@ -44,7 +44,7 @@ pointAction = (canvas, color, beginX, beginY, endX, endY) ->
       drawLine(canvas, color, beginX, beginY + magnitudeIncrement, endX, endY + magnitudeIncrement)
       drawLine(canvas, color, beginX, beginY - magnitudeIncrement, endX, endY - magnitudeIncrement)
       magnitudeIncrement++
-  if selectedTool.magnitude > 1
+  if tH[tH.length - 1].magnitude > 1
     calculatedRadius = (tH[tH.length - 1] - 2)
     magnitudeIncrement = 0
     while magnitudeIncrement < calculatedRadius

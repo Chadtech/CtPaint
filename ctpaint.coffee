@@ -977,7 +977,7 @@ pointAction = (canvas, color, beginX, beginY, endX, endY) ->
       drawLine(canvas, color, beginX, beginY + magnitudeIncrement, endX, endY + magnitudeIncrement)
       drawLine(canvas, color, beginX, beginY - magnitudeIncrement, endX, endY - magnitudeIncrement)
       magnitudeIncrement++
-  if selectedTool.magnitude > 1
+  if tH[tH.length - 1].magnitude > 1
     calculatedRadius = (tH[tH.length - 1] - 2)
     magnitudeIncrement = 0
     while magnitudeIncrement < calculatedRadius
@@ -1012,13 +1012,9 @@ flipDataSorting = ( inputMaterial ) ->
           else
             tWidth = ctContext.canvas.width
             tHeight = ctContext.canvas.height
-            #console.log tWidth, tHeight
             canvasAsWeFoundIt = ctContext.getImageData(0, 0, tWidth, tHeight)
             canvasData = canvasAsWeFoundIt.data
-            #console.log canvasData
             canvasInPixels = []
-
-            #console.log canvasData
 
             canvasIndex = 0
             colorAtDatum = []
@@ -1029,16 +1025,12 @@ flipDataSorting = ( inputMaterial ) ->
                 colorAtDatum = []
               canvasIndex++
 
-            #console.log canvasInPixels
-
             flippedCanvas = []
-
             pixelIndex = 0
             while pixelIndex < canvasInPixels.length
               rowStart = pixelIndex // tWidth
               inRow = pixelIndex %% tWidth
-              pixelToFlip = rowStart
-              pixelToFlip *= tWidth
+              pixelToFlip = rowStart * tWidth
               pixelToFlip += (tWidth - inRow - 1)
               flippedCanvas.push canvasInPixels[pixelToFlip]
               pixelIndex++
@@ -1054,17 +1046,7 @@ flipDataSorting = ( inputMaterial ) ->
               pixelIndex++
 
             ctContext.putImageData(canvasAsWeFoundIt, 0, 0)
-
-            ###
-            canvasDataAsImage = new Image()
-            canvasDataAsImage.onload = ->
-              ctContext.drawImage(canvasDataAsImage,0,0)
-              canvasAsData = ctCanvas.toDataURL()
-              canvasDataAsImage = new Image()
-              canvasDataAsImage.src = canvasAsData
-            canvasDataAsImage.src = canvasAsData
-            console.log canvasDataAsImage
-            ###
+            canvasAsData = ctCanvas.toDataURL()
             tH.pop()
             drawToolbars()
             $('#menuDiv').css('top',(window.innerHeight).toString())
