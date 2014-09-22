@@ -3,20 +3,24 @@
   They are the colors you have immediate access to drawing with
 ###
 colorSwatches = [ [192,192,192], [0,0,0], [64,64,64], [255,255,255] ]
+
 ###
   True when the menu has popped up to change a color in the color pallete
 ###
 colorModify = false
+
 ###
   The static image of the color menu that gives the impression of
   deep functionality
 ###
 colorMenuImage = new Image()
 colorMenuImage.src = 'assets\\t00.png'
+
 ###
   defined as an index number once a color has been shift clicked
 ###
 spotInColorPallete = undefined
+
 ###
   The color pallete. Even numbered pallete elements are on the top row,
   odds on the bottom row. That aside the colors ascend from left to right

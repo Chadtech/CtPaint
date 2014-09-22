@@ -87,24 +87,6 @@ while iteration < numberOfTools
   ctPaintTools[iteration].pressedImage[1].src = 'assets\\v'+zeroPadder(iteration,2)+'.PNG'
   iteration++
 
-###
-ctPaintTools[0].toolsAction = zoomAction
-ctPaintTools[1].toolsAction = selectAction
-ctPaintTools[3].toolsAction = fillAction
-ctPaintTools[4].toolsAction = squareAction
-ctPaintTools[5].toolsAction = circleAction
-ctPaintTools[6].toolsAction = lineAction
-ctPaintTools[7].toolsAction = pointAction
-ctPaintTools[10].toolsAction = flipAction
-ctPaintTools[11].toolsAction = rotateAction
-ctPaintTools[12].toolsAction = invertAction
-ctPaintTools[13].toolsAction = replaceAction
-ctPaintTools[14].toolsAction = scaleAction
-ctPaintTools[15].toolsAction = resizeAction
-ctPaintTools[16].toolsAction = horizontalColorSwap
-ctPaintTools[17].toolsAction = verticalColorSwap
-###
-
 ctPaintTools[0].posture = zoomPosture
 ctPaintTools[1].posture = selectPosture
 ctPaintTools[2].posture = samplePosture
@@ -113,17 +95,7 @@ ctPaintTools[4].posture = squarePosture
 ctPaintTools[5].posture = circlePosture
 ctPaintTools[6].posture = linePosture
 ctPaintTools[7].posture = pointPosture
-#ctPaintTools[8].posture = NOPE
-#ctPaintTools[9].posture = NOPE
-###
-  Actually, I am thinking the tools below
-  wont even have postures.
-###
-#ctPaintTools[10].posture = flipPosture
-#ctPaintTools[11].posture = rotatePosture
-#ctPaintTools[13].posture = invertPosture
-#ctpaintTools[14].posture = replacePosture
-#ctPaintTools[15].posture = resizePosture
+
 ctPaintTools[16].posture = horizontalColorSwapPosture
 ctPaintTools[17].posture = verticalColorSwapPosture
 

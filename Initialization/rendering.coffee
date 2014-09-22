@@ -62,12 +62,6 @@ drawToolbars = ->
   toolbar0Context.fillRect(0,0,toolbarWidth,window.innerHeight-toolbarHeight)
   toolbar0Context.drawImage(toolbar0sImages[toolViewMode],0,0)
   drawLine(toolbar0Context,[16,20,8],toolbarWidth-1,0,toolbarWidth-1,window.innerHeight-toolbarHeight)
-  #if selectedTool
-  #  toolbar0Context.drawImage(
-  #    selectedTool.pressedImage[toolViewMode],
-  #    selectedTool.clickRegion[0],
-  #    selectedTool.clickRegion[1])
-
   toolbar0Context.drawImage(
     tH[tH.length - 1].pressedImage[toolViewMode]
     tH[tH.length - 1].clickRegion[0],
@@ -111,11 +105,9 @@ modeToGlyph = () ->
     return '  '
 
 magnitudeToGlyph = () ->
-  #if typeof selectedTool.maxMagnitude == 'string'
   if typeof tH[tH.length - 1] is 'string'
     return ' '
   else
-    #return selectedTool.magnitude.toString(16).toUpperCase()
     return tH[tH.length - 1].magnitude.toString(16).toUpperCase()
 
 drawInformationToolbar1 = ->
@@ -142,3 +134,4 @@ scaleCanvasBigger = ( factor ) ->
   console.log 'FACTOR * DIMENSION', factor * ctCanvas.width, factor * ctCanvas.height
   ctCanvas.style.width = (factor * ctCanvas.width).toString()+'px'
   ctCanvas.style.height = (factor * ctCanvas.height).toString()+'px'
+  

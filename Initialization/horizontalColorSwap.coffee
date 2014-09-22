@@ -13,8 +13,6 @@
   horizontalColorSwap swaps 0 with 1, and 2 with 3    
 ###
 horizontalColorSwap = () ->
-  #previouslySelectedTool = selectedTool
-  #selectedTool = ctPaintTools[16]
   tH.push ctPaintTools[16]
   drawToolbars()
 
@@ -23,6 +21,5 @@ horizontalColorSwap = () ->
 
   setTimeout( ()->
     tH.pop()
-    #selectedTool = previouslySelectedTool
     drawToolbars()
   ,20)

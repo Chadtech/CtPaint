@@ -7,6 +7,7 @@ zeroPadder = (number,numberOfZerosToFill) ->
   while numberAsString.length < numberOfZerosToFill
     numberAsString = '0'+numberAsString
   return numberAsString
+  
 ###
   replaceAt replaces the element at stringsIndex in a string
   with one given as an argument (replacement)

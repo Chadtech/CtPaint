@@ -124,7 +124,6 @@ while stringOfCharactersIndex < stringOfCharacters.length
 ###
   This function draws the letters onto the canvas.
 ###
-
 drawStringAsCommandPrompt = (canvas, stringToDraw, coloration, whereAtX, whereAtY) ->
   stringIndex = 0
   while stringIndex < stringToDraw.length

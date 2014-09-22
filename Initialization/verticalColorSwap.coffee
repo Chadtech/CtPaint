@@ -13,8 +13,6 @@
   verticalColorSwap swaps 0 with 2, and 1 with 3    
 ###
 verticalColorSwap = () ->
-  #previouslySelectedTool = selectedTool
-  #selectedTool = ctPaintTools[17]
   tH.push ctPaintTools[17]
   drawToolbars()
 

@@ -75,3 +75,4 @@ drawSelectBox = (canvas, beginX, beginY, endX, endY) ->
       canvas.putImageData(selectLinesOfLengthY[distanceY - 1], beginX, endY - distanceY)
       canvas.putImageData(selectLinesOfLengthY[distanceY - 1], endX, endY - distanceY)
       distanceY-=distanceY
+

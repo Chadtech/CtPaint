@@ -1,10 +1,8 @@
 squareAction = (canvas, color, beginX, beginY, endX, endY, fillOrNot) ->
-  #if not selectedTool.mode and not fillOrNot
   if not tH[tH.length - 1].mode and not fillOrNot
     magnitudeIncrement = 0
     if (beginX < endX) == (beginY < endY)
       if (beginX < endX)
-        #while magnitudeIncrement < selectedTool.magnitude
         while magnitudeIncrement < tH[tH.length - 1].magnitude
           mi = magnitudeIncrement
           drawLine(canvas, color, beginX + mi, beginY + mi, endX - mi, beginY + mi)
@@ -78,3 +76,4 @@ squareAction = (canvas, color, beginX, beginY, endX, endY, fillOrNot) ->
           drawLine(canvas, color, endX + mi, beginY + mi, endX + mi, endY - mi)
           drawLine(canvas, color, beginX - mi, endY - mi, endX + mi, endY - mi)
           magnitudeIncrement++
+

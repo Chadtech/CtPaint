@@ -1,11 +1,8 @@
 $(document).ready ()->
   setTimeout( ()->
-    #ctContext.imageSmoothingEnabled = false
     setCanvasSizes()
     prepareCanvas()
     placeToolbars()
-    #selectedTool = ctPaintTools[7]
-    #previouslySelectedTool = ctPaintTools[7]
     tH.push ctPaintTools[7]
     tH.shift()
     tH.push ctPaintTools[7]
@@ -37,22 +34,15 @@ $(document).ready ()->
       toolViewMode = toolViewMode%2
       drawToolbars()
     if event.keyCode == keysToKeyCodes['space']
-      #if selectedTool.mode
-      #  selectedTool.mode = false
       if tH[tH.length - 1].mode
         tH[tH.length - 1].mode = false
       else
-        #selectedTool.mode = true
         tH[tH.length - 1].mode = true
     if event.keyCode == keysToKeyCodes['equals']
-      #if selectedTool.magnitude < selectedTool.maxMagnitude
-      #  selectedTool.magnitude++
       if tH[tH.length - 1].magnitude < tH[tH.length - 1].maxMagnitude
         selectedTool[tH.length - 1].magnitude--
         drawInformationToolbar0()
     if event.keyCode == keysToKeyCodes['minus']
-      #if selectedTool.magnitude > 1
-      #  selectedTool.magnitude--
       if tH[tH.length - 1].magnitude > 1
         tH[tH.length - 1]--
         drawInformationToolbar0()
@@ -170,3 +160,5 @@ $(document).ready ()->
         else
           colorSwatches[0] = colorPallete[(((toolbar1X - 52 ) // 17) * 2) + ((toolbar1Y - 4) // 16)]
         drawToolbars()
+
+        

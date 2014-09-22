@@ -4,7 +4,6 @@
   The color is given as an rgb array, and translated into
   image data.
 ###
-
 putPixel = (canvas, color, whereAtX, whereAtY) ->
   newPixel = canvas.createImageData(1,1)
   newPixelsColor = newPixel.data
@@ -34,7 +33,6 @@ putPixel = (canvas, color, whereAtX, whereAtY) ->
   it instead continuously draws circles instead of
   points.
 ###
-
 pointAction = (canvas, color, beginX, beginY, endX, endY) ->
   if tH[tH.length - 1].magnitude < 2
     drawLine(canvas, color, beginX, beginY, endX, endY)
@@ -53,3 +51,4 @@ pointAction = (canvas, color, beginX, beginY, endX, endY) ->
       drawCircle( canvas, color, beginX, beginY, calculatedRadius - magnitudeIncrement, true )
       drawCircle( canvas, color, endX, endY, calculatedRadius - magnitudeIncrement, true )
       magnitudeIncrement++
+    
