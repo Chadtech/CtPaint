@@ -65,7 +65,6 @@ keyListeningUnderNormalCircumstance = (event) ->
         canvasXOffset+=3
         positionCanvas()
         positionCorners()
-  console.log tH
 
 keyListeningUnderAbnormalCircumstance = (event) ->
   switch event.keyCode

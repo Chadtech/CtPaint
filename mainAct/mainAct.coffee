@@ -41,11 +41,11 @@ $(document).ready ()->
         tH[tH.length - 1].mode = true
     if event.keyCode == keysToKeyCodes['equals']
       if tH[tH.length - 1].magnitude < tH[tH.length - 1].maxMagnitude
-        selectedTool[tH.length - 1].magnitude--
+        tH[tH.length - 1].magnitude++
         drawInformationToolbar0()
     if event.keyCode == keysToKeyCodes['minus']
       if tH[tH.length - 1].magnitude > 1
-        tH[tH.length - 1]--
+        tH[tH.length - 1].magnitude--
         drawInformationToolbar0()
     if event.keyCode == keysToKeyCodes['shift']
       colorModify = true
