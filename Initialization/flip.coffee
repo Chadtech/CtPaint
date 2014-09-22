@@ -7,9 +7,9 @@ flipAction = () ->
   menuContext.canvas.width = 119
   menuContext.canvas.height = 35
 
-  previouslySelectedTool = SelectedTool
-  selectedTool = ctPaintTools[10]
-  menuContext.drawImage(selectedTool.menuImage, 0, 0)
+  tH.push ctPaintTools[10]
+  tH.shift()
+  menuContext.drawImage(tH[tH.length - 1].menuImage, 0, 0)
   drawToolbars()
 
   whatSortOfDataSorting = flipDataSorting

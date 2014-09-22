@@ -37,6 +37,7 @@ gulp.task('doAllTheScriptsTogether', function() {
     './postures/circle.coffee',
     './postures/line.coffee',
     './postures/point.coffee',
+    './postures/emptyPosture.coffee',
     './postures/horizontalColorSwap.coffee',
     './postures/verticalColorSwap.coffee',
 

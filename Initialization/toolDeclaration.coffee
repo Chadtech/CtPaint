@@ -95,6 +95,17 @@ ctPaintTools[4].posture = squarePosture
 ctPaintTools[5].posture = circlePosture
 ctPaintTools[6].posture = linePosture
 ctPaintTools[7].posture = pointPosture
+ctPaintTools[10].posture = emptyPosture
+ctPaintTools[11].posture = emptyPosture
+ctPaintTools[12].posture = emptyPosture
+ctPaintTools[13].posture = emptyPosture
+ctPaintTools[14].posture = emptyPosture
+ctPaintTools[15].posture = emptyPosture
+ctPaintTools[16].posture = emptyPosture
+ctPaintTools[17].posture = emptyPosture
+
+ctPaintTools[10].toolsAction = flipAction
+ctPaintTools[15].toolsAction = resizeAction
 
 ctPaintTools[16].posture = horizontalColorSwapPosture
 ctPaintTools[17].posture = verticalColorSwapPosture

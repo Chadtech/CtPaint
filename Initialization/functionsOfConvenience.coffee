@@ -19,7 +19,6 @@ replaceAt = (string, replacement, stringsIndex) ->
   rgbToHex and hexToRGB convert between the two standards
   of color expression.
 ###
-
 rgbToHex = (rgb, hashtag) ->
   if hashtag == undefined or hashtag
     return '#' + 
