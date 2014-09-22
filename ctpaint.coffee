@@ -995,7 +995,7 @@ flipAction = () ->
   menuContext.canvas.height = 35
 
   tH.push ctPaintTools[10]
-  tH.shift()
+
   menuContext.drawImage(tH[tH.length - 1].menuImage, 0, 0)
   drawToolbars()
 
@@ -1012,45 +1012,44 @@ flipDataSorting = ( inputMaterial ) ->
           else
             tWidth = ctContext.canvas.width
             tHeight = ctContext.canvas.height
+            #console.log tWidth, tHeight
             canvasAsWeFoundIt = ctContext.getImageData(0, 0, tWidth, tHeight)
             canvasData = canvasAsWeFoundIt.data
-
-            #flippedCanvas = document.createElement('canvas')
-            #flippedCanvas = flippedCanvas.getContext('2d')
-            #flippedCanvas = flippedCanvas.createImageData(tWidth, tHeight)
-
+            #console.log canvasData
             canvasInPixels = []
- 
-            xIndex = 0
-            while xIndex < tWidth
-              yIndex = 0
-              while yIndex  < tHeight 
-                colorIndex = 0
-                colorAtXY = []
-                while colorIndex < 4
-                  currentCanvasIndex = yIndex 
-                  currentCanvasIndex *= tWidth
-                  currentCanvasIndex += xIndex
-                  currentCanvasIndex *= 4
-                  currentCanvasIndex += colorIndex
-                  colorAtXY.push canvasData[currentCanvasIndex]
-                  colorIndex++
-                canvasInPixels.push colorAtXY
-                yIndex++
-              xIndex++
+
+            #console.log canvasData
+
+            canvasIndex = 0
+            colorAtDatum = []
+            while canvasIndex < canvasData.length
+              colorAtDatum.push canvasData[canvasIndex]
+              if canvasIndex % 4 is 3
+                canvasInPixels.push colorAtDatum
+                colorAtDatum = []
+              canvasIndex++
+
+            #console.log canvasInPixels
 
             flippedCanvas = []
-            flipIndex = 0
-            while flipIndex < canvasInPixels.length
-              flippedCanvas.push canvasInPixels[canvasInPixels.length - flipIndex - 1]
-              flipIndex++
 
             pixelIndex = 0
-            while pixelIndex< flippedCanvas.length
+            while pixelIndex < canvasInPixels.length
+              rowStart = pixelIndex // tWidth
+              inRow = pixelIndex %% tWidth
+              pixelToFlip = rowStart
+              pixelToFlip *= tWidth
+              pixelToFlip += (tWidth - inRow - 1)
+              flippedCanvas.push canvasInPixels[pixelToFlip]
+              pixelIndex++
+
+            pixelIndex = 0
+            while pixelIndex < canvasInPixels.length
               colorIndex = 0
               while colorIndex < 4
                 datumIndex = pixelIndex * 4
-                canvasData[datumIndex + colorIndex] = flippedCanvas[pixelIndex][colorIndex]
+                canvasAsWeFoundIt.data[datumIndex + colorIndex] = 
+                  flippedCanvas[pixelIndex][colorIndex]
                 colorIndex++
               pixelIndex++
 
@@ -1066,6 +1065,11 @@ flipDataSorting = ( inputMaterial ) ->
             canvasDataAsImage.src = canvasAsData
             console.log canvasDataAsImage
             ###
+            tH.pop()
+            drawToolbars()
+            $('#menuDiv').css('top',(window.innerHeight).toString())
+            normalCircumstance = true
+            menuUp = false
         when 'y'
           if areaSelected
             console.log selection.data 
@@ -1851,7 +1855,7 @@ $(document).ready ()->
         drawInformationToolbar0()
     if event.keyCode == keysToKeyCodes['minus']
       if tH[tH.length - 1].magnitude > 1
-        tH[tH.length - 1]--
+        tH[tH.length - 1].magnitude--
         drawInformationToolbar0()
     if event.keyCode == keysToKeyCodes['shift']
       colorModify = true
