@@ -45,7 +45,8 @@ pointAction = (canvas, color, beginX, beginY, endX, endY) ->
       drawLine(canvas, color, beginX, beginY - magnitudeIncrement, endX, endY - magnitudeIncrement)
       magnitudeIncrement++
   if tH[tH.length - 1].magnitude > 1
-    calculatedRadius = (tH[tH.length - 1] - 2)
+    console.log 'A'
+    calculatedRadius = (tH[tH.length - 1].magnitude - 2)
     magnitudeIncrement = 0
     while magnitudeIncrement < calculatedRadius
       drawCircle( canvas, color, beginX, beginY, calculatedRadius - magnitudeIncrement, true )
