@@ -130,3 +130,4 @@ drawStringAsCommandPrompt = (canvas, stringToDraw, coloration, whereAtX, whereAt
     glyph = stringsToGlyphs[stringToDraw[stringIndex]][coloration]
     canvas.drawImage(glyph, whereAtX + (12 * stringIndex), whereAtY)
     stringIndex++
+

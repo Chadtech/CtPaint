@@ -30,14 +30,18 @@ canvasYOffset = 0
 canvasAsData = undefined
 
 ###
-  selectedTool is the currently selected tool, updated when a new one is selected so the code
-  regarding the selected tool can be static. previouslySelectedTool stores a value that
-  selectedTool is sometimes reset to, for tools that should automatically go back to the
-  previously selected one (sample)
-###
+  tH is an array containing tools. The last element in the array is the tool the user 
+  is currently using. When he switches to a new tool, its added to the end of tH, and 
+  the first element is removed (shift()).
 
-#selectedTool = undefined
-#previouslySelectedTool = undefined
+  tH is regrettably named. Its short for 'toolHistory'. When I wrote toolHistory into
+  the code, I would frequently reference the last element in toolHistory with
+  toolHistory[toolHistory.length - 1], which was a pain. 
+
+  Originally it was named 'selectedTool' wasnt an array. To get to previously selected
+  tools. I would reference another variable named 'previouslySelectedTool'. I ran into
+  problems, when the relevant history was greater than 1 tool into the past.
+###
 tH = [ undefined, undefined ]
 
 # useful during tool declaration
@@ -83,8 +87,8 @@ selectionsHeight = 0
 
 menuUp = false
 whatSortOfDataSorting = undefined
-menuDatumZero = undefined
-spotInMenuZeroDatum = 0
+menuDatum = undefined
+spotInMenuDatum = 0
 
 ###
   A menu being up is an abnormal circumstance. The key
@@ -114,20 +118,24 @@ buttonHeight = 24
   They are the colors you have immediate access to drawing with
 ###
 colorSwatches = [ [192,192,192], [0,0,0], [64,64,64], [255,255,255] ]
+
 ###
   True when the menu has popped up to change a color in the color pallete
 ###
 colorModify = false
+
 ###
   The static image of the color menu that gives the impression of
   deep functionality
 ###
 colorMenuImage = new Image()
 colorMenuImage.src = 'assets\\t00.png'
+
 ###
   defined as an index number once a color has been shift clicked
 ###
 spotInColorPallete = undefined
+
 ###
   The color pallete. Even numbered pallete elements are on the top row,
   odds on the bottom row. That aside the colors ascend from left to right
@@ -153,6 +161,14 @@ colorPallete = [
   [ 212, 51, 29 ] 
   [ 10, 202, 26 ] 
 ]
+
+###
+  Color menu is the menu that comes up when you shift click
+  on any color in the color pallete. The color menu has one input,
+  that begin a hexidecimal color. When Enter is pressed, that spot 
+  in the color pallete becomes that hexidecimal color. 
+###
+
 colorMenu = ()->
   menuUp = true
   normalCircumstance = false
@@ -168,31 +184,34 @@ colorMenu = ()->
   whatSortOfDataSorting = colorDataSorting
 
 colorDataSortingInitialize = () ->
-  menuDatumZero = rgbToHex(colorPallete[spotInColorPallete]).substr(1)
-  spotInMenuZeroDatum = 0
+  menuDatum = rgbToHex(colorPallete[spotInColorPallete]).substr(1)
+  spotInMenuDatum = 0
   drawColorMenu()
 
+###
+  This function takes strings of key names, and decides what to do with them
+###
 colorDataSorting = ( inputMaterial ) ->
   if inputMaterial isnt undefined
     keysThatDontAddData = ['backspace', 'left', 'right', 'enter']
     if not (inputMaterial in keysThatDontAddData)
-      menuDatumZero = replaceAt(menuDatumZero, inputMaterial, spotInMenuZeroDatum )
-      if spotInMenuZeroDatum < 5
-        spotInMenuZeroDatum++
+      menuDatum = replaceAt(menuDatum, inputMaterial, spotInMenuDatum )
+      if spotInMenuDatum < 5
+        spotInMenuDatum++
     else
       switch inputMaterial
         when 'backspace'
-          menuDatumZero = replaceAt(menuDatumZero, '0', spotInMenuZeroDatum)
-          if 0 < spotInMenuZeroDatum
-            spotInMenuZeroDatum--
+          menuDatum = replaceAt(menuDatum, '0', spotInMenuDatum)
+          if 0 < spotInMenuDatum
+            spotInMenuDatum--
         when 'left'
-          if 0 < spotInMenuZeroDatum
-            spotInMenuZeroDatum--
+          if 0 < spotInMenuDatum
+            spotInMenuDatum--
         when 'right'
-          if spotInMenuZeroDatum < 5
-            spotInMenuZeroDatum++
+          if spotInMenuDatum < 5
+            spotInMenuDatum++
         when 'enter'
-          colorPallete[spotInColorPallete] =  hexToRGB(menuDatumZero)
+          colorPallete[spotInColorPallete] =  hexToRGB(menuDatum)
           drawToolbars()
           $('#menuDiv').css('top',(window.innerHeight).toString())
           normalCircumstance = true
@@ -200,9 +219,9 @@ colorDataSorting = ( inputMaterial ) ->
     drawColorMenu()
 
 drawColorMenu = () ->
-  currentlyHighlighted = menuDatumZero[spotInMenuZeroDatum].toUpperCase()
-  drawStringAsCommandPrompt( menuContext, menuDatumZero.toUpperCase(), 1, 91, 10 )
-  drawStringAsCommandPrompt( menuContext, currentlyHighlighted, 2, 91+(12*spotInMenuZeroDatum), 10 )
+  currentlyHighlighted = menuDatum[spotInMenuDatum].toUpperCase()
+  drawStringAsCommandPrompt( menuContext, menuDatum.toUpperCase(), 1, 91, 10 )
+  drawStringAsCommandPrompt( menuContext, currentlyHighlighted, 2, 91+(12*spotInMenuDatum), 10 )
 
 
 ###
@@ -214,6 +233,7 @@ zeroPadder = (number,numberOfZerosToFill) ->
   while numberAsString.length < numberOfZerosToFill
     numberAsString = '0'+numberAsString
   return numberAsString
+  
 ###
   replaceAt replaces the element at stringsIndex in a string
   with one given as an argument (replacement)
@@ -434,13 +454,13 @@ while stringOfCharactersIndex < stringOfCharacters.length
 ###
   This function draws the letters onto the canvas.
 ###
-
 drawStringAsCommandPrompt = (canvas, stringToDraw, coloration, whereAtX, whereAtY) ->
   stringIndex = 0
   while stringIndex < stringToDraw.length
     glyph = stringsToGlyphs[stringToDraw[stringIndex]][coloration]
     canvas.drawImage(glyph, whereAtX + (12 * stringIndex), whereAtY)
     stringIndex++
+
 
 ###
   When a region is selected, it is outlined by a box. The outline
@@ -519,6 +539,7 @@ drawSelectBox = (canvas, beginX, beginY, endX, endY) ->
       canvas.putImageData(selectLinesOfLengthY[distanceY - 1], beginX, endY - distanceY)
       canvas.putImageData(selectLinesOfLengthY[distanceY - 1], endX, endY - distanceY)
       distanceY-=distanceY
+
 
 getColorValue = (canvas, whereAtX, whereAtY) ->
   return rgbToHex(canvas.getImageData(whereAtX, whereAtY, 1, 1).data)
@@ -664,12 +685,10 @@ floodFill = (canvas, context, colorToChangeTo, xPosition, yPosition) ->
   context.putImageData(revisedCanvasToPaste,0,0)
 
 squareAction = (canvas, color, beginX, beginY, endX, endY, fillOrNot) ->
-  #if not selectedTool.mode and not fillOrNot
   if not tH[tH.length - 1].mode and not fillOrNot
     magnitudeIncrement = 0
     if (beginX < endX) == (beginY < endY)
       if (beginX < endX)
-        #while magnitudeIncrement < selectedTool.magnitude
         while magnitudeIncrement < tH[tH.length - 1].magnitude
           mi = magnitudeIncrement
           drawLine(canvas, color, beginX + mi, beginY + mi, endX - mi, beginY + mi)
@@ -744,29 +763,24 @@ squareAction = (canvas, color, beginX, beginY, endX, endY, fillOrNot) ->
           drawLine(canvas, color, beginX - mi, endY - mi, endX + mi, endY - mi)
           magnitudeIncrement++
 
-circleAction = ( canvas, color, xPos, yPos ) ->
-  #if not selectedTool.mode
-  if not tH[tH.length - 1].mode
-    whetherCornerBlocks = false
-    #if selectedTool.magnitude > 1
-    if tH[tH.length - 1].magnitude > 1
-      whetherCornerBlocks = true
-    calculatedRadius = Math.pow(Math.pow(xPos - oldX, 2) + Math.pow(yPos - oldY, 2), 0.5)
-    calculatedRadius = Math.round(calculatedRadius)
-    magnitudeIncrement = 0
-    #while magnitudeIncrement < selectedTool.magnitude
-    while magnitudeIncrement < tH[tH.length - 1].magnitude
-      thisIncrementsRadius = calculatedRadius - magnitudeIncrement
-      drawCircle( canvas, color, oldX, oldY, thisIncrementsRadius, whetherCornerBlocks )
-      magnitudeIncrement++
-  else
-    calculatedRadius = Math.pow(Math.pow(xPos - oldX, 2) + Math.pow(yPos - oldY, 2), 0.5)
-    calculatedRadius = Math.round(calculatedRadius)
-    magnitudeIncrement = 0
-    while magnitudeIncrement < calculatedRadius
-      drawCircle( canvas, color, oldX, oldY, calculatedRadius - magnitudeIncrement, true )
-      magnitudeIncrement++
-      
+
+###
+  drawCircle is the basic circle drawing function. The arguments are as
+  you would expect with the exception of cornerBlock. When the circle
+  tool has fill turned on, smaller circles are drawn inside of a largest
+  circle. When ctPaint draws successive circles some of the successors
+  dont put pixels one pixel deeper. There are empty speckles. To avoid
+  that, the corner block argument switches on a mode to bulk out the 
+  'corners' of the circle, meaning, when the next pixel is being drawn
+  diagonally (+1, +1) from the current pixel, draw a pixel vertically 
+  and horizontally (+1, 0) and (0, +1)
+
+  The draw circle function is a bresenham algorithm, which can only
+  draw one eight of a complete circle. If the algorithm is done
+  eight times inverted vertically, horizontally, and across the 
+  axis(?) You can get each section of the circle (2 ^ 3 = 8)
+###
+
 drawCircle = ( canvas, color, centerX, centerY, radius, cornerBlock) ->
   radiusError = 1 - radius
   xOffset = 0
@@ -832,6 +846,28 @@ drawCircle = ( canvas, color, centerX, centerY, radius, cornerBlock) ->
         putPixel( canvas, color, centerX - yOffset, centerY - xOffset + 1)
         doACornerBlock = false
 
+circleAction = ( canvas, color, xPos, yPos ) ->
+  if not tH[tH.length - 1].mode
+    whetherCornerBlocks = false
+    if tH[tH.length - 1].magnitude > 1
+      whetherCornerBlocks = true
+    calculatedRadius = Math.pow(Math.pow(xPos - oldX, 2) + Math.pow(yPos - oldY, 2), 0.5)
+    calculatedRadius = Math.round(calculatedRadius)
+    magnitudeIncrement = 0
+    while magnitudeIncrement < tH[tH.length - 1].magnitude
+      thisIncrementsRadius = calculatedRadius - magnitudeIncrement
+      drawCircle( canvas, color, oldX, oldY, thisIncrementsRadius, whetherCornerBlocks )
+      magnitudeIncrement++
+  else
+    calculatedRadius = Math.pow(Math.pow(xPos - oldX, 2) + Math.pow(yPos - oldY, 2), 0.5)
+    calculatedRadius = Math.round(calculatedRadius)
+    magnitudeIncrement = 0
+    while magnitudeIncrement < calculatedRadius
+      drawCircle( canvas, color, oldX, oldY, calculatedRadius - magnitudeIncrement, true )
+      magnitudeIncrement++
+
+
+
 ###
   drawline is the basic line drawing function. Its a
   bresenham algorithm.
@@ -876,23 +912,19 @@ drawLine = (canvas, color, beginX, beginY, endX, endY) ->
 
 lineAction = (canvas, color, beginX, beginY, endX, endY) ->
   lineSlope = undefined
-  #if selectedTool.magnitude > 1
   if tH[tH.length - 1].magnitude > 1
     lineSlope = Math.abs(beginX - endX) / Math.abs(beginY - endY)
     if lineSlope > 1
       lineSlope = Math.abs(beginY - endY) / Math.abs(beginX - endX)
   magnitudeIncrement = 0
-  #while magnitudeIncrement < selectedTool.magnitude
   while magnitudeIncrement < tH[tH.length - 1].magnitude
     drawLine(canvas, color, beginX + magnitudeIncrement, beginY, endX + magnitudeIncrement, endY)
     drawLine(canvas, color, beginX - magnitudeIncrement, beginY, endX - magnitudeIncrement, endY)
     drawLine(canvas, color, beginX, beginY + magnitudeIncrement, endX, endY + magnitudeIncrement)
     drawLine(canvas, color, beginX, beginY - magnitudeIncrement, endX, endY - magnitudeIncrement)
     magnitudeIncrement++
-  #if selectedTool.magnitude > 1
   if tH[tH.length - 1].magnitude > 1
     calculatedRadius = (tH[tH.length - 1]) - Math.round(lineSlope * 1.21)
-    #calculatedRadius = (selectedTool.magnitude - 2) - Math.round(lineSlope * 1.21)
     magnitudeIncrement = 0
     while magnitudeIncrement < calculatedRadius
       drawCircle( canvas, color, beginX, beginY, calculatedRadius - magnitudeIncrement, true )
@@ -906,7 +938,6 @@ lineAction = (canvas, color, beginX, beginY, endX, endY) ->
   The color is given as an rgb array, and translated into
   image data.
 ###
-
 putPixel = (canvas, color, whereAtX, whereAtY) ->
   newPixel = canvas.createImageData(1,1)
   newPixelsColor = newPixel.data
@@ -936,7 +967,6 @@ putPixel = (canvas, color, whereAtX, whereAtY) ->
   it instead continuously draws circles instead of
   points.
 ###
-
 pointAction = (canvas, color, beginX, beginY, endX, endY) ->
   if tH[tH.length - 1].magnitude < 2
     drawLine(canvas, color, beginX, beginY, endX, endY)
@@ -955,6 +985,7 @@ pointAction = (canvas, color, beginX, beginY, endX, endY) ->
       drawCircle( canvas, color, beginX, beginY, calculatedRadius - magnitudeIncrement, true )
       drawCircle( canvas, color, endX, endY, calculatedRadius - magnitudeIncrement, true )
       magnitudeIncrement++
+    
 flipAction = () ->
   menuUp = true
   normalCircumstance = false
@@ -995,8 +1026,6 @@ resizeAction = () ->
   menuContext.canvas.width = 390
   menuContext.canvas.height = 35
 
-  #previouslySelectedTool = selectedTool
-  #selectedTool = ctPaintTools[15]
   tH.push ctPaintTools[15]
   menuContext.drawImage(tH[tH.length - 1].menuImage, 0, 0)
   drawToolbars()
@@ -1005,8 +1034,8 @@ resizeAction = () ->
   whatSortOfDataSorting = resizeDataSorting
 
 resizeDataSortingInitialize = (width, height) ->
-  menuDatumZero = zeroPadder(width, 4) + zeroPadder(height, 4)
-  spotInMenuZeroDatum = 0
+  menuDatum = zeroPadder(width, 4) + zeroPadder(height, 4)
+  spotInMenuDatum = 0
   drawResizeMenu()
 
 resizeDataSorting = ( inputMaterial ) ->
@@ -1014,27 +1043,27 @@ resizeDataSorting = ( inputMaterial ) ->
     keysThatDontAddData = ['backspace', 'left', 'right', 'enter']
     if not (inputMaterial in keysThatDontAddData)
       if not isNaN(inputMaterial)
-        menuDatumZero = replaceAt(menuDatumZero, inputMaterial, spotInMenuZeroDatum )
-        if spotInMenuZeroDatum < 7
-          spotInMenuZeroDatum++
+        menuDatum = replaceAt(menuDatum, inputMaterial, spotInMenuDatum )
+        if spotInMenuDatum < 7
+          spotInMenuDatum++
     else
       switch inputMaterial
         when 'backspace'
-          menuDatumZero = replaceAt(menuDatumZero, '0', spotInMenuZeroDatum)
-          if 0 < spotInMenuZeroDatum
-            spotInMenuZeroDatum--
+          menuDatum = replaceAt(menuDatum, '0', spotInMenuDatum)
+          if 0 < spotInMenuDatum
+            spotInMenuDatum--
         when 'left'
-          if 0 < spotInMenuZeroDatum
-            spotInMenuZeroDatum--
+          if 0 < spotInMenuDatum
+            spotInMenuDatum--
         when 'right'
-          if spotInMenuZeroDatum < 7
-            spotInMenuZeroDatum++
+          if spotInMenuDatum < 7
+            spotInMenuDatum++
         when 'enter'
           $('#menuDiv').css('top',(window.innerHeight).toString())
           normalCircumstance = true
           menuUp = false
-          newWidth = menuDatumZero.substr(0,4)
-          newHeight = menuDatumZero.substr(4,4)
+          newWidth = menuDatum.substr(0,4)
+          newHeight = menuDatum.substr(4,4)
           ctContext.canvas.width = parseInt(newWidth)
           ctContext.canvas.height = parseInt(newHeight)
           canvasDataAsImage = new Image()
@@ -1057,16 +1086,15 @@ resizeDataSorting = ( inputMaterial ) ->
           ctCanvas.style.width = (canvasWidth).toString()+'px'
           ctCanvas.style.height = (canvasHeight).toString()+'px'
           positionCorners()
-          #selectedTool = previouslySelectedTool
           tH.pop()
           drawToolbars()
     drawResizeMenu()
 
 drawResizeMenu = () ->
-  drawStringAsCommandPrompt( menuContext, menuDatumZero.substr(0,4), 1, 116, 10 )
-  drawStringAsCommandPrompt( menuContext, menuDatumZero.substr(4,4), 1, 228, 10 )
-  xPos = 116 + ((spotInMenuZeroDatum // 4) * 112) + ( 12 * ( spotInMenuZeroDatum %% 4 ) )
-  drawStringAsCommandPrompt( menuContext, menuDatumZero[spotInMenuZeroDatum], 2, xPos, 10 )
+  drawStringAsCommandPrompt( menuContext, menuDatum.substr(0,4), 1, 116, 10 )
+  drawStringAsCommandPrompt( menuContext, menuDatum.substr(4,4), 1, 228, 10 )
+  xPos = 116 + ((spotInMenuDatum // 4) * 112) + ( 12 * ( spotInMenuDatum %% 4 ) )
+  drawStringAsCommandPrompt( menuContext, menuDatum[spotInMenuDatum], 2, xPos, 10 )
 
 
 ###
@@ -1084,8 +1112,6 @@ drawResizeMenu = () ->
   horizontalColorSwap swaps 0 with 1, and 2 with 3    
 ###
 horizontalColorSwap = () ->
-  #previouslySelectedTool = selectedTool
-  #selectedTool = ctPaintTools[16]
   tH.push ctPaintTools[16]
   drawToolbars()
 
@@ -1094,7 +1120,6 @@ horizontalColorSwap = () ->
 
   setTimeout( ()->
     tH.pop()
-    #selectedTool = previouslySelectedTool
     drawToolbars()
   ,20)
 
@@ -1113,8 +1138,6 @@ horizontalColorSwap = () ->
   verticalColorSwap swaps 0 with 2, and 1 with 3    
 ###
 verticalColorSwap = () ->
-  #previouslySelectedTool = selectedTool
-  #selectedTool = ctPaintTools[17]
   tH.push ctPaintTools[17]
   drawToolbars()
 
@@ -1190,12 +1213,6 @@ drawToolbars = ->
   toolbar0Context.fillRect(0,0,toolbarWidth,window.innerHeight-toolbarHeight)
   toolbar0Context.drawImage(toolbar0sImages[toolViewMode],0,0)
   drawLine(toolbar0Context,[16,20,8],toolbarWidth-1,0,toolbarWidth-1,window.innerHeight-toolbarHeight)
-  #if selectedTool
-  #  toolbar0Context.drawImage(
-  #    selectedTool.pressedImage[toolViewMode],
-  #    selectedTool.clickRegion[0],
-  #    selectedTool.clickRegion[1])
-
   toolbar0Context.drawImage(
     tH[tH.length - 1].pressedImage[toolViewMode]
     tH[tH.length - 1].clickRegion[0],
@@ -1239,11 +1256,9 @@ modeToGlyph = () ->
     return '  '
 
 magnitudeToGlyph = () ->
-  #if typeof selectedTool.maxMagnitude == 'string'
   if typeof tH[tH.length - 1] is 'string'
     return ' '
   else
-    #return selectedTool.magnitude.toString(16).toUpperCase()
     return tH[tH.length - 1].magnitude.toString(16).toUpperCase()
 
 drawInformationToolbar1 = ->
@@ -1270,6 +1285,7 @@ scaleCanvasBigger = ( factor ) ->
   console.log 'FACTOR * DIMENSION', factor * ctCanvas.width, factor * ctCanvas.height
   ctCanvas.style.width = (factor * ctCanvas.width).toString()+'px'
   ctCanvas.style.height = (factor * ctCanvas.height).toString()+'px'
+  
 
 ###
   These functions handle key presses. Under abnormal circumstances,
@@ -1287,57 +1303,34 @@ scaleCanvasBigger = ( factor ) ->
 
 keyListeningUnderNormalCircumstance = (event) ->
   if event.keyCode == keysToKeyCodes['1']
-    #previouslySelectedTool = selectedTool
-    #selectedTool = ctPaintTools[0]
     tH.push ctPaintTools[0]
     tH.shift()
     drawToolbars()
   if event.keyCode == keysToKeyCodes['2']
-    #previouslySelectedTool = selectedTool
-    #selectedTool = ctPaintTools[1]
-    #selectedTool = ctPaintTools[0]
     tH.push ctPaintTools[1]
     tH.shift()
     drawToolbars()
   if event.keyCode == keysToKeyCodes['3']
-    #previouslySelectedTool = selectedTool
-    #selectedTool = ctPaintTools[2]
-    #selectedTool = ctPaintTools[0]
     tH.push ctPaintTools[2]
     tH.shift()
     drawToolbars()
   if event.keyCode == keysToKeyCodes['4']
-    #previouslySelectedTool = selectedTool
-    #selectedTool = ctPaintTools[3]
-    #selectedTool = ctPaintTools[0]
     tH.push ctPaintTools[3]
     tH.shift()
     drawToolbars()
   if event.keyCode == keysToKeyCodes['5']
-    #previouslySelectedTool = selectedTool
-    #selectedTool = ctPaintTools[4]
-    #selectedTool = ctPaintTools[0]
     tH.push ctPaintTools[4]
     tH.shift()
     drawToolbars()
   if event.keyCode == keysToKeyCodes['6']
-    #previouslySelectedTool = selectedTool
-    #selectedTool = ctPaintTools[5]
-    #selectedTool = ctPaintTools[0]
     tH.push ctPaintTools[5]
     tH.shift()
     drawToolbars()
   if event.keyCode == keysToKeyCodes['7']
-    #previouslySelectedTool = selectedTool
-    #selectedTool = ctPaintTools[6]
-    #selectedTool = ctPaintTools[0]
     tH.push ctPaintTools[6]
     tH.shift()
     drawToolbars()
   if event.keyCode == keysToKeyCodes['8']
-    #previouslySelectedTool = selectedTool
-    #selectedTool = ctPaintTools[7]
-    #selectedTool = ctPaintTools[0]
     tH.push ctPaintTools[7]
     tH.shift()
     drawToolbars()
@@ -1497,23 +1490,12 @@ samplePosture = [
     mousePressed = false
     getMousePositionOnCanvas(event)
     colorSwatches[0] = hexToRGB(getColorValue(ctContext, xSpot, ySpot).substr(1))
-    #selectedTool = previouslySelectedTool
     tH.pop()
     tH.push tH[tH.length - 1]
     drawToolbars()
 ]
 
-###
-  Currently, when the sample is taken it often returns to the previously
-  selected tool. However, if one adjusts the color with the vertical
-  or horizontal color swaps, the previouslySelectedTool various is also
-  used, removing the memory of the tool previous to the sample.
 
-  Rather than making a previouslypreviouslyselectedtool variable, I believe
-  the solution will be an array. And selectedTool will be the first element
-  of that array. To return to previous tools, the tool at index 0 will be 
-  'shifted'.
-###
 fillPosture = [
   () ->
     toolbar1Context.drawImage(toolbar1sImage1,188,3)   
@@ -1724,24 +1706,6 @@ while iteration < numberOfTools
   ctPaintTools[iteration].pressedImage[1].src = 'assets\\v'+zeroPadder(iteration,2)+'.PNG'
   iteration++
 
-###
-ctPaintTools[0].toolsAction = zoomAction
-ctPaintTools[1].toolsAction = selectAction
-ctPaintTools[3].toolsAction = fillAction
-ctPaintTools[4].toolsAction = squareAction
-ctPaintTools[5].toolsAction = circleAction
-ctPaintTools[6].toolsAction = lineAction
-ctPaintTools[7].toolsAction = pointAction
-ctPaintTools[10].toolsAction = flipAction
-ctPaintTools[11].toolsAction = rotateAction
-ctPaintTools[12].toolsAction = invertAction
-ctPaintTools[13].toolsAction = replaceAction
-ctPaintTools[14].toolsAction = scaleAction
-ctPaintTools[15].toolsAction = resizeAction
-ctPaintTools[16].toolsAction = horizontalColorSwap
-ctPaintTools[17].toolsAction = verticalColorSwap
-###
-
 ctPaintTools[0].posture = zoomPosture
 ctPaintTools[1].posture = selectPosture
 ctPaintTools[2].posture = samplePosture
@@ -1750,17 +1714,7 @@ ctPaintTools[4].posture = squarePosture
 ctPaintTools[5].posture = circlePosture
 ctPaintTools[6].posture = linePosture
 ctPaintTools[7].posture = pointPosture
-#ctPaintTools[8].posture = NOPE
-#ctPaintTools[9].posture = NOPE
-###
-  Actually, I am thinking the tools below
-  wont even have postures.
-###
-#ctPaintTools[10].posture = flipPosture
-#ctPaintTools[11].posture = rotatePosture
-#ctPaintTools[13].posture = invertPosture
-#ctpaintTools[14].posture = replacePosture
-#ctPaintTools[15].posture = resizePosture
+
 ctPaintTools[16].posture = horizontalColorSwapPosture
 ctPaintTools[17].posture = verticalColorSwapPosture
 
@@ -1776,12 +1730,9 @@ selectedTool = ctPaintTools[7]
 
 $(document).ready ()->
   setTimeout( ()->
-    #ctContext.imageSmoothingEnabled = false
     setCanvasSizes()
     prepareCanvas()
     placeToolbars()
-    #selectedTool = ctPaintTools[7]
-    #previouslySelectedTool = ctPaintTools[7]
     tH.push ctPaintTools[7]
     tH.shift()
     tH.push ctPaintTools[7]
@@ -1792,6 +1743,7 @@ $(document).ready ()->
   , 2000)
 
   $('body').keydown (event) ->
+    event.preventDefault()
     if normalCircumstance
       keyListeningUnderNormalCircumstance(event)
     else
@@ -1813,22 +1765,15 @@ $(document).ready ()->
       toolViewMode = toolViewMode%2
       drawToolbars()
     if event.keyCode == keysToKeyCodes['space']
-      #if selectedTool.mode
-      #  selectedTool.mode = false
       if tH[tH.length - 1].mode
         tH[tH.length - 1].mode = false
       else
-        #selectedTool.mode = true
         tH[tH.length - 1].mode = true
     if event.keyCode == keysToKeyCodes['equals']
-      #if selectedTool.magnitude < selectedTool.maxMagnitude
-      #  selectedTool.magnitude++
       if tH[tH.length - 1].magnitude < tH[tH.length - 1].maxMagnitude
         selectedTool[tH.length - 1].magnitude--
         drawInformationToolbar0()
     if event.keyCode == keysToKeyCodes['minus']
-      #if selectedTool.magnitude > 1
-      #  selectedTool.magnitude--
       if tH[tH.length - 1].magnitude > 1
         tH[tH.length - 1]--
         drawInformationToolbar0()
@@ -1836,6 +1781,7 @@ $(document).ready ()->
       colorModify = true
 
   $('body').keyup (event) ->
+    event.preventDefault()
     if event.keyCode == keysToKeyCodes['shift']
       colorModify = false
 
@@ -1924,7 +1870,6 @@ $(document).ready ()->
           if toolIndex < 8 
             tH.push ctPaintTools[toolIndex]
             tH.shift()
-            console.log tH
           else
             ctPaintTools[toolIndex].toolsAction()
       toolIndex++
@@ -1947,3 +1892,5 @@ $(document).ready ()->
         else
           colorSwatches[0] = colorPallete[(((toolbar1X - 52 ) // 17) * 2) + ((toolbar1Y - 4) // 16)]
         drawToolbars()
+
+        

@@ -20,7 +20,7 @@ colorMenu = ()->
   whatSortOfDataSorting = colorDataSorting
 
 colorDataSortingInitialize = () ->
-  menuDatumZero = rgbToHex(colorPallete[spotInColorPallete]).substr(1)
+  menuDatum = rgbToHex(colorPallete[spotInColorPallete]).substr(1)
   spotInMenuDatum = 0
   drawColorMenu()
 
@@ -31,13 +31,13 @@ colorDataSorting = ( inputMaterial ) ->
   if inputMaterial isnt undefined
     keysThatDontAddData = ['backspace', 'left', 'right', 'enter']
     if not (inputMaterial in keysThatDontAddData)
-      menuDatumZero = replaceAt(menuDatumZero, inputMaterial, spotInMenuDatum )
+      menuDatum = replaceAt(menuDatum, inputMaterial, spotInMenuDatum )
       if spotInMenuDatum < 5
         spotInMenuDatum++
     else
       switch inputMaterial
         when 'backspace'
-          menuDatumZero = replaceAt(menuDatumZero, '0', spotInMenuDatum)
+          menuDatum = replaceAt(menuDatum, '0', spotInMenuDatum)
           if 0 < spotInMenuDatum
             spotInMenuDatum--
         when 'left'
@@ -47,7 +47,7 @@ colorDataSorting = ( inputMaterial ) ->
           if spotInMenuDatum < 5
             spotInMenuDatum++
         when 'enter'
-          colorPallete[spotInColorPallete] =  hexToRGB(menuDatumZero)
+          colorPallete[spotInColorPallete] =  hexToRGB(menuDatum)
           drawToolbars()
           $('#menuDiv').css('top',(window.innerHeight).toString())
           normalCircumstance = true
@@ -55,7 +55,7 @@ colorDataSorting = ( inputMaterial ) ->
     drawColorMenu()
 
 drawColorMenu = () ->
-  currentlyHighlighted = menuDatumZero[spotInMenuDatum].toUpperCase()
-  drawStringAsCommandPrompt( menuContext, menuDatumZero.toUpperCase(), 1, 91, 10 )
+  currentlyHighlighted = menuDatum[spotInMenuDatum].toUpperCase()
+  drawStringAsCommandPrompt( menuContext, menuDatum.toUpperCase(), 1, 91, 10 )
   drawStringAsCommandPrompt( menuContext, currentlyHighlighted, 2, 91+(12*spotInMenuDatum), 10 )
 

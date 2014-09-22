@@ -13,6 +13,7 @@ $(document).ready ()->
   , 2000)
 
   $('body').keydown (event) ->
+    event.preventDefault()
     if normalCircumstance
       keyListeningUnderNormalCircumstance(event)
     else
@@ -50,6 +51,7 @@ $(document).ready ()->
       colorModify = true
 
   $('body').keyup (event) ->
+    event.preventDefault()
     if event.keyCode == keysToKeyCodes['shift']
       colorModify = false
 
