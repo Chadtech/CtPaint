@@ -134,15 +134,20 @@ scaleCanvasBigger = ( factor ) ->
   ctCanvas.style.width = (factor * ctCanvas.width).toString()+'px'
   ctCanvas.style.height = (factor * ctCanvas.height).toString()+'px'
 
-copeWithSelection = ->
+copeWithSelection = (atZeroZero)->
+  copeX = selectionX
+  copeY = selectionY
+  if atZeroZero is undefined
+    atZeroZero = false
   if areaSelected
     areaSelected = false
     canvasDataAsImage = new Image()
     canvasDataAsImage.onload = ->
-      ctContext.drawImage(canvasDataAsImage,0,0)
-      ctContext.putImageData(selection, selectionX, selectionY)
+      ctContext.drawImage(canvasDataAsImage, 0, 0)
+      ctContext.putImageData(selection, copeX, copeY)
       canvasAsData = ctCanvas.toDataURL()
     canvasDataAsImage.src = canvasAsData
+
 
 
 

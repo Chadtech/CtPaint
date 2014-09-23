@@ -91,6 +91,12 @@ menuDatum = undefined
 spotInMenuDatum = 0
 
 ###
+  The memory where a selection is stored when it is copied
+###
+copyMemory = undefined
+copyExists = false
+
+###
   A menu being up is an abnormal circumstance. The key
   press events are different depending on whether conditions
   are normal or not.
@@ -1382,8 +1388,58 @@ verticalColorSwap = () ->
     drawToolbars()
   ,20)
 
+copyAction = ->
+  console.log 'A'
+  tH.push ctPaintTools[18]
+  drawToolbars()
 
+  if areaSelected
+    copyMemory = selection
+  else
+    copyMemory = ctContext.getImageData(0, 0, ctContext.canvas.width, ctContext.canvas.height)
+  console.log 'B', copyMemory
+  copyExists = true
 
+  setTimeout( ()->
+    tH.pop()
+    drawToolbars()
+  ,20)
+pasteAction = ->
+  tH.push ctPaintTools[19]
+  drawToolbars()
+  if copyExists
+    if areaSelected
+      areaSelected = false
+      canvasDataAsImage = new Image()
+      canvasDataAsImage.onload = ->
+        ctContext.drawImage(canvasDataAsImage, 0, 0)
+        ctContext.putImageData(selection, selectionX, selectionY)
+        canvasAsData = ctCanvas.toDataURL()
+        pasteTheSelection()
+      canvasDataAsImage.src = canvasAsData
+    else
+      pasteTheSelection()
+
+  setTimeout( ()->
+    tH.pop()
+    drawToolbars()
+    tH.push ctPaintTools[1]
+    tH.shift()
+  ,20)
+
+pasteTheSelection = ->
+  selection = copyMemory
+  selectionX = 0
+  selectionY = 0
+  selectionsWidth = selection.width
+  selectionsHeight = selection.height
+  canvasDataAsImage = new Image()
+  canvasDataAsImage.onload = ->
+    ctContext.drawImage(canvasDataAsImage,0,0)
+    ctContext.putImageData(selection, selectionX, selectionY)
+    drawSelectBox(ctContext, -1, -1, selectionsWidth + 1, selectionsHeight + 1)
+  canvasDataAsImage.src = canvasAsData
+  areaSelected = true
 
 
 
@@ -1524,15 +1580,20 @@ scaleCanvasBigger = ( factor ) ->
   ctCanvas.style.width = (factor * ctCanvas.width).toString()+'px'
   ctCanvas.style.height = (factor * ctCanvas.height).toString()+'px'
 
-copeWithSelection = ->
+copeWithSelection = (atZeroZero)->
+  copeX = selectionX
+  copeY = selectionY
+  if atZeroZero is undefined
+    atZeroZero = false
   if areaSelected
     areaSelected = false
     canvasDataAsImage = new Image()
     canvasDataAsImage.onload = ->
-      ctContext.drawImage(canvasDataAsImage,0,0)
-      ctContext.putImageData(selection, selectionX, selectionY)
+      ctContext.drawImage(canvasDataAsImage, 0, 0)
+      ctContext.putImageData(selection, copeX, copeY)
       canvasAsData = ctCanvas.toDataURL()
     canvasDataAsImage.src = canvasAsData
+
 
 
 
@@ -1598,18 +1659,23 @@ keyListeningUnderNormalCircumstance = (event) ->
     tH.shift()
     drawToolbars()
     copeWithSelection()
+  if event.keyCode == keysToKeyCodes['b']
+    verticalColorSwap()
+  if event.keyCode == keysToKeyCodes['c']
+    copyAction()
+  if event.keyCode == keysToKeyCodes['d']
+    replaceAction()
   if event.keyCode == keysToKeyCodes['e']
     resizeAction()
   if event.keyCode == keysToKeyCodes['f']
     flipAction()
   if event.keyCode == keysToKeyCodes['i']
     invertAction()
-  if event.keyCode == keysToKeyCodes['d']
-    replaceAction()
   if event.keyCode == keysToKeyCodes['q']
     horizontalColorSwap()
-  if event.keyCode == keysToKeyCodes['b']
-    verticalColorSwap()
+  if event.keyCode == keysToKeyCodes['v']
+    pasteAction()
+
   if event.keyCode == keysToKeyCodes['right']
     if canvasWidth > (window.innerWidth - toolbarWidth - 5)
       if (-1 * canvasXOffset) < ((canvasWidth + 10) - (window.innerWidth - toolbarWidth))
@@ -2005,9 +2071,12 @@ ctPaintTools[10].toolsAction = flipAction
 ctPaintTools[12].toolsAction = invertAction
 ctPaintTools[13].toolsAction = replaceAction
 ctPaintTools[15].toolsAction = resizeAction
+ctPaintTools[18].toolsAction = copyAction
 
 ctPaintTools[16].posture = horizontalColorSwapPosture
 ctPaintTools[17].posture = verticalColorSwapPosture
+#ctPaintTools[18].posture = copyAction
+#ctPaintTools[19].posture = 
 
 
 ctPaintTools[10].menuImage.src = 'assets\\t01.png'

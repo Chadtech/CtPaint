@@ -52,18 +52,23 @@ keyListeningUnderNormalCircumstance = (event) ->
     tH.shift()
     drawToolbars()
     copeWithSelection()
+  if event.keyCode == keysToKeyCodes['b']
+    verticalColorSwap()
+  if event.keyCode == keysToKeyCodes['c']
+    copyAction()
+  if event.keyCode == keysToKeyCodes['d']
+    replaceAction()
   if event.keyCode == keysToKeyCodes['e']
     resizeAction()
   if event.keyCode == keysToKeyCodes['f']
     flipAction()
   if event.keyCode == keysToKeyCodes['i']
     invertAction()
-  if event.keyCode == keysToKeyCodes['d']
-    replaceAction()
   if event.keyCode == keysToKeyCodes['q']
     horizontalColorSwap()
-  if event.keyCode == keysToKeyCodes['b']
-    verticalColorSwap()
+  if event.keyCode == keysToKeyCodes['v']
+    pasteAction()
+
   if event.keyCode == keysToKeyCodes['right']
     if canvasWidth > (window.innerWidth - toolbarWidth - 5)
       if (-1 * canvasXOffset) < ((canvasWidth + 10) - (window.innerWidth - toolbarWidth))

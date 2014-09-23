@@ -108,9 +108,12 @@ ctPaintTools[10].toolsAction = flipAction
 ctPaintTools[12].toolsAction = invertAction
 ctPaintTools[13].toolsAction = replaceAction
 ctPaintTools[15].toolsAction = resizeAction
+ctPaintTools[18].toolsAction = copyAction
 
 ctPaintTools[16].posture = horizontalColorSwapPosture
 ctPaintTools[17].posture = verticalColorSwapPosture
+#ctPaintTools[18].posture = copyAction
+#ctPaintTools[19].posture = 
 
 
 ctPaintTools[10].menuImage.src = 'assets\\t01.png'

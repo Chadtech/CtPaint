@@ -91,6 +91,12 @@ menuDatum = undefined
 spotInMenuDatum = 0
 
 ###
+  The memory where a selection is stored when it is copied
+###
+copyMemory = undefined
+copyExists = false
+
+###
   A menu being up is an abnormal circumstance. The key
   press events are different depending on whether conditions
   are normal or not.
