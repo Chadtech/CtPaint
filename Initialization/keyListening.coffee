@@ -51,6 +51,8 @@ keyListeningUnderNormalCircumstance = (event) ->
     flipAction()
   if event.keyCode == keysToKeyCodes['i']
     invertAction()
+  if event.keyCode == keysToKeyCodes['d']
+    replaceAction()
   if event.keyCode == keysToKeyCodes['q']
     horizontalColorSwap()
   if event.keyCode == keysToKeyCodes['b']

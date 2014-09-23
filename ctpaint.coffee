@@ -262,6 +262,18 @@ hexToRGB = (hex) ->
   blue = parseInt(hex[4] + hex[5], 16)
   return [red, green, blue]
 
+###
+  sameColorCheck returns a boolean given two colors.
+  It returns true if the two colors share the same
+  values for red, green, and blue (alpha is ignored).
+###
+sameColorCheck = (colorA, colorB) ->
+    redAreSame = colorA[0] == colorB[0]
+    greenAreSame = colorA[1] == colorB[1]
+    blueAreSame = colorA[2] == colorB[2]
+    return  redAreSame and greenAreSame and blueAreSame
+
+    
 # The main Canvas
 ctCanvas = document.getElementById('CtPaint')
 ctContext = ctCanvas.getContext('2d')
@@ -1103,47 +1115,139 @@ flipDataSorting = ( inputMaterial ) ->
 
 invertAction = () ->
   tH.push ctPaintTools[12]
+  if not areaSelected
+    tWidth = ctContext.canvas.width
+    tHeight = ctContext.canvas.height
+    canvasAsWeFoundIt = ctContext.getImageData(0, 0, tWidth, tHeight)
+    canvasData = canvasAsWeFoundIt.data
+    canvasInPixels = []
 
-  tWidth = ctContext.canvas.width
-  tHeight = ctContext.canvas.height
-  canvasAsWeFoundIt = ctContext.getImageData(0, 0, tWidth, tHeight)
-  canvasData = canvasAsWeFoundIt.data
-  canvasInPixels = []
+    canvasIndex = 0
+    colorAtDatum = []
+    while canvasIndex < canvasData.length
+      colorAtDatum.push canvasData[canvasIndex]
+      if canvasIndex % 4 is 3
+        canvasInPixels.push colorAtDatum
+        colorAtDatum = []
+      canvasIndex++
 
-  canvasIndex = 0
-  colorAtDatum = []
-  while canvasIndex < canvasData.length
-    colorAtDatum.push canvasData[canvasIndex]
-    if canvasIndex % 4 is 3
-      canvasInPixels.push colorAtDatum
-      colorAtDatum = []
-    canvasIndex++
+    pixelIndex = 0
+    while pixelIndex < canvasInPixels.length
+      red = canvasInPixels[pixelIndex][0]
+      green = canvasInPixels[pixelIndex][1]
+      blue = canvasInPixels[pixelIndex][2]
+      canvasInPixels[pixelIndex] = [ 255 - red, 255 - green, 255 - blue, 255]
+      pixelIndex++
 
-  pixelIndex = 0
-  while pixelIndex < canvasInPixels.length
-    red = canvasInPixels[pixelIndex][0]
-    green = canvasInPixels[pixelIndex][1]
-    blue = canvasInPixels[pixelIndex][2]
-    canvasInPixels[pixelIndex] = [ 255 - red, 255 - green, 255 - blue, 255]
-    pixelIndex++
+    pixelIndex = 0
+    while pixelIndex < canvasInPixels.length
+      colorIndex = 0
+      while colorIndex < 4
+        datumIndex = pixelIndex * 4
+        canvasAsWeFoundIt.data[datumIndex + colorIndex] = 
+        canvasInPixels[pixelIndex][colorIndex]
+        colorIndex++
+      pixelIndex++
 
-  pixelIndex = 0
-  while pixelIndex < canvasInPixels.length
-    colorIndex = 0
-    while colorIndex < 4
-      datumIndex = pixelIndex * 4
-      canvasAsWeFoundIt.data[datumIndex + colorIndex] = 
-      canvasInPixels[pixelIndex][colorIndex]
-      colorIndex++
-    pixelIndex++
-
-  ctContext.putImageData(canvasAsWeFoundIt, 0, 0)
-  canvasAsData = ctCanvas.toDataURL()
+    ctContext.putImageData(canvasAsWeFoundIt, 0, 0)
+    canvasAsData = ctCanvas.toDataURL()
 
   setTimeout( ()->
     tH.pop()
     drawToolbars()
   ,20)
+replaceAction = () ->
+  menuUp = true
+  normalCircumstance = false
+  $('#menuDiv').css('top', (window.innerHeight - toolbarHeight - 45).toString())
+  $('#menuDiv').css('left', (toolbarWidth + 10).toString())
+
+  menuContext.canvas.width = 439
+  menuContext.canvas.height = 35
+
+  tH.push ctPaintTools[13]
+
+  menuContext.drawImage(tH[tH.length - 1].menuImage, 0, 0)
+  drawToolbars()
+
+  replaceDataSortingInitialize()
+  whatSortOfDataSorting = replaceDataSorting
+
+replaceDataSortingInitialize = () ->
+  menuDatum = '000000' + rgbToHex(colorSwatches[1]).substr(1,6)
+  spotInMenuDatum = 0
+  drawReplaceMenu()
+
+replaceDataSorting = ( inputMaterial ) ->
+  if inputMaterial isnt undefined
+    keysThatDontAddData = ['backspace', 'left', 'right', 'enter']
+    if not (inputMaterial in keysThatDontAddData)
+      menuDatum = replaceAt(menuDatum, inputMaterial, spotInMenuDatum )
+      if spotInMenuDatum < 11
+        spotInMenuDatum++
+    else
+      switch inputMaterial
+        when 'backspace'
+          menuDatum = replaceAt(menuDatum, '0', spotInMenuDatum)
+          if 0 < spotInMenuDatum
+            spotInMenuDatum--
+        when 'left'
+          if 0 < spotInMenuDatum
+            spotInMenuDatum--
+        when 'right'
+          if spotInMenuDatum < 11
+            spotInMenuDatum++
+        when 'enter'
+          colorToReplace = hexToRGB(menuDatum.substr(0,6))
+          replacement = hexToRGB(menuDatum.substr(6,6))
+          replacement.push 255
+
+          tWidth = ctContext.canvas.width
+          tHeight = ctContext.canvas.height
+          canvasAsWeFoundIt = ctContext.getImageData(0, 0, tWidth, tHeight)
+          canvasData = canvasAsWeFoundIt.data
+          canvasInPixels = []
+
+          canvasIndex = 0
+          colorAtDatum = []
+          while canvasIndex < canvasData.length
+            colorAtDatum.push canvasData[canvasIndex]
+            if canvasIndex % 4 is 3
+              if sameColorCheck(colorAtDatum, colorToReplace)
+                canvasInPixels.push replacement
+              else
+                canvasInPixels.push colorAtDatum
+              colorAtDatum = []
+            canvasIndex++
+
+          pixelIndex = 0
+          while pixelIndex < canvasInPixels.length
+            colorIndex = 0
+            while colorIndex < 4
+              datumIndex = pixelIndex * 4
+              canvasAsWeFoundIt.data[datumIndex + colorIndex] = 
+                canvasInPixels[pixelIndex][colorIndex]
+              colorIndex++
+            pixelIndex++
+
+          ctContext.putImageData(canvasAsWeFoundIt, 0, 0)
+          canvasAsData = ctCanvas.toDataURL()
+
+          $('#menuDiv').css('top',(window.innerHeight).toString())
+          normalCircumstance = true
+          menuUp = false
+          tH.pop()
+          drawToolbars()
+    drawReplaceMenu()
+
+
+drawReplaceMenu = () ->
+  drawStringAsCommandPrompt( menuContext, menuDatum.substr(0,6).toUpperCase(), 1, 116, 10 )
+  drawStringAsCommandPrompt( menuContext, menuDatum.substr(6,6).toUpperCase(), 1, 276, 10 )
+  xPos = 116 + ((spotInMenuDatum // 6) * 160) + ( 12 * ( spotInMenuDatum %% 6 ) )
+  drawStringAsCommandPrompt( menuContext, menuDatum[spotInMenuDatum].toUpperCase(), 2, xPos, 10 )
+
+
 resizeAction = () ->
   menuUp = true
   normalCircumstance = false
@@ -1467,6 +1571,8 @@ keyListeningUnderNormalCircumstance = (event) ->
     flipAction()
   if event.keyCode == keysToKeyCodes['i']
     invertAction()
+  if event.keyCode == keysToKeyCodes['d']
+    replaceAction()
   if event.keyCode == keysToKeyCodes['q']
     horizontalColorSwap()
   if event.keyCode == keysToKeyCodes['b']
@@ -1863,6 +1969,7 @@ ctPaintTools[17].posture = emptyPosture
 
 ctPaintTools[10].toolsAction = flipAction
 ctPaintTools[12].toolsAction = invertAction
+ctPaintTools[13].toolsAction = replaceAction
 ctPaintTools[15].toolsAction = resizeAction
 
 ctPaintTools[16].posture = horizontalColorSwapPosture

@@ -21,6 +21,7 @@ gulp.task('doAllTheScriptsTogether', function() {
     './initialization/point.coffee',
     './initialization/flip.coffee',
     './initialization/invert.coffee',
+    './initialization/replace.coffee',
     './initialization/resize.coffee',
     './initialization/horizontalColorSwap.coffee',
     './initialization/verticalColorSwap.coffee',

@@ -35,3 +35,16 @@ hexToRGB = (hex) ->
   green = parseInt(hex[2] + hex[3], 16)
   blue = parseInt(hex[4] + hex[5], 16)
   return [red, green, blue]
+
+###
+  sameColorCheck returns a boolean given two colors.
+  It returns true if the two colors share the same
+  values for red, green, and blue (alpha is ignored).
+###
+sameColorCheck = (colorA, colorB) ->
+    redAreSame = colorA[0] == colorB[0]
+    greenAreSame = colorA[1] == colorB[1]
+    blueAreSame = colorA[2] == colorB[2]
+    return  redAreSame and greenAreSame and blueAreSame
+
+    
