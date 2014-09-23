@@ -1438,7 +1438,33 @@ pasteTheSelection = ->
     drawSelectBox(ctContext, -1, -1, selectionsWidth + 1, selectionsHeight + 1)
   canvasDataAsImage.src = canvasAsData
   areaSelected = true
+cutAction = ->
+  tH.push ctPaintTools[18]
+  drawToolbars()
 
+  if areaSelected
+    copyMemory = selection
+    tRightEdge = selectionX + selectionsWidth - 1
+    tBottomEdge = selectionY + selectionsHeight - 1
+    canvasDataAsImage = new Image()
+    canvasDataAsImage.onload = ->
+      ctContext.drawImage(canvasDataAsImage, 0, 0)
+      ctContext.putImageData(selection, selectionX, selectionY)
+      squareAction(ctContext, colorSwatches[1], selectionX, selectionY, tRightEdge, tBottomEdge, true)
+      canvasAsData = ctCanvas.toDataURL()
+    canvasDataAsImage.src = canvasAsData
+  else
+    copyMemory = ctContext.getImageData(0, 0, ctContext.canvas.width, ctContext.canvas.height)
+    tRightEdge = ctContext.canvas.width
+    tBottomEdge = ctContext.canvas.height
+    squareAction(ctContext, colorSwatches[1], 0, 0, tRightEdge, tBottomEdge, true)
+  copyExists = true
+  canvasAsData = ctCanvas.toDataURL()
+
+  setTimeout( ()->
+    tH.pop()
+    drawToolbars()
+  ,20)
 
 
 
@@ -1673,6 +1699,8 @@ keyListeningUnderNormalCircumstance = (event) ->
     horizontalColorSwap()
   if event.keyCode == keysToKeyCodes['v']
     pasteAction()
+  if event.keyCode == keysToKeyCodes['x']
+    cutAction()
 
   if event.keyCode == keysToKeyCodes['right']
     if canvasWidth > (window.innerWidth - toolbarWidth - 5)
@@ -2066,6 +2094,7 @@ ctPaintTools[16].posture = emptyPosture
 ctPaintTools[17].posture = emptyPosture
 ctPaintTools[18].posture = emptyPosture
 ctPaintTools[19].posture = emptyPosture
+ctPaintTools[20].posture = emptyPosture
 
 ctPaintTools[10].toolsAction = flipAction
 ctPaintTools[12].toolsAction = invertAction
@@ -2073,12 +2102,10 @@ ctPaintTools[13].toolsAction = replaceAction
 ctPaintTools[15].toolsAction = resizeAction
 ctPaintTools[18].toolsAction = copyAction
 ctPaintTools[19].toolsAction = pasteAction
+ctPaintTools[20].toolsAction = cutAction
 
 ctPaintTools[16].posture = horizontalColorSwapPosture
 ctPaintTools[17].posture = verticalColorSwapPosture
-#ctPaintTools[18].posture = copyAction
-#ctPaintTools[19].posture = 
-
 
 ctPaintTools[10].menuImage.src = 'assets\\t01.png'
 ctPaintTools[13].menuImage.src = 'assets\\t02.png'

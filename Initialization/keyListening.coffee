@@ -68,6 +68,8 @@ keyListeningUnderNormalCircumstance = (event) ->
     horizontalColorSwap()
   if event.keyCode == keysToKeyCodes['v']
     pasteAction()
+  if event.keyCode == keysToKeyCodes['x']
+    cutAction()
 
   if event.keyCode == keysToKeyCodes['right']
     if canvasWidth > (window.innerWidth - toolbarWidth - 5)
