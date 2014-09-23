@@ -1113,6 +1113,7 @@ flipDataSorting = ( inputMaterial ) ->
             menuUp = false
 
 
+
 invertAction = () ->
   tH.push ctPaintTools[12]
   if not areaSelected
@@ -1248,6 +1249,7 @@ drawReplaceMenu = () ->
   drawStringAsCommandPrompt( menuContext, menuDatum[spotInMenuDatum].toUpperCase(), 2, xPos, 10 )
 
 
+
 resizeAction = () ->
   menuUp = true
   normalCircumstance = false
@@ -1379,6 +1381,12 @@ verticalColorSwap = () ->
     tH.pop()
     drawToolbars()
   ,20)
+
+
+
+
+
+
 
 positionCorners = ->
   if cornersVisible
@@ -1513,10 +1521,28 @@ getMousePositionOnZoom = (event) ->
   ySpotZoom = event.clientY - (toolbarHeight)
 
 scaleCanvasBigger = ( factor ) ->
-  console.log 'FACTOR * DIMENSION', factor * ctCanvas.width, factor * ctCanvas.height
   ctCanvas.style.width = (factor * ctCanvas.width).toString()+'px'
   ctCanvas.style.height = (factor * ctCanvas.height).toString()+'px'
-  
+
+copeWithSelection = ->
+  if areaSelected
+    areaSelected = false
+    canvasDataAsImage = new Image()
+    canvasDataAsImage.onload = ->
+      ctContext.drawImage(canvasDataAsImage,0,0)
+      ctContext.putImageData(selection, selectionX, selectionY)
+      canvasAsData = ctCanvas.toDataURL()
+    canvasDataAsImage.src = canvasAsData
+
+
+
+
+
+
+
+
+
+
 
 ###
   These functions handle key presses. Under abnormal circumstances,
@@ -1531,40 +1557,47 @@ scaleCanvasBigger = ( factor ) ->
   whatSortOfDataSorting.
 ###
 
-
 keyListeningUnderNormalCircumstance = (event) ->
   if event.keyCode == keysToKeyCodes['1']
     tH.push ctPaintTools[0]
     tH.shift()
     drawToolbars()
+    copeWithSelection()
   if event.keyCode == keysToKeyCodes['2']
     tH.push ctPaintTools[1]
     tH.shift()
     drawToolbars()
+    copeWithSelection()
   if event.keyCode == keysToKeyCodes['3']
     tH.push ctPaintTools[2]
     tH.shift()
     drawToolbars()
+    copeWithSelection()
   if event.keyCode == keysToKeyCodes['4']
     tH.push ctPaintTools[3]
     tH.shift()
     drawToolbars()
+    copeWithSelection()
   if event.keyCode == keysToKeyCodes['5']
     tH.push ctPaintTools[4]
     tH.shift()
     drawToolbars()
+    copeWithSelection()
   if event.keyCode == keysToKeyCodes['6']
     tH.push ctPaintTools[5]
     tH.shift()
     drawToolbars()
+    copeWithSelection()
   if event.keyCode == keysToKeyCodes['7']
     tH.push ctPaintTools[6]
     tH.shift()
     drawToolbars()
+    copeWithSelection()
   if event.keyCode == keysToKeyCodes['8']
     tH.push ctPaintTools[7]
     tH.shift()
     drawToolbars()
+    copeWithSelection()
   if event.keyCode == keysToKeyCodes['e']
     resizeAction()
   if event.keyCode == keysToKeyCodes['f']
@@ -1580,13 +1613,13 @@ keyListeningUnderNormalCircumstance = (event) ->
   if event.keyCode == keysToKeyCodes['right']
     if canvasWidth > (window.innerWidth - toolbarWidth - 5)
       if (-1 * canvasXOffset) < ((canvasWidth + 10) - (window.innerWidth - toolbarWidth))
-        canvasXOffset-=3
+        canvasXOffset -= 3
         positionCanvas()
         positionCorners()
   if event.keyCode == keysToKeyCodes['left']
     if canvasWidth > (window.innerWidth - toolbarWidth - 5)
       if canvasXOffset < 0
-        canvasXOffset+=3
+        canvasXOffset += 3
         positionCanvas()
         positionCorners()
 
@@ -1614,6 +1647,7 @@ keyListeningUnderAbnormalCircumstance = (event) ->
     when keysToKeyCodes['left'] then 'left'
     when keysToKeyCodes['right'] then 'right'
     when keysToKeyCodes['enter'] then 'enter'
+
 
 zoomPosture = [
   () ->
@@ -2124,7 +2158,8 @@ $(document).ready ()->
     while toolIndex < numberOfTools
       if ctPaintTools[toolIndex].clickRegion[0]<event.clientX and event.clientX<(ctPaintTools[toolIndex].clickRegion[0]+buttonWidth)
         if ctPaintTools[toolIndex].clickRegion[1]<event.clientY and event.clientY<(ctPaintTools[toolIndex].clickRegion[1]+buttonHeight)
-          if toolIndex < 8 
+          if toolIndex < 8
+            copeWithSelection()
             tH.push ctPaintTools[toolIndex]
             tH.shift()
           else

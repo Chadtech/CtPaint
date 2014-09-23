@@ -131,7 +131,25 @@ getMousePositionOnZoom = (event) ->
   ySpotZoom = event.clientY - (toolbarHeight)
 
 scaleCanvasBigger = ( factor ) ->
-  console.log 'FACTOR * DIMENSION', factor * ctCanvas.width, factor * ctCanvas.height
   ctCanvas.style.width = (factor * ctCanvas.width).toString()+'px'
   ctCanvas.style.height = (factor * ctCanvas.height).toString()+'px'
-  
+
+copeWithSelection = ->
+  if areaSelected
+    areaSelected = false
+    canvasDataAsImage = new Image()
+    canvasDataAsImage.onload = ->
+      ctContext.drawImage(canvasDataAsImage,0,0)
+      ctContext.putImageData(selection, selectionX, selectionY)
+      canvasAsData = ctCanvas.toDataURL()
+    canvasDataAsImage.src = canvasAsData
+
+
+
+
+
+
+
+
+
+

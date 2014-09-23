@@ -16,34 +16,42 @@ keyListeningUnderNormalCircumstance = (event) ->
     tH.push ctPaintTools[0]
     tH.shift()
     drawToolbars()
+    copeWithSelection()
   if event.keyCode == keysToKeyCodes['2']
     tH.push ctPaintTools[1]
     tH.shift()
     drawToolbars()
+    copeWithSelection()
   if event.keyCode == keysToKeyCodes['3']
     tH.push ctPaintTools[2]
     tH.shift()
     drawToolbars()
+    copeWithSelection()
   if event.keyCode == keysToKeyCodes['4']
     tH.push ctPaintTools[3]
     tH.shift()
     drawToolbars()
+    copeWithSelection()
   if event.keyCode == keysToKeyCodes['5']
     tH.push ctPaintTools[4]
     tH.shift()
     drawToolbars()
+    copeWithSelection()
   if event.keyCode == keysToKeyCodes['6']
     tH.push ctPaintTools[5]
     tH.shift()
     drawToolbars()
+    copeWithSelection()
   if event.keyCode == keysToKeyCodes['7']
     tH.push ctPaintTools[6]
     tH.shift()
     drawToolbars()
+    copeWithSelection()
   if event.keyCode == keysToKeyCodes['8']
     tH.push ctPaintTools[7]
     tH.shift()
     drawToolbars()
+    copeWithSelection()
   if event.keyCode == keysToKeyCodes['e']
     resizeAction()
   if event.keyCode == keysToKeyCodes['f']

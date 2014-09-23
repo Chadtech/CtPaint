@@ -137,7 +137,8 @@ $(document).ready ()->
     while toolIndex < numberOfTools
       if ctPaintTools[toolIndex].clickRegion[0]<event.clientX and event.clientX<(ctPaintTools[toolIndex].clickRegion[0]+buttonWidth)
         if ctPaintTools[toolIndex].clickRegion[1]<event.clientY and event.clientY<(ctPaintTools[toolIndex].clickRegion[1]+buttonHeight)
-          if toolIndex < 8 
+          if toolIndex < 8
+            copeWithSelection()
             tH.push ctPaintTools[toolIndex]
             tH.shift()
           else
