@@ -20,6 +20,7 @@ gulp.task('doAllTheScriptsTogether', function() {
     './initialization/line.coffee',
     './initialization/point.coffee',
     './initialization/flip.coffee',
+    './initialization/invert.coffee',
     './initialization/resize.coffee',
     './initialization/horizontalColorSwap.coffee',
     './initialization/verticalColorSwap.coffee',

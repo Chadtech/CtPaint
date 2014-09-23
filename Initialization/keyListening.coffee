@@ -49,6 +49,8 @@ keyListeningUnderNormalCircumstance = (event) ->
     resizeAction()
   if event.keyCode == keysToKeyCodes['f']
     flipAction()
+  if event.keyCode == keysToKeyCodes['i']
+    invertAction()
   if event.keyCode == keysToKeyCodes['q']
     horizontalColorSwap()
   if event.keyCode == keysToKeyCodes['b']

@@ -1101,6 +1101,49 @@ flipDataSorting = ( inputMaterial ) ->
             menuUp = false
 
 
+invertAction = () ->
+  tH.push ctPaintTools[12]
+
+  tWidth = ctContext.canvas.width
+  tHeight = ctContext.canvas.height
+  canvasAsWeFoundIt = ctContext.getImageData(0, 0, tWidth, tHeight)
+  canvasData = canvasAsWeFoundIt.data
+  canvasInPixels = []
+
+  canvasIndex = 0
+  colorAtDatum = []
+  while canvasIndex < canvasData.length
+    colorAtDatum.push canvasData[canvasIndex]
+    if canvasIndex % 4 is 3
+      canvasInPixels.push colorAtDatum
+      colorAtDatum = []
+    canvasIndex++
+
+  pixelIndex = 0
+  while pixelIndex < canvasInPixels.length
+    red = canvasInPixels[pixelIndex][0]
+    green = canvasInPixels[pixelIndex][1]
+    blue = canvasInPixels[pixelIndex][2]
+    canvasInPixels[pixelIndex] = [ 255 - red, 255 - green, 255 - blue, 255]
+    pixelIndex++
+
+  pixelIndex = 0
+  while pixelIndex < canvasInPixels.length
+    colorIndex = 0
+    while colorIndex < 4
+      datumIndex = pixelIndex * 4
+      canvasAsWeFoundIt.data[datumIndex + colorIndex] = 
+      canvasInPixels[pixelIndex][colorIndex]
+      colorIndex++
+    pixelIndex++
+
+  ctContext.putImageData(canvasAsWeFoundIt, 0, 0)
+  canvasAsData = ctCanvas.toDataURL()
+
+  setTimeout( ()->
+    tH.pop()
+    drawToolbars()
+  ,20)
 resizeAction = () ->
   menuUp = true
   normalCircumstance = false
@@ -1422,6 +1465,8 @@ keyListeningUnderNormalCircumstance = (event) ->
     resizeAction()
   if event.keyCode == keysToKeyCodes['f']
     flipAction()
+  if event.keyCode == keysToKeyCodes['i']
+    invertAction()
   if event.keyCode == keysToKeyCodes['q']
     horizontalColorSwap()
   if event.keyCode == keysToKeyCodes['b']
@@ -1817,6 +1862,7 @@ ctPaintTools[16].posture = emptyPosture
 ctPaintTools[17].posture = emptyPosture
 
 ctPaintTools[10].toolsAction = flipAction
+ctPaintTools[12].toolsAction = invertAction
 ctPaintTools[15].toolsAction = resizeAction
 
 ctPaintTools[16].posture = horizontalColorSwapPosture
