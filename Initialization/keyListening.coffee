@@ -11,7 +11,6 @@
   whatSortOfDataSorting.
 ###
 
-
 keyListeningUnderNormalCircumstance = (event) ->
   if event.keyCode == keysToKeyCodes['1']
     tH.push ctPaintTools[0]
@@ -60,13 +59,13 @@ keyListeningUnderNormalCircumstance = (event) ->
   if event.keyCode == keysToKeyCodes['right']
     if canvasWidth > (window.innerWidth - toolbarWidth - 5)
       if (-1 * canvasXOffset) < ((canvasWidth + 10) - (window.innerWidth - toolbarWidth))
-        canvasXOffset-=3
+        canvasXOffset -= 3
         positionCanvas()
         positionCorners()
   if event.keyCode == keysToKeyCodes['left']
     if canvasWidth > (window.innerWidth - toolbarWidth - 5)
       if canvasXOffset < 0
-        canvasXOffset+=3
+        canvasXOffset += 3
         positionCanvas()
         positionCorners()
 
@@ -94,3 +93,4 @@ keyListeningUnderAbnormalCircumstance = (event) ->
     when keysToKeyCodes['left'] then 'left'
     when keysToKeyCodes['right'] then 'right'
     when keysToKeyCodes['enter'] then 'enter'
+
