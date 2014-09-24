@@ -74,6 +74,7 @@ gripX = 0
 gripY = 0
 selectionsWidth = 0
 selectionsHeight = 0
+selectionActFinish = false
 
 ###
   These variables are useful when any pop up menu shows up.
@@ -1780,10 +1781,21 @@ selectPosture = [
         canvasDataAsImage = new Image()
         canvasDataAsImage.onload = ->
           ctContext.drawImage(canvasDataAsImage,0,0)
-          drawSelectBox(ctContext, oldX - 1, oldY - 1, xSpot + 1, ySpot + 1)
+          borderSideX = 1
+          borderSideY = 1
+          if xSpot < oldX
+            borderSizeX = -1
+          if ySpot < oldY
+            borderSizeY = -1
+          originX = oldX - borderSideX
+          originY = oldY - borderSideY
+          otherSideX = xSpot + borderSideX
+          otherSideY = ySpot + borderSideY
+          drawSelectBox(ctContext, originX, originY, otherSideX, otherSideY)
         canvasDataAsImage.src = canvasAsData
     else
       if mousePressed
+        console.log 'B'
         getMousePositionOnCanvas(event)
         xOffset = xSpot - oldX
         yOffset = ySpot - oldY
@@ -1836,7 +1848,17 @@ selectPosture = [
           squareAction(ctContext, colorSwatches[1], oldX, oldY, xSpot - 1, ySpot - 1, true)
           canvasAsData = ctCanvas.toDataURL()
           ctContext.putImageData(selection, selectionX, selectionY)
-          drawSelectBox(ctContext, oldX - 1, oldY - 1, xSpot + 1, ySpot + 1)
+          borderSideX = 1
+          borderSideY = 1
+          if xSpot < oldX
+            borderSizeX = -1
+          if ySpot < oldY
+            borderSizeY = -1
+          originX = oldX - borderSideX
+          originY = oldY - borderSideY
+          otherSideX = xSpot + borderSideX
+          otherSideY = ySpot + borderSideY
+          drawSelectBox(ctContext, originX, originY, otherSideX, otherSideY)
         canvasDataAsImage.src = canvasAsData
         areaSelected = true
     else

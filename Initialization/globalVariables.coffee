@@ -74,6 +74,7 @@ gripX = 0
 gripY = 0
 selectionsWidth = 0
 selectionsHeight = 0
+selectionActFinish = false
 
 ###
   These variables are useful when any pop up menu shows up.
