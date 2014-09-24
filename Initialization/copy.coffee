@@ -5,7 +5,9 @@ copyAction = ->
   if areaSelected
     copyMemory = selection
   else
-    copyMemory = ctContext.getImageData(0, 0, ctContext.canvas.width, ctContext.canvas.height)
+    tCanvasWidth = ctContext.canvas.width
+    tCanvasHeight = ctContext.canvas.height
+    copyMemory = ctContext.getImageData(0, 0, tCanvasWidth, tCanvasHeight)
   copyExists = true
 
   setTimeout( ()->

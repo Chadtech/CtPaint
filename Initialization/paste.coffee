@@ -1,6 +1,7 @@
 pasteAction = ->
   tH.push ctPaintTools[19]
   drawToolbars()
+  
   if copyExists
     if areaSelected
       areaSelected = false
