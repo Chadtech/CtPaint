@@ -6,19 +6,15 @@ selectPosture = [
       drawInformationToolbar1()
       if mousePressed
         getMousePositionOnCanvas(event)
+        sortedXs = [ Math.min(xSpot, oldX), Math.max(xSpot, oldX) ]
+        sortedYs = [ Math.min(ySpot, oldY), Math.max(ySpot, oldY) ]
+        originX = sortedXs[0] - 1
+        originY = sortedYs[0] - 1
+        otherSideX = sortedXs[1] + 1
+        otherSideY = sortedYs[1] + 1
         canvasDataAsImage = new Image()
         canvasDataAsImage.onload = ->
           ctContext.drawImage(canvasDataAsImage,0,0)
-          borderSideX = 1
-          borderSideY = 1
-          if xSpot < oldX
-            borderSizeX = -1
-          if ySpot < oldY
-            borderSizeY = -1
-          originX = oldX - borderSideX
-          originY = oldY - borderSideY
-          otherSideX = xSpot + borderSideX
-          otherSideY = ySpot + borderSideY
           drawSelectBox(ctContext, originX, originY, otherSideX, otherSideY)
         canvasDataAsImage.src = canvasAsData
     else
@@ -37,6 +33,7 @@ selectPosture = [
           ctContext.putImageData(selection, gripX, gripY)
           drawSelectBox(ctContext, gripX - 1, gripY - 1, rightEdge, bottomEdge)
         canvasDataAsImage.src = canvasAsData
+
   () ->
     mousePressed = true
     if not areaSelected
@@ -57,6 +54,7 @@ selectPosture = [
           ctContext.putImageData(selection, selectionX, selectionY)
           canvasAsData = ctCanvas.toDataURL()
         canvasDataAsImage.src = canvasAsData
+
   () ->
     mousePressed = false
     if not areaSelected
@@ -66,6 +64,10 @@ selectPosture = [
       selectionsHeight = Math.abs(ySpot - oldY)
       selectionX = sortedXs[0]
       selectionY = sortedYs[0]
+      originX = selectionX - 1
+      originY = selectionY - 1
+      otherSideX = selectionX + selectionsWidth + 1
+      otherSideY = selectionY + selectionsHeight + 1
       if 0 < selectionsWidth and 0 < selectionsHeight
         selection = 
           ctContext.getImageData( sortedXs[0], sortedYs[0], selectionsWidth, selectionsHeight)
@@ -75,16 +77,6 @@ selectPosture = [
           squareAction(ctContext, colorSwatches[1], oldX, oldY, xSpot - 1, ySpot - 1, true)
           canvasAsData = ctCanvas.toDataURL()
           ctContext.putImageData(selection, selectionX, selectionY)
-          borderSideX = 1
-          borderSideY = 1
-          if xSpot < oldX
-            borderSizeX = -1
-          if ySpot < oldY
-            borderSizeY = -1
-          originX = oldX - borderSideX
-          originY = oldY - borderSideY
-          otherSideX = xSpot + borderSideX
-          otherSideY = ySpot + borderSideY
           drawSelectBox(ctContext, originX, originY, otherSideX, otherSideY)
         canvasDataAsImage.src = canvasAsData
         areaSelected = true
