@@ -21,7 +21,45 @@ flipDataSorting = ( inputMaterial ) ->
       switch inputMaterial
         when 'x'
           if areaSelected
-            console.log selection.data 
+            selectionsData = selection.data
+            selectionInPixels = []
+
+            selectionIndex = 0
+            colorOfDatum = []
+            while selectionIndex < selectionsData.length
+              colorOfDatum.push selectionsData[selectionIndex]
+              if selectionIndex % 4 is 3
+                selectionInPixels.push colorOfDatum
+                colorOfDatum = []
+              selectionIndex++
+
+            flippedSelection = []
+            pixelIndex = 0
+            while pixelIndex < selectionInPixels.length
+              rowStart = pixelIndex // selectionsWidth
+              inRow = pixelIndex %% selectionsWidth
+              pixelToFlip = rowStart * selectionsWidth
+              pixelToFlip += (selectionsWidth - inRow - 1)
+              flippedSelection.push selectionInPixels[pixelToFlip]
+              pixelIndex++
+
+            pixelIndex = 0
+            while pixelIndex < flippedSelection.length
+              colorIndex = 0
+              while colorIndex < 4
+                datumIndex = pixelIndex * 4
+                selection.data[datumIndex + colorIndex] = 
+                  flippedSelection[pixelIndex][colorIndex]
+                colorIndex++
+              pixelIndex++
+
+            ctContext.putImageData(selection, selectionX, selectionY)
+            tH.pop()
+            drawToolbars()
+            $('#menuDiv').css('top',(window.innerHeight).toString())
+            normalCircumstance = true
+            menuUp = false
+
           else
             tWidth = ctContext.canvas.width
             tHeight = ctContext.canvas.height
