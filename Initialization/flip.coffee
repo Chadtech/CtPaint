@@ -105,7 +105,45 @@ flipDataSorting = ( inputMaterial ) ->
             menuUp = false
         when 'y'
           if areaSelected
-            console.log selection.data 
+            selectionsData = selection.data
+            selectionInPixels = []
+
+            selectionIndex = 0
+            colorOfDatum = []
+            while selectionIndex < selectionsData.length
+              colorOfDatum.push selectionsData[selectionIndex]
+              if selectionIndex % 4 is 3
+                selectionInPixels.push colorOfDatum
+                colorOfDatum = []
+              selectionIndex++
+
+            flippedSelection = []
+            rowIndex = 0
+            while rowIndex < (selectionInPixels.length // selectionsWidth)
+              thisRow = (selectionInPixels.length // selectionsWidth) - rowIndex - 1
+              rowAt = thisRow * selectionsWidth
+              columnIndex = 0
+              while columnIndex < selectionsWidth
+                flippedSelection.push selectionInPixels[rowAt + columnIndex]
+                columnIndex++
+              rowIndex++
+
+            pixelIndex = 0
+            while pixelIndex < flippedSelection.length
+              colorIndex = 0
+              while colorIndex < 4
+                datumIndex = pixelIndex * 4
+                selection.data[datumIndex + colorIndex] = 
+                  flippedSelection[pixelIndex][colorIndex]
+                colorIndex++
+              pixelIndex++
+
+            ctContext.putImageData(selection, selectionX, selectionY)
+            tH.pop()
+            drawToolbars()
+            $('#menuDiv').css('top',(window.innerHeight).toString())
+            normalCircumstance = true
+            menuUp = false
           else
             tWidth = ctContext.canvas.width
             tHeight = ctContext.canvas.height
