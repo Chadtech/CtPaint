@@ -148,13 +148,3 @@ copeWithSelection = (atZeroZero)->
       canvasAsData = ctCanvas.toDataURL()
     canvasDataAsImage.src = canvasAsData
 
-
-
-
-
-
-
-
-
-
-
