@@ -66,11 +66,12 @@ keyListeningUnderNormalCircumstance = (event) ->
     invertAction()
   if event.keyCode == keysToKeyCodes['q']
     horizontalColorSwap()
+  if event.keyCode == keysToKeyCodes['r']
+    rotateAction()
   if event.keyCode == keysToKeyCodes['v']
     pasteAction()
   if event.keyCode == keysToKeyCodes['x']
     cutAction()
-
   if event.keyCode == keysToKeyCodes['right']
     if canvasWidth > (window.innerWidth - toolbarWidth - 5)
       if (-1 * canvasXOffset) < ((canvasWidth + 10) - (window.innerWidth - toolbarWidth))

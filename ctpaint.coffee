@@ -1121,6 +1121,228 @@ flipDataSorting = ( inputMaterial ) ->
 
 
 
+rotateAction = ->
+  menuUp = true
+  normalCircumstance = false
+  $('#menuDiv').css('top', (window.innerHeight - toolbarHeight - 45).toString())
+  $('#menuDiv').css('left', (toolbarWidth + 10).toString())
+
+  menuContext.canvas.width = 228
+  menuContext.canvas.height = 35
+
+  tH.push ctPaintTools[11]
+
+  menuContext.drawImage(tH[tH.length - 1].menuImage, 0, 0)
+  drawToolbars()
+
+  whatSortOfDataSorting = rotateDataSorting
+
+rotateDataSorting = ( inputMaterial) ->
+  if inputMaterial isnt undefined
+    acceptableKeys = ['9', '1', '2']
+    if inputMaterial in acceptableKeys
+      if not areaSelected
+        howManyRotates = 0
+        sWidth = ctContext.canvas.width
+        sHeight = ctContext.canvas.height
+        canvasCurrently = ctContext.getImageData(0, 0, sWidth, sHeight)
+              
+        canvasAsPixels = dataToPixels(canvasCurrently.data)
+        switch inputMaterial
+          when '9'
+            canvasAsPixels = axisFlip(canvasAsPixels, sWidth, sHeight)
+            canvasAsPixels = horizontalFlip(canvasAsPixels[0], canvasAsPixels[1], canvasAsPixels[2])
+          when '1'
+            canvasAsPixels = horizontalFlip(canvasAsPixels, sWidth, sHeight)
+            canvasAsPixels = verticalFlip(canvasAsPixels[0], canvasAsPixels[1], canvasAsPixels[2])
+          when '2'
+            canvasAsPixels = horizontalFlip(canvasAsPixels, sWidth, sHeight)
+            canvasAsPixels = axisFlip(canvasAsPixels[0], canvasAsPixels[1], canvasAsPixels[2])
+
+        rotatedData = []
+        thisPixelIndex = 0
+        while thisPixelIndex < canvasAsPixels[0].length
+          colorIndex = 0
+          while colorIndex < 4
+            rotatedData.push canvasAsPixels[0][thisPixelIndex][colorIndex]
+            colorIndex++
+          thisPixelIndex++
+
+        rotatedCanvas = document.createElement('canvas')
+        rotatedCanvas = rotatedCanvas.getContext('2d')
+        console.log canvasAsPixels
+        rotatedCanvas = rotatedCanvas.createImageData(canvasAsPixels[1], canvasAsPixels[2])
+
+        datumIndex = 0
+        while datumIndex < rotatedData.length
+          rotatedCanvas.data[datumIndex] = rotatedData[datumIndex]
+          datumIndex++
+
+        ctContext.canvas.width = canvasAsPixels[1]
+        ctContext.canvas.height = canvasAsPixels[2]
+        canvasWidth = ctContext.canvas.width
+        canvasHeight = ctContext.canvas.height
+        ctCanvas.style.width = (canvasWidth).toString()+'px'
+        ctCanvas.style.height = (canvasHeight).toString()+'px'
+        ctContext.putImageData(rotatedCanvas, 0, 0)
+
+        canvasAsData = ctCanvas.toDataURL()
+        tH.pop()
+        drawToolbars()
+        $('#menuDiv').css('top',(window.innerHeight).toString())
+        normalCircumstance = true
+        menuUp = false
+        positionCorners()
+
+dataToPixels = (imageData) ->
+  convertedData = []
+  datumIndex = 0
+  singlePixel = []
+  while datumIndex < imageData.length
+    singlePixel.push imageData[datumIndex]
+    if datumIndex % 4 is 3
+      convertedData.push singlePixel
+      singlePixel = []
+    datumIndex++
+  return convertedData
+
+horizontalFlip = (imageInPixels, itsWidth, itsHeight) ->
+  flippedCanvas = []
+  pixelIndex = 0
+  while pixelIndex < imageInPixels.length
+    rowStart = pixelIndex // itsWidth
+    inRow = pixelIndex %% itsWidth
+    pixelToFlip = rowStart * itsWidth
+    pixelToFlip += (itsWidth - inRow - 1)
+    flippedCanvas.push imageInPixels[pixelToFlip]
+    pixelIndex++
+  return [flippedCanvas, itsWidth, itsHeight]
+
+verticalFlip = (imageInPixels, itsWidth, itsHeight) ->
+  flippedCanvas = []
+  rowIndex = 0
+  while rowIndex < (imageInPixels.length // itsWidth)
+    thisRow = (imageInPixels.length // itsWidth) - rowIndex - 1
+    rowAt = thisRow * itsWidth
+    columnIndex = 0
+    while columnIndex < itsWidth
+      flippedCanvas.push imageInPixels[rowAt + columnIndex]
+      columnIndex++
+    rowIndex++
+  return [flippedCanvas, itsWidth, itsHeight]
+
+axisFlip = (imageInPixels, itsWidth, itsHeight) ->
+  flippedCanvas = []
+  pixelIndex = 0
+  while pixelIndex < imageInPixels.length
+    atRow = pixelIndex % itsHeight
+    atRow *= itsWidth
+    atColumn = pixelIndex // itsHeight
+    flippedCanvas.push imageInPixels[atRow + atColumn]
+    pixelIndex++
+  return [flippedCanvas, itsHeight, itsWidth]
+###
+flipDataSorting = ( inputMaterial ) ->
+  if inputMaterial isnt undefined
+    acceptableKeys = ['x','y']
+    if inputMaterial in acceptableKeys
+      switch inputMaterial
+        when 'x'
+          if areaSelected
+            console.log selection.data 
+          else
+            tWidth = ctContext.canvas.width
+            tHeight = ctContext.canvas.height
+            canvasAsWeFoundIt = ctContext.getImageData(0, 0, tWidth, tHeight)
+            canvasData = canvasAsWeFoundIt.data
+            canvasInPixels = []
+
+            canvasIndex = 0
+            colorAtDatum = []
+            while canvasIndex < canvasData.length
+              colorAtDatum.push canvasData[canvasIndex]
+              if canvasIndex % 4 is 3
+                canvasInPixels.push colorAtDatum
+                colorAtDatum = []
+              canvasIndex++
+
+            flippedCanvas = []
+            pixelIndex = 0
+            while pixelIndex < canvasInPixels.length
+              rowStart = pixelIndex // tWidth
+              inRow = pixelIndex %% tWidth
+              pixelToFlip = rowStart * tWidth
+              pixelToFlip += (tWidth - inRow - 1)
+              flippedCanvas.push canvasInPixels[pixelToFlip]
+              pixelIndex++
+
+            pixelIndex = 0
+            while pixelIndex < canvasInPixels.length
+              colorIndex = 0
+              while colorIndex < 4
+                datumIndex = pixelIndex * 4
+                canvasAsWeFoundIt.data[datumIndex + colorIndex] = 
+                  flippedCanvas[pixelIndex][colorIndex]
+                colorIndex++
+              pixelIndex++
+
+            ctContext.putImageData(canvasAsWeFoundIt, 0, 0)
+            canvasAsData = ctCanvas.toDataURL()
+            tH.pop()
+            drawToolbars()
+            $('#menuDiv').css('top',(window.innerHeight).toString())
+            normalCircumstance = true
+            menuUp = false
+        when 'y'
+          if areaSelected
+            console.log selection.data 
+          else
+            tWidth = ctContext.canvas.width
+            tHeight = ctContext.canvas.height
+            canvasAsWeFoundIt = ctContext.getImageData(0, 0, tWidth, tHeight)
+            canvasData = canvasAsWeFoundIt.data
+            canvasInPixels = []
+
+            canvasIndex = 0
+            colorAtDatum = []
+            while canvasIndex < canvasData.length
+              colorAtDatum.push canvasData[canvasIndex]
+              if canvasIndex % 4 is 3
+                canvasInPixels.push colorAtDatum
+                colorAtDatum = []
+              canvasIndex++
+
+            flippedCanvas = []
+            rowIndex = 0
+            while rowIndex < (canvasInPixels.length // tWidth)
+              thisRow = (canvasInPixels.length // tWidth) - rowIndex - 1
+              rowAt = thisRow * tWidth
+              columnIndex = 0
+              while columnIndex < tWidth
+                flippedCanvas.push canvasInPixels[rowAt + columnIndex]
+                columnIndex++
+              rowIndex++
+
+            pixelIndex = 0
+            while pixelIndex < canvasInPixels.length
+              colorIndex = 0
+              while colorIndex < 4
+                datumIndex = pixelIndex * 4
+                canvasAsWeFoundIt.data[datumIndex + colorIndex] = 
+                  flippedCanvas[pixelIndex][colorIndex]
+                colorIndex++
+              pixelIndex++
+
+            ctContext.putImageData(canvasAsWeFoundIt, 0, 0)
+            canvasAsData = ctCanvas.toDataURL()
+            tH.pop()
+            drawToolbars()
+            $('#menuDiv').css('top',(window.innerHeight).toString())
+            normalCircumstance = true
+            menuUp = false
+###
+
+
 invertAction = () ->
   tH.push ctPaintTools[12]
   if not areaSelected
@@ -1456,7 +1678,7 @@ cutAction = ->
     canvasDataAsImage.onload = ->
       ctContext.drawImage(canvasDataAsImage, 0, 0)
       sX = selectionX
-      sY = selecitonY
+      sY = selectionY
       squareAction(ctContext, colorSwatches[1], sX, sY, tRightEdge, tBottomEdge, true)
       canvasAsData = ctCanvas.toDataURL()
     canvasDataAsImage.src = canvasAsData
@@ -1704,11 +1926,12 @@ keyListeningUnderNormalCircumstance = (event) ->
     invertAction()
   if event.keyCode == keysToKeyCodes['q']
     horizontalColorSwap()
+  if event.keyCode == keysToKeyCodes['r']
+    rotateAction()
   if event.keyCode == keysToKeyCodes['v']
     pasteAction()
   if event.keyCode == keysToKeyCodes['x']
     cutAction()
-
   if event.keyCode == keysToKeyCodes['right']
     if canvasWidth > (window.innerWidth - toolbarWidth - 5)
       if (-1 * canvasXOffset) < ((canvasWidth + 10) - (window.innerWidth - toolbarWidth))
@@ -2116,6 +2339,7 @@ ctPaintTools[19].posture = emptyPosture
 ctPaintTools[20].posture = emptyPosture
 
 ctPaintTools[10].toolsAction = flipAction
+ctPaintTools[11].toolsAction = rotateAction
 ctPaintTools[12].toolsAction = invertAction
 ctPaintTools[13].toolsAction = replaceAction
 ctPaintTools[15].toolsAction = resizeAction

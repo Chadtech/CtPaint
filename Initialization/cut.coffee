@@ -12,7 +12,7 @@ cutAction = ->
     canvasDataAsImage.onload = ->
       ctContext.drawImage(canvasDataAsImage, 0, 0)
       sX = selectionX
-      sY = selecitonY
+      sY = selectionY
       squareAction(ctContext, colorSwatches[1], sX, sY, tRightEdge, tBottomEdge, true)
       canvasAsData = ctCanvas.toDataURL()
     canvasDataAsImage.src = canvasAsData

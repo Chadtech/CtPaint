@@ -108,6 +108,7 @@ ctPaintTools[19].posture = emptyPosture
 ctPaintTools[20].posture = emptyPosture
 
 ctPaintTools[10].toolsAction = flipAction
+ctPaintTools[11].toolsAction = rotateAction
 ctPaintTools[12].toolsAction = invertAction
 ctPaintTools[13].toolsAction = replaceAction
 ctPaintTools[15].toolsAction = resizeAction
