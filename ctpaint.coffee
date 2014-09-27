@@ -1522,8 +1522,6 @@ resizeDataSorting = ( inputMaterial ) ->
             ctContext.drawImage(canvasDataAsImage,0,0)
             cH.push ctCanvas.toDataURL()
             cH.shift()
-            #canvasDataAsImage = new Image()
-            #canvasDataAsImage.src = canvasAsData
           canvasDataAsImage.src = canvasAsData
           ctContext.fillStyle = rgbToHex(colorSwatches[1])
           if (ctContext.canvas.width > canvasWidth) and (ctContext.canvas.height > canvasHeight)
@@ -2396,6 +2394,16 @@ $(document).ready ()->
     cH.push ctCanvas.toDataURL()
     cH.push ctCanvas.toDataURL()
     cH.push ctCanvas.toDataURL()
+    cH.shift()
+    cH.shift()
+    cH.shift()
+    cH.shift()
+    cH.shift()
+    cH.shift()
+    cH.shift()
+    cH.shift()
+    cH.shift()
+    cH.shift()
   , 2000)
 
   $('body').keydown (event) ->
@@ -2490,8 +2498,6 @@ $(document).ready ()->
         ctContext.drawImage(canvasDataAsImage,0,0)
         cH.push ctCanvas.toDataURL()
         cH.shift()
-        #canvasDataAsImage = new Image()
-        #canvasDataAsImage.src = canvasAsData
       canvasDataAsImage.src = cH[cH.length - 1]
       ctContext.fillStyle = rgbToHex(colorSwatches[1])
       if (ctContext.canvas.width > canvasWidth) and (ctContext.canvas.height > canvasHeight)
@@ -2515,6 +2521,7 @@ $(document).ready ()->
     tH[tH.length - 1].posture[0]()
 
   $('#CtPaint').mousedown (event)->
+    console.log cH.length
     tH[tH.length - 1].posture[1]()
 
   $('#CtPaint').mouseup (event)->
