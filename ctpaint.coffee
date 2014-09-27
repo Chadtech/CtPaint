@@ -16,7 +16,6 @@ canvasHeight = 256
   canvasXOffset and canvasYOffset is how much the canvas is 'scrolled' away for when the canvas
   is larger than can fit in the window
 ###
-
 canvasXPos = toolbarWidth + 5
 canvasYPos = 5
 canvasXOffset = 0
@@ -26,8 +25,22 @@ canvasYOffset = 0
   canvasAsData is the canvas stored as data. This is useful when the canvas needs to be changed
   temporarily, such as between when you have clicked on the line draw tool, but not released.
   The canvas is constantly refreshed with the data during these moments.
-###
+
 canvasAsData = undefined
+###
+
+cH = [
+  undefined
+  undefined
+  undefined
+  undefined
+  undefined
+  undefined
+  undefined
+  undefined
+  undefined
+  undefined
+]
 
 ###
   tH is an array containing tools. The last element in the array is the tool the user 
@@ -65,7 +78,6 @@ cornersVisible = true
   selectionY are its location on the canvas. gripX and gripY
   is the location of selection while it is being dragged.
 ###
-
 selection = undefined
 areaSelected = false
 selectionX = 0
@@ -85,7 +97,6 @@ selectionActFinish = false
   resize menu. spotInMenuZeroDatum is what spot in the stored
   memory is being modified.
 ###
-
 menuUp = false
 whatSortOfDataSorting = undefined
 menuDatum = undefined
@@ -175,7 +186,6 @@ colorPallete = [
   that begin a hexidecimal color. When Enter is pressed, that spot 
   in the color pallete becomes that hexidecimal color. 
 ###
-
 colorMenu = ()->
   menuUp = true
   normalCircumstance = false
@@ -350,7 +360,6 @@ menuContext = menuCanvas.getContext('2d')
  keysToKeyCodes correlates the keycode of a key, with the keys name.
  That way I can just type in the name of the key to get the key code.
 ###
-
 keysToKeyCodes = 
   'backspace':8
   'tab':9
@@ -890,7 +899,6 @@ circleAction = ( canvas, color, xPos, yPos ) ->
   drawline is the basic line drawing function. Its a
   bresenham algorithm.
 ###
-
 drawLine = (canvas, color, beginX, beginY, endX, endY) ->
   deltaX = Math.abs(endX - beginX)
   if beginX < endX
@@ -927,7 +935,6 @@ drawLine = (canvas, color, beginX, beginY, endX, endY) ->
   make the line bolder. To give the line a more 'natural' end point,
   a filled circle is drawn on each end.
 ###
-
 lineAction = (canvas, color, beginX, beginY, endX, endY) ->
   lineSlope = undefined
   if tH[tH.length - 1].magnitude > 1
@@ -971,7 +978,7 @@ putPixel = (canvas, color, whereAtX, whereAtY) ->
   the point tool. Should putpixel be used to put a pixel
   where the mouse is clicked, the user could not draw
   strokes. The browser does not register mouse location 
-  fast enough, resulting in distantly spaced specks, as
+  fast enough. This results in distantly spaced specks, as
   the mouse might travel 10 or 20 pixels between putpixel
   actions.
 
@@ -1003,6 +1010,7 @@ pointAction = (canvas, color, beginX, beginY, endX, endY) ->
       drawCircle( canvas, color, beginX, beginY, calculatedRadius - magnitudeIncrement, true )
       drawCircle( canvas, color, endX, endY, calculatedRadius - magnitudeIncrement, true )
       magnitudeIncrement++
+    
     
 flipAction = () ->
   menuUp = true
@@ -1103,7 +1111,8 @@ flipDataSorting = ( inputMaterial ) ->
               pixelIndex++
 
             ctContext.putImageData(canvasAsWeFoundIt, 0, 0)
-            canvasAsData = ctCanvas.toDataURL()
+            cH.push ctCanvas.toDataURL()
+            cH.shift()
             tH.pop()
             drawToolbars()
             $('#menuDiv').css('top',(window.innerHeight).toString())
@@ -1188,13 +1197,13 @@ flipDataSorting = ( inputMaterial ) ->
               pixelIndex++
 
             ctContext.putImageData(canvasAsWeFoundIt, 0, 0)
-            canvasAsData = ctCanvas.toDataURL()
+            cH.push ctCanvas.toDataURL()
+            cH.shift()
             tH.pop()
             drawToolbars()
             $('#menuDiv').css('top',(window.innerHeight).toString())
             normalCircumstance = true
             menuUp = false
-
 
 
 rotateAction = ->
@@ -1246,7 +1255,6 @@ rotateDataSorting = ( inputMaterial) ->
 
         rotatedCanvas = document.createElement('canvas')
         rotatedCanvas = rotatedCanvas.getContext('2d')
-        console.log canvasAsPixels
         rotatedCanvas = rotatedCanvas.createImageData(canvasAsPixels[1], canvasAsPixels[2])
 
         datumIndex = 0
@@ -1262,7 +1270,8 @@ rotateDataSorting = ( inputMaterial) ->
         ctCanvas.style.height = (canvasHeight).toString()+'px'
         ctContext.putImageData(rotatedCanvas, 0, 0)
 
-        canvasAsData = ctCanvas.toDataURL()
+        cH.push ctCanvas.toDataURL()
+        cH.shift()
         tH.pop()
         drawToolbars()
         $('#menuDiv').css('top',(window.innerHeight).toString())
@@ -1318,13 +1327,15 @@ axisFlip = (imageInPixels, itsWidth, itsHeight) ->
     pixelIndex++
   return [flippedCanvas, itsHeight, itsWidth]
 
+
 invertAction = () ->
   tH.push ctPaintTools[12]
   if not areaSelected
     tWidth = ctContext.canvas.width
     tHeight = ctContext.canvas.height
     canvasAsWeFoundIt = ctContext.getImageData(0, 0, tWidth, tHeight)
-    canvasData = canvasAsWeFoundIt.data
+    cH.push canvasAsWeFoundIt.data
+    cH.shift()
     canvasInPixels = []
 
     canvasIndex = 0
@@ -1355,12 +1366,15 @@ invertAction = () ->
       pixelIndex++
 
     ctContext.putImageData(canvasAsWeFoundIt, 0, 0)
-    canvasAsData = ctCanvas.toDataURL()
+    cH.push ctCanvas.toDataURL()
+    cH.shift()
 
   setTimeout( ()->
     tH.pop()
     drawToolbars()
   ,20)
+
+  
 replaceAction = () ->
   menuUp = true
   normalCircumstance = false
@@ -1436,7 +1450,8 @@ replaceDataSorting = ( inputMaterial ) ->
             pixelIndex++
 
           ctContext.putImageData(canvasAsWeFoundIt, 0, 0)
-          canvasAsData = ctCanvas.toDataURL()
+          cH.push ctCanvas.toDataURL()
+          cH.shift()
 
           $('#menuDiv').css('top',(window.innerHeight).toString())
           normalCircumstance = true
@@ -1444,7 +1459,6 @@ replaceDataSorting = ( inputMaterial ) ->
           tH.pop()
           drawToolbars()
     drawReplaceMenu()
-
 
 drawReplaceMenu = () ->
   drawStringAsCommandPrompt( menuContext, menuDatum.substr(0,6).toUpperCase(), 1, 116, 10 )
@@ -1506,9 +1520,10 @@ resizeDataSorting = ( inputMaterial ) ->
           canvasDataAsImage = new Image()
           canvasDataAsImage.onload = ->
             ctContext.drawImage(canvasDataAsImage,0,0)
-            canvasAsData = ctCanvas.toDataURL()
-            canvasDataAsImage = new Image()
-            canvasDataAsImage.src = canvasAsData
+            cH.push ctCanvas.toDataURL()
+            cH.shift()
+            #canvasDataAsImage = new Image()
+            #canvasDataAsImage.src = canvasAsData
           canvasDataAsImage.src = canvasAsData
           ctContext.fillStyle = rgbToHex(colorSwatches[1])
           if (ctContext.canvas.width > canvasWidth) and (ctContext.canvas.height > canvasHeight)
@@ -1586,6 +1601,13 @@ verticalColorSwap = () ->
     drawToolbars()
   ,20)
 
+###
+  copy either saves the selections data, or if there is no selection the whole canvas,
+  into what people normally understand as the clipboard.
+
+  The time out at the end, is to ensure that for at least some duration the copy icon
+  is lit up.
+###
 copyAction = ->
   tH.push ctPaintTools[18]
   drawToolbars()
@@ -1602,6 +1624,8 @@ copyAction = ->
     tH.pop()
     drawToolbars()
   ,20)
+
+
 pasteAction = ->
   tH.push ctPaintTools[19]
   drawToolbars()
@@ -1613,7 +1637,8 @@ pasteAction = ->
       canvasDataAsImage.onload = ->
         ctContext.drawImage(canvasDataAsImage, 0, 0)
         ctContext.putImageData(selection, selectionX, selectionY)
-        canvasAsData = ctCanvas.toDataURL()
+        cH.push ctCanvas.toDataURL()
+        cH.shift()
         pasteTheSelection()
       canvasDataAsImage.src = canvasAsData
     else
@@ -1637,8 +1662,17 @@ pasteTheSelection = ->
     ctContext.drawImage(canvasDataAsImage,0,0)
     ctContext.putImageData(selection, selectionX, selectionY)
     drawSelectBox(ctContext, -1, -1, selectionsWidth + 1, selectionsHeight + 1)
-  canvasDataAsImage.src = canvasAsData
+  canvasDataAsImage.src = cH[cH.length - 1]
   areaSelected = true
+
+  
+###
+  If there is a region selects, saves the data into the clip board,
+  then draws a square filled with the secondary color (colorSwatches[1])
+  and terminates the selection. 
+
+  Cut does exactly what a normal computer user would expect.
+###
 cutAction = ->
   tH.push ctPaintTools[18]
   drawToolbars()
@@ -1655,20 +1689,24 @@ cutAction = ->
       sX = selectionX
       sY = selectionY
       squareAction(ctContext, colorSwatches[1], sX, sY, tRightEdge, tBottomEdge, true)
-      canvasAsData = ctCanvas.toDataURL()
-    canvasDataAsImage.src = canvasAsData
+      cH.push ctCanvas.toDataURL()
+      cH.shift()
+    canvasDataAsImage.src = cH[cH.length - 1]
   else
     tCanvasWidth = ctContext.canvas.width
     tCanvasHeight = ctContext.canvas.height
     copyMemory = ctContext.getImageData(0, 0, tCanvasWidth, tCanvasHeight)
     squareAction(ctContext, colorSwatches[1], 0, 0, tCanvasWidth, tCanvasHeight, true)
-    canvasAsData = ctCanvas.toDataURL()
+    cH.push ctCanvas.toDataURL()
+    cH.shift()
   copyExists = true
 
   setTimeout( ()->
     tH.pop()
     drawToolbars()
   ,20)
+
+  
 
 
 
@@ -1819,18 +1857,9 @@ copeWithSelection = (atZeroZero)->
     canvasDataAsImage.onload = ->
       ctContext.drawImage(canvasDataAsImage, 0, 0)
       ctContext.putImageData(selection, copeX, copeY)
-      canvasAsData = ctCanvas.toDataURL()
-    canvasDataAsImage.src = canvasAsData
-
-
-
-
-
-
-
-
-
-
+      cH.push ctCanvas.toDataURL()
+      cH.shift()
+    canvasDataAsImage.src = cH[cH.length - 1]
 
 
 ###
@@ -1919,6 +1948,10 @@ keyListeningUnderNormalCircumstance = (event) ->
         canvasXOffset += 3
         positionCanvas()
         positionCorners()
+  if event.keyCode is keysToKeyCodes['backspace']
+    if areaSelected
+      areaSelected = false
+      
 
 keyListeningUnderAbnormalCircumstance = (event) ->
   switch event.keyCode
@@ -1986,7 +2019,7 @@ selectPosture = [
         canvasDataAsImage.onload = ->
           ctContext.drawImage(canvasDataAsImage,0,0)
           drawSelectBox(ctContext, originX, originY, otherSideX, otherSideY)
-        canvasDataAsImage.src = canvasAsData
+        canvasDataAsImage.src = cH[cH.length - 1]
     else
       if mousePressed
         getMousePositionOnCanvas(event)
@@ -1999,10 +2032,11 @@ selectPosture = [
         canvasDataAsImage = new Image()
         canvasDataAsImage.onload = ->
           ctContext.drawImage(canvasDataAsImage,0,0)
-          canvasAsData = ctCanvas.toDataURL()
+          cH.push ctCanvas.toDataURL()
+          cH.shift()
           ctContext.putImageData(selection, gripX, gripY)
           drawSelectBox(ctContext, gripX - 1, gripY - 1, rightEdge, bottomEdge)
-        canvasDataAsImage.src = canvasAsData
+        canvasDataAsImage.src = cH[cH.length - 1]
 
   () ->
     mousePressed = true
@@ -2022,8 +2056,9 @@ selectPosture = [
         canvasDataAsImage.onload = ->
           ctContext.drawImage(canvasDataAsImage,0,0)
           ctContext.putImageData(selection, selectionX, selectionY)
-          canvasAsData = ctCanvas.toDataURL()
-        canvasDataAsImage.src = canvasAsData
+          cH.push ctCanvas.toDataURL()
+          cH.shift()
+        canvasDataAsImage.src = cH[cH.length - 1]
 
   () ->
     mousePressed = false
@@ -2045,10 +2080,11 @@ selectPosture = [
         canvasDataAsImage.onload = ->
           ctContext.drawImage(canvasDataAsImage,0,0)
           squareAction(ctContext, colorSwatches[1], oldX, oldY, xSpot - 1, ySpot - 1, true)
-          canvasAsData = ctCanvas.toDataURL()
+          cH.push ctCanvas.toDataURL()
+          cH.shift()
           ctContext.putImageData(selection, selectionX, selectionY)
           drawSelectBox(ctContext, originX, originY, otherSideX, otherSideY)
-        canvasDataAsImage.src = canvasAsData
+        canvasDataAsImage.src = cH[cH.length - 1]
         areaSelected = true
     else
       selectionX = gripX
@@ -2084,7 +2120,8 @@ fillPosture = [
     floodFill(ctCanvas, ctContext, colorSwatches[0], xSpot, ySpot)
   () ->
     mousePressed = false
-    canvasAsData = ctCanvas.toDataURL()
+    cH.push ctCanvas.toDataURL()
+    cH.shift()
 ]
 squarePosture = [
   () ->
@@ -2097,7 +2134,7 @@ squarePosture = [
       canvasDataAsImage.onload = ->
         ctContext.drawImage(canvasDataAsImage,0,0)
         squareAction(ctContext, colorSwatches[0], oldX, oldY, xSpot, ySpot)
-      canvasDataAsImage.src = canvasAsData
+      canvasDataAsImage.src = cH[cH.length - 1]
   () ->
     mousePressed = true
     getMousePositionOnCanvas(event)
@@ -2105,7 +2142,8 @@ squarePosture = [
     oldY = ySpot
   () ->
     mousePressed = false
-    canvasAsData = ctCanvas.toDataURL()
+    cH.push ctCanvas.toDataURL()
+    cH.shift()
 ]
 
 
@@ -2120,7 +2158,7 @@ circlePosture = [
       canvasDataAsImage.onload = ->
         ctContext.drawImage(canvasDataAsImage,0,0)
         circleAction(ctContext, colorSwatches[0], xSpot, ySpot)
-      canvasDataAsImage.src = canvasAsData
+      canvasDataAsImage.src = cH[cH.length - 1]
   () ->
     mousePressed = true
     getMousePositionOnCanvas(event)
@@ -2128,7 +2166,8 @@ circlePosture = [
     oldY = ySpot
   () ->
     mousePressed = false
-    canvasAsData = ctCanvas.toDataURL()
+    cH.push ctCanvas.toDataURL()
+    cH.shift()
 ]
 linePosture = [
   () ->
@@ -2141,7 +2180,7 @@ linePosture = [
       canvasDataAsImage.onload = ->
         ctContext.drawImage(canvasDataAsImage,0,0)
         lineAction(ctContext, colorSwatches[0], oldX, oldY, xSpot, ySpot)
-      canvasDataAsImage.src = canvasAsData
+      canvasDataAsImage.src = cH[cH.length - 1]
   () ->
     mousePressed = true
     getMousePositionOnCanvas(event)
@@ -2149,7 +2188,8 @@ linePosture = [
     oldY = ySpot
   () ->
     mousePressed = false
-    canvasAsData = ctCanvas.toDataURL()
+    cH.push ctCanvas.toDataURL()
+    cH.shift()
 ]
 
 pointPosture = [
@@ -2168,7 +2208,8 @@ pointPosture = [
     pointAction(ctContext, colorSwatches[0], xSpot, ySpot, xSpot, ySpot)
   () ->
     mousePressed = false
-    canvasAsData = ctCanvas.toDataURL()
+    cH.push ctCanvas.toDataURL()
+    cH.shift()
 ]
 emptyPosture = [
   () ->
@@ -2345,7 +2386,16 @@ $(document).ready ()->
     tH.shift()
     drawToolbars()
     positionMenu()
-    canvasAsData = ctCanvas.toDataURL()
+    cH.push ctCanvas.toDataURL()
+    cH.push ctCanvas.toDataURL()
+    cH.push ctCanvas.toDataURL()
+    cH.push ctCanvas.toDataURL()
+    cH.push ctCanvas.toDataURL()
+    cH.push ctCanvas.toDataURL()
+    cH.push ctCanvas.toDataURL()
+    cH.push ctCanvas.toDataURL()
+    cH.push ctCanvas.toDataURL()
+    cH.push ctCanvas.toDataURL()
   , 2000)
 
   $('body').keydown (event) ->
@@ -2424,7 +2474,8 @@ $(document).ready ()->
     leftBoundary = (canvasWidth + 5 + toolbarWidth)
     if (event.clientX < rightBoundary) and (leftBoundary < event.clientX)
       if (event.clientY < (canvasHeight + 5 + 20)) and ((canvasHeight + 5) < event.clientY)
-        canvasAsData = ctCanvas.toDataURL()
+        cH.push ctCanvas.toDataURL()
+        cH.shift()
         oldX = event.clientX
         oldY = event.clientY
         draggingBorder = true
@@ -2437,10 +2488,11 @@ $(document).ready ()->
       canvasDataAsImage = new Image()
       canvasDataAsImage.onload = ->
         ctContext.drawImage(canvasDataAsImage,0,0)
-        canvasAsData = ctCanvas.toDataURL()
-        canvasDataAsImage = new Image()
-        canvasDataAsImage.src = canvasAsData
-      canvasDataAsImage.src = canvasAsData
+        cH.push ctCanvas.toDataURL()
+        cH.shift()
+        #canvasDataAsImage = new Image()
+        #canvasDataAsImage.src = canvasAsData
+      canvasDataAsImage.src = cH[cH.length - 1]
       ctContext.fillStyle = rgbToHex(colorSwatches[1])
       if (ctContext.canvas.width > canvasWidth) and (ctContext.canvas.height > canvasHeight)
         ctContext.fillRect(canvasWidth, 0, ctContext.canvas.width, ctContext.canvas.height)

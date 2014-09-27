@@ -21,14 +21,16 @@ cutAction = ->
       sX = selectionX
       sY = selectionY
       squareAction(ctContext, colorSwatches[1], sX, sY, tRightEdge, tBottomEdge, true)
-      canvasAsData = ctCanvas.toDataURL()
-    canvasDataAsImage.src = canvasAsData
+      cH.push ctCanvas.toDataURL()
+      cH.shift()
+    canvasDataAsImage.src = cH[cH.length - 1]
   else
     tCanvasWidth = ctContext.canvas.width
     tCanvasHeight = ctContext.canvas.height
     copyMemory = ctContext.getImageData(0, 0, tCanvasWidth, tCanvasHeight)
     squareAction(ctContext, colorSwatches[1], 0, 0, tCanvasWidth, tCanvasHeight, true)
-    canvasAsData = ctCanvas.toDataURL()
+    cH.push ctCanvas.toDataURL()
+    cH.shift()
   copyExists = true
 
   setTimeout( ()->

@@ -9,7 +9,7 @@ squarePosture = [
       canvasDataAsImage.onload = ->
         ctContext.drawImage(canvasDataAsImage,0,0)
         squareAction(ctContext, colorSwatches[0], oldX, oldY, xSpot, ySpot)
-      canvasDataAsImage.src = canvasAsData
+      canvasDataAsImage.src = cH[cH.length - 1]
   () ->
     mousePressed = true
     getMousePositionOnCanvas(event)
@@ -17,6 +17,7 @@ squarePosture = [
     oldY = ySpot
   () ->
     mousePressed = false
-    canvasAsData = ctCanvas.toDataURL()
+    cH.push ctCanvas.toDataURL()
+    cH.shift()
 ]
 

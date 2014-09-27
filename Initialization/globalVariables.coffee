@@ -25,8 +25,22 @@ canvasYOffset = 0
   canvasAsData is the canvas stored as data. This is useful when the canvas needs to be changed
   temporarily, such as between when you have clicked on the line draw tool, but not released.
   The canvas is constantly refreshed with the data during these moments.
-###
+
 canvasAsData = undefined
+###
+
+cH = [
+  undefined
+  undefined
+  undefined
+  undefined
+  undefined
+  undefined
+  undefined
+  undefined
+  undefined
+  undefined
+]
 
 ###
   tH is an array containing tools. The last element in the array is the tool the user 

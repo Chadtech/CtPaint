@@ -97,7 +97,8 @@ flipDataSorting = ( inputMaterial ) ->
               pixelIndex++
 
             ctContext.putImageData(canvasAsWeFoundIt, 0, 0)
-            canvasAsData = ctCanvas.toDataURL()
+            cH.push ctCanvas.toDataURL()
+            cH.shift()
             tH.pop()
             drawToolbars()
             $('#menuDiv').css('top',(window.innerHeight).toString())
@@ -182,7 +183,8 @@ flipDataSorting = ( inputMaterial ) ->
               pixelIndex++
 
             ctContext.putImageData(canvasAsWeFoundIt, 0, 0)
-            canvasAsData = ctCanvas.toDataURL()
+            cH.push ctCanvas.toDataURL()
+            cH.shift()
             tH.pop()
             drawToolbars()
             $('#menuDiv').css('top',(window.innerHeight).toString())

@@ -47,7 +47,6 @@ rotateDataSorting = ( inputMaterial) ->
 
         rotatedCanvas = document.createElement('canvas')
         rotatedCanvas = rotatedCanvas.getContext('2d')
-        console.log canvasAsPixels
         rotatedCanvas = rotatedCanvas.createImageData(canvasAsPixels[1], canvasAsPixels[2])
 
         datumIndex = 0
@@ -63,7 +62,8 @@ rotateDataSorting = ( inputMaterial) ->
         ctCanvas.style.height = (canvasHeight).toString()+'px'
         ctContext.putImageData(rotatedCanvas, 0, 0)
 
-        canvasAsData = ctCanvas.toDataURL()
+        cH.push ctCanvas.toDataURL()
+        cH.shift()
         tH.pop()
         drawToolbars()
         $('#menuDiv').css('top',(window.innerHeight).toString())

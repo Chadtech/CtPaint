@@ -14,5 +14,6 @@ pointPosture = [
     pointAction(ctContext, colorSwatches[0], xSpot, ySpot, xSpot, ySpot)
   () ->
     mousePressed = false
-    canvasAsData = ctCanvas.toDataURL()
+    cH.push ctCanvas.toDataURL()
+    cH.shift()
 ]

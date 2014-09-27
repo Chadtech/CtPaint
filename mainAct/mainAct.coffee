@@ -9,7 +9,16 @@ $(document).ready ()->
     tH.shift()
     drawToolbars()
     positionMenu()
-    canvasAsData = ctCanvas.toDataURL()
+    cH.push ctCanvas.toDataURL()
+    cH.push ctCanvas.toDataURL()
+    cH.push ctCanvas.toDataURL()
+    cH.push ctCanvas.toDataURL()
+    cH.push ctCanvas.toDataURL()
+    cH.push ctCanvas.toDataURL()
+    cH.push ctCanvas.toDataURL()
+    cH.push ctCanvas.toDataURL()
+    cH.push ctCanvas.toDataURL()
+    cH.push ctCanvas.toDataURL()
   , 2000)
 
   $('body').keydown (event) ->
@@ -88,7 +97,8 @@ $(document).ready ()->
     leftBoundary = (canvasWidth + 5 + toolbarWidth)
     if (event.clientX < rightBoundary) and (leftBoundary < event.clientX)
       if (event.clientY < (canvasHeight + 5 + 20)) and ((canvasHeight + 5) < event.clientY)
-        canvasAsData = ctCanvas.toDataURL()
+        cH.push ctCanvas.toDataURL()
+        cH.shift()
         oldX = event.clientX
         oldY = event.clientY
         draggingBorder = true
@@ -101,10 +111,9 @@ $(document).ready ()->
       canvasDataAsImage = new Image()
       canvasDataAsImage.onload = ->
         ctContext.drawImage(canvasDataAsImage,0,0)
-        canvasAsData = ctCanvas.toDataURL()
-        canvasDataAsImage = new Image()
-        canvasDataAsImage.src = canvasAsData
-      canvasDataAsImage.src = canvasAsData
+        cH.push ctCanvas.toDataURL()
+        cH.shift()
+      canvasDataAsImage.src = cH[cH.length - 1]
       ctContext.fillStyle = rgbToHex(colorSwatches[1])
       if (ctContext.canvas.width > canvasWidth) and (ctContext.canvas.height > canvasHeight)
         ctContext.fillRect(canvasWidth, 0, ctContext.canvas.width, ctContext.canvas.height)

@@ -9,5 +9,6 @@ fillPosture = [
     floodFill(ctCanvas, ctContext, colorSwatches[0], xSpot, ySpot)
   () ->
     mousePressed = false
-    canvasAsData = ctCanvas.toDataURL()
+    cH.push ctCanvas.toDataURL()
+    cH.shift()
 ]

@@ -9,7 +9,8 @@ pasteAction = ->
       canvasDataAsImage.onload = ->
         ctContext.drawImage(canvasDataAsImage, 0, 0)
         ctContext.putImageData(selection, selectionX, selectionY)
-        canvasAsData = ctCanvas.toDataURL()
+        cH.push ctCanvas.toDataURL()
+        cH.shift()
         pasteTheSelection()
       canvasDataAsImage.src = canvasAsData
     else
@@ -33,7 +34,7 @@ pasteTheSelection = ->
     ctContext.drawImage(canvasDataAsImage,0,0)
     ctContext.putImageData(selection, selectionX, selectionY)
     drawSelectBox(ctContext, -1, -1, selectionsWidth + 1, selectionsHeight + 1)
-  canvasDataAsImage.src = canvasAsData
+  canvasDataAsImage.src = cH[cH.length - 1]
   areaSelected = true
 
   

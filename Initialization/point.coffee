@@ -19,7 +19,7 @@ putPixel = (canvas, color, whereAtX, whereAtY) ->
   the point tool. Should putpixel be used to put a pixel
   where the mouse is clicked, the user could not draw
   strokes. The browser does not register mouse location 
-  fast enough, resulting in distantly spaced specks, as
+  fast enough. This results in distantly spaced specks, as
   the mouse might travel 10 or 20 pixels between putpixel
   actions.
 

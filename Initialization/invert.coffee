@@ -4,7 +4,8 @@ invertAction = () ->
     tWidth = ctContext.canvas.width
     tHeight = ctContext.canvas.height
     canvasAsWeFoundIt = ctContext.getImageData(0, 0, tWidth, tHeight)
-    canvasData = canvasAsWeFoundIt.data
+    cH.push canvasAsWeFoundIt.data
+    cH.shift()
     canvasInPixels = []
 
     canvasIndex = 0
@@ -35,7 +36,8 @@ invertAction = () ->
       pixelIndex++
 
     ctContext.putImageData(canvasAsWeFoundIt, 0, 0)
-    canvasAsData = ctCanvas.toDataURL()
+    cH.push ctCanvas.toDataURL()
+    cH.shift()
 
   setTimeout( ()->
     tH.pop()

@@ -145,6 +145,7 @@ copeWithSelection = (atZeroZero)->
     canvasDataAsImage.onload = ->
       ctContext.drawImage(canvasDataAsImage, 0, 0)
       ctContext.putImageData(selection, copeX, copeY)
-      canvasAsData = ctCanvas.toDataURL()
-    canvasDataAsImage.src = canvasAsData
+      cH.push ctCanvas.toDataURL()
+      cH.shift()
+    canvasDataAsImage.src = cH[cH.length - 1]
 

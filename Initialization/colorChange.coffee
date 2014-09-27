@@ -4,7 +4,6 @@
   that begin a hexidecimal color. When Enter is pressed, that spot 
   in the color pallete becomes that hexidecimal color. 
 ###
-
 colorMenu = ()->
   menuUp = true
   normalCircumstance = false
