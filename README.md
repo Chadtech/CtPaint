@@ -67,6 +67,7 @@ Here is an incomplete list of features, with the ones I have finished checked of
 * View mode
 * Zoom
 * Tool cursor images
+* Secondary color transparency
 
 ------- LICENSING
 
