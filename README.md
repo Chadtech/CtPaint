@@ -13,7 +13,7 @@ http://i.imgur.com/iRnMbcg.png
 Here is an image showing off various tools:
 http://i.imgur.com/UR9H3aE.png
 
-Here is a list of features listed, with the ones I have finished checked off:
+Here is an incomplete list of features, with the ones I have finished checked off:
 
 * X Circle tool
 * X Circle fill
