@@ -12,73 +12,75 @@
 ###
 
 keyListeningUnderNormalCircumstance = (event) ->
-  if event.keyCode == keysToKeyCodes['1']
+  if event.keyCode is keysToKeyCodes['1']
     tH.push ctPaintTools[0]
     tH.shift()
     drawToolbars()
     copeWithSelection()
-  if event.keyCode == keysToKeyCodes['2']
+  if event.keyCode is keysToKeyCodes['2']
     tH.push ctPaintTools[1]
     tH.shift()
     drawToolbars()
     copeWithSelection()
-  if event.keyCode == keysToKeyCodes['3']
+  if event.keyCode is keysToKeyCodes['3']
     tH.push ctPaintTools[2]
     tH.shift()
     drawToolbars()
     copeWithSelection()
-  if event.keyCode == keysToKeyCodes['4']
+  if event.keyCode is keysToKeyCodes['4']
     tH.push ctPaintTools[3]
     tH.shift()
     drawToolbars()
     copeWithSelection()
-  if event.keyCode == keysToKeyCodes['5']
+  if event.keyCode is keysToKeyCodes['5']
     tH.push ctPaintTools[4]
     tH.shift()
     drawToolbars()
     copeWithSelection()
-  if event.keyCode == keysToKeyCodes['6']
+  if event.keyCode is keysToKeyCodes['6']
     tH.push ctPaintTools[5]
     tH.shift()
     drawToolbars()
     copeWithSelection()
-  if event.keyCode == keysToKeyCodes['7']
+  if event.keyCode is keysToKeyCodes['7']
     tH.push ctPaintTools[6]
     tH.shift()
     drawToolbars()
     copeWithSelection()
-  if event.keyCode == keysToKeyCodes['8']
+  if event.keyCode is keysToKeyCodes['8']
     tH.push ctPaintTools[7]
     tH.shift()
     drawToolbars()
     copeWithSelection()
-  if event.keyCode == keysToKeyCodes['b']
+  if event.keyCode is keysToKeyCodes['b']
     verticalColorSwap()
-  if event.keyCode == keysToKeyCodes['c']
+  if event.keyCode is keysToKeyCodes['c']
     copyAction()
-  if event.keyCode == keysToKeyCodes['d']
+  if event.keyCode is keysToKeyCodes['d']
     replaceAction()
-  if event.keyCode == keysToKeyCodes['e']
+  if event.keyCode is keysToKeyCodes['e']
     resizeAction()
-  if event.keyCode == keysToKeyCodes['f']
+  if event.keyCode is keysToKeyCodes['f']
     flipAction()
-  if event.keyCode == keysToKeyCodes['i']
+  if event.keyCode is keysToKeyCodes['i']
     invertAction()
-  if event.keyCode == keysToKeyCodes['q']
+  if event.keyCode is keysToKeyCodes['q']
     horizontalColorSwap()
-  if event.keyCode == keysToKeyCodes['r']
+  if event.keyCode is keysToKeyCodes['r']
     rotateAction()
-  if event.keyCode == keysToKeyCodes['v']
+  if event.keyCode is keysToKeyCodes['v']
     pasteAction()
-  if event.keyCode == keysToKeyCodes['x']
+  if event.keyCode is keysToKeyCodes['x']
     cutAction()
-  if event.keyCode == keysToKeyCodes['right']
+  if event.keyCode is keysToKeyCodes['z']
+    undoAction()
+  if event.keyCode is keysToKeyCodes['right']
     if canvasWidth > (window.innerWidth - toolbarWidth - 5)
       if (-1 * canvasXOffset) < ((canvasWidth + 10) - (window.innerWidth - toolbarWidth))
         canvasXOffset -= 3
         positionCanvas()
         positionCorners()
-  if event.keyCode == keysToKeyCodes['left']
+  if event.keyCode is keysToKeyCodes['left']
     if canvasWidth > (window.innerWidth - toolbarWidth - 5)
       if canvasXOffset < 0
         canvasXOffset += 3

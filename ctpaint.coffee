@@ -22,13 +22,8 @@ canvasXOffset = 0
 canvasYOffset = 0
 
 ###
-  canvasAsData is the canvas stored as data. This is useful when the canvas needs to be changed
-  temporarily, such as between when you have clicked on the line draw tool, but not released.
-  The canvas is constantly refreshed with the data during these moments.
-
-canvasAsData = undefined
+  cH is short for canvas history. 
 ###
-
 cH = [
   undefined
   undefined
@@ -41,6 +36,10 @@ cH = [
   undefined
   undefined
 ]
+###
+  cF is short for canvas future
+###
+cF = []
 
 ###
   tH is an array containing tools. The last element in the array is the tool the user 
@@ -1706,7 +1705,13 @@ cutAction = ->
 
   
 
-
+undoAction = ->
+  cF.push cH.pop()
+  cH.unshift(cH[0])
+  canvasDataAsImage = new Image()
+  canvasDataAsImage.onload = ->
+    ctContext.drawImage(canvasDataAsImage,0,0)
+  canvasDataAsImage.src = cH[cH.length - 1]
 
 positionCorners = ->
   if cornersVisible
@@ -1874,73 +1879,75 @@ copeWithSelection = (atZeroZero)->
 ###
 
 keyListeningUnderNormalCircumstance = (event) ->
-  if event.keyCode == keysToKeyCodes['1']
+  if event.keyCode is keysToKeyCodes['1']
     tH.push ctPaintTools[0]
     tH.shift()
     drawToolbars()
     copeWithSelection()
-  if event.keyCode == keysToKeyCodes['2']
+  if event.keyCode is keysToKeyCodes['2']
     tH.push ctPaintTools[1]
     tH.shift()
     drawToolbars()
     copeWithSelection()
-  if event.keyCode == keysToKeyCodes['3']
+  if event.keyCode is keysToKeyCodes['3']
     tH.push ctPaintTools[2]
     tH.shift()
     drawToolbars()
     copeWithSelection()
-  if event.keyCode == keysToKeyCodes['4']
+  if event.keyCode is keysToKeyCodes['4']
     tH.push ctPaintTools[3]
     tH.shift()
     drawToolbars()
     copeWithSelection()
-  if event.keyCode == keysToKeyCodes['5']
+  if event.keyCode is keysToKeyCodes['5']
     tH.push ctPaintTools[4]
     tH.shift()
     drawToolbars()
     copeWithSelection()
-  if event.keyCode == keysToKeyCodes['6']
+  if event.keyCode is keysToKeyCodes['6']
     tH.push ctPaintTools[5]
     tH.shift()
     drawToolbars()
     copeWithSelection()
-  if event.keyCode == keysToKeyCodes['7']
+  if event.keyCode is keysToKeyCodes['7']
     tH.push ctPaintTools[6]
     tH.shift()
     drawToolbars()
     copeWithSelection()
-  if event.keyCode == keysToKeyCodes['8']
+  if event.keyCode is keysToKeyCodes['8']
     tH.push ctPaintTools[7]
     tH.shift()
     drawToolbars()
     copeWithSelection()
-  if event.keyCode == keysToKeyCodes['b']
+  if event.keyCode is keysToKeyCodes['b']
     verticalColorSwap()
-  if event.keyCode == keysToKeyCodes['c']
+  if event.keyCode is keysToKeyCodes['c']
     copyAction()
-  if event.keyCode == keysToKeyCodes['d']
+  if event.keyCode is keysToKeyCodes['d']
     replaceAction()
-  if event.keyCode == keysToKeyCodes['e']
+  if event.keyCode is keysToKeyCodes['e']
     resizeAction()
-  if event.keyCode == keysToKeyCodes['f']
+  if event.keyCode is keysToKeyCodes['f']
     flipAction()
-  if event.keyCode == keysToKeyCodes['i']
+  if event.keyCode is keysToKeyCodes['i']
     invertAction()
-  if event.keyCode == keysToKeyCodes['q']
+  if event.keyCode is keysToKeyCodes['q']
     horizontalColorSwap()
-  if event.keyCode == keysToKeyCodes['r']
+  if event.keyCode is keysToKeyCodes['r']
     rotateAction()
-  if event.keyCode == keysToKeyCodes['v']
+  if event.keyCode is keysToKeyCodes['v']
     pasteAction()
-  if event.keyCode == keysToKeyCodes['x']
+  if event.keyCode is keysToKeyCodes['x']
     cutAction()
-  if event.keyCode == keysToKeyCodes['right']
+  if event.keyCode is keysToKeyCodes['z']
+    undoAction()
+  if event.keyCode is keysToKeyCodes['right']
     if canvasWidth > (window.innerWidth - toolbarWidth - 5)
       if (-1 * canvasXOffset) < ((canvasWidth + 10) - (window.innerWidth - toolbarWidth))
         canvasXOffset -= 3
         positionCanvas()
         positionCorners()
-  if event.keyCode == keysToKeyCodes['left']
+  if event.keyCode is keysToKeyCodes['left']
     if canvasWidth > (window.innerWidth - toolbarWidth - 5)
       if canvasXOffset < 0
         canvasXOffset += 3
@@ -2351,6 +2358,8 @@ ctPaintTools[17].posture = emptyPosture
 ctPaintTools[18].posture = emptyPosture
 ctPaintTools[19].posture = emptyPosture
 ctPaintTools[20].posture = emptyPosture
+ctPaintTools[21].posture = emptyPosture
+ctPaintTools[22].posture = emptyPosture
 
 ctPaintTools[10].toolsAction = flipAction
 ctPaintTools[11].toolsAction = rotateAction
@@ -2360,6 +2369,7 @@ ctPaintTools[15].toolsAction = resizeAction
 ctPaintTools[18].toolsAction = copyAction
 ctPaintTools[19].toolsAction = pasteAction
 ctPaintTools[20].toolsAction = cutAction
+ctPaintTools[22].toolsAction = undoAction
 
 ctPaintTools[16].posture = horizontalColorSwapPosture
 ctPaintTools[17].posture = verticalColorSwapPosture

@@ -22,13 +22,8 @@ canvasXOffset = 0
 canvasYOffset = 0
 
 ###
-  canvasAsData is the canvas stored as data. This is useful when the canvas needs to be changed
-  temporarily, such as between when you have clicked on the line draw tool, but not released.
-  The canvas is constantly refreshed with the data during these moments.
-
-canvasAsData = undefined
+  cH is short for canvas history. 
 ###
-
 cH = [
   undefined
   undefined
@@ -41,6 +36,10 @@ cH = [
   undefined
   undefined
 ]
+###
+  cF is short for canvas future
+###
+cF = []
 
 ###
   tH is an array containing tools. The last element in the array is the tool the user 
