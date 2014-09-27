@@ -2,7 +2,6 @@
   drawline is the basic line drawing function. Its a
   bresenham algorithm.
 ###
-
 drawLine = (canvas, color, beginX, beginY, endX, endY) ->
   deltaX = Math.abs(endX - beginX)
   if beginX < endX
@@ -39,7 +38,6 @@ drawLine = (canvas, color, beginX, beginY, endX, endY) ->
   make the line bolder. To give the line a more 'natural' end point,
   a filled circle is drawn on each end.
 ###
-
 lineAction = (canvas, color, beginX, beginY, endX, endY) ->
   lineSlope = undefined
   if tH[tH.length - 1].magnitude > 1

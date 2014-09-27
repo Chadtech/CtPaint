@@ -1,3 +1,10 @@
+###
+  If there is a region selects, saves the data into the clip board,
+  then draws a square filled with the secondary color (colorSwatches[1])
+  and terminates the selection. 
+
+  Cut does exactly what a normal computer user would expect.
+###
 cutAction = ->
   tH.push ctPaintTools[18]
   drawToolbars()
@@ -28,3 +35,5 @@ cutAction = ->
     tH.pop()
     drawToolbars()
   ,20)
+
+  

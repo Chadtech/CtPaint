@@ -82,7 +82,6 @@ replaceDataSorting = ( inputMaterial ) ->
           drawToolbars()
     drawReplaceMenu()
 
-
 drawReplaceMenu = () ->
   drawStringAsCommandPrompt( menuContext, menuDatum.substr(0,6).toUpperCase(), 1, 116, 10 )
   drawStringAsCommandPrompt( menuContext, menuDatum.substr(6,6).toUpperCase(), 1, 276, 10 )

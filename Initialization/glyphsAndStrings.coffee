@@ -2,7 +2,6 @@
  keysToKeyCodes correlates the keycode of a key, with the keys name.
  That way I can just type in the name of the key to get the key code.
 ###
-
 keysToKeyCodes = 
   'backspace':8
   'tab':9

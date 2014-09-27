@@ -1,4 +1,3 @@
-
 rotateAction = ->
   menuUp = true
   normalCircumstance = false
@@ -119,3 +118,4 @@ axisFlip = (imageInPixels, itsWidth, itsHeight) ->
     flippedCanvas.push imageInPixels[atRow + atColumn]
     pixelIndex++
   return [flippedCanvas, itsHeight, itsWidth]
+

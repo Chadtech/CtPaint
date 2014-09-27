@@ -52,3 +52,4 @@ pointAction = (canvas, color, beginX, beginY, endX, endY) ->
       drawCircle( canvas, color, endX, endY, calculatedRadius - magnitudeIncrement, true )
       magnitudeIncrement++
     
+    

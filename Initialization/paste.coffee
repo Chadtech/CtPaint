@@ -35,3 +35,5 @@ pasteTheSelection = ->
     drawSelectBox(ctContext, -1, -1, selectionsWidth + 1, selectionsHeight + 1)
   canvasDataAsImage.src = canvasAsData
   areaSelected = true
+
+  

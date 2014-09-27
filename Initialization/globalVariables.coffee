@@ -16,7 +16,6 @@ canvasHeight = 256
   canvasXOffset and canvasYOffset is how much the canvas is 'scrolled' away for when the canvas
   is larger than can fit in the window
 ###
-
 canvasXPos = toolbarWidth + 5
 canvasYPos = 5
 canvasXOffset = 0
@@ -65,7 +64,6 @@ cornersVisible = true
   selectionY are its location on the canvas. gripX and gripY
   is the location of selection while it is being dragged.
 ###
-
 selection = undefined
 areaSelected = false
 selectionX = 0
@@ -85,7 +83,6 @@ selectionActFinish = false
   resize menu. spotInMenuZeroDatum is what spot in the stored
   memory is being modified.
 ###
-
 menuUp = false
 whatSortOfDataSorting = undefined
 menuDatum = undefined

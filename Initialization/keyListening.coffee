@@ -84,6 +84,10 @@ keyListeningUnderNormalCircumstance = (event) ->
         canvasXOffset += 3
         positionCanvas()
         positionCorners()
+  if event.keyCode is keysToKeyCodes['backspace']
+    if areaSelected
+      areaSelected = false
+      
 
 keyListeningUnderAbnormalCircumstance = (event) ->
   switch event.keyCode
