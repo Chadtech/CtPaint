@@ -50,8 +50,8 @@ Here is an incomplete list of features, with the ones I have finished checked of
 * X Invert colors of canvas
 * Invert colors of selected region
 * X Line Draw tool
-* Undo
-* Redo
+* X Undo
+* X Redo
 * Open File
 * X Replace color
 * X Resize canvas by click and drag
