@@ -1112,6 +1112,7 @@ flipDataSorting = ( inputMaterial ) ->
             ctContext.putImageData(canvasAsWeFoundIt, 0, 0)
             cH.push ctCanvas.toDataURL()
             cH.shift()
+            cF = []
             tH.pop()
             drawToolbars()
             $('#menuDiv').css('top',(window.innerHeight).toString())
@@ -1198,6 +1199,7 @@ flipDataSorting = ( inputMaterial ) ->
             ctContext.putImageData(canvasAsWeFoundIt, 0, 0)
             cH.push ctCanvas.toDataURL()
             cH.shift()
+            cF = []
             tH.pop()
             drawToolbars()
             $('#menuDiv').css('top',(window.innerHeight).toString())
@@ -1271,6 +1273,7 @@ rotateDataSorting = ( inputMaterial) ->
 
         cH.push ctCanvas.toDataURL()
         cH.shift()
+        cF = []
         tH.pop()
         drawToolbars()
         $('#menuDiv').css('top',(window.innerHeight).toString())
@@ -1335,6 +1338,7 @@ invertAction = () ->
     canvasAsWeFoundIt = ctContext.getImageData(0, 0, tWidth, tHeight)
     cH.push canvasAsWeFoundIt.data
     cH.shift()
+    cF = []
     canvasInPixels = []
 
     canvasIndex = 0
@@ -1367,6 +1371,7 @@ invertAction = () ->
     ctContext.putImageData(canvasAsWeFoundIt, 0, 0)
     cH.push ctCanvas.toDataURL()
     cH.shift()
+    cF = []
 
   setTimeout( ()->
     tH.pop()
@@ -1451,6 +1456,7 @@ replaceDataSorting = ( inputMaterial ) ->
           ctContext.putImageData(canvasAsWeFoundIt, 0, 0)
           cH.push ctCanvas.toDataURL()
           cH.shift()
+          cF = []
 
           $('#menuDiv').css('top',(window.innerHeight).toString())
           normalCircumstance = true
@@ -1521,6 +1527,7 @@ resizeDataSorting = ( inputMaterial ) ->
             ctContext.drawImage(canvasDataAsImage,0,0)
             cH.push ctCanvas.toDataURL()
             cH.shift()
+            cF = []
           canvasDataAsImage.src = canvasAsData
           ctContext.fillStyle = rgbToHex(colorSwatches[1])
           if (ctContext.canvas.width > canvasWidth) and (ctContext.canvas.height > canvasHeight)
@@ -1636,6 +1643,7 @@ pasteAction = ->
         ctContext.putImageData(selection, selectionX, selectionY)
         cH.push ctCanvas.toDataURL()
         cH.shift()
+        cF = []
         pasteTheSelection()
       canvasDataAsImage.src = canvasAsData
     else
@@ -1688,6 +1696,7 @@ cutAction = ->
       squareAction(ctContext, colorSwatches[1], sX, sY, tRightEdge, tBottomEdge, true)
       cH.push ctCanvas.toDataURL()
       cH.shift()
+      cF = []
     canvasDataAsImage.src = cH[cH.length - 1]
   else
     tCanvasWidth = ctContext.canvas.width
@@ -1696,6 +1705,7 @@ cutAction = ->
     squareAction(ctContext, colorSwatches[1], 0, 0, tCanvasWidth, tCanvasHeight, true)
     cH.push ctCanvas.toDataURL()
     cH.shift()
+    cF = []
   copyExists = true
 
   setTimeout( ()->
@@ -1706,6 +1716,9 @@ cutAction = ->
   
 
 undoAction = ->
+  tH.push ctPaintTools[22]
+  drawToolbars()
+
   cF.push cH.pop()
   cH.unshift(cH[0])
   canvasDataAsImage = new Image()
@@ -1713,6 +1726,25 @@ undoAction = ->
     ctContext.drawImage(canvasDataAsImage,0,0)
   canvasDataAsImage.src = cH[cH.length - 1]
 
+  setTimeout( ()->
+    tH.pop()
+    drawToolbars()
+  ,20)
+redoAction = ->
+  tH.push ctPaintTools[23]
+  drawToolbars()
+
+  if cF.length > 0
+    cH.push cF.pop()
+    canvasDataAsImage = new Image()
+    canvasDataAsImage.onload = ->
+      ctContext.drawImage(canvasDataAsImage,0,0)
+    canvasDataAsImage.src = cH[cH.length - 1]
+
+  setTimeout( ()->
+    tH.pop()
+    drawToolbars()
+  ,20)
 positionCorners = ->
   if cornersVisible
     $('#corner0Div').css('top',(canvasYPos-1+canvasYOffset).toString())
@@ -1862,6 +1894,7 @@ copeWithSelection = (atZeroZero)->
       ctContext.putImageData(selection, copeX, copeY)
       cH.push ctCanvas.toDataURL()
       cH.shift()
+      cF = []
     canvasDataAsImage.src = cH[cH.length - 1]
 
 
@@ -1939,6 +1972,8 @@ keyListeningUnderNormalCircumstance = (event) ->
     pasteAction()
   if event.keyCode is keysToKeyCodes['x']
     cutAction()
+  if event.keyCode is keysToKeyCodes['y']
+    redoAction()
   if event.keyCode is keysToKeyCodes['z']
     undoAction()
   if event.keyCode is keysToKeyCodes['right']
@@ -2039,6 +2074,7 @@ selectPosture = [
           ctContext.drawImage(canvasDataAsImage,0,0)
           cH.push ctCanvas.toDataURL()
           cH.shift()
+          cF = []
           ctContext.putImageData(selection, gripX, gripY)
           drawSelectBox(ctContext, gripX - 1, gripY - 1, rightEdge, bottomEdge)
         canvasDataAsImage.src = cH[cH.length - 1]
@@ -2063,6 +2099,7 @@ selectPosture = [
           ctContext.putImageData(selection, selectionX, selectionY)
           cH.push ctCanvas.toDataURL()
           cH.shift()
+          cF = []
         canvasDataAsImage.src = cH[cH.length - 1]
 
   () ->
@@ -2087,6 +2124,7 @@ selectPosture = [
           squareAction(ctContext, colorSwatches[1], oldX, oldY, xSpot - 1, ySpot - 1, true)
           cH.push ctCanvas.toDataURL()
           cH.shift()
+          cF = []
           ctContext.putImageData(selection, selectionX, selectionY)
           drawSelectBox(ctContext, originX, originY, otherSideX, otherSideY)
         canvasDataAsImage.src = cH[cH.length - 1]
@@ -2127,6 +2165,7 @@ fillPosture = [
     mousePressed = false
     cH.push ctCanvas.toDataURL()
     cH.shift()
+    cF = []
 ]
 squarePosture = [
   () ->
@@ -2149,6 +2188,7 @@ squarePosture = [
     mousePressed = false
     cH.push ctCanvas.toDataURL()
     cH.shift()
+    cF = []
 ]
 
 
@@ -2173,6 +2213,7 @@ circlePosture = [
     mousePressed = false
     cH.push ctCanvas.toDataURL()
     cH.shift()
+    cF = []
 ]
 linePosture = [
   () ->
@@ -2195,6 +2236,7 @@ linePosture = [
     mousePressed = false
     cH.push ctCanvas.toDataURL()
     cH.shift()
+    cF = []
 ]
 
 pointPosture = [
@@ -2215,6 +2257,7 @@ pointPosture = [
     mousePressed = false
     cH.push ctCanvas.toDataURL()
     cH.shift()
+    cF = []
 ]
 emptyPosture = [
   () ->
@@ -2360,6 +2403,7 @@ ctPaintTools[19].posture = emptyPosture
 ctPaintTools[20].posture = emptyPosture
 ctPaintTools[21].posture = emptyPosture
 ctPaintTools[22].posture = emptyPosture
+ctPaintTools[23].posture = emptyPosture
 
 ctPaintTools[10].toolsAction = flipAction
 ctPaintTools[11].toolsAction = rotateAction
@@ -2370,6 +2414,7 @@ ctPaintTools[18].toolsAction = copyAction
 ctPaintTools[19].toolsAction = pasteAction
 ctPaintTools[20].toolsAction = cutAction
 ctPaintTools[22].toolsAction = undoAction
+ctPaintTools[23].toolsAction = redoAction
 
 ctPaintTools[16].posture = horizontalColorSwapPosture
 ctPaintTools[17].posture = verticalColorSwapPosture
@@ -2494,6 +2539,7 @@ $(document).ready ()->
       if (event.clientY < (canvasHeight + 5 + 20)) and ((canvasHeight + 5) < event.clientY)
         cH.push ctCanvas.toDataURL()
         cH.shift()
+        cF = []
         oldX = event.clientX
         oldY = event.clientY
         draggingBorder = true

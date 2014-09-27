@@ -147,5 +147,6 @@ copeWithSelection = (atZeroZero)->
       ctContext.putImageData(selection, copeX, copeY)
       cH.push ctCanvas.toDataURL()
       cH.shift()
+      cF = []
     canvasDataAsImage.src = cH[cH.length - 1]
 

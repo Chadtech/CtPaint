@@ -64,6 +64,7 @@ rotateDataSorting = ( inputMaterial) ->
 
         cH.push ctCanvas.toDataURL()
         cH.shift()
+        cF = []
         tH.pop()
         drawToolbars()
         $('#menuDiv').css('top',(window.innerHeight).toString())

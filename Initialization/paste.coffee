@@ -11,6 +11,7 @@ pasteAction = ->
         ctContext.putImageData(selection, selectionX, selectionY)
         cH.push ctCanvas.toDataURL()
         cH.shift()
+        cF = []
         pasteTheSelection()
       canvasDataAsImage.src = canvasAsData
     else

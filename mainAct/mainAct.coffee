@@ -109,6 +109,7 @@ $(document).ready ()->
       if (event.clientY < (canvasHeight + 5 + 20)) and ((canvasHeight + 5) < event.clientY)
         cH.push ctCanvas.toDataURL()
         cH.shift()
+        cF = []
         oldX = event.clientX
         oldY = event.clientY
         draggingBorder = true

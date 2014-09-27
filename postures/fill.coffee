@@ -11,4 +11,5 @@ fillPosture = [
     mousePressed = false
     cH.push ctCanvas.toDataURL()
     cH.shift()
+    cF = []
 ]

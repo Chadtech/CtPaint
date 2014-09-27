@@ -23,6 +23,7 @@ cutAction = ->
       squareAction(ctContext, colorSwatches[1], sX, sY, tRightEdge, tBottomEdge, true)
       cH.push ctCanvas.toDataURL()
       cH.shift()
+      cF = []
     canvasDataAsImage.src = cH[cH.length - 1]
   else
     tCanvasWidth = ctContext.canvas.width
@@ -31,6 +32,7 @@ cutAction = ->
     squareAction(ctContext, colorSwatches[1], 0, 0, tCanvasWidth, tCanvasHeight, true)
     cH.push ctCanvas.toDataURL()
     cH.shift()
+    cF = []
   copyExists = true
 
   setTimeout( ()->

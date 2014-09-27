@@ -72,6 +72,8 @@ keyListeningUnderNormalCircumstance = (event) ->
     pasteAction()
   if event.keyCode is keysToKeyCodes['x']
     cutAction()
+  if event.keyCode is keysToKeyCodes['y']
+    redoAction()
   if event.keyCode is keysToKeyCodes['z']
     undoAction()
   if event.keyCode is keysToKeyCodes['right']

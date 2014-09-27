@@ -75,6 +75,7 @@ replaceDataSorting = ( inputMaterial ) ->
           ctContext.putImageData(canvasAsWeFoundIt, 0, 0)
           cH.push ctCanvas.toDataURL()
           cH.shift()
+          cF = []
 
           $('#menuDiv').css('top',(window.innerHeight).toString())
           normalCircumstance = true

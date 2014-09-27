@@ -108,6 +108,7 @@ ctPaintTools[19].posture = emptyPosture
 ctPaintTools[20].posture = emptyPosture
 ctPaintTools[21].posture = emptyPosture
 ctPaintTools[22].posture = emptyPosture
+ctPaintTools[23].posture = emptyPosture
 
 ctPaintTools[10].toolsAction = flipAction
 ctPaintTools[11].toolsAction = rotateAction
@@ -118,6 +119,7 @@ ctPaintTools[18].toolsAction = copyAction
 ctPaintTools[19].toolsAction = pasteAction
 ctPaintTools[20].toolsAction = cutAction
 ctPaintTools[22].toolsAction = undoAction
+ctPaintTools[23].toolsAction = redoAction
 
 ctPaintTools[16].posture = horizontalColorSwapPosture
 ctPaintTools[17].posture = verticalColorSwapPosture
