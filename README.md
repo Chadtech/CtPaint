@@ -46,6 +46,7 @@ Here is an incomplete list of features, with the ones I have finished checked of
 * X Square draw tool
 * View mode
 * Zoom
+* Tool cursor images
 
 ------- LICENSING
 
