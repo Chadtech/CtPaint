@@ -1,6 +1,24 @@
+# CtPaint
+
 CtPaint is basically a clone of MSPaint in browser.
 
 Its not near completion, and I have no releases of it yet.
+
+# Navigating this repo
+
+ctpaint.coffee is the fill run in the browser. ctpaint.coffee is constructed by gulpfile.gs from the tens of coffeescript files found in the folders, mainAct, posturs, and initilization. 
+
+Initilization contains coffeescript files that mainly define functions and global variables. mainAct.coffee mostly handles user mouse and keyboard input.  Postures contains tool-specific user input functions. The basic flow of the CtPaint is the mainAct refering to tool-specific functions, which in turn give information to functions used by those tools.
+
+Assets contain the images of the icons, toolbars, and glyphs
+
+deletedScenes contains images of my notes during this project, as well as images of my MSPaint work environment while drawing the assets.
+
+glyphGeneration contains a python file and some png files. The python file recolors the png files to make many of the assets I use.
+
+spriteGeneration contains a python file and a png file. The python file crops sections out of the png file to make all the icons and toolbar images I use.
+
+# Demos
 
 This is a video of me talking about CtPaint's capacity to change colors in the palette: http://youtu.be/U08Llsl9dMk
 
@@ -12,6 +30,8 @@ http://i.imgur.com/iRnMbcg.png
 
 Here is an image showing off various tools:
 http://i.imgur.com/UR9H3aE.png
+
+# Feature list
 
 Here is an incomplete list of features, with the ones I have finished checked off:
 
