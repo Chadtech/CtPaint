@@ -8,7 +8,7 @@ Its not near completion, and I have no releases of it yet.
 
 ctpaint.coffee is the fill run in the browser. ctpaint.coffee is constructed by gulpfile.gs from the tens of coffeescript files found in the folders, mainAct, posturs, and initilization. 
 
-Initilization contains coffeescript files that mainly define functions and global variables. mainAct.coffee mostly handles user mouse and keyboard input.  Postures contains tool-specific user input functions. The basic flow of the CtPaint is the mainAct refering to tool-specific functions, which in turn give information to functions used by those tools.
+Initilization contains coffeescript files that mainly define functions and global variables. mainAct.coffee mostly handles user mouse and keyboard input.  Postures contains tool-specific user input functions. The basic flow of the CtPaint is the mainAct refering to tool-specific functions (postures), which in turn give information to functions used by those tools.
 
 Assets contain the images of the icons, toolbars, and glyphs
 
