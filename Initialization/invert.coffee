@@ -4,6 +4,7 @@ invertAction = () ->
     tWidth = ctContext.canvas.width
     tHeight = ctContext.canvas.height
     canvasAsWeFoundIt = ctContext.getImageData(0, 0, tWidth, tHeight)
+    canvasData = canvasAsWeFoundIt.data
     cH.push canvasAsWeFoundIt.data
     cH.shift()
     cF = []

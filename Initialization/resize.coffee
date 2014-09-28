@@ -53,7 +53,7 @@ resizeDataSorting = ( inputMaterial ) ->
             cH.push ctCanvas.toDataURL()
             cH.shift()
             cF = []
-          canvasDataAsImage.src = canvasAsData
+          canvasDataAsImage.src = cH[cH.length - 1]
           ctContext.fillStyle = rgbToHex(colorSwatches[1])
           if (ctContext.canvas.width > canvasWidth) and (ctContext.canvas.height > canvasHeight)
             ctContext.fillRect(canvasWidth, 0, ctContext.canvas.width, ctContext.canvas.height)

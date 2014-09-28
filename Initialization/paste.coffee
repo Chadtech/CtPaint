@@ -13,7 +13,7 @@ pasteAction = ->
         cH.shift()
         cF = []
         pasteTheSelection()
-      canvasDataAsImage.src = canvasAsData
+      canvasDataAsImage.src = cH[cH.length - 1]
     else
       pasteTheSelection()
 
