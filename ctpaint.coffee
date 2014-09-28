@@ -114,6 +114,8 @@ copyExists = false
 ### 
 normalCircumstance = true
 
+fillProceed = true
+
 ###
   xSpot and ySpot are the global variables for the x coordinated.
   They are only updated by the getMousePositionOnCanvas function.
@@ -591,9 +593,9 @@ floodFill = (canvas, context, colorToChangeTo, xPosition, yPosition) ->
   Javascript (unlike python) doesnt allow comparing arrays, but 
   I can compare to values of the arrays to verify their equality.
   ###
-
   sameColorCheck = (colorA, colorB) ->
     return colorA[0] == colorB[0] and colorA[1] == colorB[1] and colorA[2] == colorB[2]
+
   ###
 
   (A)
@@ -641,74 +643,77 @@ floodFill = (canvas, context, colorToChangeTo, xPosition, yPosition) ->
   originalPosition = xPosition + (yPosition * canvas.width)
   colorToReplace = wholeCanvas[originalPosition]
 
-  ###
-  (A)
-  The queue is declared populated with the pixel that was clicked on. The first pixel to be
-  checked is set to colorToChangeTo. Every pixel after will be color changed by checkAndFill
+  # Flood fill will break if its replacing a color with itself
+  if not sameColorCheck(colorToChangeTo, colorToReplace)
+    ###
+    (A)
+    The queue is declared populated with the pixel that was clicked on. The first pixel to be
+    checked is set to colorToChangeTo. Every pixel after will be color changed by checkAndFill
 
-  (B)
-  The checkAndFill pixel looks at each neighbor (north, east, west, and south), and sees if its
-  the color to be replaced (colorToReplace). Before doing any of that though, it checks to make 
-  sure there is in fact a northernly, easternly, westernly, southernly neighbor. 
+    (B)
+    The checkAndFill pixel looks at each neighbor (north, east, west, and south), and sees if its
+    the color to be replaced (colorToReplace). Before doing any of that though, it checks to make 
+    sure there is in fact a northernly, easternly, westernly, southernly neighbor. 
 
-  (C)
-  The while loop does checkAndFill for as long as there is an element in the queue. After it checks
-  that pixel, it removes it from the array. For a normal region, pixelsToCheck fills up quickly as
-  it touches many pixels with 2 or more available neighbors. Eventually the only members in 
-  the queue have no available neighbors, and pixelsToCheck deflates.
-  ###
+    (C)
+    The while loop does checkAndFill for as long as there is an element in the queue. After it checks
+    that pixel, it removes it from the array. For a normal region, pixelsToCheck fills up quickly as
+    it touches many pixels with 2 or more available neighbors. Eventually the only members in 
+    the queue have no available neighbors, and pixelsToCheck deflates.
+    ###
 
-  # (A)
-  pixelsToCheck = [originalPosition]
-  wholeCanvas[originalPosition] = colorToChangeTo
+    # (A)
+    pixelsToCheck = [originalPosition]
+    console.log 'B.1', pixelsToCheck
+    wholeCanvas[originalPosition] = colorToChangeTo
 
-  # (B)
-  checkAndFill = (pixelIndex)->
-    # North
-    if (pixelIndex - canvas.width) >= 0
-      if sameColorCheck(colorToReplace, wholeCanvas[pixelIndex - canvas.width])
-        pixelsToCheck.push (pixelIndex - canvas.width)
-        wholeCanvas[pixelIndex - canvas.width] = colorToChangeTo
-    # East
-    if (pixelIndex + 1)%canvas.width != 0
-      if sameColorCheck(colorToReplace, wholeCanvas[pixelIndex + 1])
-        pixelsToCheck.push (pixelIndex + 1)
-        wholeCanvas[pixelIndex + 1] = colorToChangeTo
-    # South
-    if (pixelIndex + canvas.width) < (canvas.width * canvas.height)
-      if sameColorCheck(colorToReplace, wholeCanvas[pixelIndex + canvas.width])
-        pixelsToCheck.push (pixelIndex + canvas.width)
-        wholeCanvas[pixelIndex + canvas.width] = colorToChangeTo
-    # West
-    if pixelIndex%canvas.width != 0
-      if sameColorCheck(colorToReplace, wholeCanvas[pixelIndex - 1])
-        pixelsToCheck.push (pixelIndex - 1)
-        wholeCanvas[pixelIndex - 1] = colorToChangeTo
+    # (B)
+    checkAndFill = (pixelIndex)->
+      # North
+      if (pixelIndex - canvas.width) >= 0
+        if sameColorCheck(colorToReplace, wholeCanvas[pixelIndex - canvas.width])
+          pixelsToCheck.push (pixelIndex - canvas.width)
+          wholeCanvas[pixelIndex - canvas.width] = colorToChangeTo
+      # East
+      if (pixelIndex + 1)%canvas.width != 0
+        if sameColorCheck(colorToReplace, wholeCanvas[pixelIndex + 1])
+          pixelsToCheck.push (pixelIndex + 1)
+          wholeCanvas[pixelIndex + 1] = colorToChangeTo
+      # South
+      if (pixelIndex + canvas.width) < (canvas.width * canvas.height)
+        if sameColorCheck(colorToReplace, wholeCanvas[pixelIndex + canvas.width])
+          pixelsToCheck.push (pixelIndex + canvas.width)
+          wholeCanvas[pixelIndex + canvas.width] = colorToChangeTo
+      # West
+      if pixelIndex%canvas.width != 0
+        if sameColorCheck(colorToReplace, wholeCanvas[pixelIndex - 1])
+          pixelsToCheck.push (pixelIndex - 1)
+          wholeCanvas[pixelIndex - 1] = colorToChangeTo
 
-  # (C)
-  while pixelsToCheck.length
-    checkAndFill(pixelsToCheck[0])
-    pixelsToCheck.shift()
+    # (C)
+    while pixelsToCheck.length
+      checkAndFill(pixelsToCheck[0])
+      pixelsToCheck.shift()
+    
+    ###
+    revisedCanvasToPaste is a new canvas, that is the same size of the canvas that was read.
+    The manipulated data of the original canvas is then put into the revised canvas and the
+    revised canvas is pasted over the old.
+    ###
+    revisedCanvasToPaste = document.createElement('canvas')
+    revisedCanvasToPaste = revisedCanvasToPaste.getContext('2d')
+    revisedCanvasToPaste = revisedCanvasToPaste.createImageData(canvas.width, canvas.height)
 
-  ###
-  revisedCanvasToPaste is a new canvas, that is the same size of the canvas that was read.
-  The manipulated data of the original canvas is then put into the revised canvas and the
-  revised canvas is pasted over the old.
-  ###
+    pixelInCanvasIndex = 0
+    while pixelInCanvasIndex < wholeCanvas.length
+      colorValueIndex = 0
+      while colorValueIndex < wholeCanvas[pixelInCanvasIndex].length
+        revisedCanvasToPaste.data[(pixelInCanvasIndex * 4) + colorValueIndex] = 
+          wholeCanvas[pixelInCanvasIndex][colorValueIndex]
+        colorValueIndex++
+      pixelInCanvasIndex++
+    context.putImageData(revisedCanvasToPaste,0,0)
 
-  revisedCanvasToPaste = document.createElement('canvas')
-  revisedCanvasToPaste = revisedCanvasToPaste.getContext('2d')
-  revisedCanvasToPaste = revisedCanvasToPaste.createImageData(canvas.width, canvas.height)
-  
-  pixelInCanvasIndex = 0
-  while pixelInCanvasIndex < wholeCanvas.length
-    colorValueIndex = 0
-    while colorValueIndex < wholeCanvas[pixelInCanvasIndex].length
-      revisedCanvasToPaste.data[(pixelInCanvasIndex * 4) + colorValueIndex] = 
-        wholeCanvas[pixelInCanvasIndex][colorValueIndex]
-      colorValueIndex++
-    pixelInCanvasIndex++
-  context.putImageData(revisedCanvasToPaste,0,0)
 
 squareAction = (canvas, color, beginX, beginY, endX, endY, fillOrNot) ->
   if not tH[tH.length - 1].mode and not fillOrNot
@@ -2199,6 +2204,8 @@ fillPosture = [
     cH.shift()
     cF = []
 ]
+
+
 squarePosture = [
   () ->
     toolbar1Context.drawImage(toolbar1sImage1,188,3)   

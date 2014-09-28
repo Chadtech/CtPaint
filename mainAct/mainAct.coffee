@@ -147,7 +147,6 @@ $(document).ready ()->
     tH[tH.length - 1].posture[0]()
 
   $('#CtPaint').mousedown (event)->
-    console.log cH.length
     tH[tH.length - 1].posture[1]()
 
   $('#CtPaint').mouseup (event)->

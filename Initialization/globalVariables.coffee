@@ -114,6 +114,8 @@ copyExists = false
 ### 
 normalCircumstance = true
 
+fillProceed = true
+
 ###
   xSpot and ySpot are the global variables for the x coordinated.
   They are only updated by the getMousePositionOnCanvas function.
