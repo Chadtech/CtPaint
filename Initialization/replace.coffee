@@ -16,7 +16,7 @@ replaceAction = () ->
   whatSortOfDataSorting = replaceDataSorting
 
 replaceDataSortingInitialize = () ->
-  menuDatum = '000000' + rgbToHex(colorSwatches[1]).substr(1,6)
+  menuDatum = rgbToHex(colorSwatches[0]).substr(1,6) + rgbToHex(colorSwatches[1]).substr(1,6)
   spotInMenuDatum = 0
   drawReplaceMenu()
 

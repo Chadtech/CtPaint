@@ -69,6 +69,11 @@ Here is an incomplete list of features, with the ones I have finished checked of
 * Tool cursor images
 * Secondary color transparency
 
+General to dos and bugs to fix:
+
+* Mouse canvas exit
+* redo resize memory
+
 ------- LICENSING
 
 ChadTech License (Ct)

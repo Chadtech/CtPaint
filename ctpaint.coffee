@@ -664,7 +664,6 @@ floodFill = (canvas, context, colorToChangeTo, xPosition, yPosition) ->
 
     # (A)
     pixelsToCheck = [originalPosition]
-    console.log 'B.1', pixelsToCheck
     wholeCanvas[originalPosition] = colorToChangeTo
 
     # (B)
@@ -1403,7 +1402,7 @@ replaceAction = () ->
   whatSortOfDataSorting = replaceDataSorting
 
 replaceDataSortingInitialize = () ->
-  menuDatum = '000000' + rgbToHex(colorSwatches[1]).substr(1,6)
+  menuDatum = rgbToHex(colorSwatches[0]).substr(1,6) + rgbToHex(colorSwatches[1]).substr(1,6)
   spotInMenuDatum = 0
   drawReplaceMenu()
 
@@ -1782,6 +1781,22 @@ redoAction = ->
     tH.pop()
     drawToolbars()
   ,20)
+imageOpen = () ->
+  console.log 'A'
+  event.preventDefault()
+  fileTransfer = event.dataTransfer.files[0]
+  console.log fileTransfer
+  if (fileTransfer.type.slice(0,5) is 'image')
+    imageReader = new FileReader()
+    imageReader.onloadend = (theFile) ->
+      console.log imageReader
+    console.log 'IN', fileTransfer
+
+onDragOver = ()->
+  console.log 'B'
+  event.preventDefault()
+  return false
+
 positionCorners = ->
   if cornersVisible
     $('#corner0Div').css('top',(canvasYPos-1+canvasYOffset).toString())
@@ -2542,6 +2557,13 @@ $(document).ready ()->
     event.preventDefault()
     if event.keyCode == keysToKeyCodes['shift']
       colorModify = false
+  ###
+  $('body').on 'dragover', (event) ->
+    event.preventDefault()
+
+  $('body').on 'drop', (event) ->
+    imageOpen()
+  ###
 
   $(window).resize ()->
     if canvasWidth < (window.innerWidth - toolbarWidth - 5)
@@ -2616,7 +2638,6 @@ $(document).ready ()->
     tH[tH.length - 1].posture[0]()
 
   $('#CtPaint').mousedown (event)->
-    console.log cH.length
     tH[tH.length - 1].posture[1]()
 
   $('#CtPaint').mouseup (event)->
