@@ -1,7 +1,7 @@
 <html>
   <head>
     <title>Paint</title>
-      <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js";></script>
+      <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js";></script>
       <script type="text/coffeescript" src="ctpaint.coffee"></script>
       <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.7.1/coffee-script.min.js"></script>
       <link rel="shortcut icon" href="https://raw.githubusercontent.com/ChadCS/ChadTech-v0/master/thumbnail.ico">
@@ -13,7 +13,9 @@
       </div>
 
       <div id="ctpaintDiv" style="position: absolute; top:0px; left:0px;">
+      <div id="dragAndDrop">
         <canvas id="CtPaint" style = "image-rendering: pixelated; background-color : #202020"></canvas>
+      </div>
       </div>
 
       <div id="corner0Div" style="position: absolute; top:0px; left:0x;">
@@ -40,7 +42,5 @@
         <canvas id="menu" style = "image-rendering: pixelated; background-color : #0000FF"></canvas>
       </div>
   </div>
-
-
 </body>
 </html>

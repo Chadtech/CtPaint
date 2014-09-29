@@ -116,6 +116,8 @@ normalCircumstance = true
 
 fillProceed = true
 
+imageToLoad = 'Wow, cool!'
+
 ###
   xSpot and ySpot are the global variables for the x coordinated.
   They are only updated by the getMousePositionOnCanvas function.

@@ -73,13 +73,6 @@ $(document).ready ()->
     event.preventDefault()
     if event.keyCode == keysToKeyCodes['shift']
       colorModify = false
-  ###
-  $('body').on 'dragover', (event) ->
-    event.preventDefault()
-
-  $('body').on 'drop', (event) ->
-    imageOpen()
-  ###
 
   $(window).resize ()->
     if canvasWidth < (window.innerWidth - toolbarWidth - 5)
@@ -190,5 +183,24 @@ $(document).ready ()->
         else
           colorSwatches[0] = colorPallete[(((toolbar1X - 52 ) // 17) * 2) + ((toolbar1Y - 4) // 16)]
         drawToolbars()
+
+  $('#dragAndDrop').on('dragenter', (event)->
+    event.stopPropagation()
+    event.preventDefault()
+    return false
+  )
+
+  $('#dragAndDrop').on('dragover', (event)->
+    event.stopPropagation()
+    event.preventDefault()
+    return false
+  )
+
+  $('#dragAndDrop').on('drop', (event)->
+    event.stopPropagation()
+    event.preventDefault()
+    console.log 'DROp!!!!!'
+    return false
+  )
 
         
