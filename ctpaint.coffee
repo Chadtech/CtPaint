@@ -7,8 +7,8 @@ toolbarWidth = 52
 ###
   The main canvases width and height, declared at their default values
 ###
-canvasWidth = 256
-canvasHeight = 256
+canvasWidth = 512
+canvasHeight = 512
 
 ###
   canvasYPos and canvasXPos is the upper left corner of the canvas relative to the window.
@@ -2059,7 +2059,11 @@ zoomPosture = [
     else
       zoomActivate = true
       cornersVisible = false
-      scaleCanvasBigger( 2 ** tH[tH.length - 1].magnitude )
+      zoomedCanvas = new Image()
+      zoomedCanvas.onload = ->
+        ctContext.drawImage(zoomedCanvas,0,0,zoomedCanvas.width*4,zoomedCanvas.height*4)
+      zoomedCanvas.src = cH[cH.length - 1]
+      #scaleCanvasBigger( 2 ** tH[tH.length - 1].magnitude )
     positionCorners()
     drawToolbars()
   () ->
@@ -2507,6 +2511,12 @@ $(document).ready ()->
     cH.shift()
     cH.shift()
     cH.shift()
+    console.log ctContext.imageSmoothingEnabled
+    ctContext.imageSmoothingEnabled = false
+    ctContext.oImageSmoothingEnabled = false
+    ctContext.webkitImageSmoothingEnabled = false
+    ctContext.mozImageSmoothingEnabled = false
+    ctContext.patternQuality = 'fast'
   , 2000)
 
   $('body').keydown (event) ->
