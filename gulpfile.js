@@ -33,7 +33,6 @@ gulp.task('doAllTheScriptsTogether', function() {
     './initialization/view.coffee',
     './initialization/undo.coffee',
     './initialization/redo.coffee',
-    './initialization/imageOpen.coffee',
 
     './initialization/resize.coffee',
 

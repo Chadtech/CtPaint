@@ -203,12 +203,24 @@ $(document).ready ()->
       imageLoaded = new FileReader()
       theFile = event.originalEvent.dataTransfer.files[0]
       imageLoaded.onload = ->
-        console.log imageLoaded.result
-        imageToPaste = new Image()
-        imageToPaste.onload = ->
-          ctContext.drawImage(imageToPaste, 0, 0)
-        imageToPaste.src = imageLoaded.result
+        imageToOpen = new Image()
+        imageToOpen.onload = ->
+          widthExceedsCanvas = canvasWidth < imageToOpen.width
+          heightExceedsCanvas = canvasHeight < imageToOpen.height
+          if not widthExceedsCanvas and not heightExceedsCanvas
+            pasteCanvas = document.createElement('canvas')
+            pasteCanvas = pasteCanvas.getContext('2d')
+            pasteCanvas = pasteCanvas.createImageData(imageToOpen.width, imageToOpen.height)
+
+            console.log pasteCanvas
+            imageToPaste = new Image()
+            imageToPaste.onload = ->
+              pasteCanvas.drawImage(imageToPaste, 0, 0)
+            imageToPaste.src = imageToOpen
+
+        imageToOpen.src = imageLoaded.result
       imageLoaded.readAsDataURL(theFile)
+      console.log 'C'
     return false
   )
 

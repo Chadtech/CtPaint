@@ -1629,6 +1629,7 @@ copyAction = ->
     tCanvasWidth = ctContext.canvas.width
     tCanvasHeight = ctContext.canvas.height
     copyMemory = ctContext.getImageData(0, 0, tCanvasWidth, tCanvasHeight)
+    console.log copyMemory
   copyExists = true
 
   setTimeout( ()->
@@ -1783,22 +1784,6 @@ redoAction = ->
     tH.pop()
     drawToolbars()
   ,20)
-imageOpen = () ->
-  console.log 'A'
-  event.preventDefault()
-  fileTransfer = event.dataTransfer.files[0]
-  console.log fileTransfer
-  if (fileTransfer.type.slice(0,5) is 'image')
-    imageReader = new FileReader()
-    imageReader.onloadend = (theFile) ->
-      console.log imageReader
-    console.log 'IN', fileTransfer
-
-onDragOver = ()->
-  console.log 'B'
-  event.preventDefault()
-  return false
-
 positionCorners = ->
   if cornersVisible
     $('#corner0Div').css('top',(canvasYPos-1+canvasYOffset).toString())
@@ -2689,28 +2674,24 @@ $(document).ready ()->
       imageLoaded = new FileReader()
       theFile = event.originalEvent.dataTransfer.files[0]
       imageLoaded.onload = ->
-        console.log imageLoaded.result
-        imageToPaste = new Image()
-        imageToPaste.onload = ->
-          ctContext.drawImage(imageToPaste, 0, 0)
-        imageToPaste.src = imageLoaded.result
+        imageToOpen = new Image()
+        imageToOpen.onload = ->
+          widthExceedsCanvas = canvasWidth < imageToOpen.width
+          heightExceedsCanvas = canvasHeight < imageToOpen.height
+          if not widthExceedsCanvas and not heightExceedsCanvas
+            pasteCanvas = document.createElement('canvas')
+            pasteCanvas = pasteCanvas.getContext('2d')
+            pasteCanvas = pasteCanvas.createImageData(imageToOpen.width, imageToOpen.height)
+
+            console.log pasteCanvas
+            imageToPaste = new Image()
+            imageToPaste.onload = ->
+              pasteCanvas.drawImage(imageToPaste, 0, 0)
+            imageToPaste.src = imageToOpen
+
+        imageToOpen.src = imageLoaded.result
       imageLoaded.readAsDataURL(theFile)
-
-      ###
-      imageReader = new FileReader()
-      imageReader.onloadend = ( ( innerEvent ) ->
-        console.log 'C', imageReader
-        console.log 'B', innerEvent
-        loadedImage = new Image()
-        loadedImage.onload = ->
-          console.log 'A', loadedImage
-        loadedImage.src = innerEvent.target.result
-      )(event.originalEvent.dataTransfer.files[0])
-      imageReader.readAsDataURL(event.originalEvent.dataTransfer.files[0])
-      ###
-
-    #fileTransfer = event.dataTransfer
-    #console.log fileTransfer
+      console.log 'C'
     return false
   )
 

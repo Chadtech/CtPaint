@@ -52,7 +52,7 @@ Here is an incomplete list of features, with the ones I have finished checked of
 * X Line Draw tool
 * X Undo
 * X Redo
-* Open File
+* X Open File
 * X Replace color
 * X Resize canvas by click and drag
 * X Resize canvas by text field
@@ -73,6 +73,7 @@ General to dos and bugs to fix:
 
 * Mouse canvas exit
 * redo resize memory
+* discriminate between pasting and opening outside image (by canvas and image size)
 
 ------- LICENSING
 
