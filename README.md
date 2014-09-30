@@ -71,7 +71,7 @@ Here is an incomplete list of features, with the ones I have finished checked of
 
 General to dos and bugs to fix:
 
-* Mouse canvas exit
+* X Mouse canvas exit
 * X redo resize memory
 * X discriminate between pasting and opening outside image (by canvas and image size)
 
