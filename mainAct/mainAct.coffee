@@ -208,16 +208,27 @@ $(document).ready ()->
           widthExceedsCanvas = canvasWidth < imageToOpen.width
           heightExceedsCanvas = canvasHeight < imageToOpen.height
           if not widthExceedsCanvas and not heightExceedsCanvas
-            pasteCanvas = document.createElement('canvas')
-            pasteCanvas = pasteCanvas.getContext('2d')
-            pasteCanvas = pasteCanvas.createImageData(imageToOpen.width, imageToOpen.height)
-
-            console.log pasteCanvas
-            imageToPaste = new Image()
-            imageToPaste.onload = ->
-              pasteCanvas.drawImage(imageToPaste, 0, 0)
-            imageToPaste.src = imageToOpen
-
+            ctContext.drawImage(imageToOpen, 0, 0)
+            copyMemory = ctContext.getImageData(0, 0, imageToOpen.width, imageToOpen.height)
+            canvasDataAsImage = new Image()
+            canvasDataAsImage.onload = ->
+              ctContext.drawImage(canvasDataAsImage, 0, 0)
+              copyExists = true
+              pasteAction()
+            canvasDataAsImage.src = cH[cH.length - 1]
+          else
+            newWidth = imageToOpen.width
+            newHeight = imageToOpen.height
+            ctContext.canvas.width = parseInt(newWidth)
+            ctContext.canvas.height = parseInt(newHeight)
+            canvasWidth = ctContext.canvas.width
+            canvasHeight = ctContext.canvas.height
+            ctCanvas.style.width = (canvasWidth).toString()+'px'
+            ctCanvas.style.height = (canvasHeight).toString()+'px'
+            ctContext.drawImage(imageToOpen, 0, 0)
+            cH.push ctCanvas.toDataURL()
+            cH.shift()
+            positionCorners()
         imageToOpen.src = imageLoaded.result
       imageLoaded.readAsDataURL(theFile)
       console.log 'C'
