@@ -73,7 +73,7 @@ General to dos and bugs to fix:
 
 * Mouse canvas exit
 * redo resize memory
-* discriminate between pasting and opening outside image (by canvas and image size)
+* X discriminate between pasting and opening outside image (by canvas and image size)
 
 ------- LICENSING
 
