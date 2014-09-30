@@ -8,5 +8,6 @@ horizontalColorSwapPosture = [
   () ->
     mousePressed = false
     drawToolbars()
+  () ->
 ]
 

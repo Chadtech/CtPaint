@@ -89,5 +89,6 @@ selectPosture = [
     else
       selectionX = gripX
       selectionY = gripY
+  () ->
 ]
 

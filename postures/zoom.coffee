@@ -19,4 +19,5 @@ zoomPosture = [
     drawToolbars()
   () ->
     mousePressed = false
+  () ->
 ]

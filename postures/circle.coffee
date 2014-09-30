@@ -20,4 +20,5 @@ circlePosture = [
     cH.push ctCanvas.toDataURL()
     cH.shift()
     cF = []
+  () ->
 ]

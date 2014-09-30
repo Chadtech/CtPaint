@@ -62,6 +62,7 @@ numberOfTools = 24
 toolViewMode = 0
 
 mousePressed = false
+mouseExit = false
 draggingBorder = false
 
 zoomActivate = false
@@ -2063,6 +2064,7 @@ zoomPosture = [
     drawToolbars()
   () ->
     mousePressed = false
+  () ->
 ]
 selectPosture = [
   () ->
@@ -2155,6 +2157,7 @@ selectPosture = [
     else
       selectionX = gripX
       selectionY = gripY
+  () ->
 ]
 
 
@@ -2172,6 +2175,7 @@ samplePosture = [
     tH.pop()
     tH.push tH[tH.length - 1]
     drawToolbars()
+  () ->
 ]
 
 
@@ -2189,6 +2193,7 @@ fillPosture = [
     cH.push ctCanvas.toDataURL()
     cH.shift()
     cF = []
+  () ->
 ]
 
 
@@ -2214,6 +2219,7 @@ squarePosture = [
     cH.push ctCanvas.toDataURL()
     cH.shift()
     cF = []
+  () ->
 ]
 
 
@@ -2239,6 +2245,7 @@ circlePosture = [
     cH.push ctCanvas.toDataURL()
     cH.shift()
     cF = []
+  () ->
 ]
 linePosture = [
   () ->
@@ -2262,6 +2269,7 @@ linePosture = [
     cH.push ctCanvas.toDataURL()
     cH.shift()
     cF = []
+  () ->
 ]
 
 pointPosture = [
@@ -2275,14 +2283,26 @@ pointPosture = [
       getMousePositionOnCanvas(event)
       pointAction(ctContext, colorSwatches[0], xSpot, ySpot, oldX, oldY)
   () ->
+    if not mousePressed
+      getMousePositionOnCanvas(event)
+      pointAction(ctContext, colorSwatches[0], xSpot, ySpot, xSpot, ySpot)
     mousePressed = true
-    getMousePositionOnCanvas(event)
-    pointAction(ctContext, colorSwatches[0], xSpot, ySpot, xSpot, ySpot)
   () ->
+    if mousePressed
+      cH.push ctCanvas.toDataURL()
+      cH.shift()
+      cF = []
     mousePressed = false
-    cH.push ctCanvas.toDataURL()
-    cH.shift()
-    cF = []
+  () ->
+    if mousePressed
+      oldX = xSpot
+      oldY = ySpot
+      getMousePositionOnCanvas(event)
+      pointAction(ctContext, colorSwatches[0], xSpot, ySpot, oldX, oldY)
+      cH.push ctCanvas.toDataURL()
+      cH.shift()
+      cF = []
+      mousePressed = false
 ]
 emptyPosture = [
   () ->
@@ -2293,6 +2313,7 @@ emptyPosture = [
     mousePressed = true
   () ->
     mousePressed = false
+  () ->
 ]
 horizontalColorSwapPosture = [
   () ->
@@ -2304,6 +2325,7 @@ horizontalColorSwapPosture = [
   () ->
     mousePressed = false
     drawToolbars()
+  () ->
 ]
 
 
@@ -2317,6 +2339,7 @@ verticalColorSwapPosture = [
   () ->
     mousePressed = false
     drawToolbars()
+  () ->
 ]
 # organized as they are in the 2 x 11 tool bar grid
 toolNames = [
@@ -2595,9 +2618,6 @@ $(document).ready ()->
       positionCorners()
       $('#wholeWindow').css 'cursor', 'default'   
 
-  $('#CtPaint').mouseleave ()->  
-    toolbar1Context.drawImage(toolbar1sImage1,188,3)   
-
   $('#CtPaint').mousemove (event)->
     tH[tH.length - 1].posture[0]()
 
@@ -2606,7 +2626,11 @@ $(document).ready ()->
 
   $('#CtPaint').mouseup (event)->
     tH[tH.length - 1].posture[2]()
-  
+
+  $('#CtPaint').mouseleave ()->
+    tH[tH.length - 1].posture[3]()  
+    toolbar1Context.drawImage(toolbar1sImage1,188,3)  
+
   $('#toolbar0').mousedown (event)->
     toolIndex = 0
     while toolIndex < numberOfTools

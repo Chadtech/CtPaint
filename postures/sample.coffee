@@ -12,5 +12,6 @@ samplePosture = [
     tH.pop()
     tH.push tH[tH.length - 1]
     drawToolbars()
+  () ->
 ]
 

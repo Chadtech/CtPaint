@@ -140,9 +140,6 @@ $(document).ready ()->
       positionCorners()
       $('#wholeWindow').css 'cursor', 'default'   
 
-  $('#CtPaint').mouseleave ()->  
-    toolbar1Context.drawImage(toolbar1sImage1,188,3)   
-
   $('#CtPaint').mousemove (event)->
     tH[tH.length - 1].posture[0]()
 
@@ -151,7 +148,11 @@ $(document).ready ()->
 
   $('#CtPaint').mouseup (event)->
     tH[tH.length - 1].posture[2]()
-  
+
+  $('#CtPaint').mouseleave ()->
+    tH[tH.length - 1].posture[3]()  
+    toolbar1Context.drawImage(toolbar1sImage1,188,3)  
+
   $('#toolbar0').mousedown (event)->
     toolIndex = 0
     while toolIndex < numberOfTools

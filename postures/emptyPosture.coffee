@@ -7,4 +7,5 @@ emptyPosture = [
     mousePressed = true
   () ->
     mousePressed = false
+  () ->
 ]

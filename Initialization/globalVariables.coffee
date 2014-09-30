@@ -62,6 +62,7 @@ numberOfTools = 24
 toolViewMode = 0
 
 mousePressed = false
+mouseExit = false
 draggingBorder = false
 
 zoomActivate = false
