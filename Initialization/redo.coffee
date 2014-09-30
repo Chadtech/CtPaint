@@ -6,7 +6,7 @@ redoAction = ->
     cH.push cF.pop()
     canvasDataAsImage = new Image()
     canvasDataAsImage.onload = ->
-      #undoAndRedoSizeComparison(canvasDataAsImage)
+      undoAndRedoSizeComparison(canvasDataAsImage)
       ctContext.drawImage(canvasDataAsImage,0,0)
     canvasDataAsImage.src = cH[cH.length - 1]
 
