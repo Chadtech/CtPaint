@@ -2678,14 +2678,39 @@ $(document).ready ()->
 
   $('#dragAndDrop').on('dragover', (event)->
     event.stopPropagation()
-    event.preventDefault()
     return false
   )
 
   $('#dragAndDrop').on('drop', (event)->
     event.stopPropagation()
     event.preventDefault()
-    console.log 'DROp!!!!!'
+    filesType = event.originalEvent.dataTransfer.files[0].type.substr(0,5)
+    if filesType is 'image'
+      imageLoaded = new FileReader()
+      theFile = event.originalEvent.dataTransfer.files[0]
+      imageLoaded.onload = ->
+        console.log imageLoaded.result
+        imageToPaste = new Image()
+        imageToPaste.onload = ->
+          ctContext.drawImage(imageToPaste, 0, 0)
+        imageToPaste.src = imageLoaded.result
+      imageLoaded.readAsDataURL(theFile)
+
+      ###
+      imageReader = new FileReader()
+      imageReader.onloadend = ( ( innerEvent ) ->
+        console.log 'C', imageReader
+        console.log 'B', innerEvent
+        loadedImage = new Image()
+        loadedImage.onload = ->
+          console.log 'A', loadedImage
+        loadedImage.src = innerEvent.target.result
+      )(event.originalEvent.dataTransfer.files[0])
+      imageReader.readAsDataURL(event.originalEvent.dataTransfer.files[0])
+      ###
+
+    #fileTransfer = event.dataTransfer
+    #console.log fileTransfer
     return false
   )
 
