@@ -29,12 +29,6 @@ $(document).ready ()->
     cH.shift()
     cH.shift()
     cH.shift()
-    console.log ctContext.imageSmoothingEnabled
-    ctContext.imageSmoothingEnabled = false
-    ctContext.oImageSmoothingEnabled = false
-    ctContext.webkitImageSmoothingEnabled = false
-    ctContext.mozImageSmoothingEnabled = false
-    ctContext.patternQuality = 'fast'
   , 2000)
 
   $('body').keydown (event) ->

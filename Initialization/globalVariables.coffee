@@ -7,8 +7,8 @@ toolbarWidth = 52
 ###
   The main canvases width and height, declared at their default values
 ###
-canvasWidth = 512
-canvasHeight = 512
+canvasWidth = 256
+canvasHeight = 256
 
 ###
   canvasYPos and canvasXPos is the upper left corner of the canvas relative to the window.

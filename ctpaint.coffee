@@ -7,8 +7,8 @@ toolbarWidth = 52
 ###
   The main canvases width and height, declared at their default values
 ###
-canvasWidth = 512
-canvasHeight = 512
+canvasWidth = 256
+canvasHeight = 256
 
 ###
   canvasYPos and canvasXPos is the upper left corner of the canvas relative to the window.
@@ -905,7 +905,9 @@ circleAction = ( canvas, color, xPos, yPos ) ->
   drawline is the basic line drawing function. Its a
   bresenham algorithm.
 ###
-drawLine = (canvas, color, beginX, beginY, endX, endY) ->
+drawLine = (canvas, color, beginX, beginY, endX, endY, boldness) ->
+  if boldness is undefined
+    boldness = false
   deltaX = Math.abs(endX - beginX)
   if beginX < endX
     directionX = 1
@@ -922,7 +924,10 @@ drawLine = (canvas, color, beginX, beginY, endX, endY) ->
     errorOne = -deltaY/2
   keepGoin = true
   while keepGoin
-    putPixel(canvas,color,beginX,beginY)
+    if not boldness
+      putPixel(canvas, color, beginX, beginY)
+    else
+      drawCircle( canvas, color, beginX, beginY, boldness, true )
     if (beginX == endX) and (beginY == endY)
       keepGoin = false
     errorTwo = errorOne
@@ -942,25 +947,30 @@ drawLine = (canvas, color, beginX, beginY, endX, endY) ->
   a filled circle is drawn on each end.
 ###
 lineAction = (canvas, color, beginX, beginY, endX, endY) ->
-  lineSlope = undefined
+  doingBoldness = false
   if tH[tH.length - 1].magnitude > 1
-    lineSlope = Math.abs(beginX - endX) / Math.abs(beginY - endY)
-    if lineSlope > 1
-      lineSlope = Math.abs(beginY - endY) / Math.abs(beginX - endX)
-  magnitudeIncrement = 0
-  while magnitudeIncrement < tH[tH.length - 1].magnitude
-    drawLine(canvas, color, beginX + magnitudeIncrement, beginY, endX + magnitudeIncrement, endY)
-    drawLine(canvas, color, beginX - magnitudeIncrement, beginY, endX - magnitudeIncrement, endY)
-    drawLine(canvas, color, beginX, beginY + magnitudeIncrement, endX, endY + magnitudeIncrement)
-    drawLine(canvas, color, beginX, beginY - magnitudeIncrement, endX, endY - magnitudeIncrement)
-    magnitudeIncrement++
-  if tH[tH.length - 1].magnitude > 1
-    calculatedRadius = (tH[tH.length - 1]) - Math.round(lineSlope * 1.21)
-    magnitudeIncrement = 0
-    while magnitudeIncrement < calculatedRadius
-      drawCircle( canvas, color, beginX, beginY, calculatedRadius - magnitudeIncrement, true )
-      drawCircle( canvas, color, endX, endY, calculatedRadius - magnitudeIncrement, true )
-      magnitudeIncrement++
+    doingBoldness = tH[tH.length - 1].magnitude - 1
+  drawLine(canvas, color, beginX, beginY, endX, endY, doingBoldness)
+  #lineSlope = undefined
+  #if tH[tH.length - 1].magnitude > 1
+  #  lineSlope = Math.abs(beginX - endX) / Math.abs(beginY - endY)
+  #  if lineSlope > 1
+  #    lineSlope = Math.abs(beginY - endY) / Math.abs(beginX - endX)
+
+  #magnitudeIncrement = 0
+  #while magnitudeIncrement < tH[tH.length - 1].magnitude
+  #  drawLine(canvas, color, beginX + magnitudeIncrement, beginY, endX + magnitudeIncrement, endY)
+  #  drawLine(canvas, color, beginX - magnitudeIncrement, beginY, endX - magnitudeIncrement, endY)
+  #  drawLine(canvas, color, beginX, beginY + magnitudeIncrement, endX, endY + magnitudeIncrement)
+  #  drawLine(canvas, color, beginX, beginY - magnitudeIncrement, endX, endY - magnitudeIncrement)
+  #  magnitudeIncrement++
+  #if tH[tH.length - 1].magnitude > 1
+  #  calculatedRadius = (tH[tH.length - 1].magnitude) - Math.round(lineSlope * 1.21)
+  #  magnitudeIncrement = 0
+  #  while magnitudeIncrement < calculatedRadius
+  #    drawCircle( canvas, color, beginX, beginY, calculatedRadius - magnitudeIncrement, true )
+  #    drawCircle( canvas, color, endX, endY, calculatedRadius - magnitudeIncrement, true )
+  #    magnitudeIncrement++
 
 
 ###
@@ -2060,10 +2070,10 @@ zoomPosture = [
       zoomActivate = true
       cornersVisible = false
       zoomedCanvas = new Image()
-      zoomedCanvas.onload = ->
-        ctContext.drawImage(zoomedCanvas,0,0,zoomedCanvas.width*4,zoomedCanvas.height*4)
-      zoomedCanvas.src = cH[cH.length - 1]
-      #scaleCanvasBigger( 2 ** tH[tH.length - 1].magnitude )
+      #zoomedCanvas.onload = ->
+      #  ctContext.drawImage(zoomedCanvas,0,0,zoomedCanvas.width*4,zoomedCanvas.height*4)
+      #zoomedCanvas.src = cH[cH.length - 1]
+      scaleCanvasBigger( 2 ** tH[tH.length - 1].magnitude )
     positionCorners()
     drawToolbars()
   () ->
@@ -2511,12 +2521,6 @@ $(document).ready ()->
     cH.shift()
     cH.shift()
     cH.shift()
-    console.log ctContext.imageSmoothingEnabled
-    ctContext.imageSmoothingEnabled = false
-    ctContext.oImageSmoothingEnabled = false
-    ctContext.webkitImageSmoothingEnabled = false
-    ctContext.mozImageSmoothingEnabled = false
-    ctContext.patternQuality = 'fast'
   , 2000)
 
   $('body').keydown (event) ->
