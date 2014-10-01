@@ -9,26 +9,11 @@ $(document).ready ()->
     tH.shift()
     drawToolbars()
     positionMenu()
-    cH.push ctCanvas.toDataURL()
-    cH.push ctCanvas.toDataURL()
-    cH.push ctCanvas.toDataURL()
-    cH.push ctCanvas.toDataURL()
-    cH.push ctCanvas.toDataURL()
-    cH.push ctCanvas.toDataURL()
-    cH.push ctCanvas.toDataURL()
-    cH.push ctCanvas.toDataURL()
-    cH.push ctCanvas.toDataURL()
-    cH.push ctCanvas.toDataURL()
-    cH.shift()
-    cH.shift()
-    cH.shift()
-    cH.shift()
-    cH.shift()
-    cH.shift()
-    cH.shift()
-    cH.shift()
-    cH.shift()
-    cH.shift()
+    clearOutCanvasHistoryIndex = 0
+    while clearOutCanvasHistoryIndex < 10
+      cH.push ctCanvas.toDataURL()
+      cH.shift()
+      clearOutCanvasHistoryIndex++
   , 2000)
 
   $('body').keydown (event) ->
@@ -156,8 +141,12 @@ $(document).ready ()->
   $('#toolbar0').mousedown (event)->
     toolIndex = 0
     while toolIndex < numberOfTools
-      if ctPaintTools[toolIndex].clickRegion[0]<event.clientX and event.clientX<(ctPaintTools[toolIndex].clickRegion[0]+buttonWidth)
-        if ctPaintTools[toolIndex].clickRegion[1]<event.clientY and event.clientY<(ctPaintTools[toolIndex].clickRegion[1]+buttonHeight)
+      leftBoundary = ctPaintTools[toolIndex].clickRegion[0] < event.clientX
+      rightBoundary = event.clientX < (ctPaintTools[toolIndex].clickRegion[0] + buttonWidth)
+      if leftBoundary and rightBoundary
+        topBoundary = ctPaintTools[toolIndex].clickRegion[1] < event.clientY 
+        bottomBOundary = event.clientY < (ctPaintTools[toolIndex].clickRegion[1] + buttonHeight)
+        if topBoundary and bottomBoundary
           if toolIndex < 8
             copeWithSelection()
             tH.push ctPaintTools[toolIndex]
@@ -168,7 +157,10 @@ $(document).ready ()->
     drawToolbars()
 
   $('#toolbar1').mousemove (event)->
-    drawStringAsCommandPrompt(toolbar1Context, getColorValue(toolbar1Context, event.clientX, event.clientY - window.innerHeight + toolbarHeight).toUpperCase() + ', (#,#) ', 0, 191, 12)
+    tXSpot = event.clientX
+    tYSpot = event.clientY - window.innerHeight + toolbarHeight
+    information = getColorValue(toolbar1Context, tXSpot, tYPot).toUpperCase() + ', (#,#) '
+    drawStringAsCommandPrompt(toolbar1Context, information, 0, 191, 12)
 
   $('#toolbar1').mouseleave ()->  
     toolbar1Context.drawImage(toolbar1sImage1,188,3)  

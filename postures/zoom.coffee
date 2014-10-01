@@ -14,10 +14,6 @@ zoomPosture = [
     else
       zoomActivate = true
       cornersVisible = false
-      zoomedCanvas = new Image()
-      #zoomedCanvas.onload = ->
-      #  ctContext.drawImage(zoomedCanvas,0,0,zoomedCanvas.width*4,zoomedCanvas.height*4)
-      #zoomedCanvas.src = cH[cH.length - 1]
       scaleCanvasBigger( 2 ** tH[tH.length - 1].magnitude )
     positionCorners()
     drawToolbars()
