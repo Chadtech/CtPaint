@@ -19,7 +19,7 @@ colorMenuImage.src = 'assets\\t00.png'
 ###
   defined as an index number once a color has been shift clicked
 ###
-spotInColorPallete = undefined
+spotInColorPalette = undefined
 
 ###
   The color pallete. Even numbered pallete elements are on the top row,
@@ -28,21 +28,53 @@ spotInColorPallete = undefined
   The colors were largely ripped out of the youtube video of Tom Sach's
   video 'colors'. Some minor adjustments.
 ###
-colorPallete = [
-  [ 0, 0, 0 ] 
-  [ 64, 64, 64 ] 
-  [ 128, 128, 128 ] 
-  [ 192, 192, 192 ] 
-  [ 255, 255, 255 ] 
-  [ 50, 54, 128 ] 
-  [ 85, 96, 45 ] 
-  [ 0, 47, 167 ] 
-  [ 221, 201, 142 ] 
-  [ 10, 186, 181 ] 
-  [ 243, 211, 27 ] 
-  [ 159, 170, 210 ]
-  [ 255, 91, 49 ] 
-  [ 157, 212, 147 ] 
-  [ 212, 51, 29 ] 
-  [ 10, 202, 26 ] 
+
+topRow = [
+  # Default windows light gray / windows command prompt gray
+  [192, 192, 192]
+  # black
+  [0 ,0 ,0]
+  # Olive Drab
+  [85, 96, 45]
+  # Sand / Skin light brown
+  [221, 201, 142]
+  # McDonalds Yellow
+  [243, 211, 27]
+  # An instance of Orange in Sach's video 'color'
+  [255, 91, 49]
+  # McDonalds Red
+  [212, 51, 29]
+  # Slightly gray-blue pink
+  [230, 121, 166]
 ]
+
+bottomRow = [
+  # Default Windows dark gray
+  [64, 64, 64]
+  # White
+  [255, 255, 255]
+  # Lighter and grayer Navy Blue
+  [50, 54, 128]
+  # Klein Blue
+  [0, 47, 167]
+  # Tiffany Blue
+  [10, 186, 181]
+  # 'Oriental Avenue' Blue
+  # As in, the color of that property from the game monopoly
+  # that I believe is gray and not blue, but apparently
+  # most people consider to be blue.
+  [159, 170, 210]
+  # Green I made up 0
+  [157, 212, 147]
+  # Green I made up 1
+  [10, 202, 26]
+]
+
+colorPalette = []
+colorPaletteIndex = 0
+while colorPaletteIndex < 8
+  colorPalette.push topRow[colorPaletteIndex]
+  colorPalette.push bottomRow[colorPaletteIndex]
+  colorPaletteIndex++
+
+  

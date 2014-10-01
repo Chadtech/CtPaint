@@ -159,7 +159,7 @@ $(document).ready ()->
   $('#toolbar1').mousemove (event)->
     tXSpot = event.clientX
     tYSpot = event.clientY - window.innerHeight + toolbarHeight
-    information = getColorValue(toolbar1Context, tXSpot, tYPot).toUpperCase() + ', (#,#) '
+    information = getColorValue(toolbar1Context, tXSpot, tYSpot).toUpperCase() + ', (#,#) '
     drawStringAsCommandPrompt(toolbar1Context, information, 0, 191, 12)
 
   $('#toolbar1').mouseleave ()->  
@@ -171,10 +171,10 @@ $(document).ready ()->
     if 52 < toolbar1X and toolbar1X < 188
       if 4 < toolbar1Y and toolbar1Y < 35
         if colorModify
-          spotInColorPallete = (((toolbar1X - 52 ) // 17) * 2) + ((toolbar1Y - 4) // 16)
+          spotInColorPalette = (((toolbar1X - 52 ) // 17) * 2) + ((toolbar1Y - 4) // 16)
           colorMenu()
         else
-          colorSwatches[0] = colorPallete[(((toolbar1X - 52 ) // 17) * 2) + ((toolbar1Y - 4) // 16)]
+          colorSwatches[0] = colorPalette[(((toolbar1X - 52 ) // 17) * 2) + ((toolbar1Y - 4) // 16)]
         drawToolbars()
 
   $('#dragAndDrop').on('dragenter', (event)->

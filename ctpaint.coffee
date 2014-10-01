@@ -156,7 +156,7 @@ colorMenuImage.src = 'assets\\t00.png'
 ###
   defined as an index number once a color has been shift clicked
 ###
-spotInColorPallete = undefined
+spotInColorPalette = undefined
 
 ###
   The color pallete. Even numbered pallete elements are on the top row,
@@ -165,25 +165,56 @@ spotInColorPallete = undefined
   The colors were largely ripped out of the youtube video of Tom Sach's
   video 'colors'. Some minor adjustments.
 ###
-colorPallete = [
-  [ 0, 0, 0 ] 
-  [ 64, 64, 64 ] 
-  [ 128, 128, 128 ] 
-  [ 192, 192, 192 ] 
-  [ 255, 255, 255 ] 
-  [ 50, 54, 128 ] 
-  [ 85, 96, 45 ] 
-  [ 0, 47, 167 ] 
-  [ 221, 201, 142 ] 
-  [ 10, 186, 181 ] 
-  [ 243, 211, 27 ] 
-  [ 159, 170, 210 ]
-  [ 255, 91, 49 ] 
-  [ 157, 212, 147 ] 
-  [ 212, 51, 29 ] 
-  [ 10, 202, 26 ] 
+
+topRow = [
+  # Default windows light gray / windows command prompt gray
+  [192, 192, 192]
+  # black
+  [0 ,0 ,0]
+  # Olive Drab
+  [85, 96, 45]
+  # Sand / Skin light brown
+  [221, 201, 142]
+  # McDonalds Yellow
+  [243, 211, 27]
+  # An instance of Orange in Sach's video 'color'
+  [255, 91, 49]
+  # McDonalds Red
+  [212, 51, 29]
+  # Slightly gray-blue pink
+  [230, 121, 166]
 ]
 
+bottomRow = [
+  # Default Windows dark gray
+  [64, 64, 64]
+  # White
+  [255, 255, 255]
+  # Lighter and grayer Navy Blue
+  [50, 54, 128]
+  # Klein Blue
+  [0, 47, 167]
+  # Tiffany Blue
+  [10, 186, 181]
+  # 'Oriental Avenue' Blue
+  # As in, the color of that property from the game monopoly
+  # that I believe is gray and not blue, but apparently
+  # most people consider to be blue.
+  [159, 170, 210]
+  # Green I made up 0
+  [157, 212, 147]
+  # Green I made up 1
+  [10, 202, 26]
+]
+
+colorPalette = []
+colorPaletteIndex = 0
+while colorPaletteIndex < 8
+  colorPalette.push topRow[colorPaletteIndex]
+  colorPalette.push bottomRow[colorPaletteIndex]
+  colorPaletteIndex++
+
+  
 ###
   Color menu is the menu that comes up when you shift click
   on any color in the color pallete. The color menu has one input,
@@ -205,7 +236,7 @@ colorMenu = ()->
   whatSortOfDataSorting = colorDataSorting
 
 colorDataSortingInitialize = () ->
-  menuDatum = rgbToHex(colorPallete[spotInColorPallete]).substr(1)
+  menuDatum = rgbToHex(colorPalette[spotInColorPalette]).substr(1)
   spotInMenuDatum = 0
   drawColorMenu()
 
@@ -232,7 +263,7 @@ colorDataSorting = ( inputMaterial ) ->
           if spotInMenuDatum < 5
             spotInMenuDatum++
         when 'enter'
-          colorPallete[spotInColorPallete] =  hexToRGB(menuDatum)
+          colorPalette[spotInColorPalette] =  hexToRGB(menuDatum)
           drawToolbars()
           $('#menuDiv').css('top',(window.innerHeight).toString())
           normalCircumstance = true
@@ -511,10 +542,10 @@ drawStringAsCommandPrompt = (canvas, stringToDraw, coloration, whereAtX, whereAt
 selectLinesOfLengthX = []
 selectLinesOfLengthY = []
 dataToGive = [
-  [224, 96, 128, 255] 
-  [128, 128, 128, 255] 
-  [128, 128, 128, 255] 
-  [192, 192, 0, 255] 
+  [255, 0, 0, 255]
+  [255, 0, 0, 255]
+  [128, 128, 128, 255]
+  [128, 128, 128, 255]
 ]
 
 lineIndex = 0
@@ -1870,11 +1901,11 @@ drawToolbars = ->
   toolbar1Context.fillStyle = rgbToHex(colorSwatches[3])
   toolbar1Context.fillRect(33,21,14,14)
 
-  palleteIndex = 0
-  while palleteIndex < colorPallete.length
-    toolbar1Context.fillStyle = rgbToHex(colorPallete[palleteIndex])
-    toolbar1Context.fillRect(52 + (17 * (palleteIndex // 2)), 4 + (17 * (palleteIndex % 2)),14,14)
-    palleteIndex++
+  paletteIndex = 0
+  while paletteIndex < colorPalette.length
+    toolbar1Context.fillStyle = rgbToHex(colorPalette[paletteIndex])
+    toolbar1Context.fillRect(52 + (17 * (paletteIndex // 2)), 4 + (17 * (paletteIndex % 2)),14,14)
+    paletteIndex++
 
   drawInformationToolbar0()
 
@@ -2649,7 +2680,7 @@ $(document).ready ()->
   $('#toolbar1').mousemove (event)->
     tXSpot = event.clientX
     tYSpot = event.clientY - window.innerHeight + toolbarHeight
-    information = getColorValue(toolbar1Context, tXSpot, tYPot).toUpperCase() + ', (#,#) '
+    information = getColorValue(toolbar1Context, tXSpot, tYSpot).toUpperCase() + ', (#,#) '
     drawStringAsCommandPrompt(toolbar1Context, information, 0, 191, 12)
 
   $('#toolbar1').mouseleave ()->  
@@ -2661,10 +2692,10 @@ $(document).ready ()->
     if 52 < toolbar1X and toolbar1X < 188
       if 4 < toolbar1Y and toolbar1Y < 35
         if colorModify
-          spotInColorPallete = (((toolbar1X - 52 ) // 17) * 2) + ((toolbar1Y - 4) // 16)
+          spotInColorPalette = (((toolbar1X - 52 ) // 17) * 2) + ((toolbar1Y - 4) // 16)
           colorMenu()
         else
-          colorSwatches[0] = colorPallete[(((toolbar1X - 52 ) // 17) * 2) + ((toolbar1Y - 4) // 16)]
+          colorSwatches[0] = colorPalette[(((toolbar1X - 52 ) // 17) * 2) + ((toolbar1Y - 4) // 16)]
         drawToolbars()
 
   $('#dragAndDrop').on('dragenter', (event)->

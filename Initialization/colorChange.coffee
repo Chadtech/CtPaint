@@ -19,7 +19,7 @@ colorMenu = ()->
   whatSortOfDataSorting = colorDataSorting
 
 colorDataSortingInitialize = () ->
-  menuDatum = rgbToHex(colorPallete[spotInColorPallete]).substr(1)
+  menuDatum = rgbToHex(colorPalette[spotInColorPalette]).substr(1)
   spotInMenuDatum = 0
   drawColorMenu()
 
@@ -46,7 +46,7 @@ colorDataSorting = ( inputMaterial ) ->
           if spotInMenuDatum < 5
             spotInMenuDatum++
         when 'enter'
-          colorPallete[spotInColorPallete] =  hexToRGB(menuDatum)
+          colorPalette[spotInColorPalette] =  hexToRGB(menuDatum)
           drawToolbars()
           $('#menuDiv').css('top',(window.innerHeight).toString())
           normalCircumstance = true

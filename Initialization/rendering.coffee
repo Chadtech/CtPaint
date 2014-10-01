@@ -87,11 +87,11 @@ drawToolbars = ->
   toolbar1Context.fillStyle = rgbToHex(colorSwatches[3])
   toolbar1Context.fillRect(33,21,14,14)
 
-  palleteIndex = 0
-  while palleteIndex < colorPallete.length
-    toolbar1Context.fillStyle = rgbToHex(colorPallete[palleteIndex])
-    toolbar1Context.fillRect(52 + (17 * (palleteIndex // 2)), 4 + (17 * (palleteIndex % 2)),14,14)
-    palleteIndex++
+  paletteIndex = 0
+  while paletteIndex < colorPalette.length
+    toolbar1Context.fillStyle = rgbToHex(colorPalette[paletteIndex])
+    toolbar1Context.fillRect(52 + (17 * (paletteIndex // 2)), 4 + (17 * (paletteIndex % 2)),14,14)
+    paletteIndex++
 
   drawInformationToolbar0()
 
