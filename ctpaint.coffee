@@ -951,26 +951,28 @@ lineAction = (canvas, color, beginX, beginY, endX, endY) ->
   if tH[tH.length - 1].magnitude > 1
     doingBoldness = tH[tH.length - 1].magnitude - 1
   drawLine(canvas, color, beginX, beginY, endX, endY, doingBoldness)
-  #lineSlope = undefined
-  #if tH[tH.length - 1].magnitude > 1
-  #  lineSlope = Math.abs(beginX - endX) / Math.abs(beginY - endY)
-  #  if lineSlope > 1
-  #    lineSlope = Math.abs(beginY - endY) / Math.abs(beginX - endX)
+  ###
+  lineSlope = undefined
+  if tH[tH.length - 1].magnitude > 1
+    lineSlope = Math.abs(beginX - endX) / Math.abs(beginY - endY)
+    if lineSlope > 1
+      lineSlope = Math.abs(beginY - endY) / Math.abs(beginX - endX)
 
-  #magnitudeIncrement = 0
-  #while magnitudeIncrement < tH[tH.length - 1].magnitude
-  #  drawLine(canvas, color, beginX + magnitudeIncrement, beginY, endX + magnitudeIncrement, endY)
-  #  drawLine(canvas, color, beginX - magnitudeIncrement, beginY, endX - magnitudeIncrement, endY)
-  #  drawLine(canvas, color, beginX, beginY + magnitudeIncrement, endX, endY + magnitudeIncrement)
-  #  drawLine(canvas, color, beginX, beginY - magnitudeIncrement, endX, endY - magnitudeIncrement)
-  #  magnitudeIncrement++
-  #if tH[tH.length - 1].magnitude > 1
-  #  calculatedRadius = (tH[tH.length - 1].magnitude) - Math.round(lineSlope * 1.21)
-  #  magnitudeIncrement = 0
-  #  while magnitudeIncrement < calculatedRadius
-  #    drawCircle( canvas, color, beginX, beginY, calculatedRadius - magnitudeIncrement, true )
-  #    drawCircle( canvas, color, endX, endY, calculatedRadius - magnitudeIncrement, true )
-  #    magnitudeIncrement++
+  magnitudeIncrement = 0
+  while magnitudeIncrement < tH[tH.length - 1].magnitude
+    drawLine(canvas, color, beginX + magnitudeIncrement, beginY, endX + magnitudeIncrement, endY)
+    drawLine(canvas, color, beginX - magnitudeIncrement, beginY, endX - magnitudeIncrement, endY)
+    drawLine(canvas, color, beginX, beginY + magnitudeIncrement, endX, endY + magnitudeIncrement)
+    drawLine(canvas, color, beginX, beginY - magnitudeIncrement, endX, endY - magnitudeIncrement)
+    magnitudeIncrement++
+  if tH[tH.length - 1].magnitude > 1
+    calculatedRadius = (tH[tH.length - 1].magnitude) - Math.round(lineSlope * 1.21)
+    magnitudeIncrement = 0
+    while magnitudeIncrement < calculatedRadius
+      drawCircle( canvas, color, beginX, beginY, calculatedRadius - magnitudeIncrement, true )
+      drawCircle( canvas, color, endX, endY, calculatedRadius - magnitudeIncrement, true )
+      magnitudeIncrement++
+  ###
 
 
 ###
@@ -2069,10 +2071,6 @@ zoomPosture = [
     else
       zoomActivate = true
       cornersVisible = false
-      zoomedCanvas = new Image()
-      #zoomedCanvas.onload = ->
-      #  ctContext.drawImage(zoomedCanvas,0,0,zoomedCanvas.width*4,zoomedCanvas.height*4)
-      #zoomedCanvas.src = cH[cH.length - 1]
       scaleCanvasBigger( 2 ** tH[tH.length - 1].magnitude )
     positionCorners()
     drawToolbars()
@@ -2375,7 +2373,7 @@ toolMaxMagnitudes = [
   4, ''
   '', ''
   15, 15
-  6, 9
+  5, 9
 
   '', ''
 
@@ -2501,26 +2499,11 @@ $(document).ready ()->
     tH.shift()
     drawToolbars()
     positionMenu()
-    cH.push ctCanvas.toDataURL()
-    cH.push ctCanvas.toDataURL()
-    cH.push ctCanvas.toDataURL()
-    cH.push ctCanvas.toDataURL()
-    cH.push ctCanvas.toDataURL()
-    cH.push ctCanvas.toDataURL()
-    cH.push ctCanvas.toDataURL()
-    cH.push ctCanvas.toDataURL()
-    cH.push ctCanvas.toDataURL()
-    cH.push ctCanvas.toDataURL()
-    cH.shift()
-    cH.shift()
-    cH.shift()
-    cH.shift()
-    cH.shift()
-    cH.shift()
-    cH.shift()
-    cH.shift()
-    cH.shift()
-    cH.shift()
+    clearOutCanvasHistoryIndex = 0
+    while clearOutCanvasHistoryIndex < 10
+      cH.push ctCanvas.toDataURL()
+      cH.shift()
+      clearOutCanvasHistoryIndex++
   , 2000)
 
   $('body').keydown (event) ->
@@ -2648,8 +2631,12 @@ $(document).ready ()->
   $('#toolbar0').mousedown (event)->
     toolIndex = 0
     while toolIndex < numberOfTools
-      if ctPaintTools[toolIndex].clickRegion[0]<event.clientX and event.clientX<(ctPaintTools[toolIndex].clickRegion[0]+buttonWidth)
-        if ctPaintTools[toolIndex].clickRegion[1]<event.clientY and event.clientY<(ctPaintTools[toolIndex].clickRegion[1]+buttonHeight)
+      leftBoundary = ctPaintTools[toolIndex].clickRegion[0] < event.clientX
+      rightBoundary = event.clientX < (ctPaintTools[toolIndex].clickRegion[0] + buttonWidth)
+      if leftBoundary and rightBoundary
+        topBoundary = ctPaintTools[toolIndex].clickRegion[1] < event.clientY 
+        bottomBoundary = event.clientY < (ctPaintTools[toolIndex].clickRegion[1] + buttonHeight)
+        if topBoundary and bottomBoundary
           if toolIndex < 8
             copeWithSelection()
             tH.push ctPaintTools[toolIndex]
@@ -2660,7 +2647,10 @@ $(document).ready ()->
     drawToolbars()
 
   $('#toolbar1').mousemove (event)->
-    drawStringAsCommandPrompt(toolbar1Context, getColorValue(toolbar1Context, event.clientX, event.clientY - window.innerHeight + toolbarHeight).toUpperCase() + ', (#,#) ', 0, 191, 12)
+    tXSpot = event.clientX
+    tYSpot = event.clientY - window.innerHeight + toolbarHeight
+    information = getColorValue(toolbar1Context, tXSpot, tYPot).toUpperCase() + ', (#,#) '
+    drawStringAsCommandPrompt(toolbar1Context, information, 0, 191, 12)
 
   $('#toolbar1').mouseleave ()->  
     toolbar1Context.drawImage(toolbar1sImage1,188,3)  

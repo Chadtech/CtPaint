@@ -145,7 +145,7 @@ $(document).ready ()->
       rightBoundary = event.clientX < (ctPaintTools[toolIndex].clickRegion[0] + buttonWidth)
       if leftBoundary and rightBoundary
         topBoundary = ctPaintTools[toolIndex].clickRegion[1] < event.clientY 
-        bottomBOundary = event.clientY < (ctPaintTools[toolIndex].clickRegion[1] + buttonHeight)
+        bottomBoundary = event.clientY < (ctPaintTools[toolIndex].clickRegion[1] + buttonHeight)
         if topBoundary and bottomBoundary
           if toolIndex < 8
             copeWithSelection()
