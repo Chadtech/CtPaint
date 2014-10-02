@@ -1278,7 +1278,6 @@ rotateDataSorting = ( inputMaterial) ->
     acceptableKeys = ['9', '1', '2']
     if inputMaterial in acceptableKeys
       if not areaSelected
-        howManyRotates = 0
         sWidth = ctContext.canvas.width
         sHeight = ctContext.canvas.height
         canvasCurrently = ctContext.getImageData(0, 0, sWidth, sHeight)
@@ -1324,6 +1323,68 @@ rotateDataSorting = ( inputMaterial) ->
         cH.push ctCanvas.toDataURL()
         cH.shift()
         cF = []
+        tH.pop()
+        drawToolbars()
+        $('#menuDiv').css('top',(window.innerHeight).toString())
+        normalCircumstance = true
+        menuUp = false
+        positionCorners()
+
+      else
+        selectionAsPixels = dataToPixels(selection.data)
+        switch inputMaterial
+          when '9'
+            selectionAsPixels = 
+              axisFlip(selectionAsPixels, selectionsWidth, selectionsHeight)
+            selectionAsPixels =
+              horizontalFlip(selectionAsPixels[0], selectionAsPixels[1], selectionAsPixels[2])
+          when '1'
+            selectionAsPixels = 
+              horizontalFlip(selectionAsPixels, selectionsWidth, selectionsHeight)
+            selectionAsPixels = 
+              verticalFlip(selectionAsPixels[0], selectionAsPixels[1], selectionAsPixels[2])
+          when '2'
+            selectionAsPixels = 
+              horizontalFlip(selectionAsPixels, selectionsWidth, selectionsHeight)
+            selectionAsPixels = 
+              axisFlip(selectionAsPixels[0], selectionAsPixels[1], selectionAsPixels[2])
+
+        rotatedData = []
+        thisPixelIndex = 0
+        while thisPixelIndex < selectionAsPixels[0].length
+          colorIndex = 0
+          while colorIndex < 4
+            rotatedData.push selectionAsPixels[0][thisPixelIndex][colorIndex]
+            colorIndex++
+          thisPixelIndex++
+
+        rotatedSelection = document.createElement('canvas')
+        rotatedSelection = rotatedSelection.getContext('2d')
+        rotatedSelection = 
+          rotatedSelection.createImageData(selectionAsPixels[1], selectionAsPixels[2])
+
+        datumIndex = 0
+        while datumIndex < rotatedData.length
+          rotatedSelection.data[datumIndex] = rotatedData[datumIndex]
+          datumIndex++
+
+        selection = rotatedSelection
+
+        selectionsWidth = rotatedSelection.width
+        selectionsHeight = rotatedSelection.height
+
+        canvasDataAsImage = new Image()
+        canvasDataAsImage.onload = ->
+          ctContext.drawImage(canvasDataAsImage,0,0)
+          cH.push ctCanvas.toDataURL()
+          cH.shift()
+          cF = []
+          ctContext.putImageData(selection, selectionX, selectionY)
+          rightEdge = selectionX + selectionsWidth
+          bottomEdge = selectionY + selectionsHeight
+          drawSelectBox(ctContext, selectionX - 1, selectionY - 1, rightEdge, bottomEdge)
+        canvasDataAsImage.src = cH[cH.length - 1]
+
         tH.pop()
         drawToolbars()
         $('#menuDiv').css('top',(window.innerHeight).toString())

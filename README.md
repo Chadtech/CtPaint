@@ -48,7 +48,7 @@ Here is an incomplete list of features, with the ones I have finished checked of
 * X Horizontal swap of Color Swatches 
 * X Vertical swap of Color Swatches
 * X Invert colors of canvas
-* Invert colors of selected region
+* X Invert colors of selected region
 * X Line Draw tool
 * X Undo
 * X Redo
@@ -58,7 +58,7 @@ Here is an incomplete list of features, with the ones I have finished checked of
 * X Resize canvas by text field
 * Arrow key scrolling
 * X Rotate Canvas
-* Rotate selected area
+* X Rotate selected area
 * X Sample color
 * Scale canvas
 * Scale selected area
