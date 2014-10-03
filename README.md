@@ -74,6 +74,7 @@ General to dos and bugs to fix:
 * X Mouse canvas exit
 * X redo resize memory
 * X discriminate between pasting and opening outside image (by canvas and image size)
+* Menu click region
 
 ------- LICENSING
 

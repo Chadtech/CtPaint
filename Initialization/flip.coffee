@@ -1,3 +1,7 @@
+###
+  These are the functions relevant to flipping images, whether that
+  image be the canvas itself, or a selection of the canvas. 
+###
 flipAction = () ->
   menuUp = true
   normalCircumstance = false
@@ -14,16 +18,38 @@ flipAction = () ->
 
   whatSortOfDataSorting = flipDataSorting
 
+###
+  flipDataSorting does all the heavy lifting of the flip 
+  tool. 
+
+  After listening to the key that was pressed and working with it.
+  It goes into one of four distinct sectionf of code: (A) flip
+  a selected area horizontally, (B) flip the canvas horizontally
+  (C) flip a selected area vertically; and (D) flip the canvas
+  vertically
+
+  All the sections basically flow the same way:
+    (a) Get the data of the image being manipulated
+    (b) Convert it into an array of pixels (instead 
+    of an array of color values)
+    (c) Rearrange it accordingly
+    (d) Turn it back into image data 
+    (e) Paste it back onto the canvas, and wrap up the
+    whole operation
+###
 flipDataSorting = ( inputMaterial ) ->
   if inputMaterial isnt undefined
     acceptableKeys = ['x','y']
     if inputMaterial in acceptableKeys
       switch inputMaterial
         when 'x'
+          #   ( A )
           if areaSelected
+            #   ( a )
             selectionsData = selection.data
             selectionInPixels = []
 
+            #   ( b )
             selectionIndex = 0
             colorOfDatum = []
             while selectionIndex < selectionsData.length
@@ -33,6 +59,7 @@ flipDataSorting = ( inputMaterial ) ->
                 colorOfDatum = []
               selectionIndex++
 
+            #   ( c )
             flippedSelection = []
             pixelIndex = 0
             while pixelIndex < selectionInPixels.length
@@ -43,6 +70,7 @@ flipDataSorting = ( inputMaterial ) ->
               flippedSelection.push selectionInPixels[pixelToFlip]
               pixelIndex++
 
+            #   ( d )
             pixelIndex = 0
             while pixelIndex < flippedSelection.length
               colorIndex = 0
@@ -53,6 +81,7 @@ flipDataSorting = ( inputMaterial ) ->
                 colorIndex++
               pixelIndex++
 
+            #   ( e )
             ctContext.putImageData(selection, selectionX, selectionY)
             tH.pop()
             drawToolbars()
@@ -60,13 +89,16 @@ flipDataSorting = ( inputMaterial ) ->
             normalCircumstance = true
             menuUp = false
 
+          #   ( B )
           else
+            #   ( a )
             tWidth = ctContext.canvas.width
             tHeight = ctContext.canvas.height
             canvasAsWeFoundIt = ctContext.getImageData(0, 0, tWidth, tHeight)
             canvasData = canvasAsWeFoundIt.data
             canvasInPixels = []
 
+            #   ( b )
             canvasIndex = 0
             colorAtDatum = []
             while canvasIndex < canvasData.length
@@ -76,6 +108,7 @@ flipDataSorting = ( inputMaterial ) ->
                 colorAtDatum = []
               canvasIndex++
 
+            #   ( c )
             flippedCanvas = []
             pixelIndex = 0
             while pixelIndex < canvasInPixels.length
@@ -86,6 +119,7 @@ flipDataSorting = ( inputMaterial ) ->
               flippedCanvas.push canvasInPixels[pixelToFlip]
               pixelIndex++
 
+            #  ( d )
             pixelIndex = 0
             while pixelIndex < canvasInPixels.length
               colorIndex = 0
@@ -96,6 +130,7 @@ flipDataSorting = ( inputMaterial ) ->
                 colorIndex++
               pixelIndex++
 
+            #   ( e )
             ctContext.putImageData(canvasAsWeFoundIt, 0, 0)
             cH.push ctCanvas.toDataURL()
             cH.shift()
@@ -105,11 +140,15 @@ flipDataSorting = ( inputMaterial ) ->
             $('#menuDiv').css('top',(window.innerHeight).toString())
             normalCircumstance = true
             menuUp = false
+
         when 'y'
+          #   ( C )
           if areaSelected
+            #   ( a )
             selectionsData = selection.data
             selectionInPixels = []
 
+            #   ( b )
             selectionIndex = 0
             colorOfDatum = []
             while selectionIndex < selectionsData.length
@@ -119,6 +158,7 @@ flipDataSorting = ( inputMaterial ) ->
                 colorOfDatum = []
               selectionIndex++
 
+            #   ( c )
             flippedSelection = []
             rowIndex = 0
             while rowIndex < (selectionInPixels.length // selectionsWidth)
@@ -130,6 +170,7 @@ flipDataSorting = ( inputMaterial ) ->
                 columnIndex++
               rowIndex++
 
+            #   ( d )
             pixelIndex = 0
             while pixelIndex < flippedSelection.length
               colorIndex = 0
@@ -140,19 +181,23 @@ flipDataSorting = ( inputMaterial ) ->
                 colorIndex++
               pixelIndex++
 
+            #   ( e )
             ctContext.putImageData(selection, selectionX, selectionY)
             tH.pop()
             drawToolbars()
             $('#menuDiv').css('top',(window.innerHeight).toString())
             normalCircumstance = true
             menuUp = false
+          #   ( D )
           else
+            #   ( a )
             tWidth = ctContext.canvas.width
             tHeight = ctContext.canvas.height
             canvasAsWeFoundIt = ctContext.getImageData(0, 0, tWidth, tHeight)
             canvasData = canvasAsWeFoundIt.data
             canvasInPixels = []
 
+            #   ( b )
             canvasIndex = 0
             colorAtDatum = []
             while canvasIndex < canvasData.length
@@ -162,6 +207,7 @@ flipDataSorting = ( inputMaterial ) ->
                 colorAtDatum = []
               canvasIndex++
 
+            #   ( c )
             flippedCanvas = []
             rowIndex = 0
             while rowIndex < (canvasInPixels.length // tWidth)
@@ -173,6 +219,7 @@ flipDataSorting = ( inputMaterial ) ->
                 columnIndex++
               rowIndex++
 
+            #   ( d )
             pixelIndex = 0
             while pixelIndex < canvasInPixels.length
               colorIndex = 0
@@ -183,6 +230,7 @@ flipDataSorting = ( inputMaterial ) ->
                 colorIndex++
               pixelIndex++
 
+            #   ( e )
             ctContext.putImageData(canvasAsWeFoundIt, 0, 0)
             cH.push ctCanvas.toDataURL()
             cH.shift()
