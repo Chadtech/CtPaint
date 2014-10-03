@@ -1,3 +1,6 @@
+###
+  Replace will replace a given color with another within.
+###
 replaceAction = () ->
   menuUp = true
   normalCircumstance = false
@@ -40,48 +43,49 @@ replaceDataSorting = ( inputMaterial ) ->
           if spotInMenuDatum < 11
             spotInMenuDatum++
         when 'enter'
-          colorToReplace = hexToRGB(menuDatum.substr(0,6))
-          replacement = hexToRGB(menuDatum.substr(6,6))
-          replacement.push 255
+          if not areaSelected
+            colorToReplace = hexToRGB(menuDatum.substr(0,6))
+            replacement = hexToRGB(menuDatum.substr(6,6))
+            replacement.push 255
 
-          tWidth = ctContext.canvas.width
-          tHeight = ctContext.canvas.height
-          canvasAsWeFoundIt = ctContext.getImageData(0, 0, tWidth, tHeight)
-          canvasData = canvasAsWeFoundIt.data
-          canvasInPixels = []
+            tWidth = ctContext.canvas.width
+            tHeight = ctContext.canvas.height
+            canvasAsWeFoundIt = ctContext.getImageData(0, 0, tWidth, tHeight)
+            canvasData = canvasAsWeFoundIt.data
+            canvasInPixels = []
 
-          canvasIndex = 0
-          colorAtDatum = []
-          while canvasIndex < canvasData.length
-            colorAtDatum.push canvasData[canvasIndex]
-            if canvasIndex % 4 is 3
-              if sameColorCheck(colorAtDatum, colorToReplace)
-                canvasInPixels.push replacement
-              else
-                canvasInPixels.push colorAtDatum
-              colorAtDatum = []
-            canvasIndex++
+            canvasIndex = 0
+            colorAtDatum = []
+            while canvasIndex < canvasData.length
+              colorAtDatum.push canvasData[canvasIndex]
+              if canvasIndex % 4 is 3
+                if sameColorCheck(colorAtDatum, colorToReplace)
+                  canvasInPixels.push replacement
+                else
+                  canvasInPixels.push colorAtDatum
+                colorAtDatum = []
+              canvasIndex++
 
-          pixelIndex = 0
-          while pixelIndex < canvasInPixels.length
-            colorIndex = 0
-            while colorIndex < 4
-              datumIndex = pixelIndex * 4
-              canvasAsWeFoundIt.data[datumIndex + colorIndex] = 
-                canvasInPixels[pixelIndex][colorIndex]
-              colorIndex++
-            pixelIndex++
+            pixelIndex = 0
+            while pixelIndex < canvasInPixels.length
+              colorIndex = 0
+              while colorIndex < 4
+                datumIndex = pixelIndex * 4
+                canvasAsWeFoundIt.data[datumIndex + colorIndex] = 
+                  canvasInPixels[pixelIndex][colorIndex]
+                colorIndex++
+              pixelIndex++
 
-          ctContext.putImageData(canvasAsWeFoundIt, 0, 0)
-          cH.push ctCanvas.toDataURL()
-          cH.shift()
-          cF = []
+            ctContext.putImageData(canvasAsWeFoundIt, 0, 0)
+            cH.push ctCanvas.toDataURL()
+            cH.shift()
+            cF = []
 
-          $('#menuDiv').css('top',(window.innerHeight).toString())
-          normalCircumstance = true
-          menuUp = false
-          tH.pop()
-          drawToolbars()
+            $('#menuDiv').css('top',(window.innerHeight).toString())
+            normalCircumstance = true
+            menuUp = false
+            tH.pop()
+            drawToolbars()
     drawReplaceMenu()
 
 drawReplaceMenu = () ->

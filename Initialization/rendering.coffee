@@ -1,3 +1,15 @@
+###
+  PositionCorners figures out where to put the little corner divs at the edges
+  of the canvas. Three of the four corners are just for appearance. Clicking
+  on the lower right one will actually resize the canvas.
+
+  Currently I am debating whether its worth having these at all.
+  They act more like needless decoration than actual visual ques.
+
+  Would a use not actually know they can resize without them?
+  After all, arent modern computer users familiar with clicking 
+  dragging? Dont they have a sense of that capacity?
+###
 positionCorners = ->
   if cornersVisible
     $('#corner0Div').css('top',(canvasYPos-1+canvasYOffset).toString())
@@ -25,10 +37,16 @@ positionCorners = ->
     $('#corner3Div').css('top',(window.innerHeight).toString())
     $('#corner3Div').css('left',(canvasXPos-1+canvasXOffset).toString())  
 
+###
+  Figure out where to put the canvas
+###
 positionCanvas = ->
   $('#ctpaintDiv').css('top', (canvasYPos+canvasYOffset).toString())
   $('#ctpaintDiv').css('left',(canvasXPos+canvasXOffset).toString())
 
+###
+  Only done at the very initialization of CtPaint.
+###
 prepareCanvas = ->
   ctContext.canvas.width = canvasWidth
   ctContext.canvas.height = canvasHeight
@@ -39,6 +57,11 @@ prepareCanvas = ->
   positionCanvas()
   positionCorners()
 
+###
+  Position the menu div. The menu is un-(de?)-initialized
+  by just putting the menu off screen and switching tools
+  (ending the menus functionality)
+###
 positionMenu = () ->
   if not menuUp
     $('#menuDiv').css('top',(window.innerHeight).toString())
