@@ -56,7 +56,6 @@ Here is an incomplete list of features, with the ones I have finished checked of
 * X Replace color
 * X Resize canvas by click and drag
 * X Resize canvas by text field
-* Arrow key scrolling
 * X Rotate Canvas
 * X Rotate selected area
 * X Sample color
@@ -68,6 +67,7 @@ Here is an incomplete list of features, with the ones I have finished checked of
 * Zoom
 * Tool cursor images
 * Secondary color transparency
+* Arrow key scrolling
 
 General to dos and bugs to fix:
 
