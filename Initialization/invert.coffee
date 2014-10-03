@@ -1,6 +1,7 @@
 invertAction = () ->
   tH.push ctPaintTools[12]
   if not areaSelected
+    # Get the canvass data
     tWidth = ctContext.canvas.width
     tHeight = ctContext.canvas.height
     canvasAsWeFoundIt = ctContext.getImageData(0, 0, tWidth, tHeight)
@@ -10,6 +11,7 @@ invertAction = () ->
     cF = []
     canvasInPixels = []
 
+    # Turn it into an array of pixels instead of canvas data
     canvasIndex = 0
     colorAtDatum = []
     while canvasIndex < canvasData.length
@@ -19,6 +21,7 @@ invertAction = () ->
         colorAtDatum = []
       canvasIndex++
 
+    # Take each pixel, and invert the color
     pixelIndex = 0
     while pixelIndex < canvasInPixels.length
       red = canvasInPixels[pixelIndex][0]
@@ -27,6 +30,7 @@ invertAction = () ->
       canvasInPixels[pixelIndex] = [ 255 - red, 255 - green, 255 - blue, 255]
       pixelIndex++
 
+    # Turn it back into data
     pixelIndex = 0
     while pixelIndex < canvasInPixels.length
       colorIndex = 0
@@ -37,6 +41,7 @@ invertAction = () ->
         colorIndex++
       pixelIndex++
 
+    # Paste it back onto the canvas
     ctContext.putImageData(canvasAsWeFoundIt, 0, 0)
     cH.push ctCanvas.toDataURL()
     cH.shift()
