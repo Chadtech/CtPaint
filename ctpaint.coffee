@@ -1061,6 +1061,10 @@ pointAction = (canvas, color, beginX, beginY, endX, endY) ->
       magnitudeIncrement++
     
     
+###
+  These are the functions relevant to flipping images, whether that
+  image be the canvas itself, or a selection of the canvas. 
+###
 flipAction = () ->
   menuUp = true
   normalCircumstance = false
@@ -1077,16 +1081,38 @@ flipAction = () ->
 
   whatSortOfDataSorting = flipDataSorting
 
+###
+  flipDataSorting does all the heavy lifting of the flip 
+  tool. 
+
+  After listening to the key that was pressed and working with it.
+  It goes into one of four distinct sectionf of code: (A) flip
+  a selected area horizontally, (B) flip the canvas horizontally
+  (C) flip a selected area vertically; and (D) flip the canvas
+  vertically
+
+  All the sections basically flow the same way:
+    (a) Get the data of the image being manipulated
+    (b) Convert it into an array of pixels (instead 
+    of an array of color values)
+    (c) Rearrange it accordingly
+    (d) Turn it back into image data 
+    (e) Paste it back onto the canvas, and wrap up the
+    whole operation
+###
 flipDataSorting = ( inputMaterial ) ->
   if inputMaterial isnt undefined
     acceptableKeys = ['x','y']
     if inputMaterial in acceptableKeys
       switch inputMaterial
         when 'x'
+          #   ( A )
           if areaSelected
+            #   ( a )
             selectionsData = selection.data
             selectionInPixels = []
 
+            #   ( b )
             selectionIndex = 0
             colorOfDatum = []
             while selectionIndex < selectionsData.length
@@ -1096,6 +1122,7 @@ flipDataSorting = ( inputMaterial ) ->
                 colorOfDatum = []
               selectionIndex++
 
+            #   ( c )
             flippedSelection = []
             pixelIndex = 0
             while pixelIndex < selectionInPixels.length
@@ -1106,6 +1133,7 @@ flipDataSorting = ( inputMaterial ) ->
               flippedSelection.push selectionInPixels[pixelToFlip]
               pixelIndex++
 
+            #   ( d )
             pixelIndex = 0
             while pixelIndex < flippedSelection.length
               colorIndex = 0
@@ -1116,6 +1144,7 @@ flipDataSorting = ( inputMaterial ) ->
                 colorIndex++
               pixelIndex++
 
+            #   ( e )
             ctContext.putImageData(selection, selectionX, selectionY)
             tH.pop()
             drawToolbars()
@@ -1123,13 +1152,16 @@ flipDataSorting = ( inputMaterial ) ->
             normalCircumstance = true
             menuUp = false
 
+          #   ( B )
           else
+            #   ( a )
             tWidth = ctContext.canvas.width
             tHeight = ctContext.canvas.height
             canvasAsWeFoundIt = ctContext.getImageData(0, 0, tWidth, tHeight)
             canvasData = canvasAsWeFoundIt.data
             canvasInPixels = []
 
+            #   ( b )
             canvasIndex = 0
             colorAtDatum = []
             while canvasIndex < canvasData.length
@@ -1139,6 +1171,7 @@ flipDataSorting = ( inputMaterial ) ->
                 colorAtDatum = []
               canvasIndex++
 
+            #   ( c )
             flippedCanvas = []
             pixelIndex = 0
             while pixelIndex < canvasInPixels.length
@@ -1149,6 +1182,7 @@ flipDataSorting = ( inputMaterial ) ->
               flippedCanvas.push canvasInPixels[pixelToFlip]
               pixelIndex++
 
+            #  ( d )
             pixelIndex = 0
             while pixelIndex < canvasInPixels.length
               colorIndex = 0
@@ -1159,6 +1193,7 @@ flipDataSorting = ( inputMaterial ) ->
                 colorIndex++
               pixelIndex++
 
+            #   ( e )
             ctContext.putImageData(canvasAsWeFoundIt, 0, 0)
             cH.push ctCanvas.toDataURL()
             cH.shift()
@@ -1168,11 +1203,15 @@ flipDataSorting = ( inputMaterial ) ->
             $('#menuDiv').css('top',(window.innerHeight).toString())
             normalCircumstance = true
             menuUp = false
+
         when 'y'
+          #   ( C )
           if areaSelected
+            #   ( a )
             selectionsData = selection.data
             selectionInPixels = []
 
+            #   ( b )
             selectionIndex = 0
             colorOfDatum = []
             while selectionIndex < selectionsData.length
@@ -1182,6 +1221,7 @@ flipDataSorting = ( inputMaterial ) ->
                 colorOfDatum = []
               selectionIndex++
 
+            #   ( c )
             flippedSelection = []
             rowIndex = 0
             while rowIndex < (selectionInPixels.length // selectionsWidth)
@@ -1193,6 +1233,7 @@ flipDataSorting = ( inputMaterial ) ->
                 columnIndex++
               rowIndex++
 
+            #   ( d )
             pixelIndex = 0
             while pixelIndex < flippedSelection.length
               colorIndex = 0
@@ -1203,19 +1244,23 @@ flipDataSorting = ( inputMaterial ) ->
                 colorIndex++
               pixelIndex++
 
+            #   ( e )
             ctContext.putImageData(selection, selectionX, selectionY)
             tH.pop()
             drawToolbars()
             $('#menuDiv').css('top',(window.innerHeight).toString())
             normalCircumstance = true
             menuUp = false
+          #   ( D )
           else
+            #   ( a )
             tWidth = ctContext.canvas.width
             tHeight = ctContext.canvas.height
             canvasAsWeFoundIt = ctContext.getImageData(0, 0, tWidth, tHeight)
             canvasData = canvasAsWeFoundIt.data
             canvasInPixels = []
 
+            #   ( b )
             canvasIndex = 0
             colorAtDatum = []
             while canvasIndex < canvasData.length
@@ -1225,6 +1270,7 @@ flipDataSorting = ( inputMaterial ) ->
                 colorAtDatum = []
               canvasIndex++
 
+            #   ( c )
             flippedCanvas = []
             rowIndex = 0
             while rowIndex < (canvasInPixels.length // tWidth)
@@ -1236,6 +1282,7 @@ flipDataSorting = ( inputMaterial ) ->
                 columnIndex++
               rowIndex++
 
+            #   ( d )
             pixelIndex = 0
             while pixelIndex < canvasInPixels.length
               colorIndex = 0
@@ -1246,6 +1293,7 @@ flipDataSorting = ( inputMaterial ) ->
                 colorIndex++
               pixelIndex++
 
+            #   ( e )
             ctContext.putImageData(canvasAsWeFoundIt, 0, 0)
             cH.push ctCanvas.toDataURL()
             cH.shift()
@@ -1444,6 +1492,7 @@ axisFlip = (imageInPixels, itsWidth, itsHeight) ->
 invertAction = () ->
   tH.push ctPaintTools[12]
   if not areaSelected
+    # Get the canvass data
     tWidth = ctContext.canvas.width
     tHeight = ctContext.canvas.height
     canvasAsWeFoundIt = ctContext.getImageData(0, 0, tWidth, tHeight)
@@ -1453,6 +1502,7 @@ invertAction = () ->
     cF = []
     canvasInPixels = []
 
+    # Turn it into an array of pixels instead of canvas data
     canvasIndex = 0
     colorAtDatum = []
     while canvasIndex < canvasData.length
@@ -1462,6 +1512,7 @@ invertAction = () ->
         colorAtDatum = []
       canvasIndex++
 
+    # Take each pixel, and invert the color
     pixelIndex = 0
     while pixelIndex < canvasInPixels.length
       red = canvasInPixels[pixelIndex][0]
@@ -1470,6 +1521,7 @@ invertAction = () ->
       canvasInPixels[pixelIndex] = [ 255 - red, 255 - green, 255 - blue, 255]
       pixelIndex++
 
+    # Turn it back into data
     pixelIndex = 0
     while pixelIndex < canvasInPixels.length
       colorIndex = 0
@@ -1480,6 +1532,7 @@ invertAction = () ->
         colorIndex++
       pixelIndex++
 
+    # Paste it back onto the canvas
     ctContext.putImageData(canvasAsWeFoundIt, 0, 0)
     cH.push ctCanvas.toDataURL()
     cH.shift()
@@ -1523,6 +1576,9 @@ invertAction = () ->
   ,20)
 
   
+###
+  Replace will replace a given color with another within.
+###
 replaceAction = () ->
   menuUp = true
   normalCircumstance = false
@@ -1565,48 +1621,100 @@ replaceDataSorting = ( inputMaterial ) ->
           if spotInMenuDatum < 11
             spotInMenuDatum++
         when 'enter'
-          colorToReplace = hexToRGB(menuDatum.substr(0,6))
-          replacement = hexToRGB(menuDatum.substr(6,6))
-          replacement.push 255
+          if not areaSelected
+            colorToReplace = hexToRGB(menuDatum.substr(0,6))
+            replacement = hexToRGB(menuDatum.substr(6,6))
+            replacement.push 255
 
-          tWidth = ctContext.canvas.width
-          tHeight = ctContext.canvas.height
-          canvasAsWeFoundIt = ctContext.getImageData(0, 0, tWidth, tHeight)
-          canvasData = canvasAsWeFoundIt.data
-          canvasInPixels = []
+            tWidth = ctContext.canvas.width
+            tHeight = ctContext.canvas.height
+            canvasAsWeFoundIt = ctContext.getImageData(0, 0, tWidth, tHeight)
+            canvasData = canvasAsWeFoundIt.data
+            canvasInPixels = []
 
-          canvasIndex = 0
-          colorAtDatum = []
-          while canvasIndex < canvasData.length
-            colorAtDatum.push canvasData[canvasIndex]
-            if canvasIndex % 4 is 3
-              if sameColorCheck(colorAtDatum, colorToReplace)
-                canvasInPixels.push replacement
-              else
-                canvasInPixels.push colorAtDatum
-              colorAtDatum = []
-            canvasIndex++
+            canvasIndex = 0
+            colorAtDatum = []
+            while canvasIndex < canvasData.length
+              colorAtDatum.push canvasData[canvasIndex]
+              if canvasIndex % 4 is 3
+                if sameColorCheck(colorAtDatum, colorToReplace)
+                  canvasInPixels.push replacement
+                else
+                  canvasInPixels.push colorAtDatum
+                colorAtDatum = []
+              canvasIndex++
 
-          pixelIndex = 0
-          while pixelIndex < canvasInPixels.length
-            colorIndex = 0
-            while colorIndex < 4
-              datumIndex = pixelIndex * 4
-              canvasAsWeFoundIt.data[datumIndex + colorIndex] = 
-                canvasInPixels[pixelIndex][colorIndex]
-              colorIndex++
-            pixelIndex++
+            pixelIndex = 0
+            while pixelIndex < canvasInPixels.length
+              colorIndex = 0
+              while colorIndex < 4
+                datumIndex = pixelIndex * 4
+                canvasAsWeFoundIt.data[datumIndex + colorIndex] = 
+                  canvasInPixels[pixelIndex][colorIndex]
+                colorIndex++
+              pixelIndex++
 
-          ctContext.putImageData(canvasAsWeFoundIt, 0, 0)
-          cH.push ctCanvas.toDataURL()
-          cH.shift()
-          cF = []
+            ctContext.putImageData(canvasAsWeFoundIt, 0, 0)
+            cH.push ctCanvas.toDataURL()
+            cH.shift()
+            cF = []
 
-          $('#menuDiv').css('top',(window.innerHeight).toString())
-          normalCircumstance = true
-          menuUp = false
-          tH.pop()
-          drawToolbars()
+            $('#menuDiv').css('top',(window.innerHeight).toString())
+            normalCircumstance = true
+            menuUp = false
+            tH.pop()
+            drawToolbars()
+          else
+            colorToReplace = hexToRGB(menuDatum.substr(0,6))
+            replacement = hexToRGB(menuDatum.substr(6,6))
+            replacement.push 255
+
+            selectionData = selection.data
+            selectionInPixels = []
+
+            selectionIndex = 0
+            colorAtDatum = []
+            while selectionIndex < selectionData.length
+              colorAtDatum.push selectionData[selectionIndex]
+              if selectionIndex % 4 is 3
+                #console.log colorAtDatum, colorToReplace
+                if sameColorCheck(colorAtDatum, colorToReplace)
+                  selectionInPixels.push replacement
+                  #console.log 'B'
+                else
+                  selectionInPixels.push colorAtDatum
+                colorAtDatum = []
+              selectionIndex++
+
+            pixelIndex = 0
+            while pixelIndex < selectionInPixels.length
+              colorIndex = 0
+              while colorIndex < 4
+                datumIndex = pixelIndex * 4
+                selection.data[datumIndex + colorIndex] = 
+                  selectionInPixels[pixelIndex][colorIndex]
+                colorIndex++
+              pixelIndex++
+
+            console.log 'A', selection
+
+            canvasDataAsImage = new Image()
+            canvasDataAsImage.onload = ->
+              ctContext.drawImage(canvasDataAsImage,0,0)
+              cH.push ctCanvas.toDataURL()
+              cH.shift()
+              cF = []
+              ctContext.putImageData(selection, selectionX, selectionY)
+              rightEdge = selectionX + selectionsWidth
+              bottomEdge = selectionY + selectionsHeight
+              drawSelectBox(ctContext, selectionX - 1, selectionY - 1, rightEdge, bottomEdge)
+            canvasDataAsImage.src = cH[cH.length - 1]
+
+            $('#menuDiv').css('top',(window.innerHeight).toString())
+            normalCircumstance = true
+            menuUp = false
+            tH.pop()
+            drawToolbars()
     drawReplaceMenu()
 
 drawReplaceMenu = () ->
@@ -1723,6 +1831,7 @@ horizontalColorSwap = () ->
     drawToolbars()
   ,20)
 
+
 ###
   verticalColorSwap swaps the 4 swatch colors vertically.
   Meaning if the swatches are:
@@ -1778,7 +1887,10 @@ pasteAction = ->
   tH.push ctPaintTools[19]
   drawToolbars()
   
+  # Only paste if there is something in the clipboard
   if copyExists
+    # If area is selected, we need to ditch the selection
+    # Before pasting (A)
     if areaSelected
       areaSelected = false
       canvasDataAsImage = new Image()
@@ -1788,11 +1900,15 @@ pasteAction = ->
         cH.push ctCanvas.toDataURL()
         cH.shift()
         cF = []
+        # (A)
         pasteTheSelection()
       canvasDataAsImage.src = cH[cH.length - 1]
     else
+      # (A)
       pasteTheSelection()
 
+  # Put a little delay so the user has a visual impression
+  # that the tool was used
   setTimeout( ()->
     tH.pop()
     drawToolbars()
@@ -1801,6 +1917,7 @@ pasteAction = ->
   ,20)
 
 pasteTheSelection = ->
+  # Set the selection to what was in the clipboard
   selection = copyMemory
   selectionX = 0
   selectionY = 0
@@ -1808,9 +1925,16 @@ pasteTheSelection = ->
   selectionsHeight = selection.height
   canvasDataAsImage = new Image()
   canvasDataAsImage.onload = ->
+    # Draw the canvas as we know it to be
     ctContext.drawImage(canvasDataAsImage,0,0)
+    # Then draw the selection
     ctContext.putImageData(selection, selectionX, selectionY)
+    # Then draw that little box around the selection
     drawSelectBox(ctContext, -1, -1, selectionsWidth + 1, selectionsHeight + 1)
+    # Note that none of this is saved, its merely drawn.
+    # These drawings are not incorporated into the data
+    # of the canvas.
+    # It gets incorporated upon 'exit' from selection.
   canvasDataAsImage.src = cH[cH.length - 1]
   areaSelected = true
 
@@ -1890,21 +2014,42 @@ undoAndRedoSizeComparison = (pastCanvas) ->
     ctCanvas.style.height = (canvasHeight).toString()+'px'
     positionCorners()
 redoAction = ->
+  # Update the tool history and draw the toolbars to reflect
+  # What tool is in use.
   tH.push ctPaintTools[23]
   drawToolbars()
 
+  # If there is actually a canvas in the 'future canvas'
+  # queue, replace our current canvas with it.
   if cF.length > 0
     cH.push cF.pop()
     canvasDataAsImage = new Image()
     canvasDataAsImage.onload = ->
+      # Figure out what to do if the replacing canvas
+      # Isnt the same size as our current canvas
       undoAndRedoSizeComparison(canvasDataAsImage)
       ctContext.drawImage(canvasDataAsImage,0,0)
     canvasDataAsImage.src = cH[cH.length - 1]
 
+  # Go back to the previous tool, but put a little delay on it
+  # So the user gets the visual impresssion that the redo
+  # Actually occured.
   setTimeout( ()->
     tH.pop()
     drawToolbars()
   ,20)
+###
+  PositionCorners figures out where to put the little corner divs at the edges
+  of the canvas. Three of the four corners are just for appearance. Clicking
+  on the lower right one will actually resize the canvas.
+
+  Currently I am debating whether its worth having these at all.
+  They act more like needless decoration than actual visual ques.
+
+  Would a use not actually know they can resize without them?
+  After all, arent modern computer users familiar with clicking 
+  dragging? Dont they have a sense of that capacity?
+###
 positionCorners = ->
   if cornersVisible
     $('#corner0Div').css('top',(canvasYPos-1+canvasYOffset).toString())
@@ -1932,10 +2077,16 @@ positionCorners = ->
     $('#corner3Div').css('top',(window.innerHeight).toString())
     $('#corner3Div').css('left',(canvasXPos-1+canvasXOffset).toString())  
 
+###
+  Figure out where to put the canvas
+###
 positionCanvas = ->
   $('#ctpaintDiv').css('top', (canvasYPos+canvasYOffset).toString())
   $('#ctpaintDiv').css('left',(canvasXPos+canvasXOffset).toString())
 
+###
+  Only done at the very initialization of CtPaint.
+###
 prepareCanvas = ->
   ctContext.canvas.width = canvasWidth
   ctContext.canvas.height = canvasHeight
@@ -1946,6 +2097,11 @@ prepareCanvas = ->
   positionCanvas()
   positionCorners()
 
+###
+  Position the menu div. The menu is un-(de?)-initialized
+  by just putting the menu off screen and switching tools
+  (ending the menus functionality)
+###
 positionMenu = () ->
   if not menuUp
     $('#menuDiv').css('top',(window.innerHeight).toString())
