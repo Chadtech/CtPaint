@@ -54,7 +54,7 @@ Here is an incomplete list of features, with the ones I have finished checked of
 * X Redo
 * X Open File
 * X Replace color
-* Replace color of selected area
+* X Replace color of selected area
 * X Resize canvas by click and drag
 * X Resize canvas by text field
 * X Rotate Canvas

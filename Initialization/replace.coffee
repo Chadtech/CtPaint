@@ -116,8 +116,6 @@ replaceDataSorting = ( inputMaterial ) ->
                 colorIndex++
               pixelIndex++
 
-            console.log 'A', selection
-
             canvasDataAsImage = new Image()
             canvasDataAsImage.onload = ->
               ctContext.drawImage(canvasDataAsImage,0,0)
