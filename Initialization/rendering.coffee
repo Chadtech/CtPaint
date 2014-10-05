@@ -133,12 +133,15 @@ magnitudeToGlyph = () ->
   else
     return tH[tH.length - 1].magnitude.toString(16).toUpperCase()
 
-drawInformationToolbar1 = ->
+drawInformationToolbar1 = ( extraInformation ) ->
+  if extraInformation is undefined
+    extraInformation = ''
+  toolbar1Context.drawImage(toolbar1sImage1,188,3)   
   xPos = event.clientX - (toolbarWidth + 5) - canvasXOffset
   yPos = event.clientY - 5 - canvasYOffset
   colorValue = getColorValue(ctContext, xPos, yPos).toUpperCase()
   coordinates = ', (' + xPos.toString() + ', ' + yPos.toString() + ')'
-  colorAndCoordinates = colorValue + coordinates
+  colorAndCoordinates = colorValue + coordinates + extraInformation
   drawStringAsCommandPrompt(toolbar1Context, colorAndCoordinates, 0, 191, 12)
 
 drawInformationToolbar0 = ->

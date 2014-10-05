@@ -117,8 +117,6 @@ normalCircumstance = true
 
 fillProceed = true
 
-imageToLoad = 'Wow, cool!'
-
 ###
   xSpot and ySpot are the global variables for the x coordinated.
   They are only updated by the getMousePositionOnCanvas function.
@@ -130,6 +128,12 @@ ySpot = undefined
 
 oldX = undefined
 oldY = undefined
+
+cursorX = undefined
+cursorY = undefined
+
+oldCursorX = undefined
+oldCursorY = undefined
 
 buttonWidth = 24
 buttonHeight = 24

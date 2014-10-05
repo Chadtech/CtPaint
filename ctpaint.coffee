@@ -117,8 +117,6 @@ normalCircumstance = true
 
 fillProceed = true
 
-imageToLoad = 'Wow, cool!'
-
 ###
   xSpot and ySpot are the global variables for the x coordinated.
   They are only updated by the getMousePositionOnCanvas function.
@@ -130,6 +128,12 @@ ySpot = undefined
 
 oldX = undefined
 oldY = undefined
+
+cursorX = undefined
+cursorY = undefined
+
+oldCursorX = undefined
+oldCursorY = undefined
 
 buttonWidth = 24
 buttonHeight = 24
@@ -2177,12 +2181,15 @@ magnitudeToGlyph = () ->
   else
     return tH[tH.length - 1].magnitude.toString(16).toUpperCase()
 
-drawInformationToolbar1 = ->
+drawInformationToolbar1 = ( extraInformation ) ->
+  if extraInformation is undefined
+    extraInformation = ''
+  toolbar1Context.drawImage(toolbar1sImage1,188,3)   
   xPos = event.clientX - (toolbarWidth + 5) - canvasXOffset
   yPos = event.clientY - 5 - canvasYOffset
   colorValue = getColorValue(ctContext, xPos, yPos).toUpperCase()
   coordinates = ', (' + xPos.toString() + ', ' + yPos.toString() + ')'
-  colorAndCoordinates = colorValue + coordinates
+  colorAndCoordinates = colorValue + coordinates + extraInformation
   drawStringAsCommandPrompt(toolbar1Context, colorAndCoordinates, 0, 191, 12)
 
 drawInformationToolbar0 = ->
@@ -2365,13 +2372,20 @@ zoomPosture = [
 selectPosture = [
   () ->
     if not areaSelected
-      toolbar1Context.drawImage(toolbar1sImage1,188,3)   
-      drawInformationToolbar0()
-      drawInformationToolbar1()
       if mousePressed
         getMousePositionOnCanvas(event)
         sortedXs = [ Math.min(xSpot, oldX), Math.max(xSpot, oldX) ]
         sortedYs = [ Math.min(ySpot, oldY), Math.max(ySpot, oldY) ]
+
+        toolbar1Context.drawImage(toolbar1sImage1,188,3)   
+        drawInformationToolbar0()
+        boxInformation = ' (' 
+        boxInformation += Math.abs(xSpot - oldX).toString() 
+        boxInformation += ', '
+        boxInformation += Math.abs(ySpot - oldY).toString()
+        boxInformation += ')'
+        drawInformationToolbar1( boxInformation )
+
         originX = sortedXs[0] - 1
         originY = sortedYs[0] - 1
         otherSideX = sortedXs[1] + 1
@@ -2390,6 +2404,17 @@ selectPosture = [
         gripY = selectionY + yOffset
         rightEdge = gripX + selectionsWidth
         bottomEdge = gripY + selectionsHeight
+
+        toolbar1Context.drawImage(toolbar1sImage1,188,3)   
+        drawInformationToolbar0()
+        boxInformation = ' (' 
+        boxInformation += selectionX.toString() 
+        boxInformation += ', '
+        boxInformation += selectionY.toString()
+        boxInformation += ')'
+        drawInformationToolbar1( boxInformation )
+
+
         canvasDataAsImage = new Image()
         canvasDataAsImage.onload = ->
           ctContext.drawImage(canvasDataAsImage,0,0)

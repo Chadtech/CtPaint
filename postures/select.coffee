@@ -1,13 +1,20 @@
 selectPosture = [
   () ->
     if not areaSelected
-      toolbar1Context.drawImage(toolbar1sImage1,188,3)   
-      drawInformationToolbar0()
-      drawInformationToolbar1()
       if mousePressed
         getMousePositionOnCanvas(event)
         sortedXs = [ Math.min(xSpot, oldX), Math.max(xSpot, oldX) ]
         sortedYs = [ Math.min(ySpot, oldY), Math.max(ySpot, oldY) ]
+
+        toolbar1Context.drawImage(toolbar1sImage1,188,3)   
+        drawInformationToolbar0()
+        boxInformation = ' (' 
+        boxInformation += Math.abs(xSpot - oldX).toString() 
+        boxInformation += ', '
+        boxInformation += Math.abs(ySpot - oldY).toString()
+        boxInformation += ')'
+        drawInformationToolbar1( boxInformation )
+
         originX = sortedXs[0] - 1
         originY = sortedYs[0] - 1
         otherSideX = sortedXs[1] + 1
@@ -26,6 +33,17 @@ selectPosture = [
         gripY = selectionY + yOffset
         rightEdge = gripX + selectionsWidth
         bottomEdge = gripY + selectionsHeight
+
+        toolbar1Context.drawImage(toolbar1sImage1,188,3)   
+        drawInformationToolbar0()
+        boxInformation = ' (' 
+        boxInformation += selectionX.toString() 
+        boxInformation += ', '
+        boxInformation += selectionY.toString()
+        boxInformation += ')'
+        drawInformationToolbar1( boxInformation )
+
+
         canvasDataAsImage = new Image()
         canvasDataAsImage.onload = ->
           ctContext.drawImage(canvasDataAsImage,0,0)
