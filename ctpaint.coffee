@@ -541,11 +541,19 @@ drawStringAsCommandPrompt = (canvas, stringToDraw, coloration, whereAtX, whereAt
 
 selectLinesOfLengthX = []
 selectLinesOfLengthY = []
+###
 dataToGive = [
-  [255, 0, 0, 255]
-  [255, 0, 0, 255]
-  [128, 128, 128, 255]
-  [128, 128, 128, 255]
+  [239, 8, 8, 255]
+  [239, 8, 8, 255]
+  [16, 120, 120, 255]
+  [16, 120, 120, 255]
+]
+###
+dataToGive = [
+  [64, 64, 239, 255]
+  [64, 64, 239, 255]
+  [192, 192, 16, 255]
+  [192, 192, 16, 255]
 ]
 
 lineIndex = 0
@@ -1677,10 +1685,8 @@ replaceDataSorting = ( inputMaterial ) ->
             while selectionIndex < selectionData.length
               colorAtDatum.push selectionData[selectionIndex]
               if selectionIndex % 4 is 3
-                #console.log colorAtDatum, colorToReplace
                 if sameColorCheck(colorAtDatum, colorToReplace)
                   selectionInPixels.push replacement
-                  #console.log 'B'
                 else
                   selectionInPixels.push colorAtDatum
                 colorAtDatum = []
@@ -1695,8 +1701,6 @@ replaceDataSorting = ( inputMaterial ) ->
                   selectionInPixels[pixelIndex][colorIndex]
                 colorIndex++
               pixelIndex++
-
-            console.log 'A', selection
 
             canvasDataAsImage = new Image()
             canvasDataAsImage.onload = ->

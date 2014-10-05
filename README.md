@@ -78,6 +78,7 @@ General to dos and bugs to fix:
 * Menu click region
 * Alternate Cursor colors
 * Optimize selection moving
+* Data read out on tool (square size etc)
 
 ------- LICENSING
 
