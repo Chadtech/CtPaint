@@ -80,24 +80,20 @@ drawCircle = ( canvas, color, centerX, centerY, radius, cornerBlock) ->
         putPixel( canvas, color, centerX - yOffset, centerY - xOffset + 1)
         doACornerBlock = false
 
-circleAction = ( canvas, color, xPos, yPos ) ->
+circleAction = ( canvas, color, radiusToPass ) ->
   if not tH[tH.length - 1].mode
     whetherCornerBlocks = false
     if tH[tH.length - 1].magnitude > 1
       whetherCornerBlocks = true
-    calculatedRadius = Math.pow(Math.pow(xPos - oldX, 2) + Math.pow(yPos - oldY, 2), 0.5)
-    calculatedRadius = Math.round(calculatedRadius)
     magnitudeIncrement = 0
     while magnitudeIncrement < tH[tH.length - 1].magnitude
-      thisIncrementsRadius = calculatedRadius - magnitudeIncrement
+      thisIncrementsRadius = radiusToPass - magnitudeIncrement
       drawCircle( canvas, color, oldX, oldY, thisIncrementsRadius, whetherCornerBlocks )
       magnitudeIncrement++
   else
-    calculatedRadius = Math.pow(Math.pow(xPos - oldX, 2) + Math.pow(yPos - oldY, 2), 0.5)
-    calculatedRadius = Math.round(calculatedRadius)
     magnitudeIncrement = 0
-    while magnitudeIncrement < calculatedRadius
-      drawCircle( canvas, color, oldX, oldY, calculatedRadius - magnitudeIncrement, true )
+    while magnitudeIncrement < radiusToPass
+      drawCircle( canvas, color, oldX, oldY, radiusToPass - magnitudeIncrement, true )
       magnitudeIncrement++
 
 

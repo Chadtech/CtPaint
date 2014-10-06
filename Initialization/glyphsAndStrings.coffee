@@ -103,7 +103,7 @@ keysToKeyCodes =
   must be highlighted.
 ###
 stringOfCharacters = 
-  'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ `.,;:'+"'"+'"?!0123456789@#$%^&*(){}[]'
+  'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ `.,;:'+"'"+'"?!0123456789@#$%^&*(){}[]='
 stringsToGlyphs = {}
 stringOfCharactersIndex = 0
 # (A)

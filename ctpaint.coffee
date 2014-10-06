@@ -500,7 +500,7 @@ keysToKeyCodes =
   must be highlighted.
 ###
 stringOfCharacters = 
-  'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ `.,;:'+"'"+'"?!0123456789@#$%^&*(){}[]'
+  'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ `.,;:'+"'"+'"?!0123456789@#$%^&*(){}[]='
 stringsToGlyphs = {}
 stringOfCharactersIndex = 0
 # (A)
@@ -922,24 +922,20 @@ drawCircle = ( canvas, color, centerX, centerY, radius, cornerBlock) ->
         putPixel( canvas, color, centerX - yOffset, centerY - xOffset + 1)
         doACornerBlock = false
 
-circleAction = ( canvas, color, xPos, yPos ) ->
+circleAction = ( canvas, color, radiusToPass ) ->
   if not tH[tH.length - 1].mode
     whetherCornerBlocks = false
     if tH[tH.length - 1].magnitude > 1
       whetherCornerBlocks = true
-    calculatedRadius = Math.pow(Math.pow(xPos - oldX, 2) + Math.pow(yPos - oldY, 2), 0.5)
-    calculatedRadius = Math.round(calculatedRadius)
     magnitudeIncrement = 0
     while magnitudeIncrement < tH[tH.length - 1].magnitude
-      thisIncrementsRadius = calculatedRadius - magnitudeIncrement
+      thisIncrementsRadius = radiusToPass - magnitudeIncrement
       drawCircle( canvas, color, oldX, oldY, thisIncrementsRadius, whetherCornerBlocks )
       magnitudeIncrement++
   else
-    calculatedRadius = Math.pow(Math.pow(xPos - oldX, 2) + Math.pow(yPos - oldY, 2), 0.5)
-    calculatedRadius = Math.round(calculatedRadius)
     magnitudeIncrement = 0
-    while magnitudeIncrement < calculatedRadius
-      drawCircle( canvas, color, oldX, oldY, calculatedRadius - magnitudeIncrement, true )
+    while magnitudeIncrement < radiusToPass
+      drawCircle( canvas, color, oldX, oldY, radiusToPass - magnitudeIncrement, true )
       magnitudeIncrement++
 
 
@@ -2190,10 +2186,10 @@ drawInformationToolbar1 = ( extraInformation ) ->
   if extraInformation is undefined
     extraInformation = ''
   toolbar1Context.drawImage(toolbar1sImage1,188,3)   
-  xPos = event.clientX - (toolbarWidth + 5) - canvasXOffset
-  yPos = event.clientY - 5 - canvasYOffset
-  colorValue = getColorValue(ctContext, xPos, yPos).toUpperCase()
-  coordinates = ', (' + xPos.toString() + ', ' + yPos.toString() + ')'
+  txPos = event.clientX - (toolbarWidth + 5) - canvasXOffset
+  tyPos = event.clientY - 5 - canvasYOffset
+  colorValue = getColorValue(ctContext, txPos, tyPos).toUpperCase()
+  coordinates = ', (' + txPos.toString() + ', ' + tyPos.toString() + ')'
   colorAndCoordinates = colorValue + coordinates + extraInformation
   drawStringAsCommandPrompt(toolbar1Context, colorAndCoordinates, 0, 191, 12)
 
@@ -2547,14 +2543,19 @@ squarePosture = [
 
 circlePosture = [
   () ->
-    drawInformation()
     if mousePressed
+      calculatedRadius = Math.pow(Math.pow(xSpot - oldX, 2) + Math.pow(ySpot - oldY, 2), 0.5)
+      calculatedRadius = Math.round(calculatedRadius)
+      circleInformation = ', r=' + calculatedRadius.toString()
+      drawInformation( circleInformation )
       getMousePositionOnCanvas(event)
       canvasDataAsImage = new Image()
       canvasDataAsImage.onload = ->
         ctContext.drawImage(canvasDataAsImage,0,0)
-        circleAction(ctContext, colorSwatches[0], xSpot, ySpot)
+        circleAction(ctContext, colorSwatches[0], calculatedRadius)
       canvasDataAsImage.src = cH[cH.length - 1]
+    else
+      drawInformation()
   () ->
     mousePressed = true
     getMousePositionOnCanvas(event)
