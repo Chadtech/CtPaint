@@ -2181,6 +2181,11 @@ magnitudeToGlyph = () ->
   else
     return tH[tH.length - 1].magnitude.toString(16).toUpperCase()
 
+drawInformation = ( extraInformation ) ->
+  toolbar1Context.drawImage(toolbar1sImage1,188,3)   
+  drawInformationToolbar0()
+  drawInformationToolbar1( extraInformation )
+
 drawInformationToolbar1 = ( extraInformation ) ->
   if extraInformation is undefined
     extraInformation = ''
@@ -2348,9 +2353,7 @@ keyListeningUnderAbnormalCircumstance = (event) ->
 
 zoomPosture = [
   () ->
-    toolbar1Context.drawImage(toolbar1sImage1,188,3)   
-    drawInformationToolbar0()
-    drawInformationToolbar1()
+    drawInformation()
   () ->
     mousePressed = true
     getMousePositionOnCanvas(event)
@@ -2377,6 +2380,7 @@ selectPosture = [
         sortedXs = [ Math.min(xSpot, oldX), Math.max(xSpot, oldX) ]
         sortedYs = [ Math.min(ySpot, oldY), Math.max(ySpot, oldY) ]
 
+        ###
         toolbar1Context.drawImage(toolbar1sImage1,188,3)   
         drawInformationToolbar0()
         boxInformation = ' (' 
@@ -2385,6 +2389,7 @@ selectPosture = [
         boxInformation += Math.abs(ySpot - oldY).toString()
         boxInformation += ')'
         drawInformationToolbar1( boxInformation )
+        ###
 
         originX = sortedXs[0] - 1
         originY = sortedYs[0] - 1
@@ -2405,6 +2410,7 @@ selectPosture = [
         rightEdge = gripX + selectionsWidth
         bottomEdge = gripY + selectionsHeight
 
+        ###
         toolbar1Context.drawImage(toolbar1sImage1,188,3)   
         drawInformationToolbar0()
         boxInformation = ' (' 
@@ -2413,6 +2419,7 @@ selectPosture = [
         boxInformation += selectionY.toString()
         boxInformation += ')'
         drawInformationToolbar1( boxInformation )
+        ###
 
 
         canvasDataAsImage = new Image()
@@ -2484,9 +2491,7 @@ selectPosture = [
 
 samplePosture = [
   () ->
-    toolbar1Context.drawImage(toolbar1sImage1,188,3)   
-    drawInformationToolbar0()
-    drawInformationToolbar1()
+    drawInformation()
   () ->
     mousePressed = true
   () ->
@@ -2502,9 +2507,7 @@ samplePosture = [
 
 fillPosture = [
   () ->
-    toolbar1Context.drawImage(toolbar1sImage1,188,3)   
-    drawInformationToolbar0()
-    drawInformationToolbar1()
+    drawInformation()
   () ->
     mousePressed = true
     getMousePositionOnCanvas(event)
@@ -2520,9 +2523,7 @@ fillPosture = [
 
 squarePosture = [
   () ->
-    toolbar1Context.drawImage(toolbar1sImage1,188,3)   
-    drawInformationToolbar0()
-    drawInformationToolbar1()
+    drawInformation()
     if mousePressed
       getMousePositionOnCanvas(event)
       canvasDataAsImage = new Image()
@@ -2546,9 +2547,7 @@ squarePosture = [
 
 circlePosture = [
   () ->
-    toolbar1Context.drawImage(toolbar1sImage1,188,3)   
-    drawInformationToolbar0()
-    drawInformationToolbar1()
+    drawInformation()
     if mousePressed
       getMousePositionOnCanvas(event)
       canvasDataAsImage = new Image()
@@ -2570,9 +2569,7 @@ circlePosture = [
 ]
 linePosture = [
   () ->
-    toolbar1Context.drawImage(toolbar1sImage1,188,3)   
-    drawInformationToolbar0()
-    drawInformationToolbar1()
+    drawInformation()
     if mousePressed
       getMousePositionOnCanvas(event)
       canvasDataAsImage = new Image()
@@ -2595,9 +2592,7 @@ linePosture = [
 
 pointPosture = [
   () ->
-    toolbar1Context.drawImage(toolbar1sImage1,188,3)   
-    drawInformationToolbar0()
-    drawInformationToolbar1()
+    drawInformation()
     if mousePressed
       oldX = xSpot
       oldY = ySpot
@@ -2627,9 +2622,7 @@ pointPosture = [
 ]
 emptyPosture = [
   () ->
-    toolbar1Context.drawImage(toolbar1sImage1,188,3)   
-    drawInformationToolbar0()
-    drawInformationToolbar1()
+    drawInformation()
   () ->
     mousePressed = true
   () ->
@@ -2638,9 +2631,7 @@ emptyPosture = [
 ]
 horizontalColorSwapPosture = [
   () ->
-    toolbar1Context.drawImage(toolbar1sImage1,188,3)   
-    drawInformationToolbar0()
-    drawInformationToolbar1()
+    drawInformation()
   () ->
     mousePressed = true
   () ->
@@ -2652,9 +2643,7 @@ horizontalColorSwapPosture = [
 
 verticalColorSwapPosture = [
   () ->
-    toolbar1Context.drawImage(toolbar1sImage1,188,3)   
-    drawInformationToolbar0()
-    drawInformationToolbar1()
+    drawInformation()
   () ->
     mousePressed = true
   () ->

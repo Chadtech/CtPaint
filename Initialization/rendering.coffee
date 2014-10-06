@@ -133,6 +133,11 @@ magnitudeToGlyph = () ->
   else
     return tH[tH.length - 1].magnitude.toString(16).toUpperCase()
 
+drawInformation = ( extraInformation ) ->
+  toolbar1Context.drawImage(toolbar1sImage1,188,3)   
+  drawInformationToolbar0()
+  drawInformationToolbar1( extraInformation )
+
 drawInformationToolbar1 = ( extraInformation ) ->
   if extraInformation is undefined
     extraInformation = ''
