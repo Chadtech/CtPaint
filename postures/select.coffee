@@ -6,16 +6,11 @@ selectPosture = [
         sortedXs = [ Math.min(xSpot, oldX), Math.max(xSpot, oldX) ]
         sortedYs = [ Math.min(ySpot, oldY), Math.max(ySpot, oldY) ]
 
-        ###
-        toolbar1Context.drawImage(toolbar1sImage1,188,3)   
-        drawInformationToolbar0()
-        boxInformation = ' (' 
-        boxInformation += Math.abs(xSpot - oldX).toString() 
-        boxInformation += ', '
-        boxInformation += Math.abs(ySpot - oldY).toString()
-        boxInformation += ')'
-        drawInformationToolbar1( boxInformation )
-        ###
+        boxInformation = (Math.abs(xSpot - oldX) + 1).toString() 
+        boxInformation += 'px x '
+        boxInformation += (Math.abs(ySpot - oldY) + 1).toString()
+        boxInformation += 'px'
+        drawInformation( boxInformation )
 
         originX = sortedXs[0] - 1
         originY = sortedYs[0] - 1
@@ -36,17 +31,11 @@ selectPosture = [
         rightEdge = gripX + selectionsWidth
         bottomEdge = gripY + selectionsHeight
 
-        ###
-        toolbar1Context.drawImage(toolbar1sImage1,188,3)   
-        drawInformationToolbar0()
-        boxInformation = ' (' 
-        boxInformation += selectionX.toString() 
-        boxInformation += ', '
+        boxInformation = selectionX.toString() 
+        boxInformation += 'px x '
         boxInformation += selectionY.toString()
-        boxInformation += ')'
-        drawInformationToolbar1( boxInformation )
-        ###
-
+        boxInformation += 'px'
+        drawInformation( boxInformation )
 
         canvasDataAsImage = new Image()
         canvasDataAsImage.onload = ->

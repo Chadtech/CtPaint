@@ -2140,6 +2140,7 @@ drawToolbars = ->
   toolbar1Context.drawImage(toolbar1sImage0,3,2)
   drawLine(toolbar1Context,[16,20,8],toolbarWidth-1,0,window.innerWidth,0)
   toolbar1Context.drawImage(toolbar1sImage1,188,3)
+  toolbar1Context.drawImage(toolbar1sImage1,458,3)
   drawLine(toolbar1Context,[16,20,8],toolbarWidth-1,0,window.innerWidth,0)
 
   toolbar1Context.fillStyle = rgbToHex(colorSwatches[0])
@@ -2186,12 +2187,14 @@ drawInformationToolbar1 = ( extraInformation ) ->
   if extraInformation is undefined
     extraInformation = ''
   toolbar1Context.drawImage(toolbar1sImage1,188,3)   
-  txPos = event.clientX - (toolbarWidth + 5) - canvasXOffset
-  tyPos = event.clientY - 5 - canvasYOffset
-  colorValue = getColorValue(ctContext, txPos, tyPos).toUpperCase()
-  coordinates = ', (' + txPos.toString() + ', ' + tyPos.toString() + ')'
-  colorAndCoordinates = colorValue + coordinates + extraInformation
+  toolbar1Context.drawImage(toolbar1sImage1,458,3)   
+  xPos = event.clientX - (toolbarWidth + 5) - canvasXOffset
+  yPos = event.clientY - 5 - canvasYOffset
+  colorValue = getColorValue(ctContext, xPos, yPos).toUpperCase()
+  coordinates = ', (' + xPos.toString() + ', ' + yPos.toString() + ')'
+  colorAndCoordinates = colorValue + coordinates
   drawStringAsCommandPrompt(toolbar1Context, colorAndCoordinates, 0, 191, 12)
+  drawStringAsCommandPrompt(toolbar1Context, extraInformation, 0, 461, 12)
 
 drawInformationToolbar0 = ->
   toolbarInformation = magnitudeToGlyph()+modeToGlyph()
@@ -2376,16 +2379,11 @@ selectPosture = [
         sortedXs = [ Math.min(xSpot, oldX), Math.max(xSpot, oldX) ]
         sortedYs = [ Math.min(ySpot, oldY), Math.max(ySpot, oldY) ]
 
-        ###
-        toolbar1Context.drawImage(toolbar1sImage1,188,3)   
-        drawInformationToolbar0()
-        boxInformation = ' (' 
-        boxInformation += Math.abs(xSpot - oldX).toString() 
-        boxInformation += ', '
-        boxInformation += Math.abs(ySpot - oldY).toString()
-        boxInformation += ')'
-        drawInformationToolbar1( boxInformation )
-        ###
+        boxInformation = (Math.abs(xSpot - oldX) + 1).toString() 
+        boxInformation += 'px x '
+        boxInformation += (Math.abs(ySpot - oldY) + 1).toString()
+        boxInformation += 'px'
+        drawInformation( boxInformation )
 
         originX = sortedXs[0] - 1
         originY = sortedYs[0] - 1
@@ -2406,17 +2404,11 @@ selectPosture = [
         rightEdge = gripX + selectionsWidth
         bottomEdge = gripY + selectionsHeight
 
-        ###
-        toolbar1Context.drawImage(toolbar1sImage1,188,3)   
-        drawInformationToolbar0()
-        boxInformation = ' (' 
-        boxInformation += selectionX.toString() 
-        boxInformation += ', '
+        boxInformation = selectionX.toString() 
+        boxInformation += 'px x '
         boxInformation += selectionY.toString()
-        boxInformation += ')'
-        drawInformationToolbar1( boxInformation )
-        ###
-
+        boxInformation += 'px'
+        drawInformation( boxInformation )
 
         canvasDataAsImage = new Image()
         canvasDataAsImage.onload = ->
@@ -2519,14 +2511,22 @@ fillPosture = [
 
 squarePosture = [
   () ->
-    drawInformation()
     if mousePressed
       getMousePositionOnCanvas(event)
+
+      boxInformation = (Math.abs(xSpot - oldX) + 1).toString() 
+      boxInformation += 'px x '
+      boxInformation += (Math.abs(ySpot - oldY) + 1).toString()
+      boxInformation += 'px'
+      drawInformation( boxInformation )
+
       canvasDataAsImage = new Image()
       canvasDataAsImage.onload = ->
         ctContext.drawImage(canvasDataAsImage,0,0)
         squareAction(ctContext, colorSwatches[0], oldX, oldY, xSpot, ySpot)
       canvasDataAsImage.src = cH[cH.length - 1]
+    else
+      drawInformation()
   () ->
     mousePressed = true
     getMousePositionOnCanvas(event)
@@ -2546,7 +2546,7 @@ circlePosture = [
     if mousePressed
       calculatedRadius = Math.pow(Math.pow(xSpot - oldX, 2) + Math.pow(ySpot - oldY, 2), 0.5)
       calculatedRadius = Math.round(calculatedRadius)
-      circleInformation = ', r=' + calculatedRadius.toString()
+      circleInformation = 'radius = ' + (calculatedRadius + 2).toString()
       drawInformation( circleInformation )
       getMousePositionOnCanvas(event)
       canvasDataAsImage = new Image()
@@ -2570,14 +2570,19 @@ circlePosture = [
 ]
 linePosture = [
   () ->
-    drawInformation()
     if mousePressed
       getMousePositionOnCanvas(event)
+      widthToShow = (Math.abs(oldX - xSpot) + 1).toString()
+      heightToShow = (Math.abs(oldY - ySpot) + 1).toString()
+      lineInformation = widthToShow + 'px x ' + heightToShow + 'px'
+      drawInformation( lineInformation )
       canvasDataAsImage = new Image()
       canvasDataAsImage.onload = ->
         ctContext.drawImage(canvasDataAsImage,0,0)
         lineAction(ctContext, colorSwatches[0], oldX, oldY, xSpot, ySpot)
       canvasDataAsImage.src = cH[cH.length - 1]
+    else
+      drawInformation()
   () ->
     mousePressed = true
     getMousePositionOnCanvas(event)
@@ -2811,36 +2816,44 @@ $(document).ready ()->
       keyListeningUnderNormalCircumstance(event)
     else
       whatSortOfDataSorting( keyListeningUnderAbnormalCircumstance(event) )
+      
     if event.keyCode == keysToKeyCodes['up']
       if canvasHeight > (window.innerHeight - toolbarHeight - 5)
         if canvasYOffset < 0 
           canvasYOffset+=3
           positionCanvas()
           positionCorners()
+
     if event.keyCode == keysToKeyCodes['down']
       if canvasHeight > (window.innerHeight - toolbarHeight - 5)
         if (-1 * canvasYOffset) < ((canvasHeight + 10) - (window.innerHeight - toolbarHeight))
           canvasYOffset-=3
           positionCanvas()
           positionCorners()
+
     if event.keyCode == keysToKeyCodes['alt']
       toolViewMode++
       toolViewMode = toolViewMode%2
       drawToolbars()
+
     if event.keyCode == keysToKeyCodes['space']
       if tH[tH.length - 1].mode
         tH[tH.length - 1].mode = false
       else
         tH[tH.length - 1].mode = true
+      drawInformationToolbar0()
+
     if event.keyCode == keysToKeyCodes['equals']
       if tH[tH.length - 1].magnitude < tH[tH.length - 1].maxMagnitude
         tH[tH.length - 1].magnitude++
         drawInformationToolbar0()
+
     if event.keyCode == keysToKeyCodes['minus']
       if tH[tH.length - 1].magnitude > 1
         tH[tH.length - 1].magnitude--
         drawInformationToolbar0()
     if event.keyCode == keysToKeyCodes['shift']
+
       colorModify = true
 
   $('body').keyup (event) ->

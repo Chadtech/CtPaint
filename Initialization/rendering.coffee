@@ -96,6 +96,7 @@ drawToolbars = ->
   toolbar1Context.drawImage(toolbar1sImage0,3,2)
   drawLine(toolbar1Context,[16,20,8],toolbarWidth-1,0,window.innerWidth,0)
   toolbar1Context.drawImage(toolbar1sImage1,188,3)
+  toolbar1Context.drawImage(toolbar1sImage1,458,3)
   drawLine(toolbar1Context,[16,20,8],toolbarWidth-1,0,window.innerWidth,0)
 
   toolbar1Context.fillStyle = rgbToHex(colorSwatches[0])
@@ -142,12 +143,14 @@ drawInformationToolbar1 = ( extraInformation ) ->
   if extraInformation is undefined
     extraInformation = ''
   toolbar1Context.drawImage(toolbar1sImage1,188,3)   
-  txPos = event.clientX - (toolbarWidth + 5) - canvasXOffset
-  tyPos = event.clientY - 5 - canvasYOffset
-  colorValue = getColorValue(ctContext, txPos, tyPos).toUpperCase()
-  coordinates = ', (' + txPos.toString() + ', ' + tyPos.toString() + ')'
-  colorAndCoordinates = colorValue + coordinates + extraInformation
+  toolbar1Context.drawImage(toolbar1sImage1,458,3)   
+  xPos = event.clientX - (toolbarWidth + 5) - canvasXOffset
+  yPos = event.clientY - 5 - canvasYOffset
+  colorValue = getColorValue(ctContext, xPos, yPos).toUpperCase()
+  coordinates = ', (' + xPos.toString() + ', ' + yPos.toString() + ')'
+  colorAndCoordinates = colorValue + coordinates
   drawStringAsCommandPrompt(toolbar1Context, colorAndCoordinates, 0, 191, 12)
+  drawStringAsCommandPrompt(toolbar1Context, extraInformation, 0, 461, 12)
 
 drawInformationToolbar0 = ->
   toolbarInformation = magnitudeToGlyph()+modeToGlyph()

@@ -22,36 +22,44 @@ $(document).ready ()->
       keyListeningUnderNormalCircumstance(event)
     else
       whatSortOfDataSorting( keyListeningUnderAbnormalCircumstance(event) )
+      
     if event.keyCode == keysToKeyCodes['up']
       if canvasHeight > (window.innerHeight - toolbarHeight - 5)
         if canvasYOffset < 0 
           canvasYOffset+=3
           positionCanvas()
           positionCorners()
+
     if event.keyCode == keysToKeyCodes['down']
       if canvasHeight > (window.innerHeight - toolbarHeight - 5)
         if (-1 * canvasYOffset) < ((canvasHeight + 10) - (window.innerHeight - toolbarHeight))
           canvasYOffset-=3
           positionCanvas()
           positionCorners()
+
     if event.keyCode == keysToKeyCodes['alt']
       toolViewMode++
       toolViewMode = toolViewMode%2
       drawToolbars()
+
     if event.keyCode == keysToKeyCodes['space']
       if tH[tH.length - 1].mode
         tH[tH.length - 1].mode = false
       else
         tH[tH.length - 1].mode = true
+      drawInformationToolbar0()
+
     if event.keyCode == keysToKeyCodes['equals']
       if tH[tH.length - 1].magnitude < tH[tH.length - 1].maxMagnitude
         tH[tH.length - 1].magnitude++
         drawInformationToolbar0()
+
     if event.keyCode == keysToKeyCodes['minus']
       if tH[tH.length - 1].magnitude > 1
         tH[tH.length - 1].magnitude--
         drawInformationToolbar0()
     if event.keyCode == keysToKeyCodes['shift']
+
       colorModify = true
 
   $('body').keyup (event) ->
