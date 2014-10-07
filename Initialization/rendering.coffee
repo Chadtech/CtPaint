@@ -133,6 +133,7 @@ coverUpOldCursor = ->
     putPixel( ctContext, oldCursorsColor.data, oldCursorX, oldCursorY )
 
 updateOldCursor = ->
+  console.log cursorX, cursorY
   oldCursorsColor = ctContext.getImageData(cursorX, cursorY, 1, 1)
 
 modeToGlyph = () ->
