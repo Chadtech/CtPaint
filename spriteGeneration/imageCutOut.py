@@ -39,19 +39,19 @@ for iteration in range(numberOfRows):
 
 for iteration in range(7):
   icon = sheet.crop((196,(iteration*25),196+24, 24+(iteration*25)))
-  icon.save('u'+'0400'+str((iteration*2)+1)+'.PNG','png')
+  icon.save('u'+'0400'+str(iteration)+'.PNG','png')
 
 for iteration in range(7):
   icon = sheet.crop((221,(iteration*25),221+24, 24+(iteration*25)))
-  icon.save('u'+'0500'+str((iteration*2)+1)+'.PNG','png')
+  icon.save('u'+'0500'+str(iteration)+'.PNG','png')
 
 for iteration in range(7):
   icon = sheet.crop((245,(iteration*25),245+24, 24+(iteration*25)))
-  icon.save('u'+'0600'+str((iteration*2)+1)+'.PNG','png')
+  icon.save('u'+'0600'+str(iteration)+'.PNG','png')
 
 for iteration in range(7):
   icon = sheet.crop((270,(iteration*25),270+24, 24+(iteration*25)))
-  icon.save('u'+'0700'+str((iteration*2)+1)+'.PNG','png')
+  icon.save('u'+'0700'+str(iteration)+'.PNG','png')
 
 icon = sheet.crop((294, 0, 294+24, 24))
 icon.save('u'+'04100.PNG','png')
@@ -61,19 +61,19 @@ icon.save('u'+'05100.PNG','png')
 
 for iteration in range(7):
   icon = sheet.crop((343,(iteration*25),343+24, 24+(iteration*25)))
-  icon.save('u'+'040'+str((iteration*2)+1)+'0.PNG','png')
+  icon.save('u'+'040'+str(iteration)+'0.PNG','png')
 
 for iteration in range(7):
   icon = sheet.crop((368,(iteration*25),368+24, 24+(iteration*25)))
-  icon.save('u'+'050'+str((iteration*2)+1)+'0.PNG','png')
+  icon.save('u'+'050'+str(iteration)+'0.PNG','png')
 
 for iteration in range(7):
   icon = sheet.crop((392,(iteration*25),392+24, 24+(iteration*25)))
-  icon.save('u'+'060'+str((iteration*2)+1)+'0.PNG','png')
+  icon.save('u'+'060'+str(iteration)+'0.PNG','png')
 
 for iteration in range(7):
   icon = sheet.crop((417,(iteration*25),417+24, 24+(iteration*25)))
-  icon.save('u'+'070'+str((iteration*2)+1)+'0.PNG','png')
+  icon.save('u'+'070'+str(iteration)+'0.PNG','png')
 
 icon = sheet.crop((441, 0, 441+24, 24))
 icon.save('u'+'04200.PNG','png')

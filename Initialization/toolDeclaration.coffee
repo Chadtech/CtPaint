@@ -146,3 +146,33 @@ toolsToNumbers =
   'undo':20
   'redo':21
 
+fancyResponsiveTools = ['square', 'circle', 'line', 'point']
+
+sevenImages = [
+  new Image() 
+  new Image()
+  new Image()
+  new Image()
+  new Image()
+  new Image()
+  new Image()
+]
+
+AllTheFancyIcons = [ sevenImages, sevenImages]
+
+fancyResponsiveIcons =
+  fancyResponsiveTools[0]: sevenImages
+  fancyResponsiveTools[1]: sevenImages
+  fancyResponsiveTools[2]: sevenImages
+  fancyResponsiveTools[3]: sevenImages
+
+
+
+
+
+
+
+
+
+
+
