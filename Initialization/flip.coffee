@@ -11,7 +11,7 @@ flipAction = () ->
   menuContext.canvas.width = 119
   menuContext.canvas.height = 35
 
-  tH.push ctPaintTools[10]
+  tH.push ctPaintTools[toolsToNumbers['flip']]
 
   menuContext.drawImage(tH[tH.length - 1].menuImage, 0, 0)
   drawToolbars()

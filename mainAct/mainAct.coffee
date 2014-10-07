@@ -3,9 +3,9 @@ $(document).ready ()->
     setCanvasSizes()
     prepareCanvas()
     placeToolbars()
-    tH.push ctPaintTools[7]
+    tH.push ctPaintTools[toolsToNumbers['point']]
     tH.shift()
-    tH.push ctPaintTools[7]
+    tH.push ctPaintTools[toolsToNumbers['point']]
     tH.shift()
     drawToolbars()
     positionMenu()

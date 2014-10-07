@@ -1,5 +1,5 @@
 undoAction = ->
-  tH.push ctPaintTools[22]
+  tH.push ctPaintTools[toolsToNumbers['undo']]
   drawToolbars()
 
   cF.push cH.pop()
@@ -28,3 +28,5 @@ undoAndRedoSizeComparison = (pastCanvas) ->
     ctCanvas.style.width = (canvasWidth).toString()+'px'
     ctCanvas.style.height = (canvasHeight).toString()+'px'
     positionCorners()
+
+    

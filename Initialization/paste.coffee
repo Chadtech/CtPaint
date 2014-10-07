@@ -1,5 +1,5 @@
 pasteAction = ->
-  tH.push ctPaintTools[19]
+  tH.push ctPaintTools[toolsToNumbers['paste']]
   drawToolbars()
   
   # Only paste if there is something in the clipboard
@@ -27,7 +27,7 @@ pasteAction = ->
   setTimeout( ()->
     tH.pop()
     drawToolbars()
-    tH.push ctPaintTools[1]
+    tH.push ctPaintTools[toolsToNumbers['select']]
     tH.shift()
   ,20)
 

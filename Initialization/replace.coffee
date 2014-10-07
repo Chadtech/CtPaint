@@ -10,7 +10,7 @@ replaceAction = () ->
   menuContext.canvas.width = 439
   menuContext.canvas.height = 35
 
-  tH.push ctPaintTools[13]
+  tH.push ctPaintTools[toolsToNumbers['replace']]
 
   menuContext.drawImage(tH[tH.length - 1].menuImage, 0, 0)
   drawToolbars()

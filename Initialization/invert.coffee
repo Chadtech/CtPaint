@@ -1,5 +1,5 @@
 invertAction = () ->
-  tH.push ctPaintTools[12]
+  tH.push ctPaintTools[toolsToNumbers['invert']]
   if not areaSelected
     # Get the canvass data
     tWidth = ctContext.canvas.width

@@ -57,7 +57,7 @@ cF = []
 tH = [ undefined, undefined ]
 
 # useful during tool declaration
-numberOfTools = 24
+numberOfTools = 22
 # Refers to whether toolbar0 is in view mode 0 or 1
 toolViewMode = 0
 

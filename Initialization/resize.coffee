@@ -7,7 +7,7 @@ resizeAction = () ->
   menuContext.canvas.width = 390
   menuContext.canvas.height = 35
 
-  tH.push ctPaintTools[15]
+  tH.push ctPaintTools[toolsToNumbers['resize']]
   menuContext.drawImage(tH[tH.length - 1].menuImage, 0, 0)
   drawToolbars()
 

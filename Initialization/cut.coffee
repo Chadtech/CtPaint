@@ -6,7 +6,7 @@
   Cut does exactly what a normal computer user would expect.
 ###
 cutAction = ->
-  tH.push ctPaintTools[18]
+  tH.push ctPaintTools[toolsToNumbers['cut']]
   drawToolbars()
 
   if areaSelected

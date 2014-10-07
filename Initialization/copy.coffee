@@ -6,7 +6,7 @@
   is lit up.
 ###
 copyAction = ->
-  tH.push ctPaintTools[18]
+  tH.push ctPaintTools[toolsToNumbers['copy']]
   drawToolbars()
 
   if areaSelected

@@ -1,7 +1,7 @@
 redoAction = ->
   # Update the tool history and draw the toolbars to reflect
   # What tool is in use.
-  tH.push ctPaintTools[23]
+  tH.push ctPaintTools[toolsToNumbers['redo']]
   drawToolbars()
 
   # If there is actually a canvas in the 'future canvas'

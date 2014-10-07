@@ -13,7 +13,7 @@
   horizontalColorSwap swaps 0 with 1, and 2 with 3    
 ###
 horizontalColorSwap = () ->
-  tH.push ctPaintTools[16]
+  tH.push ctPaintTools[toolsToNumbers['horizontalSwap']]
   drawToolbars()
 
   rearrangedSwatches = [ colorSwatches[1], colorSwatches[0], colorSwatches[3], colorSwatches[2] ]

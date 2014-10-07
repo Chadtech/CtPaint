@@ -7,7 +7,7 @@ rotateAction = ->
   menuContext.canvas.width = 228
   menuContext.canvas.height = 35
 
-  tH.push ctPaintTools[11]
+  tH.push ctPaintTools[toolsToNumbers['rotate']]
 
   menuContext.drawImage(tH[tH.length - 1].menuImage, 0, 0)
   drawToolbars()

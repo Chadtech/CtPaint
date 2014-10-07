@@ -57,7 +57,7 @@ cF = []
 tH = [ undefined, undefined ]
 
 # useful during tool declaration
-numberOfTools = 24
+numberOfTools = 22
 # Refers to whether toolbar0 is in view mode 0 or 1
 toolViewMode = 0
 
@@ -1084,7 +1084,7 @@ flipAction = () ->
   menuContext.canvas.width = 119
   menuContext.canvas.height = 35
 
-  tH.push ctPaintTools[10]
+  tH.push ctPaintTools[toolsToNumbers['flip']]
 
   menuContext.drawImage(tH[tH.length - 1].menuImage, 0, 0)
   drawToolbars()
@@ -1324,7 +1324,7 @@ rotateAction = ->
   menuContext.canvas.width = 228
   menuContext.canvas.height = 35
 
-  tH.push ctPaintTools[11]
+  tH.push ctPaintTools[toolsToNumbers['rotate']]
 
   menuContext.drawImage(tH[tH.length - 1].menuImage, 0, 0)
   drawToolbars()
@@ -1500,7 +1500,7 @@ axisFlip = (imageInPixels, itsWidth, itsHeight) ->
 
 
 invertAction = () ->
-  tH.push ctPaintTools[12]
+  tH.push ctPaintTools[toolsToNumbers['invert']]
   if not areaSelected
     # Get the canvass data
     tWidth = ctContext.canvas.width
@@ -1598,7 +1598,7 @@ replaceAction = () ->
   menuContext.canvas.width = 439
   menuContext.canvas.height = 35
 
-  tH.push ctPaintTools[13]
+  tH.push ctPaintTools[toolsToNumbers['replace']]
 
   menuContext.drawImage(tH[tH.length - 1].menuImage, 0, 0)
   drawToolbars()
@@ -1740,7 +1740,7 @@ resizeAction = () ->
   menuContext.canvas.width = 390
   menuContext.canvas.height = 35
 
-  tH.push ctPaintTools[15]
+  tH.push ctPaintTools[toolsToNumbers['resize']]
   menuContext.drawImage(tH[tH.length - 1].menuImage, 0, 0)
   drawToolbars()
 
@@ -1826,7 +1826,7 @@ drawResizeMenu = () ->
   horizontalColorSwap swaps 0 with 1, and 2 with 3    
 ###
 horizontalColorSwap = () ->
-  tH.push ctPaintTools[16]
+  tH.push ctPaintTools[toolsToNumbers['horizontalSwap']]
   drawToolbars()
 
   rearrangedSwatches = [ colorSwatches[1], colorSwatches[0], colorSwatches[3], colorSwatches[2] ]
@@ -1853,7 +1853,7 @@ horizontalColorSwap = () ->
   verticalColorSwap swaps 0 with 2, and 1 with 3    
 ###
 verticalColorSwap = () ->
-  tH.push ctPaintTools[17]
+  tH.push ctPaintTools[toolsToNumbers['verticalSwap']]
   drawToolbars()
 
   rearrangedSwatches = [ colorSwatches[2], colorSwatches[3], colorSwatches[0], colorSwatches[1] ]
@@ -1872,7 +1872,7 @@ verticalColorSwap = () ->
   is lit up.
 ###
 copyAction = ->
-  tH.push ctPaintTools[18]
+  tH.push ctPaintTools[toolsToNumbers['copy']]
   drawToolbars()
 
   if areaSelected
@@ -1890,7 +1890,7 @@ copyAction = ->
 
 
 pasteAction = ->
-  tH.push ctPaintTools[19]
+  tH.push ctPaintTools[toolsToNumbers['paste']]
   drawToolbars()
   
   # Only paste if there is something in the clipboard
@@ -1918,7 +1918,7 @@ pasteAction = ->
   setTimeout( ()->
     tH.pop()
     drawToolbars()
-    tH.push ctPaintTools[1]
+    tH.push ctPaintTools[toolsToNumbers['select']]
     tH.shift()
   ,20)
 
@@ -1953,7 +1953,7 @@ pasteTheSelection = ->
   Cut does exactly what a normal computer user would expect.
 ###
 cutAction = ->
-  tH.push ctPaintTools[18]
+  tH.push ctPaintTools[toolsToNumbers['cut']]
   drawToolbars()
 
   if areaSelected
@@ -1990,7 +1990,7 @@ cutAction = ->
   
 
 undoAction = ->
-  tH.push ctPaintTools[22]
+  tH.push ctPaintTools[toolsToNumbers['undo']]
   drawToolbars()
 
   cF.push cH.pop()
@@ -2019,10 +2019,12 @@ undoAndRedoSizeComparison = (pastCanvas) ->
     ctCanvas.style.width = (canvasWidth).toString()+'px'
     ctCanvas.style.height = (canvasHeight).toString()+'px'
     positionCorners()
+
+    
 redoAction = ->
   # Update the tool history and draw the toolbars to reflect
   # What tool is in use.
-  tH.push ctPaintTools[23]
+  tH.push ctPaintTools[toolsToNumbers['redo']]
   drawToolbars()
 
   # If there is actually a canvas in the 'future canvas'
@@ -2139,11 +2141,11 @@ drawToolbars = ->
   toolbar1Context.fillStyle = '#202020'
   toolbar1Context.fillRect(0,0,window.innerWidth,toolbarHeight)
 
-  toolbar1Context.drawImage(toolbar1sImage0,3,2)
-  drawLine(toolbar1Context,[16,20,8],toolbarWidth-1,0,window.innerWidth,0)
-  toolbar1Context.drawImage(toolbar1sImage1,188,3)
-  toolbar1Context.drawImage(toolbar1sImage1,458,3)
-  drawLine(toolbar1Context,[16,20,8],toolbarWidth-1,0,window.innerWidth,0)
+  toolbar1Context.drawImage(toolbar1sImage0, 3, 2)
+  drawLine(toolbar1Context, [16, 20, 8], toolbarWidth - 1, 0, window.innerWidth, 0)
+  toolbar1Context.drawImage(toolbar1sImage1, 188, 3)
+  toolbar1Context.drawImage(toolbar1sImage1, 458, 3)
+  drawLine(toolbar1Context, [16, 20, 8], toolbarWidth - 1, 0, window.innerWidth, 0)
 
   toolbar1Context.fillStyle = rgbToHex(colorSwatches[0])
   toolbar1Context.fillRect(7,4,14,14)
@@ -2179,7 +2181,6 @@ coverUpOldCursor = ->
     putPixel( ctContext, oldCursorsColor.data, oldCursorX, oldCursorY )
 
 updateOldCursor = ->
-  console.log cursorX, cursorY
   oldCursorsColor = ctContext.getImageData(cursorX, cursorY, 1, 1)
 
 modeToGlyph = () ->
@@ -2216,8 +2217,8 @@ drawInformationToolbar1 = ( extraInformation ) ->
   drawStringAsCommandPrompt(toolbar1Context, extraInformation, 0, 461, 12)
 
 drawInformationToolbar0 = ->
-  toolbarInformation = magnitudeToGlyph() + modeToGlyph()
-  drawStringAsCommandPrompt(toolbar0Context, toolbarInformation, 0, 6, 104)
+  #toolbarInformation = magnitudeToGlyph() + modeToGlyph()
+  #drawStringAsCommandPrompt(toolbar0Context, toolbarInformation, 0, 6, 104)
 
 getMousePositionOnCanvas = (event) ->
   xSpot = event.clientX - (toolbarWidth + 5) - canvasXOffset
@@ -2691,7 +2692,6 @@ toolNames = [
   'sample', 'fill'
   'square', 'circle'
   'line', 'point'
-  'NOT A TOOL0', 'NOT A TOOL1'
   'flip', 'rotate'
   'invert', 'displace'
   'scale', 'resize'
@@ -2704,10 +2704,8 @@ toolNames = [
 toolMaxMagnitudes = [
   4, ''
   '', ''
-  15, 15
-  5, 9
-
-  '', ''
+  7, 7
+  7, 7
 
   '', ''
   '', ''
@@ -2725,8 +2723,6 @@ toolModeCapacity = [
   false, false
 
   false, false
-
-  false, false
   false, false
   false, false
   false, false
@@ -2740,9 +2736,6 @@ toolMenuImages = [
   '', ''
   '', ''
   '', ''
-
-  '', ''
-
   new Image(), new Image()
   '', new Image()
   new Image(), new Image()
@@ -2770,8 +2763,8 @@ while iteration < numberOfTools
     menuImage: toolMenuImages[iteration]
     toolsAction: ->
       console.log 'did a '+toolNames[@number]
-  ctPaintTools[iteration].pressedImage[0].src = 'assets\\u'+zeroPadder(iteration,2)+'.PNG'
-  ctPaintTools[iteration].pressedImage[1].src = 'assets\\v'+zeroPadder(iteration,2)+'.PNG'
+  ctPaintTools[iteration].pressedImage[0].src = 'assets\\u'+zeroPadder(iteration,2)+'000.PNG'
+  ctPaintTools[iteration].pressedImage[1].src = 'assets\\v'+zeroPadder(iteration,2)+'000.PNG'
   iteration++
 
 ctPaintTools[0].posture = zoomPosture
@@ -2782,6 +2775,8 @@ ctPaintTools[4].posture = squarePosture
 ctPaintTools[5].posture = circlePosture
 ctPaintTools[6].posture = linePosture
 ctPaintTools[7].posture = pointPosture
+ctPaintTools[8].posture = emptyPosture
+ctPaintTools[9].posture = emptyPosture
 ctPaintTools[10].posture = emptyPosture
 ctPaintTools[11].posture = emptyPosture
 ctPaintTools[12].posture = emptyPosture
@@ -2794,30 +2789,50 @@ ctPaintTools[18].posture = emptyPosture
 ctPaintTools[19].posture = emptyPosture
 ctPaintTools[20].posture = emptyPosture
 ctPaintTools[21].posture = emptyPosture
-ctPaintTools[22].posture = emptyPosture
-ctPaintTools[23].posture = emptyPosture
 
-ctPaintTools[10].toolsAction = flipAction
-ctPaintTools[11].toolsAction = rotateAction
-ctPaintTools[12].toolsAction = invertAction
-ctPaintTools[13].toolsAction = replaceAction
-ctPaintTools[15].toolsAction = resizeAction
-ctPaintTools[18].toolsAction = copyAction
-ctPaintTools[19].toolsAction = pasteAction
-ctPaintTools[20].toolsAction = cutAction
-ctPaintTools[22].toolsAction = undoAction
-ctPaintTools[23].toolsAction = redoAction
+ctPaintTools[8].toolsAction = flipAction
+ctPaintTools[9].toolsAction = rotateAction
+ctPaintTools[10].toolsAction = invertAction
+ctPaintTools[11].toolsAction = replaceAction
+ctPaintTools[13].toolsAction = resizeAction
+ctPaintTools[16].toolsAction = copyAction
+ctPaintTools[17].toolsAction = pasteAction
+ctPaintTools[18].toolsAction = cutAction
+ctPaintTools[20].toolsAction = undoAction
+ctPaintTools[21].toolsAction = redoAction
 
-ctPaintTools[16].posture = horizontalColorSwapPosture
-ctPaintTools[17].posture = verticalColorSwapPosture
+ctPaintTools[14].posture = horizontalColorSwapPosture
+ctPaintTools[15].posture = verticalColorSwapPosture
 
-ctPaintTools[10].menuImage.src = 'assets\\t01.png'
-ctPaintTools[13].menuImage.src = 'assets\\t02.png'
-ctPaintTools[11].menuImage.src = 'assets\\t04.png'
-ctPaintTools[14].menuImage.src = 'assets\\t05.png'
-ctPaintTools[15].menuImage.src = 'assets\\t03.png'
+ctPaintTools[8].menuImage.src = 'assets\\t01.png'
+ctPaintTools[11].menuImage.src = 'assets\\t02.png'
+ctPaintTools[9].menuImage.src = 'assets\\t04.png'
+ctPaintTools[12].menuImage.src = 'assets\\t05.png'
+ctPaintTools[13].menuImage.src = 'assets\\t03.png'
 
-selectedTool = ctPaintTools[7]
+toolsToNumbers =
+  'zoom':0
+  'select':1
+  'sample':2
+  'fill':3
+  'square':4
+  'circle':5
+  'line':6
+  'point':7
+  'flip':8
+  'rotate':9
+  'invert':10
+  'replace':11
+  'scale':12
+  'resize':13
+  'horizontalSwap':14
+  'verticalSwap':15
+  'copy':16
+  'paste':17
+  'cut':18
+  'view':19
+  'undo':20
+  'redo':21
 
 
 $(document).ready ()->
@@ -2825,9 +2840,9 @@ $(document).ready ()->
     setCanvasSizes()
     prepareCanvas()
     placeToolbars()
-    tH.push ctPaintTools[7]
+    tH.push ctPaintTools[toolsToNumbers['point']]
     tH.shift()
-    tH.push ctPaintTools[7]
+    tH.push ctPaintTools[toolsToNumbers['point']]
     tH.shift()
     drawToolbars()
     positionMenu()

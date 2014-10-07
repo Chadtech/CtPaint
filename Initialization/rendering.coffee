@@ -93,11 +93,11 @@ drawToolbars = ->
   toolbar1Context.fillStyle = '#202020'
   toolbar1Context.fillRect(0,0,window.innerWidth,toolbarHeight)
 
-  toolbar1Context.drawImage(toolbar1sImage0,3,2)
-  drawLine(toolbar1Context,[16,20,8],toolbarWidth-1,0,window.innerWidth,0)
-  toolbar1Context.drawImage(toolbar1sImage1,188,3)
-  toolbar1Context.drawImage(toolbar1sImage1,458,3)
-  drawLine(toolbar1Context,[16,20,8],toolbarWidth-1,0,window.innerWidth,0)
+  toolbar1Context.drawImage(toolbar1sImage0, 3, 2)
+  drawLine(toolbar1Context, [16, 20, 8], toolbarWidth - 1, 0, window.innerWidth, 0)
+  toolbar1Context.drawImage(toolbar1sImage1, 188, 3)
+  toolbar1Context.drawImage(toolbar1sImage1, 458, 3)
+  drawLine(toolbar1Context, [16, 20, 8], toolbarWidth - 1, 0, window.innerWidth, 0)
 
   toolbar1Context.fillStyle = rgbToHex(colorSwatches[0])
   toolbar1Context.fillRect(7,4,14,14)
@@ -133,7 +133,6 @@ coverUpOldCursor = ->
     putPixel( ctContext, oldCursorsColor.data, oldCursorX, oldCursorY )
 
 updateOldCursor = ->
-  console.log cursorX, cursorY
   oldCursorsColor = ctContext.getImageData(cursorX, cursorY, 1, 1)
 
 modeToGlyph = () ->
@@ -170,8 +169,8 @@ drawInformationToolbar1 = ( extraInformation ) ->
   drawStringAsCommandPrompt(toolbar1Context, extraInformation, 0, 461, 12)
 
 drawInformationToolbar0 = ->
-  toolbarInformation = magnitudeToGlyph() + modeToGlyph()
-  drawStringAsCommandPrompt(toolbar0Context, toolbarInformation, 0, 6, 104)
+  #toolbarInformation = magnitudeToGlyph() + modeToGlyph()
+  #drawStringAsCommandPrompt(toolbar0Context, toolbarInformation, 0, 6, 104)
 
 getMousePositionOnCanvas = (event) ->
   xSpot = event.clientX - (toolbarWidth + 5) - canvasXOffset
