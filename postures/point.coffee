@@ -6,6 +6,8 @@ pointPosture = [
       oldY = ySpot
       getMousePositionOnCanvas(event)
       pointAction(ctContext, colorSwatches[0], xSpot, ySpot, oldX, oldY)
+    else
+      updateCursor()
   () ->
     if not mousePressed
       getMousePositionOnCanvas(event)
@@ -13,9 +15,8 @@ pointPosture = [
     mousePressed = true
   () ->
     if mousePressed
-      cH.push ctCanvas.toDataURL()
-      cH.shift()
-      cF = []
+      updateOldCursor()
+      historyUpdate()
     mousePressed = false
   () ->
     if mousePressed
@@ -23,8 +24,6 @@ pointPosture = [
       oldY = ySpot
       getMousePositionOnCanvas(event)
       pointAction(ctContext, colorSwatches[0], xSpot, ySpot, oldX, oldY)
-      cH.push ctCanvas.toDataURL()
-      cH.shift()
-      cF = []
+      historyUpdate()
       mousePressed = false
 ]

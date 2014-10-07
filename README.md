@@ -76,7 +76,7 @@ General to dos and bugs to fix:
 * X redo resize memory
 * X discriminate between pasting and opening outside image (by canvas and image size)
 * Menu click region
-* Alternate Cursor colors
+* Alternate Cursor colors (replace view mode)
 * Optimize selection moving
 * X Data read out on tool (square size etc)
 * Remove toolbar0 information section, and make icons change with new settings

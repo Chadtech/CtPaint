@@ -119,6 +119,22 @@ drawToolbars = ->
 
   drawInformationToolbar0()
 
+updateCursor = ->
+  coverUpOldCursor()
+  cursorX = event.clientX - (toolbarWidth + 5 - canvasXOffset)
+  cursorY = event.clientY - 5 - canvasYOffset
+  updateOldCursor()
+  oldCursorX = cursorX
+  oldCursorY = cursorY
+  putPixel( ctContext, [239, 8, 8, 255], cursorX, cursorY)
+
+coverUpOldCursor = ->
+  if oldCursorsColor isnt undefined
+    putPixel( ctContext, oldCursorsColor.data, oldCursorX, oldCursorY )
+
+updateOldCursor = ->
+  oldCursorsColor = ctContext.getImageData(cursorX, cursorY, 1, 1)
+
 modeToGlyph = () ->
   if tH[tH.length - 1].modeCapable
     if tH[tH.length - 1].mode
@@ -153,11 +169,11 @@ drawInformationToolbar1 = ( extraInformation ) ->
   drawStringAsCommandPrompt(toolbar1Context, extraInformation, 0, 461, 12)
 
 drawInformationToolbar0 = ->
-  toolbarInformation = magnitudeToGlyph()+modeToGlyph()
+  toolbarInformation = magnitudeToGlyph() + modeToGlyph()
   drawStringAsCommandPrompt(toolbar0Context, toolbarInformation, 0, 6, 104)
 
 getMousePositionOnCanvas = (event) ->
-  xSpot = event.clientX - (toolbarWidth+5) - canvasXOffset
+  xSpot = event.clientX - (toolbarWidth + 5) - canvasXOffset
   ySpot = event.clientY - 5 - canvasYOffset
 
 getMousePositionOnZoom = (event) ->
@@ -167,6 +183,13 @@ getMousePositionOnZoom = (event) ->
 scaleCanvasBigger = ( factor ) ->
   ctCanvas.style.width = (factor * ctCanvas.width).toString()+'px'
   ctCanvas.style.height = (factor * ctCanvas.height).toString()+'px'
+
+historyUpdate = ->
+  coverUpOldCursor()
+  cH.push ctCanvas.toDataURL()
+  cH.shift()
+  cF = []
+  updateCursor()
 
 copeWithSelection = (atZeroZero)->
   copeX = selectionX

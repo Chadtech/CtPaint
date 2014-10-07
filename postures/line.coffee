@@ -12,6 +12,7 @@ linePosture = [
         lineAction(ctContext, colorSwatches[0], oldX, oldY, xSpot, ySpot)
       canvasDataAsImage.src = cH[cH.length - 1]
     else
+      updateCursor()
       drawInformation()
   () ->
     mousePressed = true
@@ -20,8 +21,7 @@ linePosture = [
     oldY = ySpot
   () ->
     mousePressed = false
-    cH.push ctCanvas.toDataURL()
-    cH.shift()
-    cF = []
+    updateOldCursor()
+    historyUpdate()
   () ->
 ]

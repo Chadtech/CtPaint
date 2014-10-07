@@ -135,6 +135,8 @@ cursorY = undefined
 oldCursorX = undefined
 oldCursorY = undefined
 
+oldCursorsColor = undefined
+
 buttonWidth = 24
 buttonHeight = 24
 

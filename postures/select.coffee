@@ -1,4 +1,5 @@
 selectPosture = [
+  # Mouse Move
   () ->
     if not areaSelected
       if mousePressed
@@ -21,6 +22,8 @@ selectPosture = [
           ctContext.drawImage(canvasDataAsImage,0,0)
           drawSelectBox(ctContext, originX, originY, otherSideX, otherSideY)
         canvasDataAsImage.src = cH[cH.length - 1]
+      else
+        updateCursor()
     else
       if mousePressed
         getMousePositionOnCanvas(event)
@@ -40,13 +43,15 @@ selectPosture = [
         canvasDataAsImage = new Image()
         canvasDataAsImage.onload = ->
           ctContext.drawImage(canvasDataAsImage,0,0)
-          cH.push ctCanvas.toDataURL()
-          cH.shift()
-          cF = []
+          coverUpOldCursor()
+          historyUpdate()
           ctContext.putImageData(selection, gripX, gripY)
           drawSelectBox(ctContext, gripX - 1, gripY - 1, rightEdge, bottomEdge)
         canvasDataAsImage.src = cH[cH.length - 1]
+      else
+        updateCursor()
 
+  # Mouse down
   () ->
     mousePressed = true
     if not areaSelected
@@ -65,11 +70,11 @@ selectPosture = [
         canvasDataAsImage.onload = ->
           ctContext.drawImage(canvasDataAsImage,0,0)
           ctContext.putImageData(selection, selectionX, selectionY)
-          cH.push ctCanvas.toDataURL()
-          cH.shift()
-          cF = []
+          coverUpOldCursor()
+          historyUpdate()
         canvasDataAsImage.src = cH[cH.length - 1]
 
+  # Mouse up
   () ->
     mousePressed = false
     if not areaSelected
@@ -90,9 +95,8 @@ selectPosture = [
         canvasDataAsImage.onload = ->
           ctContext.drawImage(canvasDataAsImage,0,0)
           squareAction(ctContext, colorSwatches[1], oldX, oldY, xSpot - 1, ySpot - 1, true)
-          cH.push ctCanvas.toDataURL()
-          cH.shift()
-          cF = []
+          coverUpOldCursor()
+          historyUpdate()
           ctContext.putImageData(selection, selectionX, selectionY)
           drawSelectBox(ctContext, originX, originY, otherSideX, otherSideY)
         canvasDataAsImage.src = cH[cH.length - 1]

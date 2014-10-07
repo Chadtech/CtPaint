@@ -1,5 +1,6 @@
 zoomPosture = [
   () ->
+    updateCursor()
     drawInformation()
   () ->
     mousePressed = true

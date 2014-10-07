@@ -16,6 +16,7 @@ squarePosture = [
       canvasDataAsImage.src = cH[cH.length - 1]
     else
       drawInformation()
+      updateCursor()
   () ->
     mousePressed = true
     getMousePositionOnCanvas(event)
@@ -23,9 +24,8 @@ squarePosture = [
     oldY = ySpot
   () ->
     mousePressed = false
-    cH.push ctCanvas.toDataURL()
-    cH.shift()
-    cF = []
+    updateOldCursor()
+    historyUpdate()
   () ->
 ]
 

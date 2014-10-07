@@ -135,6 +135,8 @@ cursorY = undefined
 oldCursorX = undefined
 oldCursorY = undefined
 
+oldCursorsColor = undefined
+
 buttonWidth = 24
 buttonHeight = 24
 
@@ -2163,6 +2165,22 @@ drawToolbars = ->
 
   drawInformationToolbar0()
 
+updateCursor = ->
+  coverUpOldCursor()
+  cursorX = event.clientX - (toolbarWidth + 5 - canvasXOffset)
+  cursorY = event.clientY - 5 - canvasYOffset
+  updateOldCursor()
+  oldCursorX = cursorX
+  oldCursorY = cursorY
+  putPixel( ctContext, [239, 8, 8, 255], cursorX, cursorY)
+
+coverUpOldCursor = ->
+  if oldCursorsColor isnt undefined
+    putPixel( ctContext, oldCursorsColor.data, oldCursorX, oldCursorY )
+
+updateOldCursor = ->
+  oldCursorsColor = ctContext.getImageData(cursorX, cursorY, 1, 1)
+
 modeToGlyph = () ->
   if tH[tH.length - 1].modeCapable
     if tH[tH.length - 1].mode
@@ -2197,11 +2215,11 @@ drawInformationToolbar1 = ( extraInformation ) ->
   drawStringAsCommandPrompt(toolbar1Context, extraInformation, 0, 461, 12)
 
 drawInformationToolbar0 = ->
-  toolbarInformation = magnitudeToGlyph()+modeToGlyph()
+  toolbarInformation = magnitudeToGlyph() + modeToGlyph()
   drawStringAsCommandPrompt(toolbar0Context, toolbarInformation, 0, 6, 104)
 
 getMousePositionOnCanvas = (event) ->
-  xSpot = event.clientX - (toolbarWidth+5) - canvasXOffset
+  xSpot = event.clientX - (toolbarWidth + 5) - canvasXOffset
   ySpot = event.clientY - 5 - canvasYOffset
 
 getMousePositionOnZoom = (event) ->
@@ -2211,6 +2229,13 @@ getMousePositionOnZoom = (event) ->
 scaleCanvasBigger = ( factor ) ->
   ctCanvas.style.width = (factor * ctCanvas.width).toString()+'px'
   ctCanvas.style.height = (factor * ctCanvas.height).toString()+'px'
+
+historyUpdate = ->
+  coverUpOldCursor()
+  cH.push ctCanvas.toDataURL()
+  cH.shift()
+  cF = []
+  updateCursor()
 
 copeWithSelection = (atZeroZero)->
   copeX = selectionX
@@ -2352,6 +2377,7 @@ keyListeningUnderAbnormalCircumstance = (event) ->
 
 zoomPosture = [
   () ->
+    updateCursor()
     drawInformation()
   () ->
     mousePressed = true
@@ -2372,6 +2398,7 @@ zoomPosture = [
   () ->
 ]
 selectPosture = [
+  # Mouse Move
   () ->
     if not areaSelected
       if mousePressed
@@ -2394,6 +2421,8 @@ selectPosture = [
           ctContext.drawImage(canvasDataAsImage,0,0)
           drawSelectBox(ctContext, originX, originY, otherSideX, otherSideY)
         canvasDataAsImage.src = cH[cH.length - 1]
+      else
+        updateCursor()
     else
       if mousePressed
         getMousePositionOnCanvas(event)
@@ -2413,13 +2442,15 @@ selectPosture = [
         canvasDataAsImage = new Image()
         canvasDataAsImage.onload = ->
           ctContext.drawImage(canvasDataAsImage,0,0)
-          cH.push ctCanvas.toDataURL()
-          cH.shift()
-          cF = []
+          coverUpOldCursor()
+          historyUpdate()
           ctContext.putImageData(selection, gripX, gripY)
           drawSelectBox(ctContext, gripX - 1, gripY - 1, rightEdge, bottomEdge)
         canvasDataAsImage.src = cH[cH.length - 1]
+      else
+        updateCursor()
 
+  # Mouse down
   () ->
     mousePressed = true
     if not areaSelected
@@ -2438,11 +2469,11 @@ selectPosture = [
         canvasDataAsImage.onload = ->
           ctContext.drawImage(canvasDataAsImage,0,0)
           ctContext.putImageData(selection, selectionX, selectionY)
-          cH.push ctCanvas.toDataURL()
-          cH.shift()
-          cF = []
+          coverUpOldCursor()
+          historyUpdate()
         canvasDataAsImage.src = cH[cH.length - 1]
 
+  # Mouse up
   () ->
     mousePressed = false
     if not areaSelected
@@ -2463,9 +2494,8 @@ selectPosture = [
         canvasDataAsImage.onload = ->
           ctContext.drawImage(canvasDataAsImage,0,0)
           squareAction(ctContext, colorSwatches[1], oldX, oldY, xSpot - 1, ySpot - 1, true)
-          cH.push ctCanvas.toDataURL()
-          cH.shift()
-          cF = []
+          coverUpOldCursor()
+          historyUpdate()
           ctContext.putImageData(selection, selectionX, selectionY)
           drawSelectBox(ctContext, originX, originY, otherSideX, otherSideY)
         canvasDataAsImage.src = cH[cH.length - 1]
@@ -2479,6 +2509,7 @@ selectPosture = [
 
 samplePosture = [
   () ->
+    updateCursor()
     drawInformation()
   () ->
     mousePressed = true
@@ -2495,16 +2526,17 @@ samplePosture = [
 
 fillPosture = [
   () ->
+    updateCursor()
     drawInformation()
   () ->
     mousePressed = true
     getMousePositionOnCanvas(event)
+    coverUpOldCursor()
     floodFill(ctCanvas, ctContext, colorSwatches[0], xSpot, ySpot)
+    updateOldCursor()
   () ->
     mousePressed = false
-    cH.push ctCanvas.toDataURL()
-    cH.shift()
-    cF = []
+    historyUpdate()
   () ->
 ]
 
@@ -2527,6 +2559,7 @@ squarePosture = [
       canvasDataAsImage.src = cH[cH.length - 1]
     else
       drawInformation()
+      updateCursor()
   () ->
     mousePressed = true
     getMousePositionOnCanvas(event)
@@ -2534,9 +2567,8 @@ squarePosture = [
     oldY = ySpot
   () ->
     mousePressed = false
-    cH.push ctCanvas.toDataURL()
-    cH.shift()
-    cF = []
+    updateOldCursor()
+    historyUpdate()
   () ->
 ]
 
@@ -2551,10 +2583,11 @@ circlePosture = [
       getMousePositionOnCanvas(event)
       canvasDataAsImage = new Image()
       canvasDataAsImage.onload = ->
-        ctContext.drawImage(canvasDataAsImage,0,0)
+        ctContext.drawImage(canvasDataAsImage, 0, 0)
         circleAction(ctContext, colorSwatches[0], calculatedRadius)
       canvasDataAsImage.src = cH[cH.length - 1]
     else
+      updateCursor()
       drawInformation()
   () ->
     mousePressed = true
@@ -2563,9 +2596,7 @@ circlePosture = [
     oldY = ySpot
   () ->
     mousePressed = false
-    cH.push ctCanvas.toDataURL()
-    cH.shift()
-    cF = []
+    historyUpdate()
   () ->
 ]
 linePosture = [
@@ -2582,6 +2613,7 @@ linePosture = [
         lineAction(ctContext, colorSwatches[0], oldX, oldY, xSpot, ySpot)
       canvasDataAsImage.src = cH[cH.length - 1]
     else
+      updateCursor()
       drawInformation()
   () ->
     mousePressed = true
@@ -2590,9 +2622,8 @@ linePosture = [
     oldY = ySpot
   () ->
     mousePressed = false
-    cH.push ctCanvas.toDataURL()
-    cH.shift()
-    cF = []
+    updateOldCursor()
+    historyUpdate()
   () ->
 ]
 
@@ -2604,6 +2635,8 @@ pointPosture = [
       oldY = ySpot
       getMousePositionOnCanvas(event)
       pointAction(ctContext, colorSwatches[0], xSpot, ySpot, oldX, oldY)
+    else
+      updateCursor()
   () ->
     if not mousePressed
       getMousePositionOnCanvas(event)
@@ -2611,9 +2644,8 @@ pointPosture = [
     mousePressed = true
   () ->
     if mousePressed
-      cH.push ctCanvas.toDataURL()
-      cH.shift()
-      cF = []
+      updateOldCursor()
+      historyUpdate()
     mousePressed = false
   () ->
     if mousePressed
@@ -2621,9 +2653,7 @@ pointPosture = [
       oldY = ySpot
       getMousePositionOnCanvas(event)
       pointAction(ctContext, colorSwatches[0], xSpot, ySpot, oldX, oldY)
-      cH.push ctCanvas.toDataURL()
-      cH.shift()
-      cF = []
+      historyUpdate()
       mousePressed = false
 ]
 emptyPosture = [
@@ -2816,7 +2846,7 @@ $(document).ready ()->
       keyListeningUnderNormalCircumstance(event)
     else
       whatSortOfDataSorting( keyListeningUnderAbnormalCircumstance(event) )
-      
+
     if event.keyCode == keysToKeyCodes['up']
       if canvasHeight > (window.innerHeight - toolbarHeight - 5)
         if canvasYOffset < 0 
@@ -2937,7 +2967,8 @@ $(document).ready ()->
     tH[tH.length - 1].posture[2]()
 
   $('#CtPaint').mouseleave ()->
-    tH[tH.length - 1].posture[3]()  
+    coverUpOldCursor() 
+    tH[tH.length - 1].posture[3]() 
     toolbar1Context.drawImage(toolbar1sImage1,188,3)  
 
   $('#toolbar0').mousedown (event)->

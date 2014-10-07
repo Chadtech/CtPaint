@@ -1,3 +1,7 @@
 #ctpaint { 
   image-rendering: pixelated;
 }
+
+#ctPaint {
+  cursor: none;
+}

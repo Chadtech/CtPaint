@@ -22,7 +22,7 @@ $(document).ready ()->
       keyListeningUnderNormalCircumstance(event)
     else
       whatSortOfDataSorting( keyListeningUnderAbnormalCircumstance(event) )
-      
+
     if event.keyCode == keysToKeyCodes['up']
       if canvasHeight > (window.innerHeight - toolbarHeight - 5)
         if canvasYOffset < 0 
@@ -143,7 +143,8 @@ $(document).ready ()->
     tH[tH.length - 1].posture[2]()
 
   $('#CtPaint').mouseleave ()->
-    tH[tH.length - 1].posture[3]()  
+    coverUpOldCursor() 
+    tH[tH.length - 1].posture[3]() 
     toolbar1Context.drawImage(toolbar1sImage1,188,3)  
 
   $('#toolbar0').mousedown (event)->

@@ -1,5 +1,6 @@
 samplePosture = [
   () ->
+    updateCursor()
     drawInformation()
   () ->
     mousePressed = true

@@ -8,10 +8,11 @@ circlePosture = [
       getMousePositionOnCanvas(event)
       canvasDataAsImage = new Image()
       canvasDataAsImage.onload = ->
-        ctContext.drawImage(canvasDataAsImage,0,0)
+        ctContext.drawImage(canvasDataAsImage, 0, 0)
         circleAction(ctContext, colorSwatches[0], calculatedRadius)
       canvasDataAsImage.src = cH[cH.length - 1]
     else
+      updateCursor()
       drawInformation()
   () ->
     mousePressed = true
@@ -20,8 +21,6 @@ circlePosture = [
     oldY = ySpot
   () ->
     mousePressed = false
-    cH.push ctCanvas.toDataURL()
-    cH.shift()
-    cF = []
+    historyUpdate()
   () ->
 ]
