@@ -60,27 +60,26 @@ Here is an incomplete list of features, with the ones I have finished checked of
 * X Rotate Canvas
 * X Rotate selected area
 * X Sample color
-* Scale canvas
-* Scale selected area
 * X Select area
 * X Square draw tool
-* View mode
 * Zoom
-* Tool cursor images
+* X Tool cursor images
 * Secondary color transparency
 * Arrow key scrolling
+* Scale canvas
+* Scale selected area
 
 General to dos and bugs to fix:
 
 * X Mouse canvas exit
 * X redo resize memory
 * X discriminate between pasting and opening outside image (by canvas and image size)
-* Menu click region
-* Alternate Cursor colors (replace view mode)
-* Optimize selection moving
+* X Alternate Cursor colors (replace view mode)
 * X Data read out on tool (square size etc)
 * X Remove toolbar0 information section, and make icons change with new settings
 * Selection cursor update bug
+* Optimize selection moving
+* Menu click region ( or cancel option ) 
 
 ------- LICENSING
 
