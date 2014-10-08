@@ -148,25 +148,34 @@ toolsToNumbers =
 
 fancyResponsiveTools = ['square', 'circle', 'line', 'point']
 
-sevenImages = [
-  new Image() 
-  new Image()
-  new Image()
-  new Image()
-  new Image()
-  new Image()
-  new Image()
-]
-
-AllTheFancyIcons = [ sevenImages, sevenImages]
+placeHolder = ''
 
 fancyResponsiveIcons =
-  fancyResponsiveTools[0]: sevenImages
-  fancyResponsiveTools[1]: sevenImages
-  fancyResponsiveTools[2]: sevenImages
-  fancyResponsiveTools[3]: sevenImages
+  'square':placeHolder
+  'circle':placeHolder
+  'line':placeHolder
+  'point':placeHolder
 
+fancyToolIndex = 0
+while fancyToolIndex < fancyResponsiveTools.length
+  fancyIconIndex = 0
+  fancyResponsiveIcons[fancyResponsiveTools[fancyToolIndex]] = [ [], [] ]
+  while fancyIconIndex < 7
+    fancyResponsiveIcons[fancyResponsiveTools[fancyToolIndex]][0].push new Image()
+    fancyResponsiveIcons[fancyResponsiveTools[fancyToolIndex]][1].push new Image()
 
+    imageSource = 'assets\\u'+zeroPadder(toolsToNumbers[fancyResponsiveTools[fancyToolIndex]], 2)
+    imageSource += '00' + fancyIconIndex.toString() + '.PNG'
+    fancyResponsiveIcons[fancyResponsiveTools[fancyToolIndex]][0][fancyIconIndex].src =
+      imageSource
+
+    imageSource = 'assets\\u'+zeroPadder(toolsToNumbers[fancyResponsiveTools[fancyToolIndex]], 2)
+    imageSource += '0' + fancyIconIndex.toString() + '0.PNG'
+    fancyResponsiveIcons[fancyResponsiveTools[fancyToolIndex]][1][fancyIconIndex].src =
+      imageSource
+
+    fancyIconIndex++
+  fancyToolIndex++
 
 
 

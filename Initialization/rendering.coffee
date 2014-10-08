@@ -90,6 +90,61 @@ drawToolbars = ->
     tH[tH.length - 1].clickRegion[0],
     tH[tH.length - 1].clickRegion[1])
 
+  if toolViewMode is 0
+
+    if tH[tH.length - 1].name is 'square'
+      theImage = fancyResponsiveIcons['square'][1][tH[tH.length - 1].magnitude - 1]
+      iconX = tH[tH.length - 1].clickRegion[0]
+      iconY = tH[tH.length - 1].clickRegion[1]
+      toolbar0Context.drawImage( theImage, iconX, iconY)
+    else
+      if ctPaintTools[toolsToNumbers['square']].magnitude > 1
+        theImage = 
+          fancyResponsiveIcons['square'][0][ctPaintTools[toolsToNumbers['square']].magnitude - 1]
+        iconX = ctPaintTools[toolsToNumbers['square']].clickRegion[0]
+        iconY = ctPaintTools[toolsToNumbers['square']].clickRegion[1]
+        toolbar0Context.drawImage( theImage, iconX, iconY)
+
+    if tH[tH.length - 1].name is 'circle'
+      theImage = fancyResponsiveIcons['circle'][1][tH[tH.length - 1].magnitude - 1]
+      iconX = tH[tH.length - 1].clickRegion[0]
+      iconY = tH[tH.length - 1].clickRegion[1]
+      toolbar0Context.drawImage( theImage, iconX, iconY )
+    else
+      if ctPaintTools[toolsToNumbers['circle']].magnitude > 1
+        theImage = 
+          fancyResponsiveIcons['circle'][0][ctPaintTools[toolsToNumbers['circle']].magnitude - 1]
+        iconX = ctPaintTools[toolsToNumbers['circle']].clickRegion[0]
+        iconY = ctPaintTools[toolsToNumbers['circle']].clickRegion[1]
+        toolbar0Context.drawImage( theImage, iconX, iconY)
+
+    if tH[tH.length - 1].name is 'line'
+      theImage = fancyResponsiveIcons['line'][1][tH[tH.length - 1].magnitude - 1]
+      iconX = tH[tH.length - 1].clickRegion[0]
+      iconY = tH[tH.length - 1].clickRegion[1]
+      toolbar0Context.drawImage( theImage, iconX, iconY )
+    else
+      if ctPaintTools[toolsToNumbers['line']].magnitude > 1
+        theImage = 
+          fancyResponsiveIcons['line'][0][ctPaintTools[toolsToNumbers['line']].magnitude - 1]
+        iconX = ctPaintTools[toolsToNumbers['line']].clickRegion[0]
+        iconY = ctPaintTools[toolsToNumbers['line']].clickRegion[1]
+        toolbar0Context.drawImage( theImage, iconX, iconY)
+
+    if tH[tH.length - 1].name is 'point'
+      theImage = fancyResponsiveIcons['point'][1][tH[tH.length - 1].magnitude - 1]
+      iconX = tH[tH.length - 1].clickRegion[0]
+      iconY = tH[tH.length - 1].clickRegion[1]
+      toolbar0Context.drawImage( theImage, iconX, iconY )
+    else
+      if ctPaintTools[toolsToNumbers['point']].magnitude > 1
+        theImage = 
+          fancyResponsiveIcons['point'][0][ctPaintTools[toolsToNumbers['point']].magnitude - 1]
+        iconX = ctPaintTools[toolsToNumbers['point']].clickRegion[0]
+        iconY = ctPaintTools[toolsToNumbers['point']].clickRegion[1]
+        toolbar0Context.drawImage( theImage, iconX, iconY)
+
+
   toolbar1Context.fillStyle = '#202020'
   toolbar1Context.fillRect(0,0,window.innerWidth,toolbarHeight)
 
