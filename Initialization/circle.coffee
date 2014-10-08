@@ -96,4 +96,3 @@ circleAction = ( canvas, color, radiusToPass ) ->
       drawCircle( canvas, color, oldX, oldY, radiusToPass - magnitudeIncrement, true )
       magnitudeIncrement++
 
-

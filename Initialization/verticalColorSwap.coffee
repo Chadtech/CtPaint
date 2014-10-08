@@ -23,3 +23,4 @@ verticalColorSwap = () ->
     tH.pop()
     drawToolbars()
   ,20)
+
