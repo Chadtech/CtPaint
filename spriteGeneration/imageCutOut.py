@@ -3,6 +3,7 @@ from PIL import Image
 import os
 
 sheet = Image.open('toolbar0Sheet.png')
+sheetWidth, sheetHeight = sheet.size
 
 numberOfRows = 11
 
@@ -146,9 +147,20 @@ icon.save('u'+'04200.PNG','png')
 icon = sheet.crop((466,0,466+24, 24))
 icon.save('u'+'05200.PNG','png')
 
+#########################################
+###     Zoom magnitudes, lit up and plain
+#########################################
+
+for iteration in range(4):
+  icon = sheet.crop((490,(iteration*24),490+24, 24+(iteration*24)))
+  icon.save('u'+'0000'+str(iteration)+'.PNG','png')
+
+for iteration in range(4):
+  icon = sheet.crop((514,(iteration*24),514+24, 24+(iteration*24)))
+  icon.save('u'+'000'+str(iteration)+'0.PNG','png')
 
 
-# Non lit up menu, not cropped, but pasted as a single image
-# on the tool bar
+# Non lit up menu, not cropped into smaller icons, 
+# but pasted as a single image on the tool bar
 sheet.crop((0,0,49,sheetHeight)).save('toolbar0u.PNG','png')
 sheet.crop((49,0,98,sheetHeight)).save('toolbar0v.PNG','png')
