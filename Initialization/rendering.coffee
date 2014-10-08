@@ -82,41 +82,62 @@ placeToolbars = ->
 
 drawToolbars = ->
   toolbar0Context.fillStyle = '#202020'
-  toolbar0Context.fillRect(0,0,toolbarWidth,window.innerHeight-toolbarHeight)
-  toolbar0Context.drawImage(toolbar0sImages[toolViewMode],0,0)
-  drawLine(toolbar0Context,[16,20,8],toolbarWidth-1,0,toolbarWidth-1,window.innerHeight-toolbarHeight)
+  toolbar0Context.fillRect(0, 0, toolbarWidth, window.innerHeight - toolbarHeight)
+  toolbar0Context.drawImage(toolbar0sImages[toolViewMode], 0, 0)
+  almostWindowHeight =  window.innerHeight - toolbarHeight
+  drawLine(toolbar0Context, [16, 20, 8], toolbarWidth - 1, 0, toolbarWidth - 1, almostWindowHeight)
   toolbar0Context.drawImage(
     tH[tH.length - 1].pressedImage[toolViewMode]
     tH[tH.length - 1].clickRegion[0],
     tH[tH.length - 1].clickRegion[1])
 
-  if toolViewMode is 0
+  ###
+    The following code looks at the condition of the state-sensitive tool icons (fancy and 
+    solid-capable tools). The relevant tools are square, circle, line, and point.
 
+    Each section, for square, circle, line and point, is identical. So I have therefore
+    only commented the square section. The comments should be equally explainatory for the 
+    other tools.
+  ###
+
+  # Only if the view mode is pictoral, and...
+  if toolViewMode is 0
+    # If the current tool is the square tool
     if tH[tH.length - 1].name is 'square'
+      # and its not in fill mode
       if not tH[tH.length - 1].mode
+        # draw the icon reflecting its current magnitude and selection state
         theImage = fancyResponsiveIcons['square'][1][tH[tH.length - 1].magnitude - 1]
         iconX = tH[tH.length - 1].clickRegion[0]
         iconY = tH[tH.length - 1].clickRegion[1]
         toolbar0Context.drawImage( theImage, iconX, iconY)
+      # and it is in fill mode
       else
+        # draw the icon reflecting that its filled and selected
         theImage = solidIcons['square'][1]
         iconX = tH[tH.length - 1].clickRegion[0]
         iconY = tH[tH.length - 1].clickRegion[1]
         toolbar0Context.drawImage( theImage, iconX, iconY)
+    # If the current tool is not square  
     else
+      # and sqaure isnt in fill mode
       if not ctPaintTools[toolsToNumbers['square']].mode
+        # but square's mangitude is still greater than one
         if ctPaintTools[toolsToNumbers['square']].magnitude > 1
+          # draw its unselected icon in that magnitude
           theImage = 
             fancyResponsiveIcons['square'][0][ctPaintTools[toolsToNumbers['square']].magnitude - 1]
           iconX = ctPaintTools[toolsToNumbers['square']].clickRegion[0]
           iconY = ctPaintTools[toolsToNumbers['square']].clickRegion[1]
           toolbar0Context.drawImage( theImage, iconX, iconY)
+      # and square is in fill mode
       else
         theImage = solidIcons['square'][0]
         iconX = ctPaintTools[toolsToNumbers['square']].clickRegion[0]
         iconY = ctPaintTools[toolsToNumbers['square']].clickRegion[1]
         toolbar0Context.drawImage( theImage, iconX, iconY)
 
+    # If the current tool is the circle tool ...
     if tH[tH.length - 1].name is 'circle'
       if not tH[tH.length - 1].mode
         theImage = fancyResponsiveIcons['circle'][1][tH[tH.length - 1].magnitude - 1]
@@ -179,21 +200,21 @@ drawToolbars = ->
   drawLine(toolbar1Context, [16, 20, 8], toolbarWidth - 1, 0, window.innerWidth, 0)
 
   toolbar1Context.fillStyle = rgbToHex(colorSwatches[0])
-  toolbar1Context.fillRect(7,4,14,14)
+  toolbar1Context.fillRect(7, 4, 14, 14)
 
   toolbar1Context.fillStyle = rgbToHex(colorSwatches[1])
-  toolbar1Context.fillRect(24,4,14,14)
+  toolbar1Context.fillRect(24, 4, 14, 14)
 
   toolbar1Context.fillStyle = rgbToHex(colorSwatches[2])
-  toolbar1Context.fillRect(16,21,14,14)
+  toolbar1Context.fillRect(16, 21, 14, 14)
 
   toolbar1Context.fillStyle = rgbToHex(colorSwatches[3])
-  toolbar1Context.fillRect(33,21,14,14)
+  toolbar1Context.fillRect(33, 21, 14, 14)
 
   paletteIndex = 0
   while paletteIndex < colorPalette.length
     toolbar1Context.fillStyle = rgbToHex(colorPalette[paletteIndex])
-    toolbar1Context.fillRect(52 + (17 * (paletteIndex // 2)), 4 + (17 * (paletteIndex % 2)),14,14)
+    toolbar1Context.fillRect(52 + (17 * (paletteIndex // 2)), 4 + (17 * (paletteIndex % 2)), 14, 14)
     paletteIndex++
 
   drawInformationToolbar0()
@@ -237,8 +258,8 @@ drawInformation = ( extraInformation ) ->
 drawInformationToolbar1 = ( extraInformation ) ->
   if extraInformation is undefined
     extraInformation = ''
-  toolbar1Context.drawImage(toolbar1sImage1,188,3)   
-  toolbar1Context.drawImage(toolbar1sImage1,458,3)   
+  toolbar1Context.drawImage(toolbar1sImage1, 188, 3)   
+  toolbar1Context.drawImage(toolbar1sImage1, 458, 3)   
   xPos = event.clientX - (toolbarWidth + 5) - canvasXOffset
   yPos = event.clientY - 5 - canvasYOffset
   colorValue = getColorValue(ctContext, xPos, yPos).toUpperCase()

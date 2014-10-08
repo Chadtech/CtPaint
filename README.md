@@ -79,7 +79,7 @@ General to dos and bugs to fix:
 * Alternate Cursor colors (replace view mode)
 * Optimize selection moving
 * X Data read out on tool (square size etc)
-* Remove toolbar0 information section, and make icons change with new settings
+* X Remove toolbar0 information section, and make icons change with new settings
 
 ------- LICENSING
 

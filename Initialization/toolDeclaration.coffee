@@ -146,6 +146,10 @@ toolsToNumbers =
   'undo':20
   'redo':21
 
+###
+  Fancy Responsive tools are tools with icons that change with the tools magnitude and mode.
+###
+
 fancyResponsiveTools = ['square', 'circle', 'line', 'point']
 
 placeHolder = ''
@@ -159,16 +163,21 @@ fancyResponsiveIcons =
 fancyToolIndex = 0
 while fancyToolIndex < fancyResponsiveTools.length
   fancyIconIndex = 0
+  # For each fancy tool, declare an array of two empty arrays
+  # These arrays correspond to selected icons, and non selected icons
   fancyResponsiveIcons[fancyResponsiveTools[fancyToolIndex]] = [ [], [] ]
   while fancyIconIndex < 7
+    # For each magnitude, populate each array with a new image.
     fancyResponsiveIcons[fancyResponsiveTools[fancyToolIndex]][0].push new Image()
     fancyResponsiveIcons[fancyResponsiveTools[fancyToolIndex]][1].push new Image()
 
+    # source the icon for non selected tool fancyToolIndex of magnitude fancyIconIndex
     imageSource = 'assets\\u' + zeroPadder(toolsToNumbers[fancyResponsiveTools[fancyToolIndex]], 2)
     imageSource += '00' + fancyIconIndex.toString() + '.PNG'
     fancyResponsiveIcons[fancyResponsiveTools[fancyToolIndex]][0][fancyIconIndex].src =
       imageSource
 
+    # source the icon for selected tool fancyToolIndex of magnitude fancyIconIndex
     imageSource = 'assets\\u'+zeroPadder(toolsToNumbers[fancyResponsiveTools[fancyToolIndex]], 2)
     imageSource += '0' + fancyIconIndex.toString() + '0.PNG'
     fancyResponsiveIcons[fancyResponsiveTools[fancyToolIndex]][1][fancyIconIndex].src =
@@ -177,6 +186,8 @@ while fancyToolIndex < fancyResponsiveTools.length
     fancyIconIndex++
   fancyToolIndex++
 
+# toolsWhichCanBeSolid are tools that when their mode is true, draw a filled version
+# instead of an outline.
 toolsWhichCanBeSolid = ['square', 'circle']
 
 solidIcons =
@@ -192,6 +203,6 @@ while solidToolIndex < toolsWhichCanBeSolid.length
   imageSource = 'assets\\u' + zeroPadder(toolsToNumbers[ toolsWhichCanBeSolid[solidToolIndex] ], 2)
   imageSource += '200.PNG'
   solidIcons[toolsWhichCanBeSolid[solidToolIndex]][1].src = imageSource
-  
+
   solidToolIndex++
 
