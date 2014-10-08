@@ -150,15 +150,18 @@ icon.save('u'+'05200.PNG','png')
 #########################################
 ###     Zoom magnitudes, lit up and plain
 #########################################
+# iterations are multiplied by 24 because the icons are 
+# arranged on the sprite sheet differently.
 
+# Non - lit up
 for iteration in range(4):
   icon = sheet.crop((490,(iteration*24),490+24, 24+(iteration*24)))
   icon.save('u'+'0000'+str(iteration)+'.PNG','png')
 
+# lit up
 for iteration in range(4):
   icon = sheet.crop((514,(iteration*24),514+24, 24+(iteration*24)))
   icon.save('u'+'000'+str(iteration)+'0.PNG','png')
-
 
 # Non lit up menu, not cropped into smaller icons, 
 # but pasted as a single image on the tool bar
