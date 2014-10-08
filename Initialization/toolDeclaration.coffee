@@ -164,7 +164,7 @@ while fancyToolIndex < fancyResponsiveTools.length
     fancyResponsiveIcons[fancyResponsiveTools[fancyToolIndex]][0].push new Image()
     fancyResponsiveIcons[fancyResponsiveTools[fancyToolIndex]][1].push new Image()
 
-    imageSource = 'assets\\u'+zeroPadder(toolsToNumbers[fancyResponsiveTools[fancyToolIndex]], 2)
+    imageSource = 'assets\\u' + zeroPadder(toolsToNumbers[fancyResponsiveTools[fancyToolIndex]], 2)
     imageSource += '00' + fancyIconIndex.toString() + '.PNG'
     fancyResponsiveIcons[fancyResponsiveTools[fancyToolIndex]][0][fancyIconIndex].src =
       imageSource
@@ -177,11 +177,21 @@ while fancyToolIndex < fancyResponsiveTools.length
     fancyIconIndex++
   fancyToolIndex++
 
+toolsWhichCanBeSolid = ['square', 'circle']
 
+solidIcons =
+  'square': [ new Image(), new Image() ]
+  'circle': [ new Image(), new Image() ]
 
+solidToolIndex = 0
+while solidToolIndex < toolsWhichCanBeSolid.length
+  imageSource = 'assets\\u' + zeroPadder(toolsToNumbers[ toolsWhichCanBeSolid[solidToolIndex] ], 2)
+  imageSource += '100.PNG'
+  solidIcons[toolsWhichCanBeSolid[solidToolIndex]][0].src = imageSource
 
-
-
-
-
+  imageSource = 'assets\\u' + zeroPadder(toolsToNumbers[ toolsWhichCanBeSolid[solidToolIndex] ], 2)
+  imageSource += '200.PNG'
+  solidIcons[toolsWhichCanBeSolid[solidToolIndex]][1].src = imageSource
+  
+  solidToolIndex++
 

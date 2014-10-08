@@ -2141,27 +2141,51 @@ drawToolbars = ->
   if toolViewMode is 0
 
     if tH[tH.length - 1].name is 'square'
-      theImage = fancyResponsiveIcons['square'][1][tH[tH.length - 1].magnitude - 1]
-      iconX = tH[tH.length - 1].clickRegion[0]
-      iconY = tH[tH.length - 1].clickRegion[1]
-      toolbar0Context.drawImage( theImage, iconX, iconY)
+      if not tH[tH.length - 1].mode
+        theImage = fancyResponsiveIcons['square'][1][tH[tH.length - 1].magnitude - 1]
+        iconX = tH[tH.length - 1].clickRegion[0]
+        iconY = tH[tH.length - 1].clickRegion[1]
+        toolbar0Context.drawImage( theImage, iconX, iconY)
+      else
+        theImage = solidIcons['square'][1]
+        iconX = tH[tH.length - 1].clickRegion[0]
+        iconY = tH[tH.length - 1].clickRegion[1]
+        toolbar0Context.drawImage( theImage, iconX, iconY)
     else
-      if ctPaintTools[toolsToNumbers['square']].magnitude > 1
-        theImage = 
-          fancyResponsiveIcons['square'][0][ctPaintTools[toolsToNumbers['square']].magnitude - 1]
+      if not ctPaintTools[toolsToNumbers['square']].mode
+        if ctPaintTools[toolsToNumbers['square']].magnitude > 1
+          theImage = 
+            fancyResponsiveIcons['square'][0][ctPaintTools[toolsToNumbers['square']].magnitude - 1]
+          iconX = ctPaintTools[toolsToNumbers['square']].clickRegion[0]
+          iconY = ctPaintTools[toolsToNumbers['square']].clickRegion[1]
+          toolbar0Context.drawImage( theImage, iconX, iconY)
+      else
+        theImage = solidIcons['square'][0]
         iconX = ctPaintTools[toolsToNumbers['square']].clickRegion[0]
         iconY = ctPaintTools[toolsToNumbers['square']].clickRegion[1]
         toolbar0Context.drawImage( theImage, iconX, iconY)
 
     if tH[tH.length - 1].name is 'circle'
-      theImage = fancyResponsiveIcons['circle'][1][tH[tH.length - 1].magnitude - 1]
-      iconX = tH[tH.length - 1].clickRegion[0]
-      iconY = tH[tH.length - 1].clickRegion[1]
-      toolbar0Context.drawImage( theImage, iconX, iconY )
+      if not tH[tH.length - 1].mode
+        theImage = fancyResponsiveIcons['circle'][1][tH[tH.length - 1].magnitude - 1]
+        iconX = tH[tH.length - 1].clickRegion[0]
+        iconY = tH[tH.length - 1].clickRegion[1]
+        toolbar0Context.drawImage( theImage, iconX, iconY )
+      else
+        theImage = solidIcons['circle'][1]
+        iconX = tH[tH.length - 1].clickRegion[0]
+        iconY = tH[tH.length - 1].clickRegion[1]
+        toolbar0Context.drawImage( theImage, iconX, iconY)
     else
-      if ctPaintTools[toolsToNumbers['circle']].magnitude > 1
-        theImage = 
-          fancyResponsiveIcons['circle'][0][ctPaintTools[toolsToNumbers['circle']].magnitude - 1]
+      if not ctPaintTools[toolsToNumbers['circle']].mode
+        if ctPaintTools[toolsToNumbers['circle']].magnitude > 1
+          theImage = 
+            fancyResponsiveIcons['circle'][0][ctPaintTools[toolsToNumbers['circle']].magnitude - 1]
+          iconX = ctPaintTools[toolsToNumbers['circle']].clickRegion[0]
+          iconY = ctPaintTools[toolsToNumbers['circle']].clickRegion[1]
+          toolbar0Context.drawImage( theImage, iconX, iconY)
+      else
+        theImage = solidIcons['circle'][0]
         iconX = ctPaintTools[toolsToNumbers['circle']].clickRegion[0]
         iconY = ctPaintTools[toolsToNumbers['circle']].clickRegion[1]
         toolbar0Context.drawImage( theImage, iconX, iconY)
@@ -2907,7 +2931,7 @@ while fancyToolIndex < fancyResponsiveTools.length
     fancyResponsiveIcons[fancyResponsiveTools[fancyToolIndex]][0].push new Image()
     fancyResponsiveIcons[fancyResponsiveTools[fancyToolIndex]][1].push new Image()
 
-    imageSource = 'assets\\u'+zeroPadder(toolsToNumbers[fancyResponsiveTools[fancyToolIndex]], 2)
+    imageSource = 'assets\\u' + zeroPadder(toolsToNumbers[fancyResponsiveTools[fancyToolIndex]], 2)
     imageSource += '00' + fancyIconIndex.toString() + '.PNG'
     fancyResponsiveIcons[fancyResponsiveTools[fancyToolIndex]][0][fancyIconIndex].src =
       imageSource
@@ -2920,13 +2944,23 @@ while fancyToolIndex < fancyResponsiveTools.length
     fancyIconIndex++
   fancyToolIndex++
 
+toolsWhichCanBeSolid = ['square', 'circle']
 
+solidIcons =
+  'square': [ new Image(), new Image() ]
+  'circle': [ new Image(), new Image() ]
 
+solidToolIndex = 0
+while solidToolIndex < toolsWhichCanBeSolid.length
+  imageSource = 'assets\\u' + zeroPadder(toolsToNumbers[ toolsWhichCanBeSolid[solidToolIndex] ], 2)
+  imageSource += '100.PNG'
+  solidIcons[toolsWhichCanBeSolid[solidToolIndex]][0].src = imageSource
 
-
-
-
-
+  imageSource = 'assets\\u' + zeroPadder(toolsToNumbers[ toolsWhichCanBeSolid[solidToolIndex] ], 2)
+  imageSource += '200.PNG'
+  solidIcons[toolsWhichCanBeSolid[solidToolIndex]][1].src = imageSource
+  
+  solidToolIndex++
 
 
 $(document).ready ()->
@@ -2978,7 +3012,7 @@ $(document).ready ()->
         tH[tH.length - 1].mode = false
       else
         tH[tH.length - 1].mode = true
-      drawInformationToolbar0()
+      drawToolbars()
 
     if event.keyCode == keysToKeyCodes['equals']
       if tH[tH.length - 1].magnitude < tH[tH.length - 1].maxMagnitude

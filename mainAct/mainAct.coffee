@@ -47,7 +47,7 @@ $(document).ready ()->
         tH[tH.length - 1].mode = false
       else
         tH[tH.length - 1].mode = true
-      drawInformationToolbar0()
+      drawToolbars()
 
     if event.keyCode == keysToKeyCodes['equals']
       if tH[tH.length - 1].magnitude < tH[tH.length - 1].maxMagnitude
