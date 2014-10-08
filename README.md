@@ -80,6 +80,7 @@ General to dos and bugs to fix:
 * Optimize selection moving
 * X Data read out on tool (square size etc)
 * X Remove toolbar0 information section, and make icons change with new settings
+* Selection cursor update bug
 
 ------- LICENSING
 

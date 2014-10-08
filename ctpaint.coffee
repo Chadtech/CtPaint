@@ -2272,6 +2272,7 @@ drawToolbars = ->
 
 updateCursor = ->
   coverUpOldCursor()
+  console.log 'A', event.clientX, event.clientY
   cursorX = event.clientX - (toolbarWidth + 5 - canvasXOffset)
   cursorY = event.clientY - 5 - canvasYOffset
   updateOldCursor()
@@ -2549,6 +2550,7 @@ selectPosture = [
         canvasDataAsImage = new Image()
         canvasDataAsImage.onload = ->
           ctContext.drawImage(canvasDataAsImage,0,0)
+          console.log event
           historyUpdate()
           ctContext.putImageData(selection, gripX, gripY)
           drawSelectBox(ctContext, gripX - 1, gripY - 1, rightEdge, bottomEdge)
@@ -2575,6 +2577,7 @@ selectPosture = [
         canvasDataAsImage.onload = ->
           ctContext.drawImage(canvasDataAsImage,0,0)
           ctContext.putImageData(selection, selectionX, selectionY)
+          console.log event
           historyUpdate()
         canvasDataAsImage.src = cH[cH.length - 1]
 
@@ -2599,6 +2602,7 @@ selectPosture = [
         canvasDataAsImage.onload = ->
           ctContext.drawImage(canvasDataAsImage,0,0)
           squareAction(ctContext, colorSwatches[1], oldX, oldY, xSpot - 1, ySpot - 1, true)
+          console.log event
           historyUpdate()
           ctContext.putImageData(selection, selectionX, selectionY)
           drawSelectBox(ctContext, originX, originY, otherSideX, otherSideY)

@@ -221,6 +221,7 @@ drawToolbars = ->
 
 updateCursor = ->
   coverUpOldCursor()
+  console.log 'A', event.clientX, event.clientY
   cursorX = event.clientX - (toolbarWidth + 5 - canvasXOffset)
   cursorY = event.clientY - 5 - canvasYOffset
   updateOldCursor()
