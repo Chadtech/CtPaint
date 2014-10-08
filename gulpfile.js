@@ -30,7 +30,7 @@ gulp.task('doAllTheScriptsTogether', function() {
     './initialization/copy.coffee',
     './initialization/paste.coffee',
     './initialization/cut.coffee',
-    './initialization/view.coffee',
+    './initialization/cursorColor.coffee',
     './initialization/undo.coffee',
     './initialization/redo.coffee',
 

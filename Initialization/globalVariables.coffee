@@ -129,6 +129,25 @@ ySpot = undefined
 oldX = undefined
 oldY = undefined
 
+cursorColors = [
+  [ 255, 85, 0, 255]
+  [ 85, 0, 255, 255]
+  [ 255, 255, 255, 255]
+  [ 0, 255, 85, 255]
+  [ 255, 223, 128, 255]
+  [ 95, 255, 0, 255]
+  [ 0, 0, 0, 255]
+  [ 0, 95, 255, 255]
+  [ 128, 0, 96, 255]
+  [ 96, 128, 0, 255]
+  [ 128, 11, 0, 255]
+]
+
+indexOfCursorColors = 0
+
+colorOfCursorPixel = cursorColors[indexOfCursorColors]
+
+
 cursorX = undefined
 cursorY = undefined
 

@@ -62,6 +62,8 @@ keyListeningUnderNormalCircumstance = (event) ->
     resizeAction()
   if event.keyCode is keysToKeyCodes['f']
     flipAction()
+  if event.keyCode is keysToKeyCodes['g']
+    cursorColorAction()
   if event.keyCode is keysToKeyCodes['i']
     invertAction()
   if event.keyCode is keysToKeyCodes['q']

@@ -234,13 +234,12 @@ drawToolbars = ->
 
 updateCursor = ->
   coverUpOldCursor()
-  console.log 'A', event.clientX, event.clientY
   cursorX = event.clientX - (toolbarWidth + 5 - canvasXOffset)
   cursorY = event.clientY - 5 - canvasYOffset
   updateOldCursor()
   oldCursorX = cursorX
   oldCursorY = cursorY
-  putPixel( ctContext, [239, 8, 8, 255], cursorX, cursorY)
+  putPixel( ctContext, colorOfCursorPixel, cursorX, cursorY)
 
 coverUpOldCursor = ->
   if oldCursorsColor isnt undefined
@@ -248,6 +247,12 @@ coverUpOldCursor = ->
 
 updateOldCursor = ->
   oldCursorsColor = ctContext.getImageData(cursorX, cursorY, 1, 1)
+
+refreshCursor = ( particularColor ) ->
+  if particularColor isnt undefined
+    putPixel( ctContext, particularColor, cursorX, cursorY )
+  else
+    putPixel( ctContext, colorOfCursorPixel, cursorX, cursorY )
 
 modeToGlyph = () ->
   if tH[tH.length - 1].modeCapable

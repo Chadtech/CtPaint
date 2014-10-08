@@ -9,7 +9,7 @@ toolNames = [
   'scale', 'resize'
   'horizontalSwap', 'verticalSwap'
   'copy', 'paste'
-  'cut', 'view'
+  'cut', 'cursorColor'
   'undo', 'redo'
 ]
 
@@ -93,8 +93,8 @@ ctPaintTools[10].posture = emptyPosture
 ctPaintTools[11].posture = emptyPosture
 ctPaintTools[12].posture = emptyPosture
 ctPaintTools[13].posture = emptyPosture
-ctPaintTools[14].posture = emptyPosture
-ctPaintTools[15].posture = emptyPosture
+ctPaintTools[14].posture = horizontalColorSwapPosture
+ctPaintTools[15].posture = verticalColorSwapPosture
 ctPaintTools[16].posture = emptyPosture
 ctPaintTools[17].posture = emptyPosture
 ctPaintTools[18].posture = emptyPosture
@@ -110,11 +110,11 @@ ctPaintTools[13].toolsAction = resizeAction
 ctPaintTools[16].toolsAction = copyAction
 ctPaintTools[17].toolsAction = pasteAction
 ctPaintTools[18].toolsAction = cutAction
+ctPaintTools[19].toolsAction = cursorColorAction
 ctPaintTools[20].toolsAction = undoAction
 ctPaintTools[21].toolsAction = redoAction
 
-ctPaintTools[14].posture = horizontalColorSwapPosture
-ctPaintTools[15].posture = verticalColorSwapPosture
+
 
 ctPaintTools[8].menuImage.src = 'assets\\t01.png'
 ctPaintTools[11].menuImage.src = 'assets\\t02.png'
@@ -142,7 +142,7 @@ toolsToNumbers =
   'copy':16
   'paste':17
   'cut':18
-  'view':19
+  'cursorColor':19
   'undo':20
   'redo':21
 

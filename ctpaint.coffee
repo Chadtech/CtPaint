@@ -129,6 +129,25 @@ ySpot = undefined
 oldX = undefined
 oldY = undefined
 
+cursorColors = [
+  [ 255, 85, 0, 255]
+  [ 85, 0, 255, 255]
+  [ 255, 255, 255, 255]
+  [ 0, 255, 85, 255]
+  [ 255, 223, 128, 255]
+  [ 95, 255, 0, 255]
+  [ 0, 0, 0, 255]
+  [ 0, 95, 255, 255]
+  [ 128, 0, 96, 255]
+  [ 96, 128, 0, 255]
+  [ 128, 11, 0, 255]
+]
+
+indexOfCursorColors = 0
+
+colorOfCursorPixel = cursorColors[indexOfCursorColors]
+
+
 cursorX = undefined
 cursorY = undefined
 
@@ -1989,7 +2008,21 @@ cutAction = ->
   ,20)
 
   
+cursorColorAction = ->
+  tH.push ctPaintTools[toolsToNumbers['cursorColor']]
+  drawToolbars()
 
+  indexOfCursorColors++
+  indexOfCursorColors = indexOfCursorColors % cursorColors.length
+  colorOfCursorPixel = cursorColors[indexOfCursorColors]
+  refreshCursor()
+
+  setTimeout( ()->
+    tH.pop()
+    drawToolbars()
+  ,20)
+
+  
 undoAction = ->
   tH.push ctPaintTools[toolsToNumbers['undo']]
   drawToolbars()
@@ -2285,13 +2318,12 @@ drawToolbars = ->
 
 updateCursor = ->
   coverUpOldCursor()
-  console.log 'A', event.clientX, event.clientY
   cursorX = event.clientX - (toolbarWidth + 5 - canvasXOffset)
   cursorY = event.clientY - 5 - canvasYOffset
   updateOldCursor()
   oldCursorX = cursorX
   oldCursorY = cursorY
-  putPixel( ctContext, [239, 8, 8, 255], cursorX, cursorY)
+  putPixel( ctContext, colorOfCursorPixel, cursorX, cursorY)
 
 coverUpOldCursor = ->
   if oldCursorsColor isnt undefined
@@ -2299,6 +2331,12 @@ coverUpOldCursor = ->
 
 updateOldCursor = ->
   oldCursorsColor = ctContext.getImageData(cursorX, cursorY, 1, 1)
+
+refreshCursor = ( particularColor ) ->
+  if particularColor isnt undefined
+    putPixel( ctContext, particularColor, cursorX, cursorY )
+  else
+    putPixel( ctContext, colorOfCursorPixel, cursorX, cursorY )
 
 modeToGlyph = () ->
   if tH[tH.length - 1].modeCapable
@@ -2437,6 +2475,8 @@ keyListeningUnderNormalCircumstance = (event) ->
     resizeAction()
   if event.keyCode is keysToKeyCodes['f']
     flipAction()
+  if event.keyCode is keysToKeyCodes['g']
+    cursorColorAction()
   if event.keyCode is keysToKeyCodes['i']
     invertAction()
   if event.keyCode is keysToKeyCodes['q']
@@ -2829,7 +2869,7 @@ toolNames = [
   'scale', 'resize'
   'horizontalSwap', 'verticalSwap'
   'copy', 'paste'
-  'cut', 'view'
+  'cut', 'cursorColor'
   'undo', 'redo'
 ]
 
@@ -2913,8 +2953,8 @@ ctPaintTools[10].posture = emptyPosture
 ctPaintTools[11].posture = emptyPosture
 ctPaintTools[12].posture = emptyPosture
 ctPaintTools[13].posture = emptyPosture
-ctPaintTools[14].posture = emptyPosture
-ctPaintTools[15].posture = emptyPosture
+ctPaintTools[14].posture = horizontalColorSwapPosture
+ctPaintTools[15].posture = verticalColorSwapPosture
 ctPaintTools[16].posture = emptyPosture
 ctPaintTools[17].posture = emptyPosture
 ctPaintTools[18].posture = emptyPosture
@@ -2930,11 +2970,11 @@ ctPaintTools[13].toolsAction = resizeAction
 ctPaintTools[16].toolsAction = copyAction
 ctPaintTools[17].toolsAction = pasteAction
 ctPaintTools[18].toolsAction = cutAction
+ctPaintTools[19].toolsAction = cursorColorAction
 ctPaintTools[20].toolsAction = undoAction
 ctPaintTools[21].toolsAction = redoAction
 
-ctPaintTools[14].posture = horizontalColorSwapPosture
-ctPaintTools[15].posture = verticalColorSwapPosture
+
 
 ctPaintTools[8].menuImage.src = 'assets\\t01.png'
 ctPaintTools[11].menuImage.src = 'assets\\t02.png'
@@ -2962,7 +3002,7 @@ toolsToNumbers =
   'copy':16
   'paste':17
   'cut':18
-  'view':19
+  'cursorColor':19
   'undo':20
   'redo':21
 
