@@ -153,11 +153,12 @@ toolsToNumbers =
   of that schema look at the comments in imageCutOut.py in the folder spriteGeneration
 ###
 
-fancyResponsiveTools = ['square', 'circle', 'line', 'point']
+fancyResponsiveTools = ['zoom', 'square', 'circle', 'line', 'point']
 
 placeHolder = ''
 
 fancyResponsiveIcons =
+  'zoom':placeHolder
   'square':placeHolder
   'circle':placeHolder
   'line':placeHolder
@@ -169,7 +170,7 @@ while fancyToolIndex < fancyResponsiveTools.length
   # For each fancy tool, declare an array of two empty arrays
   # These arrays correspond to selected icons, and non selected icons
   fancyResponsiveIcons[fancyResponsiveTools[fancyToolIndex]] = [ [], [] ]
-  while fancyIconIndex < 7
+  while fancyIconIndex < toolMaxMagnitudes[toolsToNumbers[fancyResponsiveTools[fancyToolIndex]]]
     # For each magnitude, populate each array with a new image.
     fancyResponsiveIcons[fancyResponsiveTools[fancyToolIndex]][0].push new Image()
     fancyResponsiveIcons[fancyResponsiveTools[fancyToolIndex]][1].push new Image()

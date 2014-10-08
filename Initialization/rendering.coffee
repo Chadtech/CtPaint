@@ -163,6 +163,19 @@ drawToolbars = ->
         iconY = ctPaintTools[toolsToNumbers['circle']].clickRegion[1]
         toolbar0Context.drawImage( theImage, iconX, iconY)
 
+    if tH[tH.length - 1].name is 'zoom'
+      theImage = fancyResponsiveIcons['zoom'][1][tH[tH.length - 1].magnitude - 1]
+      iconX = tH[tH.length - 1].clickRegion[0]
+      iconY = tH[tH.length - 1].clickRegion[1]
+      toolbar0Context.drawImage( theImage, iconX, iconY )
+    else
+      if ctPaintTools[toolsToNumbers['zoom']].magnitude > 1
+        theImage = 
+          fancyResponsiveIcons['zoom'][0][ctPaintTools[toolsToNumbers['zoom']].magnitude - 1]
+        iconX = ctPaintTools[toolsToNumbers['zoom']].clickRegion[0]
+        iconY = ctPaintTools[toolsToNumbers['zoom']].clickRegion[1]
+        toolbar0Context.drawImage( theImage, iconX, iconY)
+
     if tH[tH.length - 1].name is 'line'
       theImage = fancyResponsiveIcons['line'][1][tH[tH.length - 1].magnitude - 1]
       iconX = tH[tH.length - 1].clickRegion[0]

@@ -150,6 +150,7 @@ icon.save('u'+'05200.PNG','png')
 #########################################
 ###     Zoom magnitudes, lit up and plain
 #########################################
+
 # iterations are multiplied by 24 because the icons are 
 # arranged on the sprite sheet differently.
 
