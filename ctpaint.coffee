@@ -620,6 +620,7 @@ drawSelectBox = (canvas, beginX, beginY, endX, endY) ->
 getColorValue = (canvas, whereAtX, whereAtY) ->
   return rgbToHex(canvas.getImageData(whereAtX, whereAtY, 1, 1).data)
 
+
 floodFill = (canvas, context, colorToChangeTo, xPosition, yPosition) ->
   # The argument context is the context of the argument canvas.
   # ColorToChangeTo is a three element array of color values 0<=.<255
@@ -939,7 +940,6 @@ circleAction = ( canvas, color, radiusToPass ) ->
     while magnitudeIncrement < radiusToPass
       drawCircle( canvas, color, oldX, oldY, radiusToPass - magnitudeIncrement, true )
       magnitudeIncrement++
-
 
 
 ###
@@ -1864,6 +1864,7 @@ verticalColorSwap = () ->
     drawToolbars()
   ,20)
 
+
 ###
   copy either saves the selections data, or if there is no selection the whole canvas,
   into what people normally understand as the clipboard.
@@ -2046,6 +2047,8 @@ redoAction = ->
     tH.pop()
     drawToolbars()
   ,20)
+
+  
 ###
   PositionCorners figures out where to put the little corner divs at the edges
   of the canvas. Three of the four corners are just for appearance. Clicking
@@ -2499,6 +2502,8 @@ zoomPosture = [
     mousePressed = false
   () ->
 ]
+
+
 selectPosture = [
   # Mouse Move
   () ->
@@ -2694,10 +2699,13 @@ circlePosture = [
     oldX = xSpot
     oldY = ySpot
   () ->
+    updateOldCursor()
     mousePressed = false
     historyUpdate()
   () ->
 ]
+
+
 linePosture = [
   () ->
     if mousePressed
@@ -2725,6 +2733,7 @@ linePosture = [
     historyUpdate()
   () ->
 ]
+
 
 pointPosture = [
   () ->
@@ -2755,6 +2764,8 @@ pointPosture = [
       historyUpdate()
       mousePressed = false
 ]
+
+
 emptyPosture = [
   () ->
     drawInformation()
@@ -2764,6 +2775,8 @@ emptyPosture = [
     mousePressed = false
   () ->
 ]
+
+
 horizontalColorSwapPosture = [
   () ->
     drawInformation()
@@ -2786,6 +2799,8 @@ verticalColorSwapPosture = [
     drawToolbars()
   () ->
 ]
+
+
 # organized as they are in the 2 x 11 tool bar grid
 toolNames = [
   'zoom', 'select'
@@ -2936,6 +2951,9 @@ toolsToNumbers =
 
 ###
   Fancy Responsive tools are tools with icons that change with the tools magnitude and mode.
+
+  The code in this section utilizes a png file naming schema for the assets. For an explaination
+  of that schema look at the comments in imageCutOut.py in the folder spriteGeneration
 ###
 
 fancyResponsiveTools = ['square', 'circle', 'line', 'point']

@@ -20,6 +20,7 @@ circlePosture = [
     oldX = xSpot
     oldY = ySpot
   () ->
+    updateOldCursor()
     mousePressed = false
     historyUpdate()
   () ->
