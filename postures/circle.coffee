@@ -24,3 +24,4 @@ circlePosture = [
     historyUpdate()
   () ->
 ]
+
