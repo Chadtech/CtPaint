@@ -148,6 +148,9 @@ toolsToNumbers =
 
 ###
   Fancy Responsive tools are tools with icons that change with the tools magnitude and mode.
+
+  The code in this section utilizes a png file naming schema for the assets. For an explaination
+  of that schema look at the comments in imageCutOut.py in the folder spriteGeneration
 ###
 
 fancyResponsiveTools = ['square', 'circle', 'line', 'point']
