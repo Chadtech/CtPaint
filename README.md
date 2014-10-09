@@ -62,12 +62,13 @@ Here is an incomplete list of features, with the ones I have finished checked of
 * X Sample color
 * X Select area
 * X Square draw tool
-* Zoom
 * X Tool cursor images
+* Zoom
 * Secondary color transparency
 * Arrow key scrolling
 * Scale canvas
 * Scale selected area
+* Delete Key
 
 General to dos and bugs to fix:
 
@@ -79,7 +80,8 @@ General to dos and bugs to fix:
 * X Remove toolbar0 information section, and make icons change with new settings
 * Selection cursor update bug
 * Optimize selection moving
-* Menu click region ( or cancel option ) 
+* Menu click region ( or cancel option )
+* Zoom blur bug
 
 ------- LICENSING
 
