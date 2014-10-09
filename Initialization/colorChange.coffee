@@ -10,7 +10,7 @@ colorMenu = ()->
   $('#menuDiv').css('top', (window.innerHeight - toolbarHeight - 45).toString())
   $('#menuDiv').css('left', (toolbarWidth + 10).toString())
 
-  menuContext.canvas.width = 255
+  menuContext.canvas.width = 340
   menuContext.canvas.height = 35
 
   menuContext.drawImage(colorMenuImage, 0, 0)

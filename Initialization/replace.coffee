@@ -7,7 +7,7 @@ replaceAction = () ->
   $('#menuDiv').css('top', (window.innerHeight - toolbarHeight - 45).toString())
   $('#menuDiv').css('left', (toolbarWidth + 10).toString())
 
-  menuContext.canvas.width = 439
+  menuContext.canvas.width = 524
   menuContext.canvas.height = 35
 
   tH.push ctPaintTools[toolsToNumbers['replace']]

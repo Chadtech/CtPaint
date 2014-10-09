@@ -130,17 +130,17 @@ oldX = undefined
 oldY = undefined
 
 cursorColors = [
-  [ 255, 85, 0, 255]
-  [ 85, 0, 255, 255]
-  [ 255, 255, 255, 255]
-  [ 0, 255, 85, 255]
-  [ 255, 223, 128, 255]
-  [ 95, 255, 0, 255]
-  [ 0, 0, 0, 255]
-  [ 0, 95, 255, 255]
-  [ 128, 0, 96, 255]
-  [ 96, 128, 0, 255]
-  [ 128, 11, 0, 255]
+  [ 255, 85, 0, 255 ]
+  [ 85, 0, 255, 255 ]
+  [ 255, 255, 255, 255 ]
+  [ 0, 255, 85, 255 ]
+  [ 255, 223, 128, 255 ]
+  [ 95, 255, 0, 255 ]
+  [ 0, 0, 0, 255 ]
+  [ 0, 95, 255, 255 ]
+  [ 128, 0, 96, 255 ]
+  [ 96, 128, 0, 255 ]
+  [ 128, 11, 0, 255 ]
 ]
 
 indexOfCursorColors = 0
@@ -252,7 +252,7 @@ colorMenu = ()->
   $('#menuDiv').css('top', (window.innerHeight - toolbarHeight - 45).toString())
   $('#menuDiv').css('left', (toolbarWidth + 10).toString())
 
-  menuContext.canvas.width = 255
+  menuContext.canvas.width = 340
   menuContext.canvas.height = 35
 
   menuContext.drawImage(colorMenuImage, 0, 0)
@@ -1100,7 +1100,7 @@ flipAction = () ->
   $('#menuDiv').css('top', (window.innerHeight - toolbarHeight - 45).toString())
   $('#menuDiv').css('left', (toolbarWidth + 10).toString())
 
-  menuContext.canvas.width = 119
+  menuContext.canvas.width = 204
   menuContext.canvas.height = 35
 
   tH.push ctPaintTools[toolsToNumbers['flip']]
@@ -1340,7 +1340,7 @@ rotateAction = ->
   $('#menuDiv').css('top', (window.innerHeight - toolbarHeight - 45).toString())
   $('#menuDiv').css('left', (toolbarWidth + 10).toString())
 
-  menuContext.canvas.width = 228
+  menuContext.canvas.width = 313
   menuContext.canvas.height = 35
 
   tH.push ctPaintTools[toolsToNumbers['rotate']]
@@ -1614,7 +1614,7 @@ replaceAction = () ->
   $('#menuDiv').css('top', (window.innerHeight - toolbarHeight - 45).toString())
   $('#menuDiv').css('left', (toolbarWidth + 10).toString())
 
-  menuContext.canvas.width = 439
+  menuContext.canvas.width = 524
   menuContext.canvas.height = 35
 
   tH.push ctPaintTools[toolsToNumbers['replace']]
@@ -1756,7 +1756,7 @@ resizeAction = () ->
   $('#menuDiv').css('top', (window.innerHeight - toolbarHeight - 45).toString())
   $('#menuDiv').css('left', (toolbarWidth + 10).toString())
 
-  menuContext.canvas.width = 390
+  menuContext.canvas.width = 475
   menuContext.canvas.height = 35
 
   tH.push ctPaintTools[toolsToNumbers['resize']]
