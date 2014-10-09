@@ -72,6 +72,8 @@ keyListeningUnderNormalCircumstance = (event) ->
     rotateAction()
   if event.keyCode is keysToKeyCodes['v']
     pasteAction()
+  if event.keyCode is keysToKeyCodes['w']
+    scaleAction()
   if event.keyCode is keysToKeyCodes['x']
     cutAction()
   if event.keyCode is keysToKeyCodes['y']

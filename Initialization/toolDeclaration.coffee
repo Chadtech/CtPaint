@@ -106,6 +106,7 @@ ctPaintTools[8].toolsAction = flipAction
 ctPaintTools[9].toolsAction = rotateAction
 ctPaintTools[10].toolsAction = invertAction
 ctPaintTools[11].toolsAction = replaceAction
+ctPaintTools[12].toolsAction = scaleAction
 ctPaintTools[13].toolsAction = resizeAction
 ctPaintTools[16].toolsAction = copyAction
 ctPaintTools[17].toolsAction = pasteAction
@@ -113,8 +114,6 @@ ctPaintTools[18].toolsAction = cutAction
 ctPaintTools[19].toolsAction = cursorColorAction
 ctPaintTools[20].toolsAction = undoAction
 ctPaintTools[21].toolsAction = redoAction
-
-
 
 ctPaintTools[8].menuImage.src = 'assets\\t01.png'
 ctPaintTools[11].menuImage.src = 'assets\\t02.png'

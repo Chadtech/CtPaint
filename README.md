@@ -82,6 +82,7 @@ General to dos and bugs to fix:
 * Optimize selection moving
 * Menu click region ( or cancel option )
 * Zoom blur bug
+* Make all menu tools cursor pixel compatible
 
 ------- LICENSING
 

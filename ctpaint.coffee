@@ -1749,7 +1749,33 @@ drawReplaceMenu = () ->
   drawStringAsCommandPrompt( menuContext, menuDatum[spotInMenuDatum].toUpperCase(), 2, xPos, 10 )
 
 
+###
+  These are the functions relevant to flipping images, whether that
+  image be the canvas itself, or a selection of the canvas. 
+###
+scaleAction = () ->
+  menuUp = true
+  normalCircumstance = false
+  $('#menuDiv').css('top', (window.innerHeight - toolbarHeight - 45).toString())
+  $('#menuDiv').css('left', (toolbarWidth + 10).toString())
 
+  menuContext.canvas.width = 416
+  menuContext.canvas.height = 35
+
+  tH.push ctPaintTools[toolsToNumbers['scale']]
+
+  menuContext.drawImage(tH[tH.length - 1].menuImage, 0, 0)
+  drawToolbars()
+
+  whatSortOfDataSorting = scaleDataSorting
+
+scaleDataSorting = ( inputMaterial ) ->
+  if inputMaterial isnt undefined
+    acceptableKeys = ['x','y']
+    if inputMaterial in acceptableKeys
+      switch inputMaterial
+        when 'x'
+          console.log 'A'
 resizeAction = () ->
   menuUp = true
   normalCircumstance = false
@@ -2485,6 +2511,8 @@ keyListeningUnderNormalCircumstance = (event) ->
     rotateAction()
   if event.keyCode is keysToKeyCodes['v']
     pasteAction()
+  if event.keyCode is keysToKeyCodes['w']
+    scaleAction()
   if event.keyCode is keysToKeyCodes['x']
     cutAction()
   if event.keyCode is keysToKeyCodes['y']
@@ -2966,6 +2994,7 @@ ctPaintTools[8].toolsAction = flipAction
 ctPaintTools[9].toolsAction = rotateAction
 ctPaintTools[10].toolsAction = invertAction
 ctPaintTools[11].toolsAction = replaceAction
+ctPaintTools[12].toolsAction = scaleAction
 ctPaintTools[13].toolsAction = resizeAction
 ctPaintTools[16].toolsAction = copyAction
 ctPaintTools[17].toolsAction = pasteAction
@@ -2973,8 +3002,6 @@ ctPaintTools[18].toolsAction = cutAction
 ctPaintTools[19].toolsAction = cursorColorAction
 ctPaintTools[20].toolsAction = undoAction
 ctPaintTools[21].toolsAction = redoAction
-
-
 
 ctPaintTools[8].menuImage.src = 'assets\\t01.png'
 ctPaintTools[11].menuImage.src = 'assets\\t02.png'
