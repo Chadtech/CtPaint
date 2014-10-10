@@ -83,6 +83,7 @@ General to dos and bugs to fix:
 * Menu click region ( or cancel option )
 * Zoom blur bug
 * Make all menu tools cursor pixel compatible
+* Redraw menu images to highlight the 'n' in 'cancel' since 'c' is not an acceptable short key
 
 ------- LICENSING
 

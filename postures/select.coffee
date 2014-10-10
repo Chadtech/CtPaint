@@ -70,7 +70,6 @@ selectPosture = [
         canvasDataAsImage.onload = ->
           ctContext.drawImage(canvasDataAsImage,0,0)
           ctContext.putImageData(selection, selectionX, selectionY)
-          console.log event
           historyUpdate()
         canvasDataAsImage.src = cH[cH.length - 1]
 
