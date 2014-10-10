@@ -284,9 +284,8 @@ colorMenu = ()->
   $('#menuDiv').css('top', (window.innerHeight - toolbarHeight - 45).toString())
   $('#menuDiv').css('left', (toolbarWidth + 10).toString())
 
-  console.log colorMenuImage.width
-  menuContext.canvas.width = 340
-  menuContext.canvas.height = 35
+  menuContext.canvas.width = colorMenuImage.width
+  menuContext.canvas.height = colorMenuImage.height
 
   menuContext.drawImage(colorMenuImage, 0, 0)
 
@@ -1135,10 +1134,10 @@ flipAction = () ->
   $('#menuDiv').css('top', (window.innerHeight - toolbarHeight - 45).toString())
   $('#menuDiv').css('left', (toolbarWidth + 10).toString())
 
-  menuContext.canvas.width = 204
-  menuContext.canvas.height = 35
-
   tH.push ctPaintTools[toolsToNumbers['flip']]
+
+  menuContext.canvas.width = tH[tH.length - 1].menuImage.width
+  menuContext.canvas.height = tH[tH.length - 1].menuImage.height
 
   menuContext.drawImage(tH[tH.length - 1].menuImage, 0, 0)
   drawToolbars()
@@ -1375,10 +1374,10 @@ rotateAction = ->
   $('#menuDiv').css('top', (window.innerHeight - toolbarHeight - 45).toString())
   $('#menuDiv').css('left', (toolbarWidth + 10).toString())
 
-  menuContext.canvas.width = 313
-  menuContext.canvas.height = 35
-
   tH.push ctPaintTools[toolsToNumbers['rotate']]
+
+  menuContext.canvas.width = tH[tH.length - 1].menuImage.width
+  menuContext.canvas.height = tH[tH.length - 1].menuImage.height
 
   menuContext.drawImage(tH[tH.length - 1].menuImage, 0, 0)
   drawToolbars()
@@ -1649,8 +1648,8 @@ replaceAction = () ->
   $('#menuDiv').css('top', (window.innerHeight - toolbarHeight - 45).toString())
   $('#menuDiv').css('left', (toolbarWidth + 10).toString())
 
-  menuContext.canvas.width = 524
-  menuContext.canvas.height = 35
+  menuContext.canvas.width = tH[tH.length - 1].menuImage.width
+  menuContext.canvas.height = tH[tH.length - 1].menuImage.height
 
   tH.push ctPaintTools[toolsToNumbers['replace']]
 
@@ -1668,7 +1667,9 @@ replaceDataSortingInitialize = () ->
 replaceDataSorting = ( inputMaterial ) ->
   if inputMaterial isnt undefined
     keysThatDontAddData = ['backspace', 'left', 'right', 'enter']
-    if not (inputMaterial in keysThatDontAddData)
+    keyAddsData = not (inputMaterial in keysThatDontAddData)
+    keyIsAcceptableDataFormat = inputMaterial in hexadecimalProper
+    if keyAddsData and keyIsAcceptableDataFormat
       menuDatum = replaceAt(menuDatum, inputMaterial, spotInMenuDatum )
       if spotInMenuDatum < 11
         spotInMenuDatum++
@@ -1791,13 +1792,14 @@ drawReplaceMenu = () ->
 scaleAction = () ->
   menuUp = true
   normalCircumstance = false
+  console.log 'B'
   $('#menuDiv').css('top', (window.innerHeight - toolbarHeight - 45).toString())
   $('#menuDiv').css('left', (toolbarWidth + 10).toString())
 
-  menuContext.canvas.width = 416
-  menuContext.canvas.height = 35
-
   tH.push ctPaintTools[toolsToNumbers['scale']]
+
+  menuContext.canvas.width = tH[tH.length - 1].menuImage.width
+  menuContext.canvas.height = tH[tH.length - 1].menuImage.height
 
   menuContext.drawImage(tH[tH.length - 1].menuImage, 0, 0)
   drawToolbars()
@@ -1808,7 +1810,7 @@ scaleAction = () ->
 scaleDataSortingInitialize = () ->
   menuDatum = zeroPadder(100, 3) + zeroPadder(100, 3)
   spotInMenuDatum = 0
-  drawScaleMenu()
+  #drawScaleMenu()
 
 scaleDataSorting = ( inputMaterial ) ->
   if inputMaterial isnt undefined
@@ -1831,10 +1833,11 @@ resizeAction = () ->
   $('#menuDiv').css('top', (window.innerHeight - toolbarHeight - 45).toString())
   $('#menuDiv').css('left', (toolbarWidth + 10).toString())
 
-  menuContext.canvas.width = 475
-  menuContext.canvas.height = 35
-
   tH.push ctPaintTools[toolsToNumbers['resize']]
+  
+  menuContext.canvas.width = tH[tH.length - 1].menuImage.width
+  menuContext.canvas.height = tH[tH.length - 1].menuImage.height
+
   menuContext.drawImage(tH[tH.length - 1].menuImage, 0, 0)
   drawToolbars()
 

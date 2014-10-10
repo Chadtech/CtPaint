@@ -4,10 +4,10 @@ rotateAction = ->
   $('#menuDiv').css('top', (window.innerHeight - toolbarHeight - 45).toString())
   $('#menuDiv').css('left', (toolbarWidth + 10).toString())
 
-  menuContext.canvas.width = 313
-  menuContext.canvas.height = 35
-
   tH.push ctPaintTools[toolsToNumbers['rotate']]
+
+  menuContext.canvas.width = tH[tH.length - 1].menuImage.width
+  menuContext.canvas.height = tH[tH.length - 1].menuImage.height
 
   menuContext.drawImage(tH[tH.length - 1].menuImage, 0, 0)
   drawToolbars()
