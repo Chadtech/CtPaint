@@ -4,8 +4,8 @@ resizeAction = () ->
   $('#menuDiv').css('top', (window.innerHeight - toolbarHeight - 45).toString())
   $('#menuDiv').css('left', (toolbarWidth + 10).toString())
 
-  menuContext.canvas.width = 475
-  menuContext.canvas.height = 35
+  menuContext.canvas.width = tH[tH.length - 1].menuImage.width
+  menuContext.canvas.height = tH[tH.length - 1].menuImage.height
 
   tH.push ctPaintTools[toolsToNumbers['resize']]
   menuContext.drawImage(tH[tH.length - 1].menuImage, 0, 0)

@@ -10,8 +10,8 @@ colorMenu = ()->
   $('#menuDiv').css('top', (window.innerHeight - toolbarHeight - 45).toString())
   $('#menuDiv').css('left', (toolbarWidth + 10).toString())
 
-  menuContext.canvas.width = 340
-  menuContext.canvas.height = 35
+  menuContext.canvas.width = colorMenuImage.width
+  menuContext.canvas.height = colorMenuImage.height
 
   menuContext.drawImage(colorMenuImage, 0, 0)
 
@@ -29,7 +29,9 @@ colorDataSortingInitialize = () ->
 colorDataSorting = ( inputMaterial ) ->
   if inputMaterial isnt undefined
     keysThatDontAddData = ['backspace', 'left', 'right', 'enter']
-    if not (inputMaterial in keysThatDontAddData)
+    keyAddsData = not (inputMaterial in keysThatDontAddData)
+    keyIsAcceptableDataFormat = inputMaterial in hexadecimalProper
+    if keyAddsData and keyIsAcceptableDataFormat
       menuDatum = replaceAt(menuDatum, inputMaterial, spotInMenuDatum )
       if spotInMenuDatum < 5
         spotInMenuDatum++
@@ -46,7 +48,7 @@ colorDataSorting = ( inputMaterial ) ->
           if spotInMenuDatum < 5
             spotInMenuDatum++
         when 'enter'
-          colorPalette[spotInColorPalette] =  hexToRGB(menuDatum)
+          colorPalette[spotInColorPalette] = hexToRGB(menuDatum)
           drawToolbars()
           $('#menuDiv').css('top',(window.innerHeight).toString())
           normalCircumstance = true

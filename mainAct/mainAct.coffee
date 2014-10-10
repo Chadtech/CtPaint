@@ -23,48 +23,48 @@ $(document).ready ()->
     else
       whatSortOfDataSorting( keyListeningUnderAbnormalCircumstance(event) )
 
-    if event.keyCode == keysToKeyCodes['up']
+    if event.keyCode is keysToKeyCodes['up']
       if canvasHeight > (window.innerHeight - toolbarHeight - 5)
         if canvasYOffset < 0 
-          canvasYOffset+=3
+          canvasYOffset += 3
           positionCanvas()
           positionCorners()
 
-    if event.keyCode == keysToKeyCodes['down']
+    if event.keyCode is keysToKeyCodes['down']
       if canvasHeight > (window.innerHeight - toolbarHeight - 5)
         if (-1 * canvasYOffset) < ((canvasHeight + 10) - (window.innerHeight - toolbarHeight))
           canvasYOffset-=3
           positionCanvas()
           positionCorners()
 
-    if event.keyCode == keysToKeyCodes['alt']
+    if event.keyCode is keysToKeyCodes['alt']
       toolViewMode++
       toolViewMode = toolViewMode%2
       drawToolbars()
 
-    if event.keyCode == keysToKeyCodes['space']
+    if event.keyCode is keysToKeyCodes['space']
       if tH[tH.length - 1].mode
         tH[tH.length - 1].mode = false
       else
         tH[tH.length - 1].mode = true
       drawToolbars()
 
-    if event.keyCode == keysToKeyCodes['equals']
+    if event.keyCode is keysToKeyCodes['equals']
       if tH[tH.length - 1].magnitude < tH[tH.length - 1].maxMagnitude
         tH[tH.length - 1].magnitude++
       drawToolbars()
 
-    if event.keyCode == keysToKeyCodes['minus']
+    if event.keyCode is keysToKeyCodes['minus']
       if tH[tH.length - 1].magnitude > 1
         tH[tH.length - 1].magnitude--
       drawToolbars()
 
-    if event.keyCode == keysToKeyCodes['shift']
+    if event.keyCode is keysToKeyCodes['shift']
       colorModify = true
 
   $('body').keyup (event) ->
     event.preventDefault()
-    if event.keyCode == keysToKeyCodes['shift']
+    if event.keyCode is keysToKeyCodes['shift']
       colorModify = false
 
   $(window).resize ()->

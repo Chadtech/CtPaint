@@ -7,8 +7,8 @@ replaceAction = () ->
   $('#menuDiv').css('top', (window.innerHeight - toolbarHeight - 45).toString())
   $('#menuDiv').css('left', (toolbarWidth + 10).toString())
 
-  menuContext.canvas.width = 524
-  menuContext.canvas.height = 35
+  menuContext.canvas.width = tH[tH.length - 1].menuImage.width
+  menuContext.canvas.height = tH[tH.length - 1].menuImage.height
 
   tH.push ctPaintTools[toolsToNumbers['replace']]
 
@@ -26,7 +26,9 @@ replaceDataSortingInitialize = () ->
 replaceDataSorting = ( inputMaterial ) ->
   if inputMaterial isnt undefined
     keysThatDontAddData = ['backspace', 'left', 'right', 'enter']
-    if not (inputMaterial in keysThatDontAddData)
+    keyAddsData = not (inputMaterial in keysThatDontAddData)
+    keyIsAcceptableDataFormat = inputMaterial in hexadecimalProper
+    if keyAddsData and keyIsAcceptableDataFormat
       menuDatum = replaceAt(menuDatum, inputMaterial, spotInMenuDatum )
       if spotInMenuDatum < 11
         spotInMenuDatum++
