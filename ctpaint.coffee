@@ -132,6 +132,7 @@ selectionActFinish = false
 ###
 menuUp = false
 whatSortOfDataSorting = undefined
+whatSortOfMouseListening = undefined
 menuDatum = undefined
 spotInMenuDatum = 0
 
@@ -291,43 +292,85 @@ colorMenu = ()->
 
   colorDataSortingInitialize()
   whatSortOfDataSorting = colorDataSorting
+  whatSortOfMouseListening = colorMouseListening
+
 
 colorDataSortingInitialize = () ->
   menuDatum = rgbToHex(colorPalette[spotInColorPalette]).substr(1)
   spotInMenuDatum = 0
   drawColorMenu()
 
+finishUp = () ->
+  drawToolbars()
+  $('#menuDiv').css('top',(window.innerHeight).toString())
+  normalCircumstance = true
+  menuUp = false
+
 ###
   This function takes strings of key names, and decides what to do with them
 ###
-colorDataSorting = ( inputMaterial ) ->
+colorDataSorting = ( inputMaterial, eventIsKeyDown ) ->
   if inputMaterial isnt undefined
-    keysThatDontAddData = ['backspace', 'left', 'right', 'enter']
+    keysThatDontAddData = [ 'backspace', 'left', 'right', 'enter', 'n' ]
     keyAddsData = not (inputMaterial in keysThatDontAddData)
     keyIsAcceptableDataFormat = inputMaterial in hexadecimalProper
-    if keyAddsData and keyIsAcceptableDataFormat
-      menuDatum = replaceAt(menuDatum, inputMaterial, spotInMenuDatum )
-      if spotInMenuDatum < 5
-        spotInMenuDatum++
+    if not eventIsKeyDown
+      if keyAddsData and keyIsAcceptableDataFormat
+        menuDatum = replaceAt(menuDatum, inputMaterial, spotInMenuDatum )
+        if spotInMenuDatum < 5
+          spotInMenuDatum++
+      else
+        switch inputMaterial
+          when 'backspace'
+            menuDatum = replaceAt(menuDatum, '0', spotInMenuDatum)
+            if 0 < spotInMenuDatum
+              spotInMenuDatum--
+          when 'left'
+            if 0 < spotInMenuDatum
+              spotInMenuDatum--
+          when 'right'
+            if spotInMenuDatum < 5
+              spotInMenuDatum++
+          when 'enter'
+            colorPalette[spotInColorPalette] = hexToRGB( menuDatum )
+            finishUp()
+          when 'n'
+            finishUp()
     else
       switch inputMaterial
-        when 'backspace'
-          menuDatum = replaceAt(menuDatum, '0', spotInMenuDatum)
-          if 0 < spotInMenuDatum
-            spotInMenuDatum--
-        when 'left'
-          if 0 < spotInMenuDatum
-            spotInMenuDatum--
-        when 'right'
-          if spotInMenuDatum < 5
-            spotInMenuDatum++
         when 'enter'
-          colorPalette[spotInColorPalette] = hexToRGB(menuDatum)
-          drawToolbars()
-          $('#menuDiv').css('top',(window.innerHeight).toString())
-          normalCircumstance = true
-          menuUp = false
+          menuContext.drawImage(enterLitUp, colorMenuImage.width - 162, 5)
+        when 'n'
+          menuContext.drawImage(cancelLitUp, colorMenuImage.width - 89, 5)
     drawColorMenu()
+
+colorMouseListening = ( coordinates, eventIsMouseDown ) ->
+  #Check if mouse event was in enter button region
+  notTooFarLeft = (colorMenuImage.width - 162) < coordinates[0]
+  notTooFarRight = coordinates[0] < ((colorMenuImage.width - 162) + enterLitUp.width)
+  withinXBoundaries = notTooFarLeft and notTooFarRight
+  notTooHigh = 5 < coordinates[1]
+  notTooLow = coordinates[1] < (5 + enterLitUp.height)
+  withinYBoundaries = notTooHigh and notTooLow
+  if withinXBoundaries and withinYBoundaries
+    if eventIsMouseDown
+      menuContext.drawImage(enterLitUp, colorMenuImage.width - 162, 5)
+    else
+      colorPalette[spotInColorPalette] = hexToRGB( menuDatum )
+      finishUp()
+
+  #Check if mouse event was in cancel button region
+  notTooFarLeft = (colorMenuImage.width - 89) < coordinates[0]
+  notTooFarRight = coordinates[0] < ((colorMenuImage.width - 89) + cancelLitUp.width)
+  withinXBoundaries = notTooFarLeft and notTooFarRight
+  notTooHigh = 5 < coordinates[1]
+  notTooLow = coordinates[1] < (5 + cancelLitUp.height)
+  withinYBoundaries = notTooHigh and notTooLow
+  if withinXBoundaries and withinYBoundaries
+    if eventIsMouseDown
+      menuContext.drawImage(cancelLitUp, colorMenuImage.width - 89, 5)
+    else
+      finishUp()
 
 drawColorMenu = () ->
   currentlyHighlighted = menuDatum[spotInMenuDatum].toUpperCase()
@@ -2593,7 +2636,6 @@ copeWithSelection = (atZeroZero)->
   sorting function corresponding to a menu, and referenced by
   whatSortOfDataSorting.
 ###
-
 keyListeningUnderNormalCircumstance = [
   (event) ->
     if event.keyCode is keysToKeyCodes['1']
@@ -2666,7 +2708,7 @@ keyListeningUnderNormalCircumstance = [
       undoAction()
     if event.keyCode is keysToKeyCodes['right']
       if canvasWidth > (window.innerWidth - toolbarWidth - 5)
-        if (-1 * canvasXOffset) < ((canvasWidth + 10) - (window.innerWidth - toolbarWidth))
+        if (-1 * canvasXOffset) < ( (canvasWidth + 10) - (window.innerWidth - toolbarWidth) )
           canvasXOffset -= 3
           positionCanvas()
           positionCorners()
@@ -2680,37 +2722,50 @@ keyListeningUnderNormalCircumstance = [
       if areaSelected
         areaSelected = false
   (event) ->
-    if event.keyCode is keysToKeyCodes['shift']
-      colorModify = false
 ]
-      
+ 
+justPassTheCharacter = (keyPressed) ->
+  switch keyPressed
+    when keysToKeyCodes['0'] then '0'
+    when keysToKeyCodes['1'] then '1'
+    when keysToKeyCodes['2'] then '2'
+    when keysToKeyCodes['3'] then '3'
+    when keysToKeyCodes['4'] then '4'
+    when keysToKeyCodes['5'] then '5'
+    when keysToKeyCodes['6'] then '6'
+    when keysToKeyCodes['7'] then '7'
+    when keysToKeyCodes['8'] then '8'
+    when keysToKeyCodes['9'] then '9'
+    when keysToKeyCodes['a'] then 'a'
+    when keysToKeyCodes['b'] then 'b'
+    when keysToKeyCodes['c'] then 'c'
+    when keysToKeyCodes['d'] then 'd'
+    when keysToKeyCodes['e'] then 'e'
+    when keysToKeyCodes['f'] then 'f'
+    when keysToKeyCodes['n'] then 'n'
+    when keysToKeyCodes['x'] then 'x'
+    when keysToKeyCodes['y'] then 'y'
+    when keysToKeyCodes['backspace'] then 'backspace'
+    when keysToKeyCodes['left'] then 'left'
+    when keysToKeyCodes['right'] then 'right'
+    when keysToKeyCodes['enter'] then 'enter'
 
 keyListeningUnderAbnormalCircumstance = [
   (event) ->
-    switch event.keyCode
-      when keysToKeyCodes['0'] then '0'
-      when keysToKeyCodes['1'] then '1'
-      when keysToKeyCodes['2'] then '2'
-      when keysToKeyCodes['3'] then '3'
-      when keysToKeyCodes['4'] then '4'
-      when keysToKeyCodes['5'] then '5'
-      when keysToKeyCodes['6'] then '6'
-      when keysToKeyCodes['7'] then '7'
-      when keysToKeyCodes['8'] then '8'
-      when keysToKeyCodes['9'] then '9'
-      when keysToKeyCodes['a'] then 'a'
-      when keysToKeyCodes['b'] then 'b'
-      when keysToKeyCodes['c'] then 'c'
-      when keysToKeyCodes['d'] then 'd'
-      when keysToKeyCodes['e'] then 'e'
-      when keysToKeyCodes['f'] then 'f'
-      when keysToKeyCodes['x'] then 'x'
-      when keysToKeyCodes['y'] then 'y'
-      when keysToKeyCodes['backspace'] then 'backspace'
-      when keysToKeyCodes['left'] then 'left'
-      when keysToKeyCodes['right'] then 'right'
-      when keysToKeyCodes['enter'] then 'enter'
+    justPassTheCharacter( event.keyCode )
   (event) ->
+    justPassTheCharacter( event.keyCode )
+]
+
+
+justPassTheCoordinates = (mouseEvent) ->
+  return [mouseEvent.offsetX, mouseEvent.offsetY]
+
+mouseListeningUnderAbnormalCircumstance = [
+  (event) ->
+    justPassTheCoordinates(event)
+  (event) ->
+    justPassTheCoordinates(event)
 ]
 
 
@@ -3160,6 +3215,12 @@ ctPaintTools[9].menuImage.src = 'assets\\t04.png'
 ctPaintTools[12].menuImage.src = 'assets\\t05.png'
 ctPaintTools[13].menuImage.src = 'assets\\t03.png'
 
+enterLitUp = new Image()
+cancelLitUp = new Image()
+
+enterLitUp.src = 'assets\\tEnter.png'
+cancelLitUp.src = 'assets\\tCancel.png'
+
 toolsToNumbers =
   'zoom':0
   'select':1
@@ -3272,7 +3333,7 @@ $(document).ready ()->
     if normalCircumstance
       keyListeningUnderNormalCircumstance[0](event)
     else
-      whatSortOfDataSorting( keyListeningUnderAbnormalCircumstance[0](event) )
+      whatSortOfDataSorting( keyListeningUnderAbnormalCircumstance[0](event), true )
 
     if event.keyCode is keysToKeyCodes['up']
       if canvasHeight > (window.innerHeight - toolbarHeight - 5)
@@ -3318,10 +3379,16 @@ $(document).ready ()->
     if normalCircumstance
       keyListeningUnderNormalCircumstance[1](event)
     else
-      keyListeningUnderAbnormalCircumstance[1](event)
-      
+      whatSortOfDataSorting( keyListeningUnderAbnormalCircumstance[1](event), false)
+
     if event.keyCode is keysToKeyCodes['shift']
       colorModify = false
+
+  $('#menuDiv').mousedown (event) ->
+    whatSortOfMouseListening( mouseListeningUnderAbnormalCircumstance[0]( event ), true)
+
+  $('#menuDiv').mouseup (event) ->
+    whatSortOfMouseListening( mouseListeningUnderAbnormalCircumstance[1]( event ), false)
 
   $(window).resize ()->
     if canvasWidth < (window.innerWidth - toolbarWidth - 5)

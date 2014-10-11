@@ -121,6 +121,12 @@ ctPaintTools[9].menuImage.src = 'assets\\t04.png'
 ctPaintTools[12].menuImage.src = 'assets\\t05.png'
 ctPaintTools[13].menuImage.src = 'assets\\t03.png'
 
+enterLitUp = new Image()
+cancelLitUp = new Image()
+
+enterLitUp.src = 'assets\\tEnter.png'
+cancelLitUp.src = 'assets\\tCancel.png'
+
 toolsToNumbers =
   'zoom':0
   'select':1

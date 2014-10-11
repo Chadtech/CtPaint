@@ -21,7 +21,7 @@ $(document).ready ()->
     if normalCircumstance
       keyListeningUnderNormalCircumstance[0](event)
     else
-      whatSortOfDataSorting( keyListeningUnderAbnormalCircumstance[0](event) )
+      whatSortOfDataSorting( keyListeningUnderAbnormalCircumstance[0](event), true )
 
     if event.keyCode is keysToKeyCodes['up']
       if canvasHeight > (window.innerHeight - toolbarHeight - 5)
@@ -67,10 +67,16 @@ $(document).ready ()->
     if normalCircumstance
       keyListeningUnderNormalCircumstance[1](event)
     else
-      keyListeningUnderAbnormalCircumstance[1](event)
-      
+      whatSortOfDataSorting( keyListeningUnderAbnormalCircumstance[1](event), false)
+
     if event.keyCode is keysToKeyCodes['shift']
       colorModify = false
+
+  $('#menuDiv').mousedown (event) ->
+    whatSortOfMouseListening( mouseListeningUnderAbnormalCircumstance[0]( event ), true)
+
+  $('#menuDiv').mouseup (event) ->
+    whatSortOfMouseListening( mouseListeningUnderAbnormalCircumstance[1]( event ), false)
 
   $(window).resize ()->
     if canvasWidth < (window.innerWidth - toolbarWidth - 5)

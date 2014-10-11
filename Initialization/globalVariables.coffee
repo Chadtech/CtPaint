@@ -132,6 +132,7 @@ selectionActFinish = false
 ###
 menuUp = false
 whatSortOfDataSorting = undefined
+whatSortOfMouseListening = undefined
 menuDatum = undefined
 spotInMenuDatum = 0
 

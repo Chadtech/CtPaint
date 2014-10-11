@@ -38,6 +38,7 @@ gulp.task('doAllTheScriptsTogether', function() {
 
     './initialization/rendering.coffee',
     './initialization/keyListening.coffee',
+    './initialization/mouseListening.coffee',
 
     './postures/zoom.coffee',
     './postures/select.coffee',

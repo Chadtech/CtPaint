@@ -10,7 +10,6 @@
   sorting function corresponding to a menu, and referenced by
   whatSortOfDataSorting.
 ###
-
 keyListeningUnderNormalCircumstance = [
   (event) ->
     if event.keyCode is keysToKeyCodes['1']
@@ -83,7 +82,7 @@ keyListeningUnderNormalCircumstance = [
       undoAction()
     if event.keyCode is keysToKeyCodes['right']
       if canvasWidth > (window.innerWidth - toolbarWidth - 5)
-        if (-1 * canvasXOffset) < ((canvasWidth + 10) - (window.innerWidth - toolbarWidth))
+        if (-1 * canvasXOffset) < ( (canvasWidth + 10) - (window.innerWidth - toolbarWidth) )
           canvasXOffset -= 3
           positionCanvas()
           positionCorners()
@@ -98,33 +97,37 @@ keyListeningUnderNormalCircumstance = [
         areaSelected = false
   (event) ->
 ]
-      
+ 
+justPassTheCharacter = (keyPressed) ->
+  switch keyPressed
+    when keysToKeyCodes['0'] then '0'
+    when keysToKeyCodes['1'] then '1'
+    when keysToKeyCodes['2'] then '2'
+    when keysToKeyCodes['3'] then '3'
+    when keysToKeyCodes['4'] then '4'
+    when keysToKeyCodes['5'] then '5'
+    when keysToKeyCodes['6'] then '6'
+    when keysToKeyCodes['7'] then '7'
+    when keysToKeyCodes['8'] then '8'
+    when keysToKeyCodes['9'] then '9'
+    when keysToKeyCodes['a'] then 'a'
+    when keysToKeyCodes['b'] then 'b'
+    when keysToKeyCodes['c'] then 'c'
+    when keysToKeyCodes['d'] then 'd'
+    when keysToKeyCodes['e'] then 'e'
+    when keysToKeyCodes['f'] then 'f'
+    when keysToKeyCodes['n'] then 'n'
+    when keysToKeyCodes['x'] then 'x'
+    when keysToKeyCodes['y'] then 'y'
+    when keysToKeyCodes['backspace'] then 'backspace'
+    when keysToKeyCodes['left'] then 'left'
+    when keysToKeyCodes['right'] then 'right'
+    when keysToKeyCodes['enter'] then 'enter'
 
 keyListeningUnderAbnormalCircumstance = [
   (event) ->
-    switch event.keyCode
-      when keysToKeyCodes['0'] then '0'
-      when keysToKeyCodes['1'] then '1'
-      when keysToKeyCodes['2'] then '2'
-      when keysToKeyCodes['3'] then '3'
-      when keysToKeyCodes['4'] then '4'
-      when keysToKeyCodes['5'] then '5'
-      when keysToKeyCodes['6'] then '6'
-      when keysToKeyCodes['7'] then '7'
-      when keysToKeyCodes['8'] then '8'
-      when keysToKeyCodes['9'] then '9'
-      when keysToKeyCodes['a'] then 'a'
-      when keysToKeyCodes['b'] then 'b'
-      when keysToKeyCodes['c'] then 'c'
-      when keysToKeyCodes['d'] then 'd'
-      when keysToKeyCodes['e'] then 'e'
-      when keysToKeyCodes['f'] then 'f'
-      when keysToKeyCodes['x'] then 'x'
-      when keysToKeyCodes['y'] then 'y'
-      when keysToKeyCodes['backspace'] then 'backspace'
-      when keysToKeyCodes['left'] then 'left'
-      when keysToKeyCodes['right'] then 'right'
-      when keysToKeyCodes['enter'] then 'enter'
+    justPassTheCharacter( event.keyCode )
   (event) ->
+    justPassTheCharacter( event.keyCode )
 ]
 
