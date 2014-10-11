@@ -66,7 +66,7 @@ Here is an incomplete list of features, with the ones I have finished checked of
 * Zoom
 * Secondary color transparency
 * Arrow key scrolling
-* Scale canvas
+* X Scale canvas
 * Scale selected area
 * Delete Key
 
