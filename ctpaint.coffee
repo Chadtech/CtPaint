@@ -1792,7 +1792,6 @@ drawReplaceMenu = () ->
 scaleAction = () ->
   menuUp = true
   normalCircumstance = false
-  console.log 'B'
   $('#menuDiv').css('top', (window.innerHeight - toolbarHeight - 45).toString())
   $('#menuDiv').css('left', (toolbarWidth + 10).toString())
 
@@ -1838,21 +1837,23 @@ scaleDataSorting = ( inputMaterial ) ->
             normalCircumstance = true
             menuUp = false
 
+            # Convert the string datum into the width and height factor components
             widthFactor = parseInt(menuDatum[0])
             widthFactor += ( parseInt( menuDatum[1] + menuDatum[2] ) / 100 )
 
             heightFactor = parseInt( menuDatum[3] )
             heightFactor += ( parseInt( menuDatum[4] + menuDatum[5] ) / 100 )
 
+            # Get the canvass data
             cWidth = ctContext.canvas.width
             cHeight = ctContext.canvas.height
             canvasToScale = ctContext.getImageData(0, 0, cWidth, cHeight)
-
             canvassData = canvasToScale.data
-            canvasAsPixels = []
 
+            # Turn the data into pixels
             datumIndex = 0
             singlePixel = []
+            canvasAsPixels = []
             while datumIndex < canvassData.length
               singlePixel.push canvassData[datumIndex]
               if singlePixel.length is 4
@@ -1860,32 +1861,31 @@ scaleDataSorting = ( inputMaterial ) ->
                 singlePixel = []
               datumIndex++
 
-            scaledCanvas = []
+            # Create a new array of data that is the size of the scaledCanvas
             scaledWidth = Math.floor( widthFactor * canvasToScale.width )
             scaledHeight = Math.floor( heightFactor * canvasToScale.height )
+            scaledCanvas = []
+            zeroToAdd = 0
+            while zeroToAdd < (scaledWidth * scaledHeight)
+              scaledCanvas.push 0
+              zeroToAdd++
 
+            # Fill the scaled-canvas with the canvas's pixels
+            inverseWidthFactor = 1 / widthFactor
+            inverseHeightFactor = 1 / heightFactor
             rowIndex = 0
             while rowIndex < scaledHeight
               columnIndex = 0
               while columnIndex < scaledWidth
-                pointX = Math.floor(columnIndex * widthFactor)
-                pointY = Math.floor(rowIndex * heightFactor)
-                pixelIndex = ( pointY * canvasToScale.width ) + pointX
-                scaledCanvas.push canvasAsPixels[pixelIndex]
+                pointX = Math.floor(columnIndex * inverseWidthFactor)
+                pointY = Math.floor(rowIndex * inverseHeightFactor)
+                pixelInScaledCanvas = (rowIndex * scaledWidth) + columnIndex
+                pixelInCanvas = (pointY * cWidth) + pointX
+                scaledCanvas[pixelInScaledCanvas] = canvasAsPixels[pixelInCanvas]
                 columnIndex++
               rowIndex++
 
-            scaledCanvasAsData = []
-            pixelIndex = 0
-            while pixelIndex < scaledCanvas.length
-              colorIndex = 0
-              while colorIndex < 4
-                #console.log scaledCanvas[pixelIndex][colorIndex]
-                console.log scaledCanvas[pixelIndex]
-                scaledCanvasAsData.push scaledCanvas[pixelIndex][colorIndex]
-                colorIndex++
-              pixelIndex++
-
+            # Resize the canvas to reflect its scaled size
             newWidth = scaledWidth
             newHeight = scaledHeight
             ctContext.canvas.width = parseInt(newWidth)
@@ -1896,10 +1896,19 @@ scaleDataSorting = ( inputMaterial ) ->
             ctCanvas.style.height = (canvasHeight).toString()+'px'
             positionCorners()
 
-            dataToReplace = ctContext.getImageData( 0, 0, scaledWidth, scaledHeight)
+            # Turn the scaled canvass pixels into data
+            scaledCanvasAsData = ctContext.getImageData( 0, 0, scaledWidth, scaledHeight)
+            pixelIndex = 0
+            while pixelIndex < scaledCanvas.length
+              colorIndex = 0
+              while colorIndex < 4
+                datumIndex = ( pixelIndex * 4 ) + colorIndex
+                scaledCanvasAsData.data[datumIndex] = scaledCanvas[pixelIndex][colorIndex]
+                colorIndex++
+              pixelIndex++
 
-            console.log dataToReplace
-
+            ctContext.putImageData(scaledCanvasAsData, 0, 0)
+            historyUpdate()
             tH.pop()
             drawToolbars()
     drawScaleMenu()
