@@ -19,9 +19,9 @@ $(document).ready ()->
   $('body').keydown (event) ->
     event.preventDefault()
     if normalCircumstance
-      keyListeningUnderNormalCircumstance(event)
+      keyListeningUnderNormalCircumstance[0](event)
     else
-      whatSortOfDataSorting( keyListeningUnderAbnormalCircumstance(event) )
+      whatSortOfDataSorting( keyListeningUnderAbnormalCircumstance[0](event) )
 
     if event.keyCode is keysToKeyCodes['up']
       if canvasHeight > (window.innerHeight - toolbarHeight - 5)
@@ -64,6 +64,11 @@ $(document).ready ()->
 
   $('body').keyup (event) ->
     event.preventDefault()
+    if normalCircumstance
+      keyListeningUnderNormalCircumstance[1](event)
+    else
+      keyListeningUnderAbnormalCircumstance[1](event)
+      
     if event.keyCode is keysToKeyCodes['shift']
       colorModify = false
 
