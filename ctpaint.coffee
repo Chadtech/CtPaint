@@ -1818,27 +1818,32 @@ replaceDataSortingInitialize = () ->
   drawReplaceMenu()
 
 replaceDataSorting = ( inputMaterial, eventIsKeyDown ) ->
-  if eventIsKeyDown
-    if inputMaterial isnt undefined
-      keysThatDontAddData = ['backspace', 'left', 'right', 'enter']
-      keyAddsData = not (inputMaterial in keysThatDontAddData)
-      keyIsAcceptableDataFormat = inputMaterial in hexadecimalProper
+  if inputMaterial isnt undefined
+    keysThatDontAddData = ['backspace', 'left', 'right', 'enter', 'n']
+    keyAddsData = not (inputMaterial in keysThatDontAddData)
+    keyIsAcceptableDataFormat = inputMaterial in hexadecimalProper
+    if not eventIsKeyDown
       if keyAddsData and keyIsAcceptableDataFormat
         menuDatum = replaceAt(menuDatum, inputMaterial, spotInMenuDatum )
         if spotInMenuDatum < 11
           spotInMenuDatum++
+        drawReplaceMenu()
       else
         switch inputMaterial
           when 'backspace'
             menuDatum = replaceAt(menuDatum, '0', spotInMenuDatum)
             if 0 < spotInMenuDatum
               spotInMenuDatum--
+            drawReplaceMenu()
           when 'left'
             if 0 < spotInMenuDatum
               spotInMenuDatum--
+            drawReplaceMenu()
           when 'right'
             if spotInMenuDatum < 11
               spotInMenuDatum++
+            drawReplaceMenu()
+          when 'n' then replaceFinishUp()
           when 'enter'
             if not areaSelected
               colorToReplace = hexToRGB(menuDatum.substr(0,6))
@@ -1924,13 +1929,47 @@ replaceDataSorting = ( inputMaterial, eventIsKeyDown ) ->
                 bottomEdge = selectionY + selectionsHeight
                 drawSelectBox(ctContext, selectionX - 1, selectionY - 1, rightEdge, bottomEdge)
               canvasDataAsImage.src = cH[cH.length - 1]
+              replaceFinishUp()
+    else
+      switch inputMaterial
+        when 'enter' then menuContext.drawImage(enterLitUp, colorMenuImage.width - 162, 5)
+        when 'n' then menuContext.drawImage(cancelLitUp, tH[tH.length - 1].menuImage.width - 89, 5)
 
-              $('#menuDiv').css('top',(window.innerHeight).toString())
-              normalCircumstance = true
-              menuUp = false
-              tH.pop()
-              drawToolbars()
-      drawReplaceMenu()
+
+replaceFinishUp = ->
+  $('#menuDiv').css('top',(window.innerHeight).toString())
+  normalCircumstance = true
+  menuUp = false
+  tH.pop()
+  drawToolbars()
+
+replaceMouseListening = ( coordinates, eventIsMouseDown ) ->
+  #Check if mouse event was in enter button region
+  notTooFarLeft = (tH[tH.length - 1].menuImage.width - 162) < coordinates[0]
+  notTooFarRight = coordinates[0] < ((tH[tH.length - 1].menuImage.width - 162) + enterLitUp.width)
+  withinXBoundaries = notTooFarLeft and notTooFarRight
+  notTooHigh = 5 < coordinates[1]
+  notTooLow = coordinates[1] < (5 + enterLitUp.height)
+  withinYBoundaries = notTooHigh and notTooLow
+  if withinXBoundaries and withinYBoundaries
+    if eventIsMouseDown
+      menuContext.drawImage(enterLitUp, tH[tH.length - 1].menuImage.width - 162, 5)
+    else
+      colorPalette[spotInColorPalette] = hexToRGB( menuDatum )
+      finishUp()
+
+  #Check if mouse event was in cancel button region
+  notTooFarLeft = (tH[tH.length - 1].menuImage.width - 89) < coordinates[0]
+  notTooFarRight = coordinates[0] < ((tH[tH.length - 1].menuImage.width- 89) + cancelLitUp.width)
+  withinXBoundaries = notTooFarLeft and notTooFarRight
+  notTooHigh = 5 < coordinates[1]
+  notTooLow = coordinates[1] < (5 + cancelLitUp.height)
+  withinYBoundaries = notTooHigh and notTooLow
+  if withinXBoundaries and withinYBoundaries
+    if eventIsMouseDown
+      menuContext.drawImage(cancelLitUp, tH[tH.length - 1].menuImage.width - 89, 5)
+    else
+      finishUp()
 
 drawReplaceMenu = () ->
   drawStringAsCommandPrompt( menuContext, menuDatum.substr(0,6).toUpperCase(), 1, 116, 10 )
@@ -2795,8 +2834,6 @@ keyListeningUnderNormalCircumstance = [
       verticalColorSwap()
     if event.keyCode is keysToKeyCodes['c']
       copyAction()
-    if event.keyCode is keysToKeyCodes['d']
-      replaceAction()
     if event.keyCode is keysToKeyCodes['e']
       resizeAction()
     if event.keyCode is keysToKeyCodes['f']
@@ -2835,6 +2872,8 @@ keyListeningUnderNormalCircumstance = [
       if areaSelected
         areaSelected = false
   (event) ->
+    if event.keyCode is keysToKeyCodes['d']
+      replaceAction()
 ]
  
 justPassTheCharacter = (keyPressed) ->

@@ -56,8 +56,6 @@ keyListeningUnderNormalCircumstance = [
       verticalColorSwap()
     if event.keyCode is keysToKeyCodes['c']
       copyAction()
-    if event.keyCode is keysToKeyCodes['d']
-      replaceAction()
     if event.keyCode is keysToKeyCodes['e']
       resizeAction()
     if event.keyCode is keysToKeyCodes['f']
@@ -96,6 +94,8 @@ keyListeningUnderNormalCircumstance = [
       if areaSelected
         areaSelected = false
   (event) ->
+    if event.keyCode is keysToKeyCodes['d']
+      replaceAction()
 ]
  
 justPassTheCharacter = (keyPressed) ->
