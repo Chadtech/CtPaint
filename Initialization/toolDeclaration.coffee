@@ -127,6 +127,13 @@ cancelLitUp = new Image()
 enterLitUp.src = 'assets\\tEnter.png'
 cancelLitUp.src = 'assets\\tCancel.png'
 
+xLitUp = new Image()
+yLitUp = new Image()
+
+xLitUp.src = 'assets\\t11.png'
+yLitUp.src = 'assets\\t21.png'
+
+
 toolsToNumbers =
   'zoom':0
   'select':1
