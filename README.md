@@ -68,7 +68,6 @@ Here is an incomplete list of features, with the ones I have finished checked of
 * Arrow key scrolling
 * X Scale canvas
 * Scale selected area
-* Delete Key
 
 General to dos and bugs to fix:
 
