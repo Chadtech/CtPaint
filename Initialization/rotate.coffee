@@ -13,125 +13,138 @@ rotateAction = ->
   drawToolbars()
 
   whatSortOfDataSorting = rotateDataSorting
+  whatSortOfMouseListening = rotateMouseListening
 
-rotateDataSorting = ( inputMaterial) ->
-  if inputMaterial isnt undefined
-    acceptableKeys = ['9', '1', '2']
-    if inputMaterial in acceptableKeys
-      if not areaSelected
-        sWidth = ctContext.canvas.width
-        sHeight = ctContext.canvas.height
-        canvasCurrently = ctContext.getImageData(0, 0, sWidth, sHeight)
-              
-        canvasAsPixels = dataToPixels(canvasCurrently.data)
-        switch inputMaterial
-          when '9'
-            canvasAsPixels = axisFlip(canvasAsPixels, sWidth, sHeight)
-            canvasAsPixels = horizontalFlip(canvasAsPixels[0], canvasAsPixels[1], canvasAsPixels[2])
-          when '1'
-            canvasAsPixels = horizontalFlip(canvasAsPixels, sWidth, sHeight)
-            canvasAsPixels = verticalFlip(canvasAsPixels[0], canvasAsPixels[1], canvasAsPixels[2])
-          when '2'
-            canvasAsPixels = horizontalFlip(canvasAsPixels, sWidth, sHeight)
-            canvasAsPixels = axisFlip(canvasAsPixels[0], canvasAsPixels[1], canvasAsPixels[2])
-
-        rotatedData = []
-        thisPixelIndex = 0
-        while thisPixelIndex < canvasAsPixels[0].length
-          colorIndex = 0
-          while colorIndex < 4
-            rotatedData.push canvasAsPixels[0][thisPixelIndex][colorIndex]
-            colorIndex++
-          thisPixelIndex++
-
-        rotatedCanvas = document.createElement('canvas')
-        rotatedCanvas = rotatedCanvas.getContext('2d')
-        rotatedCanvas = rotatedCanvas.createImageData(canvasAsPixels[1], canvasAsPixels[2])
-
-        datumIndex = 0
-        while datumIndex < rotatedData.length
-          rotatedCanvas.data[datumIndex] = rotatedData[datumIndex]
-          datumIndex++
-
-        ctContext.canvas.width = canvasAsPixels[1]
-        ctContext.canvas.height = canvasAsPixels[2]
-        canvasWidth = ctContext.canvas.width
-        canvasHeight = ctContext.canvas.height
-        ctCanvas.style.width = (canvasWidth).toString()+'px'
-        ctCanvas.style.height = (canvasHeight).toString()+'px'
-        ctContext.putImageData(rotatedCanvas, 0, 0)
-
-        cH.push ctCanvas.toDataURL()
-        cH.shift()
-        cF = []
-        tH.pop()
-        drawToolbars()
-        $('#menuDiv').css('top',(window.innerHeight).toString())
-        normalCircumstance = true
-        menuUp = false
-        positionCorners()
-
+rotateDataSorting = ( inputMaterial, eventIsKeyDown) ->
+  if not eventIsKeyDown
+    if inputMaterial isnt undefined
+      acceptableKeys = ['9', '1', '2']
+      if inputMaterial in acceptableKeys
+        rotation( inputMaterial )
       else
-        selectionAsPixels = dataToPixels(selection.data)
-        switch inputMaterial
-          when '9'
-            selectionAsPixels = 
-              axisFlip(selectionAsPixels, selectionsWidth, selectionsHeight)
-            selectionAsPixels =
-              horizontalFlip(selectionAsPixels[0], selectionAsPixels[1], selectionAsPixels[2])
-          when '1'
-            selectionAsPixels = 
-              horizontalFlip(selectionAsPixels, selectionsWidth, selectionsHeight)
-            selectionAsPixels = 
-              verticalFlip(selectionAsPixels[0], selectionAsPixels[1], selectionAsPixels[2])
-          when '2'
-            selectionAsPixels = 
-              horizontalFlip(selectionAsPixels, selectionsWidth, selectionsHeight)
-            selectionAsPixels = 
-              axisFlip(selectionAsPixels[0], selectionAsPixels[1], selectionAsPixels[2])
+        if inputMaterial is 'n'
+          flipFinishUp()
+  else
+    switch inputMaterial
+      when '9' then menuContext.drawImage(ninetyDegreesLitUp, tH[tH.length - 1].menuImage.width - 223, 5)
+      when '1' then menuContext.drawImage(oneHundredAndEightyDegreesLitUp, tH[tH.length - 1].menuImage.width - 187, 5)
+      when '2' then menuContext.drawImage(twoHundredAndSeventyDegreesLitUp, tH[tH.length - 1].menuImage.width - 138, 5)
+      when 'n' then menuContext.drawImage(cancelLitUp, tH[tH.length - 1].menuImage.width - 89, 5)
 
-        rotatedData = []
-        thisPixelIndex = 0
-        while thisPixelIndex < selectionAsPixels[0].length
-          colorIndex = 0
-          while colorIndex < 4
-            rotatedData.push selectionAsPixels[0][thisPixelIndex][colorIndex]
-            colorIndex++
-          thisPixelIndex++
+rotation = ( howManyDegrees ) ->
+  if not areaSelected
+    sWidth = ctContext.canvas.width
+    sHeight = ctContext.canvas.height
+    canvasCurrently = ctContext.getImageData(0, 0, sWidth, sHeight)
+                
+    canvasAsPixels = dataToPixels(canvasCurrently.data)
+    switch howManyDegrees
+      when '9'
+        canvasAsPixels = axisFlip(canvasAsPixels, sWidth, sHeight)
+        canvasAsPixels = horizontalFlip(canvasAsPixels[0], canvasAsPixels[1], canvasAsPixels[2])
+      when '1'
+        canvasAsPixels = horizontalFlip(canvasAsPixels, sWidth, sHeight)
+        canvasAsPixels = verticalFlip(canvasAsPixels[0], canvasAsPixels[1], canvasAsPixels[2])
+      when '2'
+        canvasAsPixels = horizontalFlip(canvasAsPixels, sWidth, sHeight)
+        canvasAsPixels = axisFlip(canvasAsPixels[0], canvasAsPixels[1], canvasAsPixels[2])
 
-        rotatedSelection = document.createElement('canvas')
-        rotatedSelection = rotatedSelection.getContext('2d')
-        rotatedSelection = 
-          rotatedSelection.createImageData(selectionAsPixels[1], selectionAsPixels[2])
+    rotatedData = []
+    thisPixelIndex = 0
+    while thisPixelIndex < canvasAsPixels[0].length
+      colorIndex = 0
+      while colorIndex < 4
+        rotatedData.push canvasAsPixels[0][thisPixelIndex][colorIndex]
+        colorIndex++
+      thisPixelIndex++
 
-        datumIndex = 0
-        while datumIndex < rotatedData.length
-          rotatedSelection.data[datumIndex] = rotatedData[datumIndex]
-          datumIndex++
+    rotatedCanvas = document.createElement('canvas')
+    rotatedCanvas = rotatedCanvas.getContext('2d')
+    rotatedCanvas = rotatedCanvas.createImageData(canvasAsPixels[1], canvasAsPixels[2])
 
-        selection = rotatedSelection
+    datumIndex = 0
+    while datumIndex < rotatedData.length
+      rotatedCanvas.data[datumIndex] = rotatedData[datumIndex]
+      datumIndex++
 
-        selectionsWidth = rotatedSelection.width
-        selectionsHeight = rotatedSelection.height
+    ctContext.canvas.width = canvasAsPixels[1]
+    ctContext.canvas.height = canvasAsPixels[2]
+    canvasWidth = ctContext.canvas.width
+    canvasHeight = ctContext.canvas.height
+    ctCanvas.style.width = (canvasWidth).toString()+'px'
+    ctCanvas.style.height = (canvasHeight).toString()+'px'
+    ctContext.putImageData(rotatedCanvas, 0, 0)
 
-        canvasDataAsImage = new Image()
-        canvasDataAsImage.onload = ->
-          ctContext.drawImage(canvasDataAsImage,0,0)
-          cH.push ctCanvas.toDataURL()
-          cH.shift()
-          cF = []
-          ctContext.putImageData(selection, selectionX, selectionY)
-          rightEdge = selectionX + selectionsWidth
-          bottomEdge = selectionY + selectionsHeight
-          drawSelectBox(ctContext, selectionX - 1, selectionY - 1, rightEdge, bottomEdge)
-        canvasDataAsImage.src = cH[cH.length - 1]
+    cH.push ctCanvas.toDataURL()
+    cH.shift()
+    cF = []
+    tH.pop()
+    rotateFinishUp()
 
-        tH.pop()
-        drawToolbars()
-        $('#menuDiv').css('top',(window.innerHeight).toString())
-        normalCircumstance = true
-        menuUp = false
-        positionCorners()
+  else
+    selectionAsPixels = dataToPixels(selection.data)
+    switch howManyDegrees
+      when '9'
+        selectionAsPixels = 
+          axisFlip(selectionAsPixels, selectionsWidth, selectionsHeight)
+        selectionAsPixels =
+          horizontalFlip(selectionAsPixels[0], selectionAsPixels[1], selectionAsPixels[2])
+      when '1'
+        selectionAsPixels = 
+          horizontalFlip(selectionAsPixels, selectionsWidth, selectionsHeight)
+        selectionAsPixels = 
+          verticalFlip(selectionAsPixels[0], selectionAsPixels[1], selectionAsPixels[2])
+      when '2'
+        selectionAsPixels = 
+          horizontalFlip(selectionAsPixels, selectionsWidth, selectionsHeight)
+        selectionAsPixels = 
+          axisFlip(selectionAsPixels[0], selectionAsPixels[1], selectionAsPixels[2])
+
+    rotatedData = []
+    thisPixelIndex = 0
+    while thisPixelIndex < selectionAsPixels[0].length
+      colorIndex = 0
+      while colorIndex < 4
+        rotatedData.push selectionAsPixels[0][thisPixelIndex][colorIndex]
+        colorIndex++
+      thisPixelIndex++
+
+    rotatedSelection = document.createElement('canvas')
+    rotatedSelection = rotatedSelection.getContext('2d')
+    rotatedSelection = 
+      rotatedSelection.createImageData(selectionAsPixels[1], selectionAsPixels[2])
+
+    datumIndex = 0
+    while datumIndex < rotatedData.length
+      rotatedSelection.data[datumIndex] = rotatedData[datumIndex]
+      datumIndex++
+
+    selection = rotatedSelection
+
+    selectionsWidth = rotatedSelection.width
+    selectionsHeight = rotatedSelection.height
+
+    canvasDataAsImage = new Image()
+    canvasDataAsImage.onload = ->
+      ctContext.drawImage(canvasDataAsImage,0,0)
+      cH.push ctCanvas.toDataURL()
+      cH.shift()
+      cF = []
+      ctContext.putImageData(selection, selectionX, selectionY)
+      rightEdge = selectionX + selectionsWidth
+      bottomEdge = selectionY + selectionsHeight
+      drawSelectBox(ctContext, selectionX - 1, selectionY - 1, rightEdge, bottomEdge)
+    canvasDataAsImage.src = cH[cH.length - 1]
+
+    tH.pop()
+    rotateFinishUp()
+
+rotateFinishUp = ->
+  drawToolbars()
+  $('#menuDiv').css('top',(window.innerHeight).toString())
+  normalCircumstance = true
+  menuUp = false
+  positionCorners()
 
 dataToPixels = (imageData) ->
   convertedData = []
@@ -181,3 +194,55 @@ axisFlip = (imageInPixels, itsWidth, itsHeight) ->
     pixelIndex++
   return [flippedCanvas, itsHeight, itsWidth]
 
+rotateMouseListening = ( coordinates, eventIsMouseDown ) ->
+  #Check if mouse event was in 90 button region
+  notTooFarLeft = (tH[tH.length - 1].menuImage.width - 223) < coordinates[0]
+  notTooFarRight = coordinates[0] < ((tH[tH.length - 1].menuImage.width - 223) + ninetyDegreesLitUp.width)
+  withinXBoundaries = notTooFarLeft and notTooFarRight
+  notTooHigh = 5 < coordinates[1]
+  notTooLow = coordinates[1] < (5 + ninetyDegreesLitUp.height)
+  withinYBoundaries = notTooHigh and notTooLow
+  if withinXBoundaries and withinYBoundaries
+    if eventIsMouseDown
+      menuContext.drawImage(ninetyDegreesLitUp, tH[tH.length - 1].menuImage.width - 223, 5)
+    else
+      xFlip()
+
+  #Check if mouse event was in 180 button region
+  notTooFarLeft = (tH[tH.length - 1].menuImage.width - 187) < coordinates[0]
+  notTooFarRight = coordinates[0] < ((tH[tH.length - 1].menuImage.width - 187) + oneHundredAndEightyDegreesLitUp.width)
+  withinXBoundaries = notTooFarLeft and notTooFarRight
+  notTooHigh = 5 < coordinates[1]
+  notTooLow = coordinates[1] < (5 + oneHundredAndEightyDegreesLitUp.height)
+  withinYBoundaries = notTooHigh and notTooLow
+  if withinXBoundaries and withinYBoundaries
+    if eventIsMouseDown
+      menuContext.drawImage(oneHundredAndEightyDegreesLitUp, tH[tH.length - 1].menuImage.width - 187, 5)
+    else
+      yFlip()
+
+  #Check if mouse event was in 270 button region
+  notTooFarLeft = (tH[tH.length - 1].menuImage.width - 138) < coordinates[0]
+  notTooFarRight = coordinates[0] < ((tH[tH.length - 1].menuImage.width - 138) + twoHundredAndSeventyDegreesLitUp.width)
+  withinXBoundaries = notTooFarLeft and notTooFarRight
+  notTooHigh = 5 < coordinates[1]
+  notTooLow = coordinates[1] < (5 + twoHundredAndSeventyDegreesLitUp.height)
+  withinYBoundaries = notTooHigh and notTooLow
+  if withinXBoundaries and withinYBoundaries
+    if eventIsMouseDown
+      menuContext.drawImage(twoHundredAndSeventyDegreesLitUp, tH[tH.length - 1].menuImage.width - 138, 5)
+    else
+      rotation('2')
+
+  #Check if mouse event was in cancel button region
+  notTooFarLeft = (tH[tH.length - 1].menuImage.width - 89) < coordinates[0]
+  notTooFarRight = coordinates[0] < ((tH[tH.length - 1].menuImage.width - 89) + cancelLitUp.width)
+  withinXBoundaries = notTooFarLeft and notTooFarRight
+  notTooHigh = 5 < coordinates[1]
+  notTooLow = coordinates[1] < (5 + cancelLitUp.height)
+  withinYBoundaries = notTooHigh and notTooLow
+  if withinXBoundaries and withinYBoundaries
+    if eventIsMouseDown
+      menuContext.drawImage(cancelLitUp, tH[tH.length - 1].menuImage.width - 89, 5)
+    else
+      flipFinishUp()

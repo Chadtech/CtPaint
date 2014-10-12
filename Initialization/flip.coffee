@@ -239,13 +239,12 @@ flipDataSorting = ( inputMaterial, eventIsKeyDown ) ->
         switch inputMaterial
           when 'x' then xFlip() #   ( A )
           when 'y' then yFlip() #   ( C )
+          when 'n' then flipFinishUp()
       else
         switch inputMaterial
           when 'x' then menuContext.drawImage(xLitUp, tH[tH.length - 1].menuImage.width - 139, 5)
           when 'y' then menuContext.drawImage(yLitUp, tH[tH.length - 1].menuImage.width - 114, 5)
-          when 'n'
-            menuContext.drawImage(cancelLitUp, tH[tH.length - 1].menuImage.width - 89, 5)
-            flipFinishUp()
+          when 'n' then menuContext.drawImage(cancelLitUp, tH[tH.length - 1].menuImage.width - 89, 5)
 
 flipMouseListening = ( coordinates, eventIsMouseDown ) ->
   #Check if mouse event was in X button region
@@ -286,5 +285,4 @@ flipMouseListening = ( coordinates, eventIsMouseDown ) ->
       menuContext.drawImage(cancelLitUp, tH[tH.length - 1].menuImage.width - 89, 5)
     else
       flipFinishUp()
-
 

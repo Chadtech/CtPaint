@@ -133,6 +133,13 @@ yLitUp = new Image()
 xLitUp.src = 'assets\\t11.png'
 yLitUp.src = 'assets\\t21.png'
 
+ninetyDegreesLitUp = new Image()
+oneHundredAndEightyDegreesLitUp = new Image()
+twoHundredAndSeventyDegreesLitUp = new Image()
+
+ninetyDegreesLitUp.src = 'assets\\t14.png'
+oneHundredAndEightyDegreesLitUp.src = 'assets\\t24.png'
+twoHundredAndSeventyDegreesLitUp.src = 'assets\\t34.png'
 
 toolsToNumbers =
   'zoom':0
