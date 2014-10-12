@@ -14,6 +14,7 @@ resizeAction = () ->
 
   resizeDataSortingInitialize(canvasWidth, canvasHeight)
   whatSortOfDataSorting = resizeDataSorting
+  whatSortOfMouseListening = resizeMouseListening
 
 resizeDataSortingInitialize = (width, height) ->
   menuDatum = zeroPadder(width, 4) + zeroPadder(height, 4)
@@ -22,8 +23,8 @@ resizeDataSortingInitialize = (width, height) ->
 
 resizeDataSorting = ( inputMaterial, eventIsKeyDown ) ->
   if inputMaterial isnt undefined
-    if eventIsKeyDown
-      keysThatDontAddData = ['backspace', 'left', 'right', 'enter']
+    keysThatDontAddData = [ 'backspace', 'left', 'right', 'enter', 'n' ]
+    if not eventIsKeyDown
       if not (inputMaterial in keysThatDontAddData)
         if not isNaN(inputMaterial)
           menuDatum = replaceAt(menuDatum, inputMaterial, spotInMenuDatum )
@@ -41,37 +42,80 @@ resizeDataSorting = ( inputMaterial, eventIsKeyDown ) ->
           when 'right'
             if spotInMenuDatum < 7
               spotInMenuDatum++
+          when 'n'
+            resizeFinishUp()
           when 'enter'
-            $('#menuDiv').css('top',(window.innerHeight).toString())
-            normalCircumstance = true
-            menuUp = false
-            newWidth = menuDatum.substr(0,4)
-            newHeight = menuDatum.substr(4,4)
-            ctContext.canvas.width = parseInt(newWidth)
-            ctContext.canvas.height = parseInt(newHeight)
-            canvasDataAsImage = new Image()
-            canvasDataAsImage.onload = ->
-              ctContext.drawImage(canvasDataAsImage,0,0)
-              cH.push ctCanvas.toDataURL()
-              cH.shift()
-              cF = []
-            canvasDataAsImage.src = cH[cH.length - 1]
-            ctContext.fillStyle = rgbToHex(colorSwatches[1])
-            if (ctContext.canvas.width > canvasWidth) and (ctContext.canvas.height > canvasHeight)
-              ctContext.fillRect(canvasWidth, 0, ctContext.canvas.width, ctContext.canvas.height)
-              ctContext.fillRect(0, canvasHeight, canvasWidth, ctContext.canvas.height)
-            else if (ctContext.canvas.width > canvasWidth)
-              ctContext.fillRect(canvasWidth, 0, ctContext.canvas.width, ctContext.canvas.height)
-            else if (ctContext.canvas.height > canvasHeight)
-              ctContext.fillRect(0, canvasHeight, ctContext.canvas.width, ctContext.canvas.height)
-            canvasWidth = ctContext.canvas.width
-            canvasHeight = ctContext.canvas.height
-            ctCanvas.style.width = (canvasWidth).toString()+'px'
-            ctCanvas.style.height = (canvasHeight).toString()+'px'
-            positionCorners()
-            tH.pop()
-            drawToolbars()
+            resize()
       drawResizeMenu()
+    else
+      switch inputMaterial
+        when 'enter' then menuContext.drawImage(enterLitUp, tH[tH.length - 1].menuImage.width - 162, 5)
+        when 'n' then menuContext.drawImage(cancelLitUp, tH[tH.length - 1].menuImage.width - 89, 5)
+
+resize = ->
+  $('#menuDiv').css('top',(window.innerHeight).toString())
+  normalCircumstance = true
+  menuUp = false
+  newWidth = menuDatum.substr(0,4)
+  newHeight = menuDatum.substr(4,4)
+  ctContext.canvas.width = parseInt(newWidth)
+  ctContext.canvas.height = parseInt(newHeight)
+  canvasDataAsImage = new Image()
+  canvasDataAsImage.onload = ->
+    ctContext.drawImage(canvasDataAsImage,0,0)
+    cH.push ctCanvas.toDataURL()
+    cH.shift()
+    cF = []
+  canvasDataAsImage.src = cH[cH.length - 1]
+  ctContext.fillStyle = rgbToHex(colorSwatches[1])
+  if (ctContext.canvas.width > canvasWidth) and (ctContext.canvas.height > canvasHeight)
+    ctContext.fillRect(canvasWidth, 0, ctContext.canvas.width, ctContext.canvas.height)
+    ctContext.fillRect(0, canvasHeight, canvasWidth, ctContext.canvas.height)
+  else if (ctContext.canvas.width > canvasWidth)
+    ctContext.fillRect(canvasWidth, 0, ctContext.canvas.width, ctContext.canvas.height)
+  else if (ctContext.canvas.height > canvasHeight)
+    ctContext.fillRect(0, canvasHeight, ctContext.canvas.width, ctContext.canvas.height)
+  canvasWidth = ctContext.canvas.width
+  canvasHeight = ctContext.canvas.height
+  ctCanvas.style.width = (canvasWidth).toString()+'px'
+  ctCanvas.style.height = (canvasHeight).toString()+'px'
+  positionCorners()
+  tH.pop()
+  drawToolbars()
+
+
+resizeFinishUp = ->
+  $('#menuDiv').css('top',(window.innerHeight).toString())
+  normalCircumstance = true
+  menuUp = false
+  tH.pop()
+
+resizeMouseListening = ( coordinates, eventIsMouseDown ) ->
+  #Check if mouse event was in enter button region
+  notTooFarLeft = (tH[tH.length - 1].menuImage.width - 162) < coordinates[0]
+  notTooFarRight = coordinates[0] < ((tH[tH.length - 1].menuImage.width - 162) + enterLitUp.width)
+  withinXBoundaries = notTooFarLeft and notTooFarRight
+  notTooHigh = 5 < coordinates[1]
+  notTooLow = coordinates[1] < (5 + enterLitUp.height)
+  withinYBoundaries = notTooHigh and notTooLow
+  if withinXBoundaries and withinYBoundaries
+    if eventIsMouseDown
+      menuContext.drawImage(enterLitUp, tH[tH.length - 1].menuImage.width - 162, 5)
+    else
+      resizeFinishUp()
+
+  #Check if mouse event was in cancel button region
+  notTooFarLeft = (tH[tH.length - 1].menuImage.width - 89) < coordinates[0]
+  notTooFarRight = coordinates[0] < ((tH[tH.length - 1].menuImage.width- 89) + cancelLitUp.width)
+  withinXBoundaries = notTooFarLeft and notTooFarRight
+  notTooHigh = 5 < coordinates[1]
+  notTooLow = coordinates[1] < (5 + cancelLitUp.height)
+  withinYBoundaries = notTooHigh and notTooLow
+  if withinXBoundaries and withinYBoundaries
+    if eventIsMouseDown
+      menuContext.drawImage(cancelLitUp, tH[tH.length - 1].menuImage.width - 89, 5)
+    else
+      resizeFinishUp()
 
 drawResizeMenu = () ->
   drawStringAsCommandPrompt( menuContext, menuDatum.substr(0,4), 1, 116, 10 )
