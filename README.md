@@ -80,7 +80,7 @@ General to dos and bugs to fix:
 * X Remove toolbar0 information section, and make icons change with new settings
 * Selection cursor update bug
 * Optimize selection moving
-* Menu click region ( or cancel option )
+* X Menu click region ( or cancel option )
 * Zoom blur bug
 * Make all menu tools cursor pixel compatible
 * X Redraw menu images to highlight the 'n' in 'cancel' since 'c' is not an acceptable short key
