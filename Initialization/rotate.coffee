@@ -206,7 +206,7 @@ rotateMouseListening = ( coordinates, eventIsMouseDown ) ->
     if eventIsMouseDown
       menuContext.drawImage(ninetyDegreesLitUp, tH[tH.length - 1].menuImage.width - 223, 5)
     else
-      xFlip()
+      rotation('9')
 
   #Check if mouse event was in 180 button region
   notTooFarLeft = (tH[tH.length - 1].menuImage.width - 187) < coordinates[0]
@@ -219,7 +219,7 @@ rotateMouseListening = ( coordinates, eventIsMouseDown ) ->
     if eventIsMouseDown
       menuContext.drawImage(oneHundredAndEightyDegreesLitUp, tH[tH.length - 1].menuImage.width - 187, 5)
     else
-      yFlip()
+      rotation('1')
 
   #Check if mouse event was in 270 button region
   notTooFarLeft = (tH[tH.length - 1].menuImage.width - 138) < coordinates[0]
