@@ -1,4 +1,5 @@
 squarePosture = [
+  # Mouse Move
   () ->
     if mousePressed
       getMousePositionOnCanvas(event)
@@ -13,19 +14,29 @@ squarePosture = [
       canvasDataAsImage.onload = ->
         ctContext.drawImage(canvasDataAsImage,0,0)
         squareAction(ctContext, colorSwatches[0], oldX, oldY, xSpot, ySpot)
+        putPixel( ctContext, colorOfCursorPixel, xSpot, ySpot )
       canvasDataAsImage.src = cH[cH.length - 1]
     else
       drawInformation()
       updateCursor()
+
+  # Mouse Down
   () ->
-    mousePressed = true
-    getMousePositionOnCanvas(event)
-    oldX = xSpot
-    oldY = ySpot
+    if not mousePressed
+      mousePressed = true
+      getMousePositionOnCanvas(event)
+      oldX = xSpot
+      oldY = ySpot
+
+  # Mouse Up
   () ->
-    mousePressed = false
-    updateOldCursor()
-    historyUpdate()
+    if mousePressed
+      mousePressed = false
+      squareAction(ctContext, colorSwatches[0], oldX, oldY, xSpot, ySpot)
+      updateOldCursor()
+      historyUpdate()
+
+  # Mouse Exit
   () ->
 ]
 
