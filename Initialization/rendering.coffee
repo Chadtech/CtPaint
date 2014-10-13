@@ -230,8 +230,6 @@ drawToolbars = ->
     toolbar1Context.fillRect(52 + (17 * (paletteIndex // 2)), 4 + (17 * (paletteIndex % 2)), 14, 14)
     paletteIndex++
 
-  drawInformationToolbar0()
-
 updateCursor = ->
   coverUpOldCursor()
   cursorX = event.clientX - (toolbarWidth + 5 - canvasXOffset)
@@ -254,27 +252,8 @@ refreshCursor = ( particularColor ) ->
   else
     putPixel( ctContext, colorOfCursorPixel, cursorX, cursorY )
 
-modeToGlyph = () ->
-  if tH[tH.length - 1].modeCapable
-    if tH[tH.length - 1].mode
-      return ',T'
-    else
-      return ',F'
-  else
-    return '  '
-
-magnitudeToGlyph = () ->
-  if typeof tH[tH.length - 1] is 'string'
-    return ' '
-  else
-    return tH[tH.length - 1].magnitude.toString(16).toUpperCase()
-
 drawInformation = ( extraInformation ) ->
-  toolbar1Context.drawImage(toolbar1sImage1,188,3)   
-  drawInformationToolbar0()
-  drawInformationToolbar1( extraInformation )
-
-drawInformationToolbar1 = ( extraInformation ) ->
+  toolbar1Context.drawImage(toolbar1sImage1,188,3)  
   if extraInformation is undefined
     extraInformation = ''
   toolbar1Context.drawImage(toolbar1sImage1, 188, 3)   
@@ -285,11 +264,7 @@ drawInformationToolbar1 = ( extraInformation ) ->
   coordinates = ', (' + xPos.toString() + ', ' + yPos.toString() + ')'
   colorAndCoordinates = colorValue + coordinates
   drawStringAsCommandPrompt(toolbar1Context, colorAndCoordinates, 0, 191, 12)
-  drawStringAsCommandPrompt(toolbar1Context, extraInformation, 0, 461, 12)
-
-drawInformationToolbar0 = ->
-  #toolbarInformation = magnitudeToGlyph() + modeToGlyph()
-  #drawStringAsCommandPrompt(toolbar0Context, toolbarInformation, 0, 6, 104)
+  drawStringAsCommandPrompt(toolbar1Context, extraInformation, 0, 461, 12) 
 
 getMousePositionOnCanvas = (event) ->
   xSpot = event.clientX - (toolbarWidth + 5) - canvasXOffset
@@ -304,11 +279,9 @@ scaleCanvasBigger = ( factor ) ->
   ctCanvas.style.height = (factor * ctCanvas.height).toString()+'px'
 
 historyUpdate = ->
-  coverUpOldCursor()
   cH.push ctCanvas.toDataURL()
   cH.shift()
   cF = []
-  updateCursor()
 
 copeWithSelection = (atZeroZero)->
   copeX = selectionX
