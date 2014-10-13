@@ -20,8 +20,6 @@ replaceAction = () ->
   whatSortOfMouseListening = replaceMouseListening
 
 replaceDataSortingInitialize = () ->
-  console.log xSpot, ySpot
-  console.log getColorValue(ctContext, xSpot, ySpot)
   theColorTheCursorIsCurrentlyOver = getColorValue(ctContext, xSpot, ySpot).substr(1)
   firstColorSwatch = rgbToHex(colorSwatches[0]).substr(1,6)
   menuDatum = theColorTheCursorIsCurrentlyOver + firstColorSwatch
