@@ -2047,8 +2047,8 @@ scaleDataSorting = ( inputMaterial, eventIsKeyDown ) ->
             if spotInMenuDatum < 5
               spotInMenuDatum++
           when 'enter'
-            if not areaSelected
-              scale()
+            scale()
+
       drawScaleMenu()
     else
       switch inputMaterial
@@ -2064,72 +2064,146 @@ scale = ->
   heightFactor = parseInt( menuDatum[3] )
   heightFactor += ( parseInt( menuDatum[4] + menuDatum[5] ) / 100 )
 
-  # Get the canvass data
-  cWidth = ctContext.canvas.width
-  cHeight = ctContext.canvas.height
-  canvasToScale = ctContext.getImageData(0, 0, cWidth, cHeight)
-  canvassData = canvasToScale.data
+  if not areaSelected
 
-  # Turn the data into pixels
-  datumIndex = 0
-  singlePixel = []
-  canvasAsPixels = []
-  while datumIndex < canvassData.length
-    singlePixel.push canvassData[datumIndex]
-    if singlePixel.length is 4
-      canvasAsPixels.push singlePixel
-      singlePixel = []
-    datumIndex++
+    # Get the canvass data
+    cWidth = ctContext.canvas.width
+    cHeight = ctContext.canvas.height
+    canvasToScale = ctContext.getImageData(0, 0, cWidth, cHeight)
+    canvassData = canvasToScale.data
 
-  # Create a new array of data that is the size of the scaledCanvas
-  scaledWidth = Math.floor( widthFactor * canvasToScale.width )
-  scaledHeight = Math.floor( heightFactor * canvasToScale.height )
-  scaledCanvas = []
-  zeroToAdd = 0
-  while zeroToAdd < (scaledWidth * scaledHeight)
-    scaledCanvas.push 0
-    zeroToAdd++
+    # Turn the data into pixels
+    datumIndex = 0
+    singlePixel = []
+    canvasAsPixels = []
+    while datumIndex < canvassData.length
+      singlePixel.push canvassData[datumIndex]
+      if singlePixel.length is 4
+        canvasAsPixels.push singlePixel
+        singlePixel = []
+      datumIndex++
 
-  # Fill the scaled-canvas with the canvas's pixels
-  inverseWidthFactor = 1 / widthFactor
-  inverseHeightFactor = 1 / heightFactor
-  rowIndex = 0
-  while rowIndex < scaledHeight
-    columnIndex = 0
-    while columnIndex < scaledWidth
-      pointX = Math.floor(columnIndex * inverseWidthFactor)
-      pointY = Math.floor(rowIndex * inverseHeightFactor)
-      pixelInScaledCanvas = (rowIndex * scaledWidth) + columnIndex
-      pixelInCanvas = (pointY * cWidth) + pointX
-      scaledCanvas[pixelInScaledCanvas] = canvasAsPixels[pixelInCanvas]
-      columnIndex++
-    rowIndex++
+    # Create a new array of data that is the size of the scaledCanvas
+    scaledWidth = Math.floor( widthFactor * canvasToScale.width )
+    scaledHeight = Math.floor( heightFactor * canvasToScale.height )
+    scaledCanvas = []
+    zeroToAdd = 0
+    while zeroToAdd < (scaledWidth * scaledHeight)
+      scaledCanvas.push 0
+      zeroToAdd++
 
-  # Resize the canvas to reflect its scaled size
-  newWidth = scaledWidth
-  newHeight = scaledHeight
-  ctContext.canvas.width = parseInt(newWidth)
-  ctContext.canvas.height = parseInt(newHeight)
-  canvasWidth = ctContext.canvas.width
-  canvasHeight = ctContext.canvas.height
-  ctCanvas.style.width = (canvasWidth).toString()+'px'
-  ctCanvas.style.height = (canvasHeight).toString()+'px'
-  positionCorners()
+    # Fill the scaled-canvas with the canvas's pixels
+    inverseWidthFactor = 1 / widthFactor
+    inverseHeightFactor = 1 / heightFactor
+    rowIndex = 0
+    while rowIndex < scaledHeight
+      columnIndex = 0
+      while columnIndex < scaledWidth
+        pointX = Math.floor(columnIndex * inverseWidthFactor)
+        pointY = Math.floor(rowIndex * inverseHeightFactor)
+        pixelInScaledCanvas = (rowIndex * scaledWidth) + columnIndex
+        pixelInCanvas = (pointY * cWidth) + pointX
+        scaledCanvas[pixelInScaledCanvas] = canvasAsPixels[pixelInCanvas]
+        columnIndex++
+      rowIndex++
 
-  # Turn the scaled canvass pixels into data
-  scaledCanvasAsData = ctContext.getImageData( 0, 0, scaledWidth, scaledHeight)
-  pixelIndex = 0
-  while pixelIndex < scaledCanvas.length
-    colorIndex = 0
-    while colorIndex < 4
-      datumIndex = ( pixelIndex * 4 ) + colorIndex
-      scaledCanvasAsData.data[datumIndex] = scaledCanvas[pixelIndex][colorIndex]
-      colorIndex++
-    pixelIndex++
+    # Resize the canvas to reflect its scaled size
+    newWidth = scaledWidth
+    newHeight = scaledHeight
+    ctContext.canvas.width = parseInt(newWidth)
+    ctContext.canvas.height = parseInt(newHeight)
+    canvasWidth = ctContext.canvas.width
+    canvasHeight = ctContext.canvas.height
+    ctCanvas.style.width = (canvasWidth).toString()+'px'
+    ctCanvas.style.height = (canvasHeight).toString()+'px'
+    positionCorners()
 
-  ctContext.putImageData(scaledCanvasAsData, 0, 0)
-  scaleFinishUp()
-  historyUpdate()
+    # Turn the scaled canvass pixels into data
+    scaledCanvasAsData = ctContext.getImageData( 0, 0, scaledWidth, scaledHeight)
+    pixelIndex = 0
+    while pixelIndex < scaledCanvas.length
+      colorIndex = 0
+      while colorIndex < 4
+        datumIndex = ( pixelIndex * 4 ) + colorIndex
+        scaledCanvasAsData.data[datumIndex] = scaledCanvas[pixelIndex][colorIndex]
+        colorIndex++
+      pixelIndex++
+
+    ctContext.putImageData(scaledCanvasAsData, 0, 0)
+    scaleFinishUp()
+    historyUpdate()
+
+  else
+    # Get selections data
+    cWidth = selectionsWidth
+    cHeight = selectionsHeight
+    selectionsData = selection.data
+
+    # Turn the data into pixels
+    datumIndex = 0
+    singlePixel = []
+    selectionAsPixels = []
+    while datumIndex < selectionsData.length
+      singlePixel.push selectionsData[datumIndex]
+      if singlePixel.length is 4
+        selectionAsPixels.push singlePixel
+        singlePixel = []
+      datumIndex++
+
+    # Create a new array of data that is the size of scaledSelection
+    scaledWidth = Math.floor( widthFactor * selectionsWidth )
+    scaledHeight = Math.floor( heightFactor * selectionsHeight )
+    scaledSelection = []
+    zeroToAdd = 0
+    while zeroToAdd < (scaledWidth * scaledHeight)
+      scaledSelection.push 0
+      zeroToAdd++
+
+    # Fill scaledSelection with the selections's pixels
+    inverseWidthFactor = 1 / widthFactor
+    inverseHeightFactor = 1 / heightFactor
+    rowIndex = 0
+    while rowIndex < scaledHeight
+      columnIndex = 0
+      while columnIndex < scaledWidth
+        pointX = Math.floor(columnIndex * inverseWidthFactor)
+        pointY = Math.floor(rowIndex * inverseHeightFactor)
+        pixelInScaledCanvas = (rowIndex * scaledWidth) + columnIndex
+        pixelInCanvas = (pointY * cWidth) + pointX
+        scaledSelection[pixelInScaledCanvas] = selectionAsPixels[pixelInCanvas]
+        columnIndex++
+      rowIndex++
+
+    newSelection = document.createElement('canvas')
+    newSelection = newSelection.getContext('2d')
+    newSelection = newSelection.createImageData(scaledWidth, scaledHeight)
+
+    pixelIndex = 0
+    while pixelIndex < scaledSelection.length
+      colorIndex = 0
+      while colorIndex < 4
+        datumIndex = ( pixelIndex * 4 ) + colorIndex
+        newSelection.data[datumIndex] = scaledSelection[pixelIndex][colorIndex]
+        colorIndex++
+      pixelIndex++
+
+    selection = newSelection
+    selectionsWidth = scaledWidth
+    selectionsHeight = scaledHeight
+
+    canvasDataAsImage = new Image()
+    canvasDataAsImage.onload = ->
+      ctContext.drawImage(canvasDataAsImage,0,0)
+      cH.push ctCanvas.toDataURL()
+      cH.shift()
+      cF = []
+      ctContext.putImageData(selection, selectionX, selectionY)
+      rightEdge = selectionX + selectionsWidth
+      bottomEdge = selectionY + selectionsHeight
+      drawSelectBox(ctContext, selectionX - 1, selectionY - 1, rightEdge, bottomEdge)
+    canvasDataAsImage.src = cH[cH.length - 1]
+
+    scaleFinishUp()
 
 scaleFinishUp = ->
   $('#menuDiv').css('top',(window.innerHeight).toString())
@@ -2445,6 +2519,7 @@ cutAction = ->
   tH.push ctPaintTools[toolsToNumbers['cut']]
   drawToolbars()
 
+  coverUpOldCursor()
   if areaSelected
     copyMemory = selection
     copeWithSelection()

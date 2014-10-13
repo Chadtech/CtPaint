@@ -67,7 +67,7 @@ Here is an incomplete list of features, with the ones I have finished checked of
 * Secondary color transparency
 * Arrow key scrolling
 * X Scale canvas
-* Scale selected area
+* X Scale selected area
 
 General to dos and bugs to fix:
 
@@ -81,7 +81,7 @@ General to dos and bugs to fix:
 * Optimize selection moving
 * X Menu click region ( or cancel option )
 * Zoom blur bug
-* Make all menu tools cursor pixel compatible
+* X Make all menu tools cursor pixel compatible
 * X Redraw menu images to highlight the 'n' in 'cancel' since 'c' is not an acceptable short key
 
 ------- LICENSING
