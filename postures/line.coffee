@@ -1,5 +1,6 @@
 linePosture = [
   () ->
+    # Mouse move
     if mousePressed
       getMousePositionOnCanvas(event)
       widthToShow = (Math.abs(oldX - xSpot) + 1).toString()
@@ -10,19 +11,27 @@ linePosture = [
       canvasDataAsImage.onload = ->
         ctContext.drawImage(canvasDataAsImage,0,0)
         lineAction(ctContext, colorSwatches[0], oldX, oldY, xSpot, ySpot)
+        putPixel( ctContext, colorOfCursorPixel, xSpot, ySpot )
       canvasDataAsImage.src = cH[cH.length - 1]
     else
-      updateCursor()
       drawInformation()
+    updateCursor()
+
+  # Mouse down
   () ->
     mousePressed = true
     getMousePositionOnCanvas(event)
     oldX = xSpot
     oldY = ySpot
+
+  # Mouse up
   () ->
     mousePressed = false
+    lineAction(ctContext, colorSwatches[0], oldX, oldY, xSpot, ySpot)
     updateOldCursor()
     historyUpdate()
+
+  # Mouse Exit
   () ->
 ]
 

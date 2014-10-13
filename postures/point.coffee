@@ -21,7 +21,6 @@ pointPosture = [
   # Mouse up
   () ->
     if mousePressed
-      #updateOldCursor()
       coverUpOldCursor()
       historyUpdate()
       refreshCursor()
