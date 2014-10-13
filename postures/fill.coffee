@@ -1,7 +1,7 @@
 fillPosture = [
   () ->
-    updateCursor()
     drawInformation()
+    updateCursor()
   () ->
     mousePressed = true
     getMousePositionOnCanvas(event)

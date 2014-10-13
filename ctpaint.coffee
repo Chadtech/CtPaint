@@ -111,6 +111,7 @@ cornersVisible = true
   selectionY are its location on the canvas. gripX and gripY
   is the location of selection while it is being dragged.
 ###
+boxInformation = undefined
 selection = undefined
 areaSelected = false
 selectionX = 0
@@ -598,7 +599,7 @@ keysToKeyCodes =
   must be highlighted.
 ###
 stringOfCharacters = 
-  'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ `.,;:'+"'"+'"?!0123456789@#$%^&*(){}[]='
+  'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ `.,;:'+"'"+'"?!0123456789@#$%^&*(){}[]=-'
 stringsToGlyphs = {}
 stringOfCharactersIndex = 0
 # (A)
@@ -674,9 +675,9 @@ while lineIndex < dataToGive.length
     eachColorIndex = 0
     while eachColorIndex < dataToGive.length
       colorIndexOfDatum = eachColorIndex + (dataIndex * 4)
-      selectLinesOfLengthX[selectLinesOfLengthX.length-1].data[colorIndexOfDatum] = 
+      selectLinesOfLengthX[selectLinesOfLengthX.length - 1].data[colorIndexOfDatum] = 
         dataToGive[dataIndex][eachColorIndex]
-      selectLinesOfLengthY[selectLinesOfLengthY.length-1].data[colorIndexOfDatum] = 
+      selectLinesOfLengthY[selectLinesOfLengthY.length - 1].data[colorIndexOfDatum] = 
         dataToGive[dataIndex][eachColorIndex]
       eachColorIndex++
     dataIndex++
@@ -1658,7 +1659,8 @@ axisFlip = (imageInPixels, itsWidth, itsHeight) ->
 rotateMouseListening = ( coordinates, eventIsMouseDown ) ->
   #Check if mouse event was in 90 button region
   notTooFarLeft = (tH[tH.length - 1].menuImage.width - 223) < coordinates[0]
-  notTooFarRight = coordinates[0] < ((tH[tH.length - 1].menuImage.width - 223) + ninetyDegreesLitUp.width)
+  tooFarRight = ((tH[tH.length - 1].menuImage.width - 223) + ninetyDegreesLitUp.width)
+  notTooFarRight = coordinates[0] < tooFarRight
   withinXBoundaries = notTooFarLeft and notTooFarRight
   notTooHigh = 5 < coordinates[1]
   notTooLow = coordinates[1] < (5 + ninetyDegreesLitUp.height)
@@ -1671,27 +1673,31 @@ rotateMouseListening = ( coordinates, eventIsMouseDown ) ->
 
   #Check if mouse event was in 180 button region
   notTooFarLeft = (tH[tH.length - 1].menuImage.width - 187) < coordinates[0]
-  notTooFarRight = coordinates[0] < ((tH[tH.length - 1].menuImage.width - 187) + oneHundredAndEightyDegreesLitUp.width)
+  tooFarRight = ((tH[tH.length - 1].menuImage.width - 187) + oneHundredAndEightyDegreesLitUp.width)
+  notTooFarRight = coordinates[0] < tooFarRight
   withinXBoundaries = notTooFarLeft and notTooFarRight
   notTooHigh = 5 < coordinates[1]
   notTooLow = coordinates[1] < (5 + oneHundredAndEightyDegreesLitUp.height)
   withinYBoundaries = notTooHigh and notTooLow
   if withinXBoundaries and withinYBoundaries
     if eventIsMouseDown
-      menuContext.drawImage(oneHundredAndEightyDegreesLitUp, tH[tH.length - 1].menuImage.width - 187, 5)
+      leftSide = tH[tH.length - 1].menuImage.width - 187
+      menuContext.drawImage(oneHundredAndEightyDegreesLitUp, leftSide, 5)
     else
       rotation('1')
 
   #Check if mouse event was in 270 button region
   notTooFarLeft = (tH[tH.length - 1].menuImage.width - 138) < coordinates[0]
-  notTooFarRight = coordinates[0] < ((tH[tH.length - 1].menuImage.width - 138) + twoHundredAndSeventyDegreesLitUp.width)
+  tooFarRight = ((tH[tH.length - 1].menuImage.width - 138) + twoHundredAndSeventyDegreesLitUp.width)
+  notTooFarRight = coordinates[0] < tooFarRight
   withinXBoundaries = notTooFarLeft and notTooFarRight
   notTooHigh = 5 < coordinates[1]
   notTooLow = coordinates[1] < (5 + twoHundredAndSeventyDegreesLitUp.height)
   withinYBoundaries = notTooHigh and notTooLow
   if withinXBoundaries and withinYBoundaries
     if eventIsMouseDown
-      menuContext.drawImage(twoHundredAndSeventyDegreesLitUp, tH[tH.length - 1].menuImage.width - 138, 5)
+      leftSide = tH[tH.length - 1].menuImage.width - 138
+      menuContext.drawImage(twoHundredAndSeventyDegreesLitUp, leftSide, 5)
     else
       rotation('2')
 
@@ -1824,11 +1830,16 @@ replaceAction = () ->
   whatSortOfMouseListening = replaceMouseListening
 
 replaceDataSortingInitialize = () ->
-  menuDatum = rgbToHex(colorSwatches[0]).substr(1,6) + rgbToHex(colorSwatches[1]).substr(1,6)
-  spotInMenuDatum = 0
+  console.log xSpot, ySpot
+  console.log getColorValue(ctContext, xSpot, ySpot)
+  theColorTheCursorIsCurrentlyOver = getColorValue(ctContext, xSpot, ySpot).substr(1)
+  firstColorSwatch = rgbToHex(colorSwatches[0]).substr(1,6)
+  menuDatum = theColorTheCursorIsCurrentlyOver + firstColorSwatch
+  spotInMenuDatum = 6
   drawReplaceMenu()
 
 replaceDataSorting = ( inputMaterial, eventIsKeyDown ) ->
+  coverUpOldCursor()
   if inputMaterial isnt undefined
     keysThatDontAddData = ['backspace', 'left', 'right', 'enter', 'n']
     keyAddsData = not (inputMaterial in keysThatDontAddData)
@@ -1945,6 +1956,7 @@ replaceDataSorting = ( inputMaterial, eventIsKeyDown ) ->
       switch inputMaterial
         when 'enter' then menuContext.drawImage(enterLitUp, tH[tH.length - 1].menuImage.width - 162, 5)
         when 'n' then menuContext.drawImage(cancelLitUp, tH[tH.length - 1].menuImage.width - 89, 5)
+    updateOldCursor()
 
 replaceFinishUp = ->
   $('#menuDiv').css('top',(window.innerHeight).toString())
@@ -2987,8 +2999,8 @@ mouseListeningUnderAbnormalCircumstance = [
 
 zoomPosture = [
   () ->
-    updateCursor()
     drawInformation()
+    updateCursor()
   () ->
     mousePressed = true
     getMousePositionOnCanvas(event)
@@ -3034,6 +3046,7 @@ selectPosture = [
           drawSelectBox(ctContext, originX, originY, otherSideX, otherSideY)
         canvasDataAsImage.src = cH[cH.length - 1]
       else
+        drawInformation( boxInformation )
         updateCursor()
     else
       if mousePressed
@@ -3045,11 +3058,9 @@ selectPosture = [
         rightEdge = gripX + selectionsWidth
         bottomEdge = gripY + selectionsHeight
 
-        boxInformation = selectionX.toString() 
-        boxInformation += 'px x '
-        boxInformation += selectionY.toString()
-        boxInformation += 'px'
-        drawInformation( boxInformation )
+        if (gripX isnt undefined) and (gripY isnt undefined)
+          selectionOrigin = '(' + (gripX + '') + ', ' + (gripY + '') + ')'
+          drawInformation( selectionOrigin )
 
         canvasDataAsImage = new Image()
         canvasDataAsImage.onload = ->
@@ -3058,6 +3069,7 @@ selectPosture = [
           drawSelectBox(ctContext, gripX - 1, gripY - 1, rightEdge, bottomEdge)
         canvasDataAsImage.src = cH[cH.length - 1]
       else
+        drawInformation( boxInformation )
         updateCursor()
 
   # Mouse down
@@ -3081,6 +3093,7 @@ selectPosture = [
 
       if not (withinXBoundaries and withinYBoundaries)
         areaSelected = false
+        boxInformation = undefined
         canvasDataAsImage = new Image()
         canvasDataAsImage.onload = ->
           ctContext.drawImage(canvasDataAsImage,0,0)
@@ -3124,8 +3137,8 @@ selectPosture = [
 samplePosture = [
   # Mouse Move
   () ->
-    updateCursor()
     drawInformation()
+    updateCursor()
 
   # Mouse Down
   () ->
@@ -3149,8 +3162,8 @@ samplePosture = [
 
 fillPosture = [
   () ->
-    updateCursor()
     drawInformation()
+    updateCursor()
   () ->
     mousePressed = true
     getMousePositionOnCanvas(event)
@@ -3223,8 +3236,8 @@ circlePosture = [
         putPixel( ctContext, colorOfCursorPixel, xSpot, ySpot )
       canvasDataAsImage.src = cH[cH.length - 1]
     else
-      updateCursor()
       drawInformation()
+      updateCursor()
 
   # Mouse Down
   () ->

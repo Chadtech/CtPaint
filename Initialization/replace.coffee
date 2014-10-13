@@ -20,11 +20,16 @@ replaceAction = () ->
   whatSortOfMouseListening = replaceMouseListening
 
 replaceDataSortingInitialize = () ->
-  menuDatum = rgbToHex(colorSwatches[0]).substr(1,6) + rgbToHex(colorSwatches[1]).substr(1,6)
-  spotInMenuDatum = 0
+  console.log xSpot, ySpot
+  console.log getColorValue(ctContext, xSpot, ySpot)
+  theColorTheCursorIsCurrentlyOver = getColorValue(ctContext, xSpot, ySpot).substr(1)
+  firstColorSwatch = rgbToHex(colorSwatches[0]).substr(1,6)
+  menuDatum = theColorTheCursorIsCurrentlyOver + firstColorSwatch
+  spotInMenuDatum = 6
   drawReplaceMenu()
 
 replaceDataSorting = ( inputMaterial, eventIsKeyDown ) ->
+  coverUpOldCursor()
   if inputMaterial isnt undefined
     keysThatDontAddData = ['backspace', 'left', 'right', 'enter', 'n']
     keyAddsData = not (inputMaterial in keysThatDontAddData)
@@ -141,6 +146,7 @@ replaceDataSorting = ( inputMaterial, eventIsKeyDown ) ->
       switch inputMaterial
         when 'enter' then menuContext.drawImage(enterLitUp, tH[tH.length - 1].menuImage.width - 162, 5)
         when 'n' then menuContext.drawImage(cancelLitUp, tH[tH.length - 1].menuImage.width - 89, 5)
+    updateOldCursor()
 
 replaceFinishUp = ->
   $('#menuDiv').css('top',(window.innerHeight).toString())

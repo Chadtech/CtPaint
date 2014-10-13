@@ -1,7 +1,7 @@
 zoomPosture = [
   () ->
-    updateCursor()
     drawInformation()
+    updateCursor()
   () ->
     mousePressed = true
     getMousePositionOnCanvas(event)

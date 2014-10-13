@@ -46,9 +46,9 @@ while lineIndex < dataToGive.length
     eachColorIndex = 0
     while eachColorIndex < dataToGive.length
       colorIndexOfDatum = eachColorIndex + (dataIndex * 4)
-      selectLinesOfLengthX[selectLinesOfLengthX.length-1].data[colorIndexOfDatum] = 
+      selectLinesOfLengthX[selectLinesOfLengthX.length - 1].data[colorIndexOfDatum] = 
         dataToGive[dataIndex][eachColorIndex]
-      selectLinesOfLengthY[selectLinesOfLengthY.length-1].data[colorIndexOfDatum] = 
+      selectLinesOfLengthY[selectLinesOfLengthY.length - 1].data[colorIndexOfDatum] = 
         dataToGive[dataIndex][eachColorIndex]
       eachColorIndex++
     dataIndex++

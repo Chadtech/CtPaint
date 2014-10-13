@@ -1,8 +1,8 @@
 samplePosture = [
   # Mouse Move
   () ->
-    updateCursor()
     drawInformation()
+    updateCursor()
 
   # Mouse Down
   () ->

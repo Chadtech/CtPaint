@@ -23,6 +23,7 @@ selectPosture = [
           drawSelectBox(ctContext, originX, originY, otherSideX, otherSideY)
         canvasDataAsImage.src = cH[cH.length - 1]
       else
+        drawInformation( boxInformation )
         updateCursor()
     else
       if mousePressed
@@ -34,11 +35,9 @@ selectPosture = [
         rightEdge = gripX + selectionsWidth
         bottomEdge = gripY + selectionsHeight
 
-        boxInformation = selectionX.toString() 
-        boxInformation += 'px x '
-        boxInformation += selectionY.toString()
-        boxInformation += 'px'
-        drawInformation( boxInformation )
+        if (gripX isnt undefined) and (gripY isnt undefined)
+          selectionOrigin = '(' + (gripX + '') + ', ' + (gripY + '') + ')'
+          drawInformation( selectionOrigin )
 
         canvasDataAsImage = new Image()
         canvasDataAsImage.onload = ->
@@ -47,6 +46,7 @@ selectPosture = [
           drawSelectBox(ctContext, gripX - 1, gripY - 1, rightEdge, bottomEdge)
         canvasDataAsImage.src = cH[cH.length - 1]
       else
+        drawInformation( boxInformation )
         updateCursor()
 
   # Mouse down
@@ -70,6 +70,7 @@ selectPosture = [
 
       if not (withinXBoundaries and withinYBoundaries)
         areaSelected = false
+        boxInformation = undefined
         canvasDataAsImage = new Image()
         canvasDataAsImage.onload = ->
           ctContext.drawImage(canvasDataAsImage,0,0)

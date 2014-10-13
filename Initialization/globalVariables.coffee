@@ -111,6 +111,7 @@ cornersVisible = true
   selectionY are its location on the canvas. gripX and gripY
   is the location of selection while it is being dragged.
 ###
+boxInformation = undefined
 selection = undefined
 areaSelected = false
 selectionX = 0

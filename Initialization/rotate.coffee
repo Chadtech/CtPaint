@@ -198,7 +198,8 @@ axisFlip = (imageInPixels, itsWidth, itsHeight) ->
 rotateMouseListening = ( coordinates, eventIsMouseDown ) ->
   #Check if mouse event was in 90 button region
   notTooFarLeft = (tH[tH.length - 1].menuImage.width - 223) < coordinates[0]
-  notTooFarRight = coordinates[0] < ((tH[tH.length - 1].menuImage.width - 223) + ninetyDegreesLitUp.width)
+  tooFarRight = ((tH[tH.length - 1].menuImage.width - 223) + ninetyDegreesLitUp.width)
+  notTooFarRight = coordinates[0] < tooFarRight
   withinXBoundaries = notTooFarLeft and notTooFarRight
   notTooHigh = 5 < coordinates[1]
   notTooLow = coordinates[1] < (5 + ninetyDegreesLitUp.height)
@@ -211,27 +212,31 @@ rotateMouseListening = ( coordinates, eventIsMouseDown ) ->
 
   #Check if mouse event was in 180 button region
   notTooFarLeft = (tH[tH.length - 1].menuImage.width - 187) < coordinates[0]
-  notTooFarRight = coordinates[0] < ((tH[tH.length - 1].menuImage.width - 187) + oneHundredAndEightyDegreesLitUp.width)
+  tooFarRight = ((tH[tH.length - 1].menuImage.width - 187) + oneHundredAndEightyDegreesLitUp.width)
+  notTooFarRight = coordinates[0] < tooFarRight
   withinXBoundaries = notTooFarLeft and notTooFarRight
   notTooHigh = 5 < coordinates[1]
   notTooLow = coordinates[1] < (5 + oneHundredAndEightyDegreesLitUp.height)
   withinYBoundaries = notTooHigh and notTooLow
   if withinXBoundaries and withinYBoundaries
     if eventIsMouseDown
-      menuContext.drawImage(oneHundredAndEightyDegreesLitUp, tH[tH.length - 1].menuImage.width - 187, 5)
+      leftSide = tH[tH.length - 1].menuImage.width - 187
+      menuContext.drawImage(oneHundredAndEightyDegreesLitUp, leftSide, 5)
     else
       rotation('1')
 
   #Check if mouse event was in 270 button region
   notTooFarLeft = (tH[tH.length - 1].menuImage.width - 138) < coordinates[0]
-  notTooFarRight = coordinates[0] < ((tH[tH.length - 1].menuImage.width - 138) + twoHundredAndSeventyDegreesLitUp.width)
+  tooFarRight = ((tH[tH.length - 1].menuImage.width - 138) + twoHundredAndSeventyDegreesLitUp.width)
+  notTooFarRight = coordinates[0] < tooFarRight
   withinXBoundaries = notTooFarLeft and notTooFarRight
   notTooHigh = 5 < coordinates[1]
   notTooLow = coordinates[1] < (5 + twoHundredAndSeventyDegreesLitUp.height)
   withinYBoundaries = notTooHigh and notTooLow
   if withinXBoundaries and withinYBoundaries
     if eventIsMouseDown
-      menuContext.drawImage(twoHundredAndSeventyDegreesLitUp, tH[tH.length - 1].menuImage.width - 138, 5)
+      leftSide = tH[tH.length - 1].menuImage.width - 138
+      menuContext.drawImage(twoHundredAndSeventyDegreesLitUp, leftSide, 5)
     else
       rotation('2')
 

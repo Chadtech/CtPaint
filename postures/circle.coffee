@@ -14,8 +14,8 @@ circlePosture = [
         putPixel( ctContext, colorOfCursorPixel, xSpot, ySpot )
       canvasDataAsImage.src = cH[cH.length - 1]
     else
-      updateCursor()
       drawInformation()
+      updateCursor()
 
   # Mouse Down
   () ->
