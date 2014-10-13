@@ -39,6 +39,7 @@ flipAction = () ->
     whole operation
 ###
 xFlip = ->
+  coverUpOldCursor()
   if areaSelected
     #   ( a )
     selectionsData = selection.data
@@ -130,6 +131,7 @@ xFlip = ->
     flipFinishUp()
 
 yFlip = ->
+  coverUpOldCursor()
   if areaSelected
     #   ( a )
     selectionsData = selection.data

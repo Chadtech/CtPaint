@@ -1,14 +1,13 @@
 invertAction = () ->
   tH.push ctPaintTools[toolsToNumbers['invert']]
   if not areaSelected
+    coverUpOldCursor()
+
     # Get the canvass data
     tWidth = ctContext.canvas.width
     tHeight = ctContext.canvas.height
     canvasAsWeFoundIt = ctContext.getImageData(0, 0, tWidth, tHeight)
     canvasData = canvasAsWeFoundIt.data
-    cH.push canvasAsWeFoundIt.data
-    cH.shift()
-    cF = []
     canvasInPixels = []
 
     # Turn it into an array of pixels instead of canvas data
@@ -47,7 +46,12 @@ invertAction = () ->
     cH.shift()
     cF = []
 
+    updateOldCursor()
+    refreshCursor()
+
   else
+    coverUpOldCursor()
+
     selectionData = selection.data
     selectionInPixels = []
 
@@ -78,6 +82,9 @@ invertAction = () ->
       pixelIndex++
 
     ctContext.putImageData(selection, selectionX, selectionY)
+
+    updateOldCursor()
+    refreshCursor()
 
   setTimeout( ()->
     tH.pop()

@@ -32,6 +32,7 @@ rotateDataSorting = ( inputMaterial, eventIsKeyDown) ->
       when 'n' then menuContext.drawImage(cancelLitUp, tH[tH.length - 1].menuImage.width - 89, 5)
 
 rotation = ( howManyDegrees ) ->
+  coverUpOldCursor()
   if not areaSelected
     sWidth = ctContext.canvas.width
     sHeight = ctContext.canvas.height
