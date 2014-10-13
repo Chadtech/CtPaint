@@ -3044,7 +3044,6 @@ selectPosture = [
         canvasDataAsImage = new Image()
         canvasDataAsImage.onload = ->
           ctContext.drawImage(canvasDataAsImage,0,0)
-          historyUpdate()
           ctContext.putImageData(selection, gripX, gripY)
           drawSelectBox(ctContext, gripX - 1, gripY - 1, rightEdge, bottomEdge)
         canvasDataAsImage.src = cH[cH.length - 1]
@@ -3062,8 +3061,14 @@ selectPosture = [
       getMousePositionOnCanvas(event)
       oldX = xSpot
       oldY = ySpot
-      withinXBoundaries = selectionX < xSpot and xSpot < (selectionX + selectionsWidth)
-      withinYBoundaries = selectionY < ySpot and ySpot < (selectionY + selectionsHeight)
+
+      notTooFarLeft = selectionX < xSpot
+      notTooFarRight = xSpot < (selectionX + selectionsWidth)
+      withinXBoundaries = notTooFarLeft and notTooFarRight
+      notTooLow = selectionY < ySpot
+      notTooHigh = ySpot < (selectionY + selectionsHeight)
+      withinYBoundaries = notTooLow and notTooHigh
+
       if not (withinXBoundaries and withinYBoundaries)
         areaSelected = false
         canvasDataAsImage = new Image()
@@ -3232,6 +3237,7 @@ linePosture = [
 
 pointPosture = [
   () ->
+    # Mouse Move
     drawInformation()
     if mousePressed
       oldX = xSpot
@@ -3240,16 +3246,22 @@ pointPosture = [
       pointAction(ctContext, colorSwatches[0], xSpot, ySpot, oldX, oldY)
     else
       updateCursor()
+
+  # Mouse down
   () ->
     if not mousePressed
       getMousePositionOnCanvas(event)
       pointAction(ctContext, colorSwatches[0], xSpot, ySpot, xSpot, ySpot)
     mousePressed = true
+
+  # Mouse up
   () ->
     if mousePressed
       updateOldCursor()
       historyUpdate()
     mousePressed = false
+
+  # Mouse Exit
   () ->
     if mousePressed
       oldX = xSpot
