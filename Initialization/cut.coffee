@@ -9,6 +9,7 @@ cutAction = ->
   tH.push ctPaintTools[toolsToNumbers['cut']]
   drawToolbars()
 
+  coverUpOldCursor()
   if areaSelected
     copyMemory = selection
     copeWithSelection()

@@ -9,6 +9,7 @@ copyAction = ->
   tH.push ctPaintTools[toolsToNumbers['copy']]
   drawToolbars()
 
+  coverUpOldCursor()
   if areaSelected
     copyMemory = selection
   else

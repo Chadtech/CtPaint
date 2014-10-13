@@ -26,6 +26,7 @@ scaleDataSortingInitialize = () ->
   drawScaleMenu()
 
 scaleDataSorting = ( inputMaterial, eventIsKeyDown ) ->
+  coverUpOldCursor()
   if inputMaterial isnt undefined
     keysThatDontAddData = ['backspace', 'left', 'right', 'enter', 'n']
     if not eventIsKeyDown
@@ -54,6 +55,7 @@ scaleDataSorting = ( inputMaterial, eventIsKeyDown ) ->
       switch inputMaterial
         when 'enter' then menuContext.drawImage(enterLitUp, tH[tH.length - 1].menuImage.width - 162, 5)
         when 'n' then menuContext.drawImage(cancelLitUp, tH[tH.length - 1].menuImage.width - 89, 5)
+  updateOldCursor()
 
 scale = ->
   # Convert the string datum into the width and height factor components
