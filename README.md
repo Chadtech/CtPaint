@@ -77,7 +77,7 @@ General to dos and bugs to fix:
 * X Alternate Cursor colors (replace view mode)
 * X Data read out on tool (square size etc)
 * X Remove toolbar0 information section, and make icons change with new settings
-* Selection cursor update bug
+* X Selection cursor update bug
 * Optimize selection moving
 * X Menu click region ( or cancel option )
 * Zoom blur bug

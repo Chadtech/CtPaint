@@ -7,21 +7,24 @@ pointPosture = [
       oldY = ySpot
       getMousePositionOnCanvas(event)
       pointAction(ctContext, colorSwatches[0], xSpot, ySpot, oldX, oldY)
-    else
-      updateCursor()
+    updateCursor()
 
   # Mouse down
   () ->
     if not mousePressed
       getMousePositionOnCanvas(event)
       pointAction(ctContext, colorSwatches[0], xSpot, ySpot, xSpot, ySpot)
+      updateOldCursor()
+      refreshCursor()
     mousePressed = true
 
   # Mouse up
   () ->
     if mousePressed
-      updateOldCursor()
+      #updateOldCursor()
+      coverUpOldCursor()
       historyUpdate()
+      refreshCursor()
     mousePressed = false
 
   # Mouse Exit
