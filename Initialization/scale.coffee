@@ -49,6 +49,8 @@ scaleDataSorting = ( inputMaterial, eventIsKeyDown ) ->
               spotInMenuDatum++
           when 'enter'
             scale()
+          when 'n'
+            scaleFinishUp()
 
       drawScaleMenu()
     else

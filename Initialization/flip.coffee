@@ -241,7 +241,12 @@ flipDataSorting = ( inputMaterial, eventIsKeyDown ) ->
         switch inputMaterial
           when 'x' then xFlip() #   ( A )
           when 'y' then yFlip() #   ( C )
-          when 'n' then flipFinishUp()
+          when 'n' 
+            tH.pop()
+            drawToolbars()
+            $('#menuDiv').css('top',(window.innerHeight).toString())
+            normalCircumstance = true
+            menuUp = false
       else
         switch inputMaterial
           when 'x' then menuContext.drawImage(xLitUp, tH[tH.length - 1].menuImage.width - 139, 5)
@@ -286,5 +291,9 @@ flipMouseListening = ( coordinates, eventIsMouseDown ) ->
     if eventIsMouseDown
       menuContext.drawImage(cancelLitUp, tH[tH.length - 1].menuImage.width - 89, 5)
     else
-      flipFinishUp()
+      tH.pop()
+      drawToolbars()
+      $('#menuDiv').css('top',(window.innerHeight).toString())
+      normalCircumstance = true
+      menuUp = false
 

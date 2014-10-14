@@ -32,9 +32,10 @@ backgroundCanvas = document.getElementById('background')
 backgroundContext = backgroundCanvas.getContext('2d')
 
 ###
-  The corners are the four small dots at the corners of the main canvas. They give an impression of
-  boundary, and resizeability. One of them can be clicked on to resize the canvas,
-  which is the lower right one.
+  The corners are the four small dots at the corners of the main canvas. 
+  They give an impression of boundary, and resizeability. 
+  One of them can be clicked on to resize the canvas, which is the 
+  lower right one.
 ###
 corner0Canvas = document.getElementById('corner0')
 corner0Context = corner0Canvas.getContext('2d')
@@ -55,9 +56,9 @@ corner3Context.canvas.width = 1
 corner3Context.canvas.height = 1
 
 ###
-  The menucanvas is a canvas that displays whatever menu is currently active. Menus such as resize
-  and scale. When inactive it sits off screen. When activated its updated with the correct 
-  appearanceand location
+  The menucanvas is a canvas that displays whatever menu is currently active. 
+  Menus such as resize and scale. When inactive it sits off screen. When 
+  activated its updated with the correct appearanceand location
 ###
 menuCanvas = document.getElementById('menu')
 menuContext = menuCanvas.getContext('2d')

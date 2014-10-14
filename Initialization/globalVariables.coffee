@@ -17,20 +17,6 @@ hexadecimalProper = [
   'f'
 ]
 
-arabicNumeralsProper = [
-  '0'
-  '1'
-  '2'
-  '3'
-  '4'
-  '5'
-  '6'
-  '7'
-  '8'
-  '9'  
-]
-
-
 ###
   the height of the horizontal tool bar, and the width of the vertical toolbar
 ###
@@ -119,7 +105,6 @@ gripX = 0
 gripY = 0
 selectionsWidth = 0
 selectionsHeight = 0
-selectionActFinish = false
 transparent = false
 boxInformation = undefined
 

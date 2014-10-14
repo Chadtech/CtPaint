@@ -17,6 +17,15 @@ resizeAction = () ->
   whatSortOfMouseListening = resizeMouseListening
 
 resizeDataSortingInitialize = (width, height) ->
+  if areaSelected
+    areaSelected = false
+    boxInformation = undefined
+    canvasDataAsImage = new Image()
+    canvasDataAsImage.onload = ->
+      ctContext.drawImage(canvasDataAsImage,0,0)
+      ctContext.putImageData(selection, selectionX, selectionY)
+      historyUpdate()
+    canvasDataAsImage.src = cH[cH.length - 1]
   menuDatum = zeroPadder(width, 4) + zeroPadder(height, 4)
   spotInMenuDatum = 0
   drawResizeMenu()
@@ -83,12 +92,12 @@ resize = ->
   tH.pop()
   drawToolbars()
 
-
 resizeFinishUp = ->
-  $('#menuDiv').css('top',(window.innerHeight).toString())
+  $('#menuDiv').css('top', (window.innerHeight).toString())
   normalCircumstance = true
   menuUp = false
   tH.pop()
+  drawToolbars()
 
 resizeMouseListening = ( coordinates, eventIsMouseDown ) ->
   #Check if mouse event was in enter button region

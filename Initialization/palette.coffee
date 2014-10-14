@@ -28,7 +28,6 @@ spotInColorPalette = undefined
   The colors were largely ripped out of the youtube video of Tom Sach's
   video 'colors'. Some minor adjustments.
 ###
-
 topRow = [
   # Default windows light gray / windows command prompt gray
   [192, 192, 192]
@@ -36,7 +35,7 @@ topRow = [
   [0 ,0 ,0]
   # Olive Drab
   [85, 96, 45]
-  # Sand / Skin light brown
+  # Sand / Skin / light brown
   [221, 201, 142]
   # McDonalds Yellow
   [243, 211, 27]

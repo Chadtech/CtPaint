@@ -17,20 +17,6 @@ hexadecimalProper = [
   'f'
 ]
 
-arabicNumeralsProper = [
-  '0'
-  '1'
-  '2'
-  '3'
-  '4'
-  '5'
-  '6'
-  '7'
-  '8'
-  '9'  
-]
-
-
 ###
   the height of the horizontal tool bar, and the width of the vertical toolbar
 ###
@@ -119,7 +105,6 @@ gripX = 0
 gripY = 0
 selectionsWidth = 0
 selectionsHeight = 0
-selectionActFinish = false
 transparent = false
 boxInformation = undefined
 
@@ -225,7 +210,6 @@ spotInColorPalette = undefined
   The colors were largely ripped out of the youtube video of Tom Sach's
   video 'colors'. Some minor adjustments.
 ###
-
 topRow = [
   # Default windows light gray / windows command prompt gray
   [192, 192, 192]
@@ -233,7 +217,7 @@ topRow = [
   [0 ,0 ,0]
   # Olive Drab
   [85, 96, 45]
-  # Sand / Skin light brown
+  # Sand / Skin / light brown
   [221, 201, 142]
   # McDonalds Yellow
   [243, 211, 27]
@@ -278,7 +262,7 @@ while colorPaletteIndex < 8
 ###
   Color menu is the menu that comes up when you shift click
   on any color in the color pallete. The color menu has one input,
-  that begin a hexidecimal color. When Enter is pressed, that spot 
+  that being a hexidecimal color. When Enter is pressed, that spot 
   in the color pallete becomes that hexidecimal color. 
 ###
 colorMenu = ()->
@@ -295,7 +279,6 @@ colorMenu = ()->
   colorDataSortingInitialize()
   whatSortOfDataSorting = colorDataSorting
   whatSortOfMouseListening = colorMouseListening
-
 
 colorDataSortingInitialize = () ->
   menuDatum = rgbToHex(colorPalette[spotInColorPalette]).substr(1)
@@ -377,7 +360,7 @@ colorMouseListening = ( coordinates, eventIsMouseDown ) ->
 drawColorMenu = () ->
   currentlyHighlighted = menuDatum[spotInMenuDatum].toUpperCase()
   drawStringAsCommandPrompt( menuContext, menuDatum.toUpperCase(), 1, 91, 10 )
-  drawStringAsCommandPrompt( menuContext, currentlyHighlighted, 2, 91+(12*spotInMenuDatum), 10 )
+  drawStringAsCommandPrompt( menuContext, currentlyHighlighted, 2, 91 + (12 * spotInMenuDatum), 10 )
 
 
 ###
@@ -464,9 +447,10 @@ backgroundCanvas = document.getElementById('background')
 backgroundContext = backgroundCanvas.getContext('2d')
 
 ###
-  The corners are the four small dots at the corners of the main canvas. They give an impression of
-  boundary, and resizeability. One of them can be clicked on to resize the canvas,
-  which is the lower right one.
+  The corners are the four small dots at the corners of the main canvas. 
+  They give an impression of boundary, and resizeability. 
+  One of them can be clicked on to resize the canvas, which is the 
+  lower right one.
 ###
 corner0Canvas = document.getElementById('corner0')
 corner0Context = corner0Canvas.getContext('2d')
@@ -487,9 +471,9 @@ corner3Context.canvas.width = 1
 corner3Context.canvas.height = 1
 
 ###
-  The menucanvas is a canvas that displays whatever menu is currently active. Menus such as resize
-  and scale. When inactive it sits off screen. When activated its updated with the correct 
-  appearanceand location
+  The menucanvas is a canvas that displays whatever menu is currently active. 
+  Menus such as resize and scale. When inactive it sits off screen. When 
+  activated its updated with the correct appearanceand location
 ###
 menuCanvas = document.getElementById('menu')
 menuContext = menuCanvas.getContext('2d')
@@ -1412,7 +1396,12 @@ flipDataSorting = ( inputMaterial, eventIsKeyDown ) ->
         switch inputMaterial
           when 'x' then xFlip() #   ( A )
           when 'y' then yFlip() #   ( C )
-          when 'n' then flipFinishUp()
+          when 'n' 
+            tH.pop()
+            drawToolbars()
+            $('#menuDiv').css('top',(window.innerHeight).toString())
+            normalCircumstance = true
+            menuUp = false
       else
         switch inputMaterial
           when 'x' then menuContext.drawImage(xLitUp, tH[tH.length - 1].menuImage.width - 139, 5)
@@ -1457,7 +1446,11 @@ flipMouseListening = ( coordinates, eventIsMouseDown ) ->
     if eventIsMouseDown
       menuContext.drawImage(cancelLitUp, tH[tH.length - 1].menuImage.width - 89, 5)
     else
-      flipFinishUp()
+      tH.pop()
+      drawToolbars()
+      $('#menuDiv').css('top',(window.innerHeight).toString())
+      normalCircumstance = true
+      menuUp = false
 
 
 rotateAction = ->
@@ -1485,7 +1478,8 @@ rotateDataSorting = ( inputMaterial, eventIsKeyDown) ->
         rotation( inputMaterial )
       else
         if inputMaterial is 'n'
-          flipFinishUp()
+          tH.pop()
+          rotateFinishUp()
   else
     switch inputMaterial
       when '9' then menuContext.drawImage(ninetyDegreesLitUp, tH[tH.length - 1].menuImage.width - 223, 5)
@@ -1604,7 +1598,7 @@ rotation = ( howManyDegrees ) ->
 
 rotateFinishUp = ->
   drawToolbars()
-  $('#menuDiv').css('top',(window.innerHeight).toString())
+  $('#menuDiv').css('top', (window.innerHeight).toString())
   normalCircumstance = true
   menuUp = false
   positionCorners()
@@ -1713,7 +1707,8 @@ rotateMouseListening = ( coordinates, eventIsMouseDown ) ->
     if eventIsMouseDown
       menuContext.drawImage(cancelLitUp, tH[tH.length - 1].menuImage.width - 89, 5)
     else
-      flipFinishUp()
+      tH.pop()
+      rotateFinishUp()
 
 invertAction = () ->
   tH.push ctPaintTools[toolsToNumbers['invert']]
@@ -2049,6 +2044,8 @@ scaleDataSorting = ( inputMaterial, eventIsKeyDown ) ->
               spotInMenuDatum++
           when 'enter'
             scale()
+          when 'n'
+            scaleFinishUp()
 
       drawScaleMenu()
     else
@@ -2266,6 +2263,15 @@ resizeAction = () ->
   whatSortOfMouseListening = resizeMouseListening
 
 resizeDataSortingInitialize = (width, height) ->
+  if areaSelected
+    areaSelected = false
+    boxInformation = undefined
+    canvasDataAsImage = new Image()
+    canvasDataAsImage.onload = ->
+      ctContext.drawImage(canvasDataAsImage,0,0)
+      ctContext.putImageData(selection, selectionX, selectionY)
+      historyUpdate()
+    canvasDataAsImage.src = cH[cH.length - 1]
   menuDatum = zeroPadder(width, 4) + zeroPadder(height, 4)
   spotInMenuDatum = 0
   drawResizeMenu()
@@ -2332,12 +2338,12 @@ resize = ->
   tH.pop()
   drawToolbars()
 
-
 resizeFinishUp = ->
-  $('#menuDiv').css('top',(window.innerHeight).toString())
+  $('#menuDiv').css('top', (window.innerHeight).toString())
   normalCircumstance = true
   menuUp = false
   tH.pop()
+  drawToolbars()
 
 resizeMouseListening = ( coordinates, eventIsMouseDown ) ->
   #Check if mouse event was in enter button region

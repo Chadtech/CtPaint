@@ -23,7 +23,8 @@ rotateDataSorting = ( inputMaterial, eventIsKeyDown) ->
         rotation( inputMaterial )
       else
         if inputMaterial is 'n'
-          flipFinishUp()
+          tH.pop()
+          rotateFinishUp()
   else
     switch inputMaterial
       when '9' then menuContext.drawImage(ninetyDegreesLitUp, tH[tH.length - 1].menuImage.width - 223, 5)
@@ -142,7 +143,7 @@ rotation = ( howManyDegrees ) ->
 
 rotateFinishUp = ->
   drawToolbars()
-  $('#menuDiv').css('top',(window.innerHeight).toString())
+  $('#menuDiv').css('top', (window.innerHeight).toString())
   normalCircumstance = true
   menuUp = false
   positionCorners()
@@ -251,4 +252,5 @@ rotateMouseListening = ( coordinates, eventIsMouseDown ) ->
     if eventIsMouseDown
       menuContext.drawImage(cancelLitUp, tH[tH.length - 1].menuImage.width - 89, 5)
     else
-      flipFinishUp()
+      tH.pop()
+      rotateFinishUp()

@@ -1,7 +1,7 @@
 ###
   Color menu is the menu that comes up when you shift click
   on any color in the color pallete. The color menu has one input,
-  that begin a hexidecimal color. When Enter is pressed, that spot 
+  that being a hexidecimal color. When Enter is pressed, that spot 
   in the color pallete becomes that hexidecimal color. 
 ###
 colorMenu = ()->
@@ -18,7 +18,6 @@ colorMenu = ()->
   colorDataSortingInitialize()
   whatSortOfDataSorting = colorDataSorting
   whatSortOfMouseListening = colorMouseListening
-
 
 colorDataSortingInitialize = () ->
   menuDatum = rgbToHex(colorPalette[spotInColorPalette]).substr(1)
@@ -100,5 +99,5 @@ colorMouseListening = ( coordinates, eventIsMouseDown ) ->
 drawColorMenu = () ->
   currentlyHighlighted = menuDatum[spotInMenuDatum].toUpperCase()
   drawStringAsCommandPrompt( menuContext, menuDatum.toUpperCase(), 1, 91, 10 )
-  drawStringAsCommandPrompt( menuContext, currentlyHighlighted, 2, 91+(12*spotInMenuDatum), 10 )
+  drawStringAsCommandPrompt( menuContext, currentlyHighlighted, 2, 91 + (12 * spotInMenuDatum), 10 )
 
