@@ -111,7 +111,6 @@ cornersVisible = true
   selectionY are its location on the canvas. gripX and gripY
   is the location of selection while it is being dragged.
 ###
-boxInformation = undefined
 selection = undefined
 areaSelected = false
 selectionX = 0
@@ -121,6 +120,8 @@ gripY = 0
 selectionsWidth = 0
 selectionsHeight = 0
 selectionActFinish = false
+transparent = false
+boxInformation = undefined
 
 ###
   These variables are useful when any pop up menu shows up.
@@ -2927,6 +2928,90 @@ copeWithSelection = (atZeroZero)->
       cF = []
     canvasDataAsImage.src = cH[cH.length - 1]
 
+makeTransparent = () ->
+  if areaSelected
+    if not transparent
+      colorToMakeTransparent = colorSwatches[1]
+
+      counter = 0
+      while counter < (selection.data.length / 4)
+        pixelIndex = counter * 4
+        red = selection.data[pixelIndex]
+        green = selection.data[pixelIndex + 1]
+        blue = selection.data[pixelIndex + 2]
+
+        redsAreSame = red is colorToMakeTransparent[0]
+        greensAreSame = green is colorToMakeTransparent[1]
+        bluesAreSame = blue is colorToMakeTransparent[2]
+        sameColor = redsAreSame and greensAreSame and bluesAreSame
+
+        if sameColor
+          selection.data[pixelIndex + 3] = 0
+        counter++
+
+      selectionAsCanvas = ( inputSelection ) ->
+        temporaryCanvas = document.createElement('canvas')
+        temporaryContext = temporaryCanvas.getContext('2d')
+        temporaryContext.putImageData(inputSelection, 0, 0)
+        return temporaryCanvas.toDataURL()
+
+      canvasDataAsImage = new Image()
+      canvasDataAsImage.onload = ->
+        ctContext.drawImage(canvasDataAsImage,0,0)
+        cH.push ctCanvas.toDataURL()
+        cH.shift()
+        cF = []
+        #selectionsOldData = selectionAsCanvas(selection)
+        selectionClear = new Image()
+        selectionClear.onload = ->
+          ctContext.drawImage(selectionAsCanvas(selection), selectionX, selectionY)
+          rightEdge = selectionX + selectionsWidth
+          bottomEdge = selectionY + selectionsHeight
+          drawSelectBox(ctContext, selectionX - 1, selectionY - 1, rightEdge, bottomEdge)
+        selection.src = selectionAsCanvas(selection)
+      canvasDataAsImage.src = cH[cH.length - 1]
+
+    else
+      colorToMakeTransparent = colorSwatches[1]
+      counter = 0
+      while counter < (selection.data.length / 4)
+        pixelIndex = counter * 4
+        red = selection.data[pixelIndex]
+        green = selection.data[pixelIndex + 1]
+        blue = selection.data[pixelIndex + 2]
+
+        redsAreSame = red is colorToMakeTransparent[0]
+        greensAreSame = green is colorToMakeTransparent[1]
+        bluesAreSame = blue is colorToMakeTransparent[2]
+        sameColor = redsAreSame and greensAreSame and bluesAreSame
+
+        if sameColor
+          selection.data[pixelIndex + 3] = 255
+
+        counter++
+
+      canvasDataAsImage = new Image()
+      canvasDataAsImage.onload = ->
+        ctContext.drawImage(canvasDataAsImage,0,0)
+        cH.push ctCanvas.toDataURL()
+        cH.shift()
+        cF = []
+        ctContext.drawImage(selection.toDataURL(), selectionX, selectionY)
+        rightEdge = selectionX + selectionsWidth
+        bottomEdge = selectionY + selectionsHeight
+        drawSelectBox(ctContext, selectionX - 1, selectionY - 1, rightEdge, bottomEdge)
+      canvasDataAsImage.src = cH[cH.length - 1]
+
+
+
+
+
+
+
+
+
+
+
 
 ###
   These functions handle key presses. Under abnormal circumstances,
@@ -3729,6 +3814,7 @@ $(document).ready ()->
       drawToolbars()
 
     if event.keyCode is keysToKeyCodes['space']
+      makeTransparent()
       if tH[tH.length - 1].mode
         tH[tH.length - 1].mode = false
       else

@@ -299,3 +299,17 @@ copeWithSelection = (atZeroZero)->
       cF = []
     canvasDataAsImage.src = cH[cH.length - 1]
 
+#makeTransparent = () ->
+#  if areaSelected
+
+
+
+
+
+
+
+
+
+
+
+
