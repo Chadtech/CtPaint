@@ -52,7 +52,7 @@ keyListeningUnderNormalCircumstance = [
       tH.shift()
       drawToolbars()
       copeWithSelection()
-    if event.keyCode is keysToKeyCodes['b']
+    if event.keyCode is keysToKeyCodes['a']
       verticalColorSwap()
     if event.keyCode is keysToKeyCodes['c']
       copyAction()
@@ -93,6 +93,10 @@ keyListeningUnderNormalCircumstance = [
     if event.keyCode is keysToKeyCodes['backspace']
       if areaSelected
         areaSelected = false
+        canvasDataAsImage = new Image()
+        canvasDataAsImage.onload = ->
+          ctContext.drawImage(canvasDataAsImage,0,0)
+       canvasDataAsImage.src = cH[cH.length - 1]
   (event) ->
     if event.keyCode is keysToKeyCodes['d']
       replaceAction()
