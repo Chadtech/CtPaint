@@ -18,6 +18,7 @@ keyListeningUnderNormalCircumstance = [
       drawToolbars()
       copeWithSelection()
     if event.keyCode is keysToKeyCodes['2']
+      coverUpOldCursor()
       tH.push ctPaintTools[1]
       tH.shift()
       drawToolbars()
