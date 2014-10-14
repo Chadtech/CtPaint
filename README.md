@@ -83,7 +83,7 @@ General to dos and bugs to fix:
 * Zoom blur bug
 * X Make all menu tools cursor pixel compatible
 * X Redraw menu images to highlight the 'n' in 'cancel' since 'c' is not an acceptable short key
-* Draw Selection transparent Icon
+* X Draw Selection transparent Icon
 * Custom Cursor when not zoomed in
 
 ------- LICENSING

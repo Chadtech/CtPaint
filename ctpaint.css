@@ -1,4 +1,4 @@
 #Ctpaint { 
   image-rendering: pixelated;
-  cursor: none;
+  cursor: url("./ctpaintcursor.cur"), auto;
 }
