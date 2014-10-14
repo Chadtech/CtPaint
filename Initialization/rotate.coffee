@@ -146,7 +146,6 @@ rotateFinishUp = ->
   $('#menuDiv').css('top', (window.innerHeight).toString())
   normalCircumstance = true
   menuUp = false
-  positionCorners()
 
 dataToPixels = (imageData) ->
   convertedData = []

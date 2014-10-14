@@ -84,13 +84,11 @@ keyListeningUnderNormalCircumstance = [
         if (-1 * canvasXOffset) < ( (canvasWidth + 10) - (window.innerWidth - toolbarWidth) )
           canvasXOffset -= 3
           positionCanvas()
-          positionCorners()
     if event.keyCode is keysToKeyCodes['left']
       if canvasWidth > (window.innerWidth - toolbarWidth - 5)
         if canvasXOffset < 0
           canvasXOffset += 3
           positionCanvas()
-          positionCorners()
     if event.keyCode is keysToKeyCodes['backspace']
       if areaSelected
         areaSelected = false

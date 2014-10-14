@@ -27,6 +27,5 @@ undoAndRedoSizeComparison = (pastCanvas) ->
     canvasHeight = ctContext.canvas.height
     ctCanvas.style.width = (canvasWidth).toString()+'px'
     ctCanvas.style.height = (canvasHeight).toString()+'px'
-    positionCorners()
 
     

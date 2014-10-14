@@ -1,43 +1,4 @@
 ###
-  PositionCorners figures out where to put the little corner divs at the edges
-  of the canvas. Three of the four corners are just for appearance. Clicking
-  on the lower right one will actually resize the canvas.
-
-  Currently I am debating whether its worth having these at all.
-  They act more like needless decoration than actual visual ques.
-
-  Would a use not actually know they can resize without them?
-  After all, arent modern computer users familiar with clicking 
-  dragging? Dont they have a sense of that capacity?
-###
-positionCorners = ->
-  if cornersVisible
-    $('#corner0Div').css('top',(canvasYPos-1+canvasYOffset).toString())
-    $('#corner0Div').css('left',(canvasXPos-1+canvasXOffset).toString())
-
-    $('#corner1Div').css('top',(canvasYPos-1+canvasYOffset).toString())
-    $('#corner1Div').css('left',(canvasXPos+canvasWidth+1+canvasXOffset).toString())
-
-    $('#corner2Div').css('top',(canvasYPos+canvasHeight+1+canvasYOffset).toString())
-    $('#corner2Div').css('left',(canvasXPos+canvasWidth+1+canvasXOffset).toString())
-
-    $('#corner3Div').css('top',(canvasYPos+canvasHeight+1+canvasYOffset).toString())
-    $('#corner3Div').css('left',(canvasXPos-1+canvasXOffset).toString())
-  
-  else
-    $('#corner0Div').css('top',(window.innerHeight).toString())
-    $('#corner0Div').css('left',(canvasXPos-1+canvasXOffset).toString())
-
-    $('#corner1Div').css('top',(window.innerHeight).toString())
-    $('#corner1Div').css('left',(canvasXPos+canvasWidth+1+canvasXOffset).toString())
-
-    $('#corner2Div').css('top',(window.innerHeight).toString())
-    $('#corner2Div').css('left',(canvasXPos+canvasWidth+1+canvasXOffset).toString())
-
-    $('#corner3Div').css('top',(window.innerHeight).toString())
-    $('#corner3Div').css('left',(canvasXPos-1+canvasXOffset).toString())  
-
-###
   Figure out where to put the canvas
 ###
 positionCanvas = ->
@@ -55,7 +16,6 @@ prepareCanvas = ->
   ctContext.fillRect(0,0,canvasWidth,canvasHeight)
 
   positionCanvas()
-  positionCorners()
 
 ###
   Position the menu div. The menu is un-(de?)-initialized

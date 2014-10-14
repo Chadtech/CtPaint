@@ -85,7 +85,6 @@ mouseExit = false
 draggingBorder = false
 
 zoomActivate = false
-cornersVisible = true
 
 ###
   These variables are all relevant to the selection process, 
@@ -445,30 +444,6 @@ toolbar1sImage1.src = 'assets\\toolbar11.png'
 ###
 backgroundCanvas = document.getElementById('background')
 backgroundContext = backgroundCanvas.getContext('2d')
-
-###
-  The corners are the four small dots at the corners of the main canvas. 
-  They give an impression of boundary, and resizeability. 
-  One of them can be clicked on to resize the canvas, which is the 
-  lower right one.
-###
-corner0Canvas = document.getElementById('corner0')
-corner0Context = corner0Canvas.getContext('2d')
-corner1Canvas = document.getElementById('corner1')
-corner1Context = corner1Canvas.getContext('2d')
-corner2Canvas = document.getElementById('corner2')
-corner2Context = corner2Canvas.getContext('2d')
-corner3Canvas = document.getElementById('corner3')
-corner3Context = corner3Canvas.getContext('2d')
-
-corner0Context.canvas.width = 1
-corner0Context.canvas.height = 1
-corner1Context.canvas.width = 1
-corner1Context.canvas.height = 1
-corner2Context.canvas.width = 1
-corner2Context.canvas.height = 1
-corner3Context.canvas.width = 1
-corner3Context.canvas.height = 1
 
 ###
   The menucanvas is a canvas that displays whatever menu is currently active. 
@@ -1601,7 +1576,6 @@ rotateFinishUp = ->
   $('#menuDiv').css('top', (window.innerHeight).toString())
   normalCircumstance = true
   menuUp = false
-  positionCorners()
 
 dataToPixels = (imageData) ->
   convertedData = []
@@ -2114,7 +2088,6 @@ scale = ->
     canvasHeight = ctContext.canvas.height
     ctCanvas.style.width = (canvasWidth).toString()+'px'
     ctCanvas.style.height = (canvasHeight).toString()+'px'
-    positionCorners()
 
     # Turn the scaled canvass pixels into data
     scaledCanvasAsData = ctContext.getImageData( 0, 0, scaledWidth, scaledHeight)
@@ -2334,7 +2307,6 @@ resize = ->
   canvasHeight = ctContext.canvas.height
   ctCanvas.style.width = (canvasWidth).toString()+'px'
   ctCanvas.style.height = (canvasHeight).toString()+'px'
-  positionCorners()
   tH.pop()
   drawToolbars()
 
@@ -2603,7 +2575,6 @@ undoAndRedoSizeComparison = (pastCanvas) ->
     canvasHeight = ctContext.canvas.height
     ctCanvas.style.width = (canvasWidth).toString()+'px'
     ctCanvas.style.height = (canvasHeight).toString()+'px'
-    positionCorners()
 
     
 redoAction = ->
@@ -2634,45 +2605,6 @@ redoAction = ->
 
   
 ###
-  PositionCorners figures out where to put the little corner divs at the edges
-  of the canvas. Three of the four corners are just for appearance. Clicking
-  on the lower right one will actually resize the canvas.
-
-  Currently I am debating whether its worth having these at all.
-  They act more like needless decoration than actual visual ques.
-
-  Would a use not actually know they can resize without them?
-  After all, arent modern computer users familiar with clicking 
-  dragging? Dont they have a sense of that capacity?
-###
-positionCorners = ->
-  if cornersVisible
-    $('#corner0Div').css('top',(canvasYPos-1+canvasYOffset).toString())
-    $('#corner0Div').css('left',(canvasXPos-1+canvasXOffset).toString())
-
-    $('#corner1Div').css('top',(canvasYPos-1+canvasYOffset).toString())
-    $('#corner1Div').css('left',(canvasXPos+canvasWidth+1+canvasXOffset).toString())
-
-    $('#corner2Div').css('top',(canvasYPos+canvasHeight+1+canvasYOffset).toString())
-    $('#corner2Div').css('left',(canvasXPos+canvasWidth+1+canvasXOffset).toString())
-
-    $('#corner3Div').css('top',(canvasYPos+canvasHeight+1+canvasYOffset).toString())
-    $('#corner3Div').css('left',(canvasXPos-1+canvasXOffset).toString())
-  
-  else
-    $('#corner0Div').css('top',(window.innerHeight).toString())
-    $('#corner0Div').css('left',(canvasXPos-1+canvasXOffset).toString())
-
-    $('#corner1Div').css('top',(window.innerHeight).toString())
-    $('#corner1Div').css('left',(canvasXPos+canvasWidth+1+canvasXOffset).toString())
-
-    $('#corner2Div').css('top',(window.innerHeight).toString())
-    $('#corner2Div').css('left',(canvasXPos+canvasWidth+1+canvasXOffset).toString())
-
-    $('#corner3Div').css('top',(window.innerHeight).toString())
-    $('#corner3Div').css('left',(canvasXPos-1+canvasXOffset).toString())  
-
-###
   Figure out where to put the canvas
 ###
 positionCanvas = ->
@@ -2690,7 +2622,6 @@ prepareCanvas = ->
   ctContext.fillRect(0,0,canvasWidth,canvasHeight)
 
   positionCanvas()
-  positionCorners()
 
 ###
   Position the menu div. The menu is un-(de?)-initialized
@@ -3048,13 +2979,11 @@ keyListeningUnderNormalCircumstance = [
         if (-1 * canvasXOffset) < ( (canvasWidth + 10) - (window.innerWidth - toolbarWidth) )
           canvasXOffset -= 3
           positionCanvas()
-          positionCorners()
     if event.keyCode is keysToKeyCodes['left']
       if canvasWidth > (window.innerWidth - toolbarWidth - 5)
         if canvasXOffset < 0
           canvasXOffset += 3
           positionCanvas()
-          positionCorners()
     if event.keyCode is keysToKeyCodes['backspace']
       if areaSelected
         areaSelected = false
@@ -3121,14 +3050,11 @@ zoomPosture = [
     getMousePositionOnCanvas(event)
     if zoomActivate
       zoomActivate = false
-      cornersVisible = true
       ctCanvas.style.width = (canvasWidth).toString()+'px'
       ctCanvas.style.height = (canvasHeight).toString()+'px'
     else
       zoomActivate = true
-      cornersVisible = false
       scaleCanvasBigger( 2 ** tH[tH.length - 1].magnitude )
-    positionCorners()
     drawToolbars()
   () ->
     mousePressed = false
@@ -3752,14 +3678,12 @@ $(document).ready ()->
         if canvasYOffset < 0 
           canvasYOffset += 3
           positionCanvas()
-          positionCorners()
 
     if event.keyCode is keysToKeyCodes['down']
       if canvasHeight > (window.innerHeight - toolbarHeight - 5)
         if (-1 * canvasYOffset) < ((canvasHeight + 10) - (window.innerHeight - toolbarHeight))
           canvasYOffset-=3
           positionCanvas()
-          positionCorners()
 
     if event.keyCode is keysToKeyCodes['alt']
       toolViewMode++
@@ -3814,7 +3738,6 @@ $(document).ready ()->
     else
       $('#menuDiv').css('top', (window.innerHeight).toString())
     positionCanvas()
-    positionCorners()
     setCanvasSizes()
     placeToolbars()
     drawToolbars()
@@ -3866,7 +3789,6 @@ $(document).ready ()->
       canvasHeight = ctContext.canvas.height
       ctCanvas.style.width = (canvasWidth).toString()+'px'
       ctCanvas.style.height = (canvasHeight).toString()+'px'
-      positionCorners()
       $('#wholeWindow').css 'cursor', 'default'   
 
   $('#CtPaint').mousemove (event)->
@@ -3966,7 +3888,6 @@ $(document).ready ()->
             ctContext.drawImage(imageToOpen, 0, 0)
             cH.push ctCanvas.toDataURL()
             cH.shift()
-            positionCorners()
         imageToOpen.src = imageLoaded.result
       imageLoaded.readAsDataURL(theFile)
       console.log 'C'

@@ -85,7 +85,6 @@ mouseExit = false
 draggingBorder = false
 
 zoomActivate = false
-cornersVisible = true
 
 ###
   These variables are all relevant to the selection process, 

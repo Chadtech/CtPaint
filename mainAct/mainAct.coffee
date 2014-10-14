@@ -28,14 +28,12 @@ $(document).ready ()->
         if canvasYOffset < 0 
           canvasYOffset += 3
           positionCanvas()
-          positionCorners()
 
     if event.keyCode is keysToKeyCodes['down']
       if canvasHeight > (window.innerHeight - toolbarHeight - 5)
         if (-1 * canvasYOffset) < ((canvasHeight + 10) - (window.innerHeight - toolbarHeight))
           canvasYOffset-=3
           positionCanvas()
-          positionCorners()
 
     if event.keyCode is keysToKeyCodes['alt']
       toolViewMode++
@@ -90,7 +88,6 @@ $(document).ready ()->
     else
       $('#menuDiv').css('top', (window.innerHeight).toString())
     positionCanvas()
-    positionCorners()
     setCanvasSizes()
     placeToolbars()
     drawToolbars()
@@ -142,7 +139,6 @@ $(document).ready ()->
       canvasHeight = ctContext.canvas.height
       ctCanvas.style.width = (canvasWidth).toString()+'px'
       ctCanvas.style.height = (canvasHeight).toString()+'px'
-      positionCorners()
       $('#wholeWindow').css 'cursor', 'default'   
 
   $('#CtPaint').mousemove (event)->
@@ -242,7 +238,6 @@ $(document).ready ()->
             ctContext.drawImage(imageToOpen, 0, 0)
             cH.push ctCanvas.toDataURL()
             cH.shift()
-            positionCorners()
         imageToOpen.src = imageLoaded.result
       imageLoaded.readAsDataURL(theFile)
       console.log 'C'
