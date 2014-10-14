@@ -211,9 +211,10 @@ while fancyToolIndex < fancyResponsiveTools.length
 
 # toolsWhichCanBeSolid are tools that when their mode is true, draw a filled version
 # instead of an outline.
-toolsWhichCanBeSolid = ['square', 'circle']
+toolsWhichCanBeSolid = [ 'select', 'square', 'circle' ]
 
 solidIcons =
+  'select': [ new Image(), new Image() ]
   'square': [ new Image(), new Image() ]
   'circle': [ new Image(), new Image() ]
 

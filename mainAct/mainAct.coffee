@@ -43,7 +43,7 @@ $(document).ready ()->
       drawToolbars()
 
     if event.keyCode is keysToKeyCodes['space']
-      makeTransparent()
+      #makeTransparent()
       if tH[tH.length - 1].mode
         tH[tH.length - 1].mode = false
       else

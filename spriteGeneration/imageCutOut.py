@@ -164,6 +164,16 @@ for iteration in range(4):
   icon = sheet.crop((514,(iteration*24),514+24, 24+(iteration*24)))
   icon.save('u'+'000'+str(iteration)+'0.PNG','png')
 
+#############################################
+###     Select transparency, lit up and plain
+#############################################
+
+icon = sheet.crop((538, 0, 538+24, 24))
+icon.save('u'+'01200.PNG','png')
+
+icon = sheet.crop((562, 0, 562+24, 24))
+icon.save('u'+'01100.PNG','png')
+
 # Non lit up menu, not cropped into smaller icons, 
 # but pasted as a single image on the tool bar
 sheet.crop((0,0,49,sheetHeight)).save('toolbar0u.PNG','png')

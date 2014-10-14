@@ -2805,6 +2805,19 @@ drawToolbars = ->
         iconY = ctPaintTools[toolsToNumbers['zoom']].clickRegion[1]
         toolbar0Context.drawImage( theImage, iconX, iconY)
 
+   if tH[tH.length - 1].name is 'select'
+      if tH[tH.length - 1].mode
+        theImage = solidIcons['select'][1]
+        iconX = tH[tH.length - 1].clickRegion[0]
+        iconY = tH[tH.length - 1].clickRegion[1]
+        toolbar0Context.drawImage( theImage, iconX, iconY)
+    else
+      if ctPaintTools[toolsToNumbers['select']].mode
+        theImage = solidIcons['select'][0]
+        iconX = ctPaintTools[toolsToNumbers['select']].clickRegion[0]
+        iconY = ctPaintTools[toolsToNumbers['select']].clickRegion[1]
+        toolbar0Context.drawImage( theImage, iconX, iconY)
+
     if tH[tH.length - 1].name is 'line'
       theImage = fancyResponsiveIcons['line'][1][tH[tH.length - 1].magnitude - 1]
       iconX = tH[tH.length - 1].clickRegion[0]
@@ -3684,9 +3697,10 @@ while fancyToolIndex < fancyResponsiveTools.length
 
 # toolsWhichCanBeSolid are tools that when their mode is true, draw a filled version
 # instead of an outline.
-toolsWhichCanBeSolid = ['square', 'circle']
+toolsWhichCanBeSolid = [ 'select', 'square', 'circle' ]
 
 solidIcons =
+  'select': [ new Image(), new Image() ]
   'square': [ new Image(), new Image() ]
   'circle': [ new Image(), new Image() ]
 
@@ -3748,7 +3762,7 @@ $(document).ready ()->
       drawToolbars()
 
     if event.keyCode is keysToKeyCodes['space']
-      makeTransparent()
+      #makeTransparent()
       if tH[tH.length - 1].mode
         tH[tH.length - 1].mode = false
       else
