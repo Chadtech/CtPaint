@@ -85,7 +85,7 @@ General to dos and bugs to fix:
 * X Redraw menu images to highlight the 'n' in 'cancel' since 'c' is not an acceptable short key
 * X Draw Selection transparent Icon
 * X Custom Cursor when not zoomed in
-* Select area cursor pixel update bug (it reads the pixel of the selected area when updating the old location)
+* X Select area cursor pixel update bug (it reads the pixel of the selected area when updating the old location)
 
 ------- LICENSING
 

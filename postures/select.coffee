@@ -24,7 +24,6 @@ selectPosture = [
         canvasDataAsImage.src = cH[cH.length - 1]
       else
         drawInformation( boxInformation )
-        updateCursor()
     else
       if mousePressed
         getMousePositionOnCanvas(event)
@@ -47,7 +46,6 @@ selectPosture = [
         canvasDataAsImage.src = cH[cH.length - 1]
       else
         drawInformation( boxInformation )
-        updateCursor()
 
   # Mouse down
   () ->
