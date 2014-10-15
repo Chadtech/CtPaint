@@ -14,7 +14,7 @@ colorModify = false
   deep functionality
 ###
 colorMenuImage = new Image()
-colorMenuImage.src = 'assets\\t00.png'
+colorMenuImage.src = 'assets/t00.png'
 
 ###
   defined as an index number once a color has been shift clicked

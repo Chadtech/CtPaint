@@ -1,12 +1,12 @@
 circlePosture = [
   # Mouse Move
-  () ->
+  (event) ->
     if mousePressed
       getMousePositionOnCanvas(event)
       calculatedRadius = Math.pow(Math.pow(xSpot - oldX, 2) + Math.pow(ySpot - oldY, 2), 0.5)
       calculatedRadius = Math.round(calculatedRadius)
       circleInformation = 'radius = ' + (calculatedRadius + 2).toString()
-      drawInformation( circleInformation )
+      drawInformation( event, circleInformation )
       canvasDataAsImage = new Image()
       canvasDataAsImage.onload = ->
         ctContext.drawImage(canvasDataAsImage, 0, 0)
@@ -14,18 +14,18 @@ circlePosture = [
         putPixel( ctContext, colorOfCursorPixel, xSpot, ySpot )
       canvasDataAsImage.src = cH[cH.length - 1]
     else
-      drawInformation()
-      updateCursor()
+      drawInformation(event)
+      updateCursor(event)
 
   # Mouse Down
-  () ->
+  (event) ->
     mousePressed = true
     getMousePositionOnCanvas(event)
     oldX = xSpot
     oldY = ySpot
 
   # Mouse Up
-  () ->
+  (event) ->
     if mousePressed
       calculatedRadius = Math.pow(Math.pow(xSpot - oldX, 2) + Math.pow(ySpot - oldY, 2), 0.5)
       calculatedRadius = Math.round(calculatedRadius)
@@ -37,6 +37,6 @@ circlePosture = [
       historyUpdate()
 
   # Mouse Exit
-  () ->
+  (event) ->
 ]
 

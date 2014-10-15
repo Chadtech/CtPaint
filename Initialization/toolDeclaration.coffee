@@ -75,8 +75,8 @@ while iteration < numberOfTools
     menuImage: toolMenuImages[iteration]
     toolsAction: ->
       console.log 'did a '+toolNames[@number]
-  ctPaintTools[iteration].pressedImage[0].src = 'assets\\u'+zeroPadder(iteration,2)+'000.PNG'
-  ctPaintTools[iteration].pressedImage[1].src = 'assets\\v'+zeroPadder(iteration,2)+'000.PNG'
+  ctPaintTools[iteration].pressedImage[0].src = 'assets/u'+zeroPadder(iteration,2)+'000.PNG'
+  ctPaintTools[iteration].pressedImage[1].src = 'assets/v'+zeroPadder(iteration,2)+'000.PNG'
   iteration++
 
 ctPaintTools[0].posture = zoomPosture
@@ -115,31 +115,31 @@ ctPaintTools[19].toolsAction = cursorColorAction
 ctPaintTools[20].toolsAction = undoAction
 ctPaintTools[21].toolsAction = redoAction
 
-ctPaintTools[8].menuImage.src = 'assets\\t01.png'
-ctPaintTools[11].menuImage.src = 'assets\\t02.png'
-ctPaintTools[9].menuImage.src = 'assets\\t04.png'
-ctPaintTools[12].menuImage.src = 'assets\\t05.png'
-ctPaintTools[13].menuImage.src = 'assets\\t03.png'
+ctPaintTools[8].menuImage.src = 'assets/t01.png'
+ctPaintTools[11].menuImage.src = 'assets/t02.png'
+ctPaintTools[9].menuImage.src = 'assets/t04.png'
+ctPaintTools[12].menuImage.src = 'assets/t05.png'
+ctPaintTools[13].menuImage.src = 'assets/t03.png'
 
 enterLitUp = new Image()
 cancelLitUp = new Image()
 
-enterLitUp.src = 'assets\\tEnter.png'
-cancelLitUp.src = 'assets\\tCancel.png'
+enterLitUp.src = 'assets/tEnter.png'
+cancelLitUp.src = 'assets/tCancel.png'
 
 xLitUp = new Image()
 yLitUp = new Image()
 
-xLitUp.src = 'assets\\t11.png'
-yLitUp.src = 'assets\\t21.png'
+xLitUp.src = 'assets/t11.png'
+yLitUp.src = 'assets/t21.png'
 
 ninetyDegreesLitUp = new Image()
 oneHundredAndEightyDegreesLitUp = new Image()
 twoHundredAndSeventyDegreesLitUp = new Image()
 
-ninetyDegreesLitUp.src = 'assets\\t14.png'
-oneHundredAndEightyDegreesLitUp.src = 'assets\\t24.png'
-twoHundredAndSeventyDegreesLitUp.src = 'assets\\t34.png'
+ninetyDegreesLitUp.src = 'assets/t14.png'
+oneHundredAndEightyDegreesLitUp.src = 'assets/t24.png'
+twoHundredAndSeventyDegreesLitUp.src = 'assets/t34.png'
 
 toolsToNumbers =
   'zoom':0
@@ -195,13 +195,13 @@ while fancyToolIndex < fancyResponsiveTools.length
     fancyResponsiveIcons[fancyResponsiveTools[fancyToolIndex]][1].push new Image()
 
     # source the icon for non selected tool fancyToolIndex of magnitude fancyIconIndex
-    imageSource = 'assets\\u' + zeroPadder(toolsToNumbers[fancyResponsiveTools[fancyToolIndex]], 2)
+    imageSource = 'assets/u' + zeroPadder(toolsToNumbers[fancyResponsiveTools[fancyToolIndex]], 2)
     imageSource += '00' + fancyIconIndex.toString() + '.PNG'
     fancyResponsiveIcons[fancyResponsiveTools[fancyToolIndex]][0][fancyIconIndex].src =
       imageSource
 
     # source the icon for selected tool fancyToolIndex of magnitude fancyIconIndex
-    imageSource = 'assets\\u'+zeroPadder(toolsToNumbers[fancyResponsiveTools[fancyToolIndex]], 2)
+    imageSource = 'assets/u'+zeroPadder(toolsToNumbers[fancyResponsiveTools[fancyToolIndex]], 2)
     imageSource += '0' + fancyIconIndex.toString() + '0.PNG'
     fancyResponsiveIcons[fancyResponsiveTools[fancyToolIndex]][1][fancyIconIndex].src =
       imageSource
@@ -220,11 +220,11 @@ solidIcons =
 
 solidToolIndex = 0
 while solidToolIndex < toolsWhichCanBeSolid.length
-  imageSource = 'assets\\u' + zeroPadder(toolsToNumbers[ toolsWhichCanBeSolid[solidToolIndex] ], 2)
+  imageSource = 'assets/u' + zeroPadder(toolsToNumbers[ toolsWhichCanBeSolid[solidToolIndex] ], 2)
   imageSource += '100.PNG'
   solidIcons[toolsWhichCanBeSolid[solidToolIndex]][0].src = imageSource
 
-  imageSource = 'assets\\u' + zeroPadder(toolsToNumbers[ toolsWhichCanBeSolid[solidToolIndex] ], 2)
+  imageSource = 'assets/u' + zeroPadder(toolsToNumbers[ toolsWhichCanBeSolid[solidToolIndex] ], 2)
   imageSource += '200.PNG'
   solidIcons[toolsWhichCanBeSolid[solidToolIndex]][1].src = imageSource
 

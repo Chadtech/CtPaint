@@ -1,8 +1,8 @@
 zoomPosture = [
-  () ->
-    drawInformation()
-    updateCursor()
-  () ->
+  (event) ->
+    drawInformation(event)
+    updateCursor(event)
+  (event) ->
     mousePressed = true
     getMousePositionOnCanvas(event)
     if zoomActivate
@@ -13,8 +13,8 @@ zoomPosture = [
       zoomActivate = true
       scaleCanvasBigger( 2 ** tH[tH.length - 1].magnitude )
     drawToolbars()
-  () ->
+  (event) ->
     mousePressed = false
-  () ->
+  (event) ->
 ]
 

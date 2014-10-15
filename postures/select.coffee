@@ -1,6 +1,6 @@
 selectPosture = [
   # Mouse Move
-  () ->
+  (event) ->
     if not areaSelected
       if mousePressed
         getMousePositionOnCanvas(event)
@@ -11,7 +11,7 @@ selectPosture = [
         boxInformation += 'px x '
         boxInformation += (Math.abs(ySpot - oldY) + 1).toString()
         boxInformation += 'px'
-        drawInformation( boxInformation )
+        drawInformation( event, boxInformation )
 
         originX = sortedXs[0] - 1
         originY = sortedYs[0] - 1
@@ -23,7 +23,7 @@ selectPosture = [
           drawSelectBox(ctContext, originX, originY, otherSideX, otherSideY)
         canvasDataAsImage.src = cH[cH.length - 1]
       else
-        drawInformation( boxInformation )
+        drawInformation( event, boxInformation )
     else
       if mousePressed
         getMousePositionOnCanvas(event)
@@ -45,10 +45,10 @@ selectPosture = [
           drawSelectBox(ctContext, gripX - 1, gripY - 1, rightEdge, bottomEdge)
         canvasDataAsImage.src = cH[cH.length - 1]
       else
-        drawInformation( boxInformation )
+        drawInformation( event, boxInformation )
 
   # Mouse down
-  () ->
+  (event) ->
     mousePressed = true
     if not areaSelected
       getMousePositionOnCanvas(event)
@@ -77,7 +77,7 @@ selectPosture = [
         canvasDataAsImage.src = cH[cH.length - 1]
 
   # Mouse up
-  () ->
+  (event) ->
     mousePressed = false
     if not areaSelected
       sortedXs = [ Math.min(xSpot, oldX), Math.max(xSpot, oldX) ]
@@ -105,6 +105,6 @@ selectPosture = [
     else
       selectionX = gripX
       selectionY = gripY
-  () ->
+  (event) ->
 ]
 

@@ -1,5 +1,5 @@
-$(document).ready ()->
-  setTimeout( ()->
+$(document).ready (event)->
+  setTimeout( (event)->
     setCanvasSizes()
     prepareCanvas()
     placeToolbars()
@@ -77,7 +77,7 @@ $(document).ready ()->
   $('#menuDiv').mouseup (event) ->
     whatSortOfMouseListening( mouseListeningUnderAbnormalCircumstance[1]( event ), false)
 
-  $(window).resize ()->
+  $(window).resize (event)->
     if canvasWidth < (window.innerWidth - toolbarWidth - 5)
       canvasXOffset = 0
     if canvasHeight < (window.innerHeight - toolbarHeight - 5)
@@ -92,7 +92,7 @@ $(document).ready ()->
     placeToolbars()
     drawToolbars()
 
-  $(window).scroll ()->
+  $(window).scroll (event)->
     window.scroll(0,0)
 
   window.onmousemove = () ->
@@ -142,17 +142,17 @@ $(document).ready ()->
       $('#wholeWindow').css 'cursor', 'default'   
 
   $('#CtPaint').mousemove (event)->
-    tH[tH.length - 1].posture[0]()
+    tH[tH.length - 1].posture[0](event)
 
   $('#CtPaint').mousedown (event)->
-    tH[tH.length - 1].posture[1]()
+    tH[tH.length - 1].posture[1](event)
 
   $('#CtPaint').mouseup (event)->
-    tH[tH.length - 1].posture[2]()
+    tH[tH.length - 1].posture[2](event)
 
-  $('#CtPaint').mouseleave ()->
+  $('#CtPaint').mouseleave (event)->
     coverUpOldCursor() 
-    tH[tH.length - 1].posture[3]() 
+    tH[tH.length - 1].posture[3](event) 
     toolbar1Context.drawImage(toolbar1sImage1,188,3)  
 
   $('#toolbar0').mousedown (event)->
@@ -179,7 +179,7 @@ $(document).ready ()->
     information = getColorValue(toolbar1Context, tXSpot, tYSpot).toUpperCase() + ', (#,#) '
     drawStringAsCommandPrompt(toolbar1Context, information, 0, 191, 12)
 
-  $('#toolbar1').mouseleave ()->  
+  $('#toolbar1').mouseleave (event)->  
     toolbar1Context.drawImage(toolbar1sImage1,188,3)  
 
   $('#toolbar1').mousedown (event)->

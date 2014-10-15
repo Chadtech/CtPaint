@@ -115,7 +115,7 @@ while stringOfCharactersIndex < stringOfCharacters.length
     new Image()]
   imageVariety = 0
   while imageVariety < 3
-    asset = 'assets\\' + varietyCodes[imageVariety]+zeroPadder(stringOfCharactersIndex,4)+'.PNG'
+    asset = 'assets/' + varietyCodes[imageVariety]+zeroPadder(stringOfCharactersIndex,4)+'.PNG'
     stringsToGlyphs[stringOfCharacters[stringOfCharactersIndex]][imageVariety].src = asset
     imageVariety++
   stringOfCharactersIndex++

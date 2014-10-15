@@ -203,7 +203,7 @@ drawToolbars = ->
     toolbar1Context.fillRect(52 + (17 * (paletteIndex // 2)), 4 + (17 * (paletteIndex % 2)), 14, 14)
     paletteIndex++
 
-updateCursor = ->
+updateCursor = (event)->
   coverUpOldCursor()
   cursorX = event.clientX - (toolbarWidth + 5 - canvasXOffset)
   cursorY = event.clientY - 5 - canvasYOffset
@@ -225,7 +225,7 @@ refreshCursor = ( particularColor ) ->
   else
     putPixel( ctContext, colorOfCursorPixel, cursorX, cursorY )
 
-drawInformation = ( extraInformation ) ->
+drawInformation = ( event, extraInformation ) ->
   toolbar1Context.drawImage(toolbar1sImage1,188,3)  
   if extraInformation is undefined
     extraInformation = ''

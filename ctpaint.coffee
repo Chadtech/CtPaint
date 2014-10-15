@@ -195,7 +195,7 @@ colorModify = false
   deep functionality
 ###
 colorMenuImage = new Image()
-colorMenuImage.src = 'assets\\t00.png'
+colorMenuImage.src = 'assets/t00.png'
 
 ###
   defined as an index number once a color has been shift clicked
@@ -425,8 +425,8 @@ toolbar0Context = toolbar0Canvas.getContext('2d')
   the other the shortkey to that tool
 ###
 toolbar0sImages = [new Image(), new Image()]
-toolbar0sImages[0].src = 'assets\\toolbar0v.PNG'
-toolbar0sImages[1].src = 'assets\\toolbar0u.PNG'
+toolbar0sImages[0].src = 'assets/toolbar0v.PNG'
+toolbar0sImages[1].src = 'assets/toolbar0u.PNG'
 
 ###
   toolbar1 is the horizontal toolbar. It has two images. The first of the color palette and color 
@@ -435,9 +435,9 @@ toolbar0sImages[1].src = 'assets\\toolbar0u.PNG'
 toolbar1Canvas = document.getElementById('toolbar1')
 toolbar1Context = toolbar1Canvas.getContext('2d')
 toolbar1sImage0 = new Image()
-toolbar1sImage0.src = 'assets\\toolbar10.png'
+toolbar1sImage0.src = 'assets/toolbar10.png'
 toolbar1sImage1 = new Image()
-toolbar1sImage1.src = 'assets\\toolbar11.png'
+toolbar1sImage1.src = 'assets/toolbar11.png'
 
 ###
   The background canvas is just a gray expanse behind everything
@@ -571,7 +571,7 @@ while stringOfCharactersIndex < stringOfCharacters.length
     new Image()]
   imageVariety = 0
   while imageVariety < 3
-    asset = 'assets\\' + varietyCodes[imageVariety]+zeroPadder(stringOfCharactersIndex,4)+'.PNG'
+    asset = 'assets/' + varietyCodes[imageVariety]+zeroPadder(stringOfCharactersIndex,4)+'.PNG'
     stringsToGlyphs[stringOfCharacters[stringOfCharactersIndex]][imageVariety].src = asset
     imageVariety++
   stringOfCharactersIndex++
@@ -2809,7 +2809,7 @@ drawToolbars = ->
     toolbar1Context.fillRect(52 + (17 * (paletteIndex // 2)), 4 + (17 * (paletteIndex % 2)), 14, 14)
     paletteIndex++
 
-updateCursor = ->
+updateCursor = (event)->
   coverUpOldCursor()
   cursorX = event.clientX - (toolbarWidth + 5 - canvasXOffset)
   cursorY = event.clientY - 5 - canvasYOffset
@@ -2831,7 +2831,7 @@ refreshCursor = ( particularColor ) ->
   else
     putPixel( ctContext, colorOfCursorPixel, cursorX, cursorY )
 
-drawInformation = ( extraInformation ) ->
+drawInformation = ( event, extraInformation ) ->
   toolbar1Context.drawImage(toolbar1sImage1,188,3)  
   if extraInformation is undefined
     extraInformation = ''
@@ -3042,10 +3042,10 @@ mouseListeningUnderAbnormalCircumstance = [
 
 
 zoomPosture = [
-  () ->
-    drawInformation()
-    updateCursor()
-  () ->
+  (event) ->
+    drawInformation(event)
+    updateCursor(event)
+  (event) ->
     mousePressed = true
     getMousePositionOnCanvas(event)
     if zoomActivate
@@ -3056,15 +3056,15 @@ zoomPosture = [
       zoomActivate = true
       scaleCanvasBigger( 2 ** tH[tH.length - 1].magnitude )
     drawToolbars()
-  () ->
+  (event) ->
     mousePressed = false
-  () ->
+  (event) ->
 ]
 
 
 selectPosture = [
   # Mouse Move
-  () ->
+  (event) ->
     if not areaSelected
       if mousePressed
         getMousePositionOnCanvas(event)
@@ -3075,7 +3075,7 @@ selectPosture = [
         boxInformation += 'px x '
         boxInformation += (Math.abs(ySpot - oldY) + 1).toString()
         boxInformation += 'px'
-        drawInformation( boxInformation )
+        drawInformation( event, boxInformation )
 
         originX = sortedXs[0] - 1
         originY = sortedYs[0] - 1
@@ -3087,7 +3087,7 @@ selectPosture = [
           drawSelectBox(ctContext, originX, originY, otherSideX, otherSideY)
         canvasDataAsImage.src = cH[cH.length - 1]
       else
-        drawInformation( boxInformation )
+        drawInformation( event, boxInformation )
     else
       if mousePressed
         getMousePositionOnCanvas(event)
@@ -3109,10 +3109,10 @@ selectPosture = [
           drawSelectBox(ctContext, gripX - 1, gripY - 1, rightEdge, bottomEdge)
         canvasDataAsImage.src = cH[cH.length - 1]
       else
-        drawInformation( boxInformation )
+        drawInformation( event, boxInformation )
 
   # Mouse down
-  () ->
+  (event) ->
     mousePressed = true
     if not areaSelected
       getMousePositionOnCanvas(event)
@@ -3141,7 +3141,7 @@ selectPosture = [
         canvasDataAsImage.src = cH[cH.length - 1]
 
   # Mouse up
-  () ->
+  (event) ->
     mousePressed = false
     if not areaSelected
       sortedXs = [ Math.min(xSpot, oldX), Math.max(xSpot, oldX) ]
@@ -3169,22 +3169,22 @@ selectPosture = [
     else
       selectionX = gripX
       selectionY = gripY
-  () ->
+  (event) ->
 ]
 
 
 samplePosture = [
   # Mouse Move
-  () ->
-    drawInformation()
-    updateCursor()
+  (event) ->
+    drawInformation(event)
+    updateCursor(event)
 
   # Mouse Down
-  () ->
+  (event) ->
     mousePressed = true
 
   # Mouse Up
-  () ->
+  (event) ->
     mousePressed = false
     getMousePositionOnCanvas(event)
     coverUpOldCursor()
@@ -3195,30 +3195,30 @@ samplePosture = [
     drawToolbars()
 
   # Mouse Exit
-  () ->
+  (event) ->
 ]
 
 
 fillPosture = [
-  () ->
-    drawInformation()
-    updateCursor()
-  () ->
+  (event) ->
+    drawInformation(event)
+    updateCursor(event)
+  (event) ->
     mousePressed = true
     getMousePositionOnCanvas(event)
     coverUpOldCursor()
     floodFill(ctCanvas, ctContext, colorSwatches[0], xSpot, ySpot)
     updateOldCursor()
-  () ->
+  (event) ->
     mousePressed = false
     historyUpdate()
-  () ->
+  (event) ->
 ]
 
 
 squarePosture = [
   # Mouse Move
-  () ->
+  (event) ->
     if mousePressed
       getMousePositionOnCanvas(event)
 
@@ -3226,7 +3226,7 @@ squarePosture = [
       boxInformation += 'px x '
       boxInformation += (Math.abs(ySpot - oldY) + 1).toString()
       boxInformation += 'px'
-      drawInformation( boxInformation )
+      drawInformation( event, boxInformation )
 
       canvasDataAsImage = new Image()
       canvasDataAsImage.onload = ->
@@ -3235,11 +3235,11 @@ squarePosture = [
         putPixel( ctContext, colorOfCursorPixel, xSpot, ySpot )
       canvasDataAsImage.src = cH[cH.length - 1]
     else
-      drawInformation()
-      updateCursor()
+      drawInformation(event)
+      updateCursor(event)
 
   # Mouse Down
-  () ->
+  (event) ->
     if not mousePressed
       mousePressed = true
       getMousePositionOnCanvas(event)
@@ -3247,7 +3247,7 @@ squarePosture = [
       oldY = ySpot
 
   # Mouse Up
-  () ->
+  (event) ->
     if mousePressed
       mousePressed = false
       squareAction(ctContext, colorSwatches[0], oldX, oldY, xSpot, ySpot)
@@ -3255,19 +3255,19 @@ squarePosture = [
       historyUpdate()
 
   # Mouse Exit
-  () ->
+  (event) ->
 ]
 
 
 circlePosture = [
   # Mouse Move
-  () ->
+  (event) ->
     if mousePressed
       getMousePositionOnCanvas(event)
       calculatedRadius = Math.pow(Math.pow(xSpot - oldX, 2) + Math.pow(ySpot - oldY, 2), 0.5)
       calculatedRadius = Math.round(calculatedRadius)
       circleInformation = 'radius = ' + (calculatedRadius + 2).toString()
-      drawInformation( circleInformation )
+      drawInformation( event, circleInformation )
       canvasDataAsImage = new Image()
       canvasDataAsImage.onload = ->
         ctContext.drawImage(canvasDataAsImage, 0, 0)
@@ -3275,18 +3275,18 @@ circlePosture = [
         putPixel( ctContext, colorOfCursorPixel, xSpot, ySpot )
       canvasDataAsImage.src = cH[cH.length - 1]
     else
-      drawInformation()
-      updateCursor()
+      drawInformation(event)
+      updateCursor(event)
 
   # Mouse Down
-  () ->
+  (event) ->
     mousePressed = true
     getMousePositionOnCanvas(event)
     oldX = xSpot
     oldY = ySpot
 
   # Mouse Up
-  () ->
+  (event) ->
     if mousePressed
       calculatedRadius = Math.pow(Math.pow(xSpot - oldX, 2) + Math.pow(ySpot - oldY, 2), 0.5)
       calculatedRadius = Math.round(calculatedRadius)
@@ -3298,19 +3298,19 @@ circlePosture = [
       historyUpdate()
 
   # Mouse Exit
-  () ->
+  (event) ->
 ]
 
 
 linePosture = [
-  () ->
+  (event) ->
     # Mouse move
     if mousePressed
       getMousePositionOnCanvas(event)
       widthToShow = (Math.abs(oldX - xSpot) + 1).toString()
       heightToShow = (Math.abs(oldY - ySpot) + 1).toString()
       lineInformation = widthToShow + 'px x ' + heightToShow + 'px'
-      drawInformation( lineInformation )
+      drawInformation( event, lineInformation )
       canvasDataAsImage = new Image()
       canvasDataAsImage.onload = ->
         ctContext.drawImage(canvasDataAsImage,0,0)
@@ -3318,41 +3318,41 @@ linePosture = [
         putPixel( ctContext, colorOfCursorPixel, xSpot, ySpot )
       canvasDataAsImage.src = cH[cH.length - 1]
     else
-      drawInformation()
-    updateCursor()
+      drawInformation(event)
+    updateCursor(event)
 
   # Mouse down
-  () ->
+  (event) ->
     mousePressed = true
     getMousePositionOnCanvas(event)
     oldX = xSpot
     oldY = ySpot
 
   # Mouse up
-  () ->
+  (event) ->
     mousePressed = false
     lineAction(ctContext, colorSwatches[0], oldX, oldY, xSpot, ySpot)
     updateOldCursor()
     historyUpdate()
 
   # Mouse Exit
-  () ->
+  (event) ->
 ]
 
 
 pointPosture = [
-  () ->
+  (event) ->
     # Mouse Move
-    drawInformation()
+    drawInformation(event)
     if mousePressed
       oldX = xSpot
       oldY = ySpot
       getMousePositionOnCanvas(event)
       pointAction(ctContext, colorSwatches[0], xSpot, ySpot, oldX, oldY)
-    updateCursor()
+    updateCursor(event)
 
   # Mouse down
-  () ->
+  (event) ->
     if not mousePressed
       getMousePositionOnCanvas(event)
       pointAction(ctContext, colorSwatches[0], xSpot, ySpot, xSpot, ySpot)
@@ -3361,7 +3361,7 @@ pointPosture = [
     mousePressed = true
 
   # Mouse up
-  () ->
+  (event) ->
     if mousePressed
       coverUpOldCursor()
       historyUpdate()
@@ -3369,7 +3369,7 @@ pointPosture = [
     mousePressed = false
 
   # Mouse Exit
-  () ->
+  (event) ->
     if mousePressed
       oldX = xSpot
       oldY = ySpot
@@ -3381,37 +3381,37 @@ pointPosture = [
 
 
 emptyPosture = [
-  () ->
-    drawInformation()
-  () ->
+  (event) ->
+    drawInformation(event)
+  (event) ->
     mousePressed = true
-  () ->
+  (event) ->
     mousePressed = false
-  () ->
+  (event) ->
 ]
 
 
 horizontalColorSwapPosture = [
-  () ->
+  (event) ->
     drawInformation()
-  () ->
+  (event) ->
     mousePressed = true
-  () ->
+  (event) ->
     mousePressed = false
     drawToolbars()
-  () ->
+  (event) ->
 ]
 
 
 verticalColorSwapPosture = [
-  () ->
-    drawInformation()
-  () ->
+  (event) ->
+    drawInformation(event)
+  (event) ->
     mousePressed = true
-  () ->
+  (event) ->
     mousePressed = false
     drawToolbars()
-  () ->
+  (event) ->
 ]
 
 
@@ -3492,8 +3492,8 @@ while iteration < numberOfTools
     menuImage: toolMenuImages[iteration]
     toolsAction: ->
       console.log 'did a '+toolNames[@number]
-  ctPaintTools[iteration].pressedImage[0].src = 'assets\\u'+zeroPadder(iteration,2)+'000.PNG'
-  ctPaintTools[iteration].pressedImage[1].src = 'assets\\v'+zeroPadder(iteration,2)+'000.PNG'
+  ctPaintTools[iteration].pressedImage[0].src = 'assets/u'+zeroPadder(iteration,2)+'000.PNG'
+  ctPaintTools[iteration].pressedImage[1].src = 'assets/v'+zeroPadder(iteration,2)+'000.PNG'
   iteration++
 
 ctPaintTools[0].posture = zoomPosture
@@ -3532,31 +3532,31 @@ ctPaintTools[19].toolsAction = cursorColorAction
 ctPaintTools[20].toolsAction = undoAction
 ctPaintTools[21].toolsAction = redoAction
 
-ctPaintTools[8].menuImage.src = 'assets\\t01.png'
-ctPaintTools[11].menuImage.src = 'assets\\t02.png'
-ctPaintTools[9].menuImage.src = 'assets\\t04.png'
-ctPaintTools[12].menuImage.src = 'assets\\t05.png'
-ctPaintTools[13].menuImage.src = 'assets\\t03.png'
+ctPaintTools[8].menuImage.src = 'assets/t01.png'
+ctPaintTools[11].menuImage.src = 'assets/t02.png'
+ctPaintTools[9].menuImage.src = 'assets/t04.png'
+ctPaintTools[12].menuImage.src = 'assets/t05.png'
+ctPaintTools[13].menuImage.src = 'assets/t03.png'
 
 enterLitUp = new Image()
 cancelLitUp = new Image()
 
-enterLitUp.src = 'assets\\tEnter.png'
-cancelLitUp.src = 'assets\\tCancel.png'
+enterLitUp.src = 'assets/tEnter.png'
+cancelLitUp.src = 'assets/tCancel.png'
 
 xLitUp = new Image()
 yLitUp = new Image()
 
-xLitUp.src = 'assets\\t11.png'
-yLitUp.src = 'assets\\t21.png'
+xLitUp.src = 'assets/t11.png'
+yLitUp.src = 'assets/t21.png'
 
 ninetyDegreesLitUp = new Image()
 oneHundredAndEightyDegreesLitUp = new Image()
 twoHundredAndSeventyDegreesLitUp = new Image()
 
-ninetyDegreesLitUp.src = 'assets\\t14.png'
-oneHundredAndEightyDegreesLitUp.src = 'assets\\t24.png'
-twoHundredAndSeventyDegreesLitUp.src = 'assets\\t34.png'
+ninetyDegreesLitUp.src = 'assets/t14.png'
+oneHundredAndEightyDegreesLitUp.src = 'assets/t24.png'
+twoHundredAndSeventyDegreesLitUp.src = 'assets/t34.png'
 
 toolsToNumbers =
   'zoom':0
@@ -3612,13 +3612,13 @@ while fancyToolIndex < fancyResponsiveTools.length
     fancyResponsiveIcons[fancyResponsiveTools[fancyToolIndex]][1].push new Image()
 
     # source the icon for non selected tool fancyToolIndex of magnitude fancyIconIndex
-    imageSource = 'assets\\u' + zeroPadder(toolsToNumbers[fancyResponsiveTools[fancyToolIndex]], 2)
+    imageSource = 'assets/u' + zeroPadder(toolsToNumbers[fancyResponsiveTools[fancyToolIndex]], 2)
     imageSource += '00' + fancyIconIndex.toString() + '.PNG'
     fancyResponsiveIcons[fancyResponsiveTools[fancyToolIndex]][0][fancyIconIndex].src =
       imageSource
 
     # source the icon for selected tool fancyToolIndex of magnitude fancyIconIndex
-    imageSource = 'assets\\u'+zeroPadder(toolsToNumbers[fancyResponsiveTools[fancyToolIndex]], 2)
+    imageSource = 'assets/u'+zeroPadder(toolsToNumbers[fancyResponsiveTools[fancyToolIndex]], 2)
     imageSource += '0' + fancyIconIndex.toString() + '0.PNG'
     fancyResponsiveIcons[fancyResponsiveTools[fancyToolIndex]][1][fancyIconIndex].src =
       imageSource
@@ -3637,19 +3637,19 @@ solidIcons =
 
 solidToolIndex = 0
 while solidToolIndex < toolsWhichCanBeSolid.length
-  imageSource = 'assets\\u' + zeroPadder(toolsToNumbers[ toolsWhichCanBeSolid[solidToolIndex] ], 2)
+  imageSource = 'assets/u' + zeroPadder(toolsToNumbers[ toolsWhichCanBeSolid[solidToolIndex] ], 2)
   imageSource += '100.PNG'
   solidIcons[toolsWhichCanBeSolid[solidToolIndex]][0].src = imageSource
 
-  imageSource = 'assets\\u' + zeroPadder(toolsToNumbers[ toolsWhichCanBeSolid[solidToolIndex] ], 2)
+  imageSource = 'assets/u' + zeroPadder(toolsToNumbers[ toolsWhichCanBeSolid[solidToolIndex] ], 2)
   imageSource += '200.PNG'
   solidIcons[toolsWhichCanBeSolid[solidToolIndex]][1].src = imageSource
 
   solidToolIndex++
 
 
-$(document).ready ()->
-  setTimeout( ()->
+$(document).ready (event)->
+  setTimeout( (event)->
     setCanvasSizes()
     prepareCanvas()
     placeToolbars()
@@ -3727,7 +3727,7 @@ $(document).ready ()->
   $('#menuDiv').mouseup (event) ->
     whatSortOfMouseListening( mouseListeningUnderAbnormalCircumstance[1]( event ), false)
 
-  $(window).resize ()->
+  $(window).resize (event)->
     if canvasWidth < (window.innerWidth - toolbarWidth - 5)
       canvasXOffset = 0
     if canvasHeight < (window.innerHeight - toolbarHeight - 5)
@@ -3742,7 +3742,7 @@ $(document).ready ()->
     placeToolbars()
     drawToolbars()
 
-  $(window).scroll ()->
+  $(window).scroll (event)->
     window.scroll(0,0)
 
   window.onmousemove = () ->
@@ -3792,17 +3792,17 @@ $(document).ready ()->
       $('#wholeWindow').css 'cursor', 'default'   
 
   $('#CtPaint').mousemove (event)->
-    tH[tH.length - 1].posture[0]()
+    tH[tH.length - 1].posture[0](event)
 
   $('#CtPaint').mousedown (event)->
-    tH[tH.length - 1].posture[1]()
+    tH[tH.length - 1].posture[1](event)
 
   $('#CtPaint').mouseup (event)->
-    tH[tH.length - 1].posture[2]()
+    tH[tH.length - 1].posture[2](event)
 
-  $('#CtPaint').mouseleave ()->
+  $('#CtPaint').mouseleave (event)->
     coverUpOldCursor() 
-    tH[tH.length - 1].posture[3]() 
+    tH[tH.length - 1].posture[3](event) 
     toolbar1Context.drawImage(toolbar1sImage1,188,3)  
 
   $('#toolbar0').mousedown (event)->
@@ -3829,7 +3829,7 @@ $(document).ready ()->
     information = getColorValue(toolbar1Context, tXSpot, tYSpot).toUpperCase() + ', (#,#) '
     drawStringAsCommandPrompt(toolbar1Context, information, 0, 191, 12)
 
-  $('#toolbar1').mouseleave ()->  
+  $('#toolbar1').mouseleave (event)->  
     toolbar1Context.drawImage(toolbar1sImage1,188,3)  
 
   $('#toolbar1').mousedown (event)->

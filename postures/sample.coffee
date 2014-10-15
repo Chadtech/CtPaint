@@ -1,15 +1,15 @@
 samplePosture = [
   # Mouse Move
-  () ->
-    drawInformation()
-    updateCursor()
+  (event) ->
+    drawInformation(event)
+    updateCursor(event)
 
   # Mouse Down
-  () ->
+  (event) ->
     mousePressed = true
 
   # Mouse Up
-  () ->
+  (event) ->
     mousePressed = false
     getMousePositionOnCanvas(event)
     coverUpOldCursor()
@@ -20,6 +20,6 @@ samplePosture = [
     drawToolbars()
 
   # Mouse Exit
-  () ->
+  (event) ->
 ]
 

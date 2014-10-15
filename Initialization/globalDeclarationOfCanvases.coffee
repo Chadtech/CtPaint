@@ -11,8 +11,8 @@ toolbar0Context = toolbar0Canvas.getContext('2d')
   the other the shortkey to that tool
 ###
 toolbar0sImages = [new Image(), new Image()]
-toolbar0sImages[0].src = 'assets\\toolbar0v.PNG'
-toolbar0sImages[1].src = 'assets\\toolbar0u.PNG'
+toolbar0sImages[0].src = 'assets/toolbar0v.PNG'
+toolbar0sImages[1].src = 'assets/toolbar0u.PNG'
 
 ###
   toolbar1 is the horizontal toolbar. It has two images. The first of the color palette and color 
@@ -21,9 +21,9 @@ toolbar0sImages[1].src = 'assets\\toolbar0u.PNG'
 toolbar1Canvas = document.getElementById('toolbar1')
 toolbar1Context = toolbar1Canvas.getContext('2d')
 toolbar1sImage0 = new Image()
-toolbar1sImage0.src = 'assets\\toolbar10.png'
+toolbar1sImage0.src = 'assets/toolbar10.png'
 toolbar1sImage1 = new Image()
-toolbar1sImage1.src = 'assets\\toolbar11.png'
+toolbar1sImage1.src = 'assets/toolbar11.png'
 
 ###
   The background canvas is just a gray expanse behind everything
