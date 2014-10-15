@@ -85,6 +85,8 @@ mouseExit = false
 draggingBorder = false
 
 zoomActivate = false
+zoomX = undefined
+zoomY = undefined
 
 ###
   These variables are all relevant to the selection process, 

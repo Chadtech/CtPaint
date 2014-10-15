@@ -243,14 +243,6 @@ getMousePositionOnCanvas = (event) ->
   xSpot = event.clientX - (toolbarWidth + 5) - canvasXOffset
   ySpot = event.clientY - 5 - canvasYOffset
 
-getMousePositionOnZoom = (event) ->
-  xSpotZoom = event.clientX - (toolbarWidth)
-  ySpotZoom = event.clientY - (toolbarHeight)
-
-scaleCanvasBigger = ( factor ) ->
-  ctCanvas.style.width = (factor * ctCanvas.width).toString()+'px'
-  ctCanvas.style.height = (factor * ctCanvas.height).toString()+'px'
-
 historyUpdate = ->
   cH.push ctCanvas.toDataURL()
   cH.shift()

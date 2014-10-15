@@ -2848,14 +2848,10 @@ drawInformation = ( event, extraInformation ) ->
 getMousePositionOnCanvas = (event) ->
   xSpot = event.clientX - (toolbarWidth + 5) - canvasXOffset
   ySpot = event.clientY - 5 - canvasYOffset
-
-getMousePositionOnZoom = (event) ->
-  xSpotZoom = event.clientX - (toolbarWidth)
-  ySpotZoom = event.clientY - (toolbarHeight)
-
-scaleCanvasBigger = ( factor ) ->
-  ctCanvas.style.width = (factor * ctCanvas.width).toString()+'px'
-  ctCanvas.style.height = (factor * ctCanvas.height).toString()+'px'
+  if zoomActivate
+    zoomFactor = 2 ** tH[tH.length - 1].magnitude
+    xSpot = xSpot // zoomFactor
+    ySpot = ySpot // zoomFactor
 
 historyUpdate = ->
   cH.push ctCanvas.toDataURL()
@@ -3054,7 +3050,9 @@ zoomPosture = [
       ctCanvas.style.height = (canvasHeight).toString()+'px'
     else
       zoomActivate = true
-      scaleCanvasBigger( 2 ** tH[tH.length - 1].magnitude )
+      zoomFactor = 2 ** tH[tH.length - 1].magnitude
+      ctCanvas.style.width = (zoomFactor * ctCanvas.width).toString()+'px'
+      ctCanvas.style.height = (zoomFactor * ctCanvas.height).toString()+'px'
     drawToolbars()
   (event) ->
     mousePressed = false
