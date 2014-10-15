@@ -48,13 +48,12 @@ $(document).ready (event)->
         tH[tH.length - 1].mode = true
       drawToolbars()
 
-    if event.keyCode is keysToKeyCodes['equals']
-      console.log 'A'
+    if event.keyCode is keysToKeyCodes['equals'] or event.keyCode is 61
       if tH[tH.length - 1].magnitude < tH[tH.length - 1].maxMagnitude
         tH[tH.length - 1].magnitude++
       drawToolbars()
 
-    if event.keyCode is keysToKeyCodes['minus']
+    if event.keyCode is keysToKeyCodes['minus'] or event.keyCode is 173
       if tH[tH.length - 1].magnitude > 1
         tH[tH.length - 1].magnitude--
       drawToolbars()
