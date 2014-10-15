@@ -24,6 +24,7 @@ selectPosture = [
         canvasDataAsImage.src = cH[cH.length - 1]
       else
         drawInformation( event, boxInformation )
+
     else
       if mousePressed
         getMousePositionOnCanvas(event)
@@ -36,7 +37,7 @@ selectPosture = [
 
         if (gripX isnt undefined) and (gripY isnt undefined)
           selectionOrigin = '(' + (gripX + '') + ', ' + (gripY + '') + ')'
-          drawInformation( selectionOrigin )
+          drawInformation( event, selectionOrigin )
 
         canvasDataAsImage = new Image()
         canvasDataAsImage.onload = ->

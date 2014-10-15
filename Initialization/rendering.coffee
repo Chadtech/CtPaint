@@ -230,7 +230,7 @@ drawInformation = ( event, extraInformation ) ->
   if extraInformation is undefined
     extraInformation = ''
   toolbar1Context.drawImage(toolbar1sImage1, 188, 3)   
-  toolbar1Context.drawImage(toolbar1sImage1, 458, 3)   
+  toolbar1Context.drawImage(toolbar1sImage1, 458, 3) 
   xPos = event.clientX - (toolbarWidth + 5) - canvasXOffset
   yPos = event.clientY - 5 - canvasYOffset
   colorValue = getColorValue(ctContext, xPos, yPos).toUpperCase()

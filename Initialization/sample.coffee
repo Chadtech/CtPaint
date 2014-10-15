@@ -1,3 +1,3 @@
-getColorValue = (canvas, whereAtX, whereAtY) ->
-  return rgbToHex(canvas.getImageData(whereAtX, whereAtY, 1, 1).data)
+getColorValue = (canvasObject, whereAtX, whereAtY) ->
+  return rgbToHex(canvasObject.getImageData(whereAtX, whereAtY, 1, 1).data)
 

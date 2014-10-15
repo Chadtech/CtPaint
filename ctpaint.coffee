@@ -674,8 +674,8 @@ drawSelectBox = (canvas, beginX, beginY, endX, endY) ->
       distanceY-=distanceY
 
 
-getColorValue = (canvas, whereAtX, whereAtY) ->
-  return rgbToHex(canvas.getImageData(whereAtX, whereAtY, 1, 1).data)
+getColorValue = (canvasObject, whereAtX, whereAtY) ->
+  return rgbToHex(canvasObject.getImageData(whereAtX, whereAtY, 1, 1).data)
 
 
 floodFill = (canvas, context, colorToChangeTo, xPosition, yPosition) ->
@@ -2836,7 +2836,7 @@ drawInformation = ( event, extraInformation ) ->
   if extraInformation is undefined
     extraInformation = ''
   toolbar1Context.drawImage(toolbar1sImage1, 188, 3)   
-  toolbar1Context.drawImage(toolbar1sImage1, 458, 3)   
+  toolbar1Context.drawImage(toolbar1sImage1, 458, 3) 
   xPos = event.clientX - (toolbarWidth + 5) - canvasXOffset
   yPos = event.clientY - 5 - canvasYOffset
   colorValue = getColorValue(ctContext, xPos, yPos).toUpperCase()
@@ -3088,6 +3088,7 @@ selectPosture = [
         canvasDataAsImage.src = cH[cH.length - 1]
       else
         drawInformation( event, boxInformation )
+
     else
       if mousePressed
         getMousePositionOnCanvas(event)
@@ -3100,7 +3101,7 @@ selectPosture = [
 
         if (gripX isnt undefined) and (gripY isnt undefined)
           selectionOrigin = '(' + (gripX + '') + ', ' + (gripY + '') + ')'
-          drawInformation( selectionOrigin )
+          drawInformation( event, selectionOrigin )
 
         canvasDataAsImage = new Image()
         canvasDataAsImage.onload = ->
@@ -3699,6 +3700,7 @@ $(document).ready (event)->
       drawToolbars()
 
     if event.keyCode is keysToKeyCodes['equals']
+      console.log 'A'
       if tH[tH.length - 1].magnitude < tH[tH.length - 1].maxMagnitude
         tH[tH.length - 1].magnitude++
       drawToolbars()
