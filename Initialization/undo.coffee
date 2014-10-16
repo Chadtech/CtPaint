@@ -8,6 +8,8 @@ undoAction = ->
   canvasDataAsImage.onload = ->
     undoAndRedoSizeComparison(canvasDataAsImage)
     ctContext.drawImage(canvasDataAsImage,0,0)
+    updateOldCursor()
+    refreshCursor()
   canvasDataAsImage.src = cH[cH.length - 1]
 
   setTimeout( ()->

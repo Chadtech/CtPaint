@@ -14,6 +14,8 @@ redoAction = ->
       # Isnt the same size as our current canvas
       undoAndRedoSizeComparison(canvasDataAsImage)
       ctContext.drawImage(canvasDataAsImage,0,0)
+      updateOldCursor()
+      refreshCursor()
     canvasDataAsImage.src = cH[cH.length - 1]
 
   # Go back to the previous tool, but put a little delay on it

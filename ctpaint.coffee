@@ -2561,6 +2561,8 @@ undoAction = ->
   canvasDataAsImage.onload = ->
     undoAndRedoSizeComparison(canvasDataAsImage)
     ctContext.drawImage(canvasDataAsImage,0,0)
+    updateOldCursor()
+    refreshCursor()
   canvasDataAsImage.src = cH[cH.length - 1]
 
   setTimeout( ()->
@@ -2598,6 +2600,8 @@ redoAction = ->
       # Isnt the same size as our current canvas
       undoAndRedoSizeComparison(canvasDataAsImage)
       ctContext.drawImage(canvasDataAsImage,0,0)
+      updateOldCursor()
+      refreshCursor()
     canvasDataAsImage.src = cH[cH.length - 1]
 
   # Go back to the previous tool, but put a little delay on it
@@ -3088,6 +3092,7 @@ zoomPosture = [
 
         ctCanvas.style.width = (canvasWidth).toString()+'px'
         ctCanvas.style.height = (canvasHeight).toString()+'px'
+        
       else
         zoomActivate = true
         zoomFactor = 2 ** tH[tH.length - 1].magnitude
@@ -3108,6 +3113,13 @@ zoomPosture = [
         # new view mode to where they clicked.
         zoomRootX = xSpot - (screensWidthInCanvasPixels // 2)
         zoomRootY = ySpot - (screensHeightInCanvasPixels // 2)
+
+        if zoomRootX < 0
+          zoomRootX = 0
+          canvasXPos += 5
+        if zoomRootY < 0
+          zoomRootY = 0
+          canvasYPos += 5
 
         canvasXPos -= 5 
         canvasYPos -= 5
