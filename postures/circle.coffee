@@ -5,7 +5,7 @@ circlePosture = [
       getMousePositionOnCanvas(event)
       calculatedRadius = Math.pow(Math.pow(xSpot - oldX, 2) + Math.pow(ySpot - oldY, 2), 0.5)
       calculatedRadius = Math.round(calculatedRadius)
-      circleInformation = 'radius = ' + (calculatedRadius + 2).toString()
+      circleInformation = 'radius = ' + (calculatedRadius + 1).toString()
       drawInformation( event, circleInformation )
       canvasDataAsImage = new Image()
       canvasDataAsImage.onload = ->
