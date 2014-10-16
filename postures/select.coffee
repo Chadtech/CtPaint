@@ -72,7 +72,7 @@ selectPosture = [
         boxInformation = undefined
         canvasDataAsImage = new Image()
         canvasDataAsImage.onload = ->
-          ctContext.drawImage(canvasDataAsImage,0,0)
+          ctContext.drawImage(canvasDataAsImage, 0, 0)
           ctContext.putImageData(selection, selectionX, selectionY)
           historyUpdate()
         canvasDataAsImage.src = cH[cH.length - 1]

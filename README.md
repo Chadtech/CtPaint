@@ -63,7 +63,7 @@ Here is an incomplete list of features, with the ones I have finished checked of
 * X Select area
 * X Square draw tool
 * X Tool cursor images
-* Zoom
+* X Zoom
 * Secondary color transparency
 * Arrow key scrolling
 * X Scale canvas
@@ -80,12 +80,13 @@ General to dos and bugs to fix:
 * X Selection cursor update bug
 * Optimize selection moving
 * X Menu click region ( or cancel option )
-* Zoom blur bug
 * X Make all menu tools cursor pixel compatible
 * X Redraw menu images to highlight the 'n' in 'cancel' since 'c' is not an acceptable short key
 * X Draw Selection transparent Icon
 * X Custom Cursor when not zoomed in
 * X Select area cursor pixel update bug (it reads the pixel of the selected area when updating the old location)
+* Drag and drop Color palette/swatch changing
+* Sample cursor bug
 
 ------- LICENSING
 

@@ -202,6 +202,7 @@ $(document).ready (event)->
 
   $('#dragAndDrop').on('dragover', (event)->
     event.stopPropagation()
+    event.preventDefault()
     return false
   )
 
