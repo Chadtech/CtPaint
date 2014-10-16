@@ -2489,8 +2489,8 @@ pasteTheSelection = ->
     # Then draw that little box around the selection
     originX = selectionX
     originY = selectionY
-    edgeX = originX + selectionsWidth
-    edgeY = originY + selectionsHeight
+    edgeX = originX + selectionsWidth - 1
+    edgeY = originY + selectionsHeight - 1
     drawSelectBox(ctContext, originX, originY, edgeX, edgeY)
     # Note that none of this is saved, its merely drawn.
     # These drawings are not incorporated into the data
