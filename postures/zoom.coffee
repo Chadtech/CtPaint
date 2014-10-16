@@ -1,24 +1,57 @@
 zoomPosture = [
   (event) ->
     drawInformation(event)
-    updateCursor(event)
+    #updateCursor(event)
 
   (event) ->
-    mousePressed = true
-    getMousePositionOnCanvas(event)
-    if zoomActivate
-      zoomActivate = false
-      ctCanvas.style.width = (canvasWidth).toString()+'px'
-      ctCanvas.style.height = (canvasHeight).toString()+'px'
-    else
-      zoomActivate = true
-      zoomFactor = 2 ** tH[tH.length - 1].magnitude
-      ctCanvas.style.width = (zoomFactor * ctCanvas.width).toString()+'px'
-      ctCanvas.style.height = (zoomFactor * ctCanvas.height).toString()+'px'
-    drawToolbars()
+    if not mousePressed
+      mousePressed = true
+      getMousePositionOnCanvas(event)
+      if zoomActivate
+        zoomActivate = false
+
+        canvasXPos = toolbarWidth + 5
+        canvasYPos = 5
+        positionCanvas()
+
+        ctCanvas.style.width = (canvasWidth).toString()+'px'
+        ctCanvas.style.height = (canvasHeight).toString()+'px'
+      else
+        zoomActivate = true
+        zoomFactor = 2 ** tH[tH.length - 1].magnitude
+
+        # The windows width, minus the width of the vertical toolbar
+        screensWidth = window.innerWidth - toolbarWidth
+        # The number of 'represented' pixels in the canvas, not the 
+        # number of pixels across the resolution of the screen
+        screensWidthInCanvasPixels = screensWidth // zoomFactor
+
+        screensHeight = window.innerHeight - toolbarHeight
+        screensHeightInCanvasPixels = screensHeight // zoomFactor
+
+        # zoomRootX, being in the upper left corner of where
+        # they clicked given the new zoom magnitude
+        # This results that they zoom in to where they click
+        # instead of setting the origin ( (0,0) ) of their
+        # new view mode to where they clicked.
+        zoomRootX = xSpot - (screensWidthInCanvasPixels // 2)
+        zoomRootY = ySpot - (screensHeightInCanvasPixels // 2)
+
+        canvasXPos -= 5 
+        canvasYPos -= 5
+
+        canvasXPos -= (zoomRootX * zoomFactor)
+        canvasYPos -= (zoomRootY * zoomFactor)
+
+        positionCanvas()
+
+        ctCanvas.style.width = (zoomFactor * ctCanvas.width).toString()+'px'
+        ctCanvas.style.height = (zoomFactor * ctCanvas.height).toString()+'px'
+      drawToolbars()
 
   (event) ->
-    mousePressed = false
+    if mousePressed
+      mousePressed = false
 
   (event) ->
 ]

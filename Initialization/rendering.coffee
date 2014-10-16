@@ -5,6 +5,20 @@ positionCanvas = ->
   $('#ctpaintDiv').css('top', (canvasYPos+canvasYOffset).toString())
   $('#ctpaintDiv').css('left',(canvasXPos+canvasXOffset).toString())
 
+getMousePositionOnCanvas = (event) ->
+  if not zoomActivate
+    xSpot = event.clientX - canvasXPos - canvasXOffset
+    ySpot = event.clientY - canvasYPos - canvasYOffset
+  else
+    xSpot = event.clientX - toolbarWidth
+    ySpot = event.clientY
+
+    xSpot = xSpot // zoomFactor
+    ySpot = ySpot // zoomFactor
+
+    xSpot += zoomRootX
+    ySpot += zoomRootY
+
 ###
   Only done at the very initialization of CtPaint.
 ###
@@ -175,7 +189,6 @@ drawToolbars = ->
         iconY = ctPaintTools[toolsToNumbers['point']].clickRegion[1]
         toolbar0Context.drawImage( theImage, iconX, iconY)
 
-
   toolbar1Context.fillStyle = '#202020'
   toolbar1Context.fillRect(0,0,window.innerWidth,toolbarHeight)
 
@@ -205,8 +218,19 @@ drawToolbars = ->
 
 updateCursor = (event)->
   coverUpOldCursor()
-  cursorX = event.clientX - (toolbarWidth + 5 - canvasXOffset)
-  cursorY = event.clientY - 5 - canvasYOffset
+  if not zoomActivate
+    cursorX = event.clientX - canvasXPos - canvasXOffset
+    cursorY = event.clientY - canvasYPos - canvasYOffset
+  else
+    cursorX = event.clientX - toolbarWidth
+    cursorY = event.clientY
+
+    cursorX = cursorX // zoomFactor
+    cursorY = cursorY // zoomFactor
+
+    cursorX += zoomRootX
+    cursorY += zoomRootY
+
   updateOldCursor()
   oldCursorX = cursorX
   oldCursorY = cursorY
@@ -230,18 +254,26 @@ drawInformation = ( event, extraInformation ) ->
   if extraInformation is undefined
     extraInformation = ''
   toolbar1Context.drawImage(toolbar1sImage1, 188, 3)   
-  toolbar1Context.drawImage(toolbar1sImage1, 458, 3) 
-  xPos = event.clientX - (toolbarWidth + 5) - canvasXOffset
-  yPos = event.clientY - 5 - canvasYOffset
+  toolbar1Context.drawImage(toolbar1sImage1, 458, 3)
+
+  if not zoomActivate 
+    xPos = event.clientX - canvasXPos - canvasXOffset
+    yPos = event.clientY - canvasYPos - canvasYOffset
+  else
+    xPos = event.clientX - toolbarWidth
+    yPos = event.clientY
+
+    xPos = xPos // zoomFactor
+    yPos = yPos // zoomFactor
+
+    xPos += zoomRootX
+    yPos += zoomRootY
+
   colorValue = getColorValue(ctContext, xPos, yPos).toUpperCase()
   coordinates = ', (' + xPos.toString() + ', ' + yPos.toString() + ')'
   colorAndCoordinates = colorValue + coordinates
   drawStringAsCommandPrompt(toolbar1Context, colorAndCoordinates, 0, 191, 12)
   drawStringAsCommandPrompt(toolbar1Context, extraInformation, 0, 461, 12) 
-
-getMousePositionOnCanvas = (event) ->
-  xSpot = event.clientX - (toolbarWidth + 5) - canvasXOffset
-  ySpot = event.clientY - 5 - canvasYOffset
 
 historyUpdate = ->
   cH.push ctCanvas.toDataURL()

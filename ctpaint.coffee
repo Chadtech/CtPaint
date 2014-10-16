@@ -85,6 +85,11 @@ mouseExit = false
 draggingBorder = false
 
 zoomActivate = false
+zoomFactor = 1
+zoomRootX = undefined
+zoomRootY = undefined
+zoomX = undefined
+zoomY = undefined
 
 ###
   These variables are all relevant to the selection process, 
@@ -2467,8 +2472,12 @@ pasteAction = ->
 pasteTheSelection = ->
   # Set the selection to what was in the clipboard
   selection = copyMemory
-  selectionX = 0
-  selectionY = 0
+  if not zoomActivate
+    selectionX = 0
+    selectionY = 0
+  else
+    selectionX = zoomRootX
+    selectionY = zoomRootY
   selectionsWidth = selection.width
   selectionsHeight = selection.height
   canvasDataAsImage = new Image()
@@ -2478,7 +2487,11 @@ pasteTheSelection = ->
     # Then draw the selection
     ctContext.putImageData(selection, selectionX, selectionY)
     # Then draw that little box around the selection
-    drawSelectBox(ctContext, -1, -1, selectionsWidth + 1, selectionsHeight + 1)
+    originX = selectionX
+    originY = selectionY
+    edgeX = originX + selectionsWidth
+    edgeY = originY + selectionsHeight
+    drawSelectBox(ctContext, originX, originY, edgeX, edgeY)
     # Note that none of this is saved, its merely drawn.
     # These drawings are not incorporated into the data
     # of the canvas.
@@ -2610,6 +2623,20 @@ redoAction = ->
 positionCanvas = ->
   $('#ctpaintDiv').css('top', (canvasYPos+canvasYOffset).toString())
   $('#ctpaintDiv').css('left',(canvasXPos+canvasXOffset).toString())
+
+getMousePositionOnCanvas = (event) ->
+  if not zoomActivate
+    xSpot = event.clientX - canvasXPos - canvasXOffset
+    ySpot = event.clientY - canvasYPos - canvasYOffset
+  else
+    xSpot = event.clientX - toolbarWidth
+    ySpot = event.clientY
+
+    xSpot = xSpot // zoomFactor
+    ySpot = ySpot // zoomFactor
+
+    xSpot += zoomRootX
+    ySpot += zoomRootY
 
 ###
   Only done at the very initialization of CtPaint.
@@ -2781,7 +2808,6 @@ drawToolbars = ->
         iconY = ctPaintTools[toolsToNumbers['point']].clickRegion[1]
         toolbar0Context.drawImage( theImage, iconX, iconY)
 
-
   toolbar1Context.fillStyle = '#202020'
   toolbar1Context.fillRect(0,0,window.innerWidth,toolbarHeight)
 
@@ -2811,8 +2837,19 @@ drawToolbars = ->
 
 updateCursor = (event)->
   coverUpOldCursor()
-  cursorX = event.clientX - (toolbarWidth + 5 - canvasXOffset)
-  cursorY = event.clientY - 5 - canvasYOffset
+  if not zoomActivate
+    cursorX = event.clientX - canvasXPos - canvasXOffset
+    cursorY = event.clientY - canvasYPos - canvasYOffset
+  else
+    cursorX = event.clientX - toolbarWidth
+    cursorY = event.clientY
+
+    cursorX = cursorX // zoomFactor
+    cursorY = cursorY // zoomFactor
+
+    cursorX += zoomRootX
+    cursorY += zoomRootY
+
   updateOldCursor()
   oldCursorX = cursorX
   oldCursorY = cursorY
@@ -2836,22 +2873,26 @@ drawInformation = ( event, extraInformation ) ->
   if extraInformation is undefined
     extraInformation = ''
   toolbar1Context.drawImage(toolbar1sImage1, 188, 3)   
-  toolbar1Context.drawImage(toolbar1sImage1, 458, 3) 
-  xPos = event.clientX - (toolbarWidth + 5) - canvasXOffset
-  yPos = event.clientY - 5 - canvasYOffset
+  toolbar1Context.drawImage(toolbar1sImage1, 458, 3)
+
+  if not zoomActivate 
+    xPos = event.clientX - canvasXPos - canvasXOffset
+    yPos = event.clientY - canvasYPos - canvasYOffset
+  else
+    xPos = event.clientX - toolbarWidth
+    yPos = event.clientY
+
+    xPos = xPos // zoomFactor
+    yPos = yPos // zoomFactor
+
+    xPos += zoomRootX
+    yPos += zoomRootY
+
   colorValue = getColorValue(ctContext, xPos, yPos).toUpperCase()
   coordinates = ', (' + xPos.toString() + ', ' + yPos.toString() + ')'
   colorAndCoordinates = colorValue + coordinates
   drawStringAsCommandPrompt(toolbar1Context, colorAndCoordinates, 0, 191, 12)
   drawStringAsCommandPrompt(toolbar1Context, extraInformation, 0, 461, 12) 
-
-getMousePositionOnCanvas = (event) ->
-  xSpot = event.clientX - (toolbarWidth + 5) - canvasXOffset
-  ySpot = event.clientY - 5 - canvasYOffset
-  if zoomActivate
-    zoomFactor = 2 ** tH[tH.length - 1].magnitude
-    xSpot = xSpot // zoomFactor
-    ySpot = ySpot // zoomFactor
 
 historyUpdate = ->
   cH.push ctCanvas.toDataURL()
@@ -3040,22 +3081,58 @@ mouseListeningUnderAbnormalCircumstance = [
 zoomPosture = [
   (event) ->
     drawInformation(event)
-    updateCursor(event)
+    #updateCursor(event)
+
   (event) ->
-    mousePressed = true
-    getMousePositionOnCanvas(event)
-    if zoomActivate
-      zoomActivate = false
-      ctCanvas.style.width = (canvasWidth).toString()+'px'
-      ctCanvas.style.height = (canvasHeight).toString()+'px'
-    else
-      zoomActivate = true
-      zoomFactor = 2 ** tH[tH.length - 1].magnitude
-      ctCanvas.style.width = (zoomFactor * ctCanvas.width).toString()+'px'
-      ctCanvas.style.height = (zoomFactor * ctCanvas.height).toString()+'px'
-    drawToolbars()
+    if not mousePressed
+      mousePressed = true
+      getMousePositionOnCanvas(event)
+      if zoomActivate
+        zoomActivate = false
+
+        canvasXPos = toolbarWidth + 5
+        canvasYPos = 5
+        positionCanvas()
+
+        ctCanvas.style.width = (canvasWidth).toString()+'px'
+        ctCanvas.style.height = (canvasHeight).toString()+'px'
+      else
+        zoomActivate = true
+        zoomFactor = 2 ** tH[tH.length - 1].magnitude
+
+        # The windows width, minus the width of the vertical toolbar
+        screensWidth = window.innerWidth - toolbarWidth
+        # The number of 'represented' pixels in the canvas, not the 
+        # number of pixels across the resolution of the screen
+        screensWidthInCanvasPixels = screensWidth // zoomFactor
+
+        screensHeight = window.innerHeight - toolbarHeight
+        screensHeightInCanvasPixels = screensHeight // zoomFactor
+
+        # zoomRootX, being in the upper left corner of where
+        # they clicked given the new zoom magnitude
+        # This results that they zoom in to where they click
+        # instead of setting the origin ( (0,0) ) of their
+        # new view mode to where they clicked.
+        zoomRootX = xSpot - (screensWidthInCanvasPixels // 2)
+        zoomRootY = ySpot - (screensHeightInCanvasPixels // 2)
+
+        canvasXPos -= 5 
+        canvasYPos -= 5
+
+        canvasXPos -= (zoomRootX * zoomFactor)
+        canvasYPos -= (zoomRootY * zoomFactor)
+
+        positionCanvas()
+
+        ctCanvas.style.width = (zoomFactor * ctCanvas.width).toString()+'px'
+        ctCanvas.style.height = (zoomFactor * ctCanvas.height).toString()+'px'
+      drawToolbars()
+
   (event) ->
-    mousePressed = false
+    if mousePressed
+      mousePressed = false
+
   (event) ->
 ]
 
@@ -3075,13 +3152,13 @@ selectPosture = [
         boxInformation += 'px'
         drawInformation( event, boxInformation )
 
-        originX = sortedXs[0] - 1
-        originY = sortedYs[0] - 1
-        otherSideX = sortedXs[1] + 1
-        otherSideY = sortedYs[1] + 1
+        originX = sortedXs[0]
+        originY = sortedYs[0]
+        otherSideX = sortedXs[1]
+        otherSideY = sortedYs[1]
         canvasDataAsImage = new Image()
         canvasDataAsImage.onload = ->
-          ctContext.drawImage(canvasDataAsImage,0,0)
+          ctContext.drawImage(canvasDataAsImage, 0, 0)
           drawSelectBox(ctContext, originX, originY, otherSideX, otherSideY)
         canvasDataAsImage.src = cH[cH.length - 1]
       else
@@ -3094,8 +3171,8 @@ selectPosture = [
         yOffset = ySpot - oldY
         gripX = selectionX + xOffset
         gripY = selectionY + yOffset
-        rightEdge = gripX + selectionsWidth
-        bottomEdge = gripY + selectionsHeight
+        rightEdge = gripX + selectionsWidth - 1
+        bottomEdge = gripY + selectionsHeight - 1
 
         if (gripX isnt undefined) and (gripY isnt undefined)
           selectionOrigin = '(' + (gripX + '') + ', ' + (gripY + '') + ')'
@@ -3103,9 +3180,9 @@ selectPosture = [
 
         canvasDataAsImage = new Image()
         canvasDataAsImage.onload = ->
-          ctContext.drawImage(canvasDataAsImage,0,0)
+          ctContext.drawImage(canvasDataAsImage, 0, 0)
           ctContext.putImageData(selection, gripX, gripY)
-          drawSelectBox(ctContext, gripX - 1, gripY - 1, rightEdge, bottomEdge)
+          drawSelectBox(ctContext, gripX, gripY, rightEdge, bottomEdge)
         canvasDataAsImage.src = cH[cH.length - 1]
       else
         drawInformation( event, boxInformation )
@@ -3145,21 +3222,21 @@ selectPosture = [
     if not areaSelected
       sortedXs = [ Math.min(xSpot, oldX), Math.max(xSpot, oldX) ]
       sortedYs = [ Math.min(ySpot, oldY), Math.max(ySpot, oldY) ]
-      selectionsWidth = Math.abs(xSpot - oldX)
-      selectionsHeight = Math.abs(ySpot - oldY)
+      selectionsWidth = Math.abs(xSpot - oldX) + 1
+      selectionsHeight = Math.abs(ySpot - oldY) + 1
       selectionX = sortedXs[0]
       selectionY = sortedYs[0]
-      originX = selectionX - 1
-      originY = selectionY - 1
-      otherSideX = selectionX + selectionsWidth + 1
-      otherSideY = selectionY + selectionsHeight + 1
+      originX = selectionX
+      originY = selectionY
+      otherSideX = selectionX + selectionsWidth - 1
+      otherSideY = selectionY + selectionsHeight - 1
       if 0 < selectionsWidth and 0 < selectionsHeight
-        selection = 
-          ctContext.getImageData( sortedXs[0], sortedYs[0], selectionsWidth, selectionsHeight)
         canvasDataAsImage = new Image()
         canvasDataAsImage.onload = ->
           ctContext.drawImage(canvasDataAsImage,0,0)
-          squareAction(ctContext, colorSwatches[1], oldX, oldY, xSpot - 1, ySpot - 1, true)
+          selection = 
+            ctContext.getImageData( sortedXs[0], sortedYs[0], selectionsWidth, selectionsHeight)
+          squareAction(ctContext, colorSwatches[1], oldX, oldY, xSpot, ySpot, true)
           historyUpdate()
           ctContext.putImageData(selection, selectionX, selectionY)
           drawSelectBox(ctContext, originX, originY, otherSideX, otherSideY)
@@ -3168,6 +3245,8 @@ selectPosture = [
     else
       selectionX = gripX
       selectionY = gripY
+
+  # Mouse Exit
   (event) ->
 ]
 
@@ -3265,7 +3344,7 @@ circlePosture = [
       getMousePositionOnCanvas(event)
       calculatedRadius = Math.pow(Math.pow(xSpot - oldX, 2) + Math.pow(ySpot - oldY, 2), 0.5)
       calculatedRadius = Math.round(calculatedRadius)
-      circleInformation = 'radius = ' + (calculatedRadius + 2).toString()
+      circleInformation = 'radius = ' + (calculatedRadius + 1).toString()
       drawInformation( event, circleInformation )
       canvasDataAsImage = new Image()
       canvasDataAsImage.onload = ->

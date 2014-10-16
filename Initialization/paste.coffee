@@ -34,8 +34,12 @@ pasteAction = ->
 pasteTheSelection = ->
   # Set the selection to what was in the clipboard
   selection = copyMemory
-  selectionX = 0
-  selectionY = 0
+  if not zoomActivate
+    selectionX = 0
+    selectionY = 0
+  else
+    selectionX = zoomRootX
+    selectionY = zoomRootY
   selectionsWidth = selection.width
   selectionsHeight = selection.height
   canvasDataAsImage = new Image()
@@ -45,7 +49,11 @@ pasteTheSelection = ->
     # Then draw the selection
     ctContext.putImageData(selection, selectionX, selectionY)
     # Then draw that little box around the selection
-    drawSelectBox(ctContext, -1, -1, selectionsWidth + 1, selectionsHeight + 1)
+    originX = selectionX
+    originY = selectionY
+    edgeX = originX + selectionsWidth
+    edgeY = originY + selectionsHeight
+    drawSelectBox(ctContext, originX, originY, edgeX, edgeY)
     # Note that none of this is saved, its merely drawn.
     # These drawings are not incorporated into the data
     # of the canvas.
