@@ -12,22 +12,14 @@
   a canvas of the remaining length is pasted (1, 2 or 3). 
   selectLinesOfLengthY is the vertical version of this technique.
 ###
-
 selectLinesOfLengthX = []
 selectLinesOfLengthY = []
-###
+
 dataToGive = [
-  [239, 8, 8, 255]
-  [239, 8, 8, 255]
-  [16, 120, 120, 255]
-  [16, 120, 120, 255]
-]
-###
-dataToGive = [
-  [64, 64, 239, 255]
-  [64, 64, 239, 255]
-  [192, 192, 16, 255]
-  [192, 192, 16, 255]
+  [52, 110, 192, 255]
+  [52, 110, 192, 255]
+  [220, 196, 85, 255]
+  [220, 196, 85, 255]
 ]
 
 lineIndex = 0
@@ -69,18 +61,18 @@ drawSelectBox = (canvas, beginX, beginY, endX, endY) ->
     if distanceX > 3
       canvas.putImageData(selectLinesOfLengthX[3],endX - distanceX, beginY)
       canvas.putImageData(selectLinesOfLengthX[3],endX - distanceX, endY)
-      distanceX-=4
+      distanceX-=3
     else
-      canvas.putImageData(selectLinesOfLengthX[distanceX - 1],endX - distanceX, beginY)
-      canvas.putImageData(selectLinesOfLengthX[distanceX - 1],endX - distanceX, endY)
+      canvas.putImageData(selectLinesOfLengthX[distanceX],endX - distanceX, beginY)
+      canvas.putImageData(selectLinesOfLengthX[distanceX],endX - distanceX, endY)
       distanceX-=distanceX
   while distanceY > 0
     if distanceY > 3
       canvas.putImageData(selectLinesOfLengthY[3], beginX, endY - distanceY)
       canvas.putImageData(selectLinesOfLengthY[3], endX, endY - distanceY)
-      distanceY-=4
+      distanceY-=3
     else
-      canvas.putImageData(selectLinesOfLengthY[distanceY - 1], beginX, endY - distanceY)
-      canvas.putImageData(selectLinesOfLengthY[distanceY - 1], endX, endY - distanceY)
+      canvas.putImageData(selectLinesOfLengthY[distanceY], beginX, endY - distanceY)
+      canvas.putImageData(selectLinesOfLengthY[distanceY], endX, endY - distanceY)
       distanceY-=distanceY
 
