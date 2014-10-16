@@ -87,6 +87,8 @@ General to dos and bugs to fix:
 * X Select area cursor pixel update bug (it reads the pixel of the selected area when updating the old location)
 * Drag and drop Color palette/swatch changing
 * Sample cursor bug
+* Open Image bug, possible open button
+* magnitude/mode buttons
 
 ------- LICENSING
 

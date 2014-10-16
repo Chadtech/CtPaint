@@ -197,6 +197,7 @@ drawToolbars = ->
   toolbar1Context.drawImage(toolbar1sImage1, 188, 3)
   toolbar1Context.drawImage(toolbar1sImage1, 458, 3)
   drawLine(toolbar1Context, [16, 20, 8], toolbarWidth - 1, 0, window.innerWidth, 0)
+  toolbar1Context.drawImage(ct, window.innerWidth - 35, 2)
 
   toolbar1Context.fillStyle = rgbToHex(colorSwatches[0])
   toolbar1Context.fillRect(7, 4, 14, 14)

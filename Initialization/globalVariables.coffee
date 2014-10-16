@@ -1,3 +1,6 @@
+ct = new Image()
+ct.src = "assets/ct.png"
+
 hexadecimalProper = [
   '0'
   '1'
