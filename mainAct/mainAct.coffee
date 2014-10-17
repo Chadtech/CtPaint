@@ -131,8 +131,6 @@ $(document).ready (event)->
       else
         zoomAction(canvasXOffset, canvasYOffset)
 
-
-
     if event.keyCode is keysToKeyCodes['minus'] or event.keyCode is 173
       if zoomActivate
         if ctPaintTools[toolsToNumbers['zoom']].magnitude is 1

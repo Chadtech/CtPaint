@@ -3981,6 +3981,7 @@ $(document).ready (event)->
 
   $(window).scroll (event)->
     window.scroll(0,0)
+    console.log event
 
   window.onmousemove = () ->
     rightBoundary = (canvasWidth + 5 + toolbarWidth + 20)
