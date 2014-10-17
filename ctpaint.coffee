@@ -186,6 +186,8 @@ oldCursorsColor = undefined
 buttonWidth = 24
 buttonHeight = 24
 
+swatchColorPicked = false
+
 
 ###
   Color swatches are the four colors in the very lower left corner of the window
@@ -3860,6 +3862,9 @@ $(document).ready (event)->
     if event.keyCode is keysToKeyCodes['shift']
       colorModify = true
 
+    if event.keyCode is keysToKeyCodes['tab']
+      swatchColorPicked = true
+
   $('body').keyup (event) ->
     event.preventDefault()
     if normalCircumstance
@@ -3869,6 +3874,9 @@ $(document).ready (event)->
 
     if event.keyCode is keysToKeyCodes['shift']
       colorModify = false
+
+    if event.keyCode is keysToKeyCodes['tab']
+      swatchColorPicked = false
 
   $('#menuDiv').mousedown (event) ->
     whatSortOfMouseListening( mouseListeningUnderAbnormalCircumstance[0]( event ), true)
@@ -3980,19 +3988,42 @@ $(document).ready (event)->
     drawStringAsCommandPrompt(toolbar1Context, information, 0, 191, 12)
 
   $('#toolbar1').mouseleave (event)->  
-    toolbar1Context.drawImage(toolbar1sImage1,188,3)  
+    toolbar1Context.drawImage(toolbar1sImage1,188,3)
 
-  $('#toolbar1').mousedown (event)->
+  $('#toolbar1').mousedown (event) ->
     toolbar1X = event.clientX
     toolbar1Y = event.clientY - (window.innerHeight - toolbarHeight)
-    if 52 < toolbar1X and toolbar1X < 188
-      if 4 < toolbar1Y and toolbar1Y < 35
-        if colorModify
+    notTooFarLeft =  7 < toolbar1X 
+    notTooFarRight = toolbar1X < 21
+    withinXBoundaries = notTooFarLeft and notTooFarRight
+    notTooHigh = 4 < toolbar1Y
+    notTooLow = toolbar1Y < 25
+    withinYBoundaries = notTooHigh and notTooLow
+    if withinXBoundaries and withinYBoundaries
+      console.log '9'
+      swatchColorPicked = true
+
+  $('#toolbar1').mouseup (event)->
+    toolbar1X = event.clientX
+    toolbar1Y = event.clientY - (window.innerHeight - toolbarHeight)
+    if not swatchColorPicked
+      if 52 < toolbar1X and toolbar1X < 188
+        if 4 < toolbar1Y and toolbar1Y < 35
+          if colorModify
+            spotInColorPalette = (((toolbar1X - 52 ) // 17) * 2) + ((toolbar1Y - 4) // 16)
+            colorMenu()
+          else
+            colorSwatches[0] = colorPalette[(((toolbar1X - 52 ) // 17) * 2) + ((toolbar1Y - 4) // 16)]
+          drawToolbars()
+    else
+      console.log 'A', swatchColorPicked
+      if 52 < toolbar1X and toolbar1X < 188
+        if 4 < toolbar1Y and toolbar1Y < 35
+          console.log 'B'
           spotInColorPalette = (((toolbar1X - 52 ) // 17) * 2) + ((toolbar1Y - 4) // 16)
-          colorMenu()
-        else
-          colorSwatches[0] = colorPalette[(((toolbar1X - 52 ) // 17) * 2) + ((toolbar1Y - 4) // 16)]
-        drawToolbars()
+          colorPalette[spotInColorPalette] = colorSwatches[0]
+          swatchColorPicked = false
+          drawToolbars()
 
   $('#dragAndDrop').on('dragenter', (event)->
     event.stopPropagation()
@@ -4040,7 +4071,6 @@ $(document).ready (event)->
             cH.shift()
         imageToOpen.src = imageLoaded.result
       imageLoaded.readAsDataURL(theFile)
-      console.log 'C'
     return false
   )
 

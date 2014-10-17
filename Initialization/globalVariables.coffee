@@ -186,3 +186,5 @@ oldCursorsColor = undefined
 buttonWidth = 24
 buttonHeight = 24
 
+swatchColorPicked = false
+

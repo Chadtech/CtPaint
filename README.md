@@ -70,6 +70,8 @@ Here is an incomplete list of features, with the ones I have finished checked of
 * X Scale selected area
 * Hue, brightness, and saturation buttons.
 * magnitude/mode buttons
+* Select all tool
+* X Drag and drop Color palette/swatch changing (tab key)
 
 General to dos and bugs to fix:
 
@@ -87,10 +89,8 @@ General to dos and bugs to fix:
 * X Draw Selection transparent Icon
 * X Custom Cursor when not zoomed in
 * X Select area cursor pixel update bug (it reads the pixel of the selected area when updating the old location)
-* Drag and drop Color palette/swatch changing
 * X Sample cursor bug
 * X Open Image bug
-
 * Tweak zoom button
 
 
