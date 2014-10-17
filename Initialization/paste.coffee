@@ -34,9 +34,12 @@ pasteAction = ->
 pasteTheSelection = ->
   # Set the selection to what was in the clipboard
   selection = copyMemory
+  #If we are zomed in, we want the pastee
+  # to be in the visual field
   if not zoomActivate
     selectionX = 0
     selectionY = 0
+  # Otherwise just stick it in the corner
   else
     selectionX = zoomRootX
     selectionY = zoomRootY
@@ -44,6 +47,8 @@ pasteTheSelection = ->
   selectionsHeight = selection.height
   tooWide = selectionsWidth > canvasWidth
   tooTall = selectionsHeight > canvasHeight
+  # If its too big in both dimensions, replace the canvas with the
+  # selections
   if tooTall and tooWide
     ctContext.canvas.width = selectionsWidth
     ctContext.canvas.height = selectionsHeight
