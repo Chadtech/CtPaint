@@ -65,9 +65,11 @@ Here is an incomplete list of features, with the ones I have finished checked of
 * X Tool cursor images
 * X Zoom
 * Secondary color transparency
-* Arrow key scrolling
+* X Arrow key scrolling
 * X Scale canvas
 * X Scale selected area
+* Hue, brightness, and saturation buttons.
+* magnitude/mode buttons
 
 General to dos and bugs to fix:
 
@@ -86,11 +88,11 @@ General to dos and bugs to fix:
 * X Custom Cursor when not zoomed in
 * X Select area cursor pixel update bug (it reads the pixel of the selected area when updating the old location)
 * Drag and drop Color palette/swatch changing
-* Sample cursor bug
-* Open Image bug, possible open button
-* magnitude/mode buttons
+* X Sample cursor bug
+* X Open Image bug
+
 * Tweak zoom button
-* Hue, brightness, and saturation buttons.
+
 
 ------- LICENSING
 

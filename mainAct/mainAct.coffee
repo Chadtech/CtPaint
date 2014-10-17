@@ -81,7 +81,6 @@ $(document).ready (event)->
           positionCanvas()
           updateCursor()
 
-
     if event.keyCode is keysToKeyCodes['alt']
       toolViewMode++
       toolViewMode = toolViewMode%2

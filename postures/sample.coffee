@@ -1,6 +1,7 @@
 samplePosture = [
   # Mouse Move
   (event) ->
+    coverUpOldCursor()
     drawInformation(event)
     updateCursor(event)
 
