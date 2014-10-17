@@ -109,6 +109,7 @@ $(document).ready (event)->
     leftBoundary = (canvasWidth + 5 + toolbarWidth)
     if (event.clientX < rightBoundary) and (leftBoundary < event.clientX)
       if (event.clientY < (canvasHeight + 5 + 20)) and ((canvasHeight + 5) < event.clientY)
+        copeWithSelection()
         cH.push ctCanvas.toDataURL()
         cH.shift()
         cF = []
@@ -202,7 +203,6 @@ $(document).ready (event)->
 
   $('#dragAndDrop').on('dragover', (event)->
     event.stopPropagation()
-    event.preventDefault()
     return false
   )
 

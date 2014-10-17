@@ -2475,24 +2475,37 @@ pasteTheSelection = ->
     selectionY = zoomRootY
   selectionsWidth = selection.width
   selectionsHeight = selection.height
-  canvasDataAsImage = new Image()
-  canvasDataAsImage.onload = ->
-    # Draw the canvas as we know it to be
-    ctContext.drawImage(canvasDataAsImage,0,0)
-    # Then draw the selection
-    ctContext.putImageData(selection, selectionX, selectionY)
-    # Then draw that little box around the selection
-    originX = selectionX
-    originY = selectionY
-    edgeX = originX + selectionsWidth - 1
-    edgeY = originY + selectionsHeight - 1
-    drawSelectBox(ctContext, originX, originY, edgeX, edgeY)
-    # Note that none of this is saved, its merely drawn.
-    # These drawings are not incorporated into the data
-    # of the canvas.
-    # It gets incorporated upon 'exit' from selection.
-  canvasDataAsImage.src = cH[cH.length - 1]
-  areaSelected = true
+  tooWide = selectionsWidth > canvasWidth
+  tooTall = selectionsHeight > canvasHeight
+  if tooTall and tooWide
+    ctContext.canvas.width = selectionsWidth
+    ctContext.canvas.height = selectionsHeight
+    canvasWidth = ctContext.canvas.width
+    canvasHeight = ctContext.canvas.height
+    ctCanvas.style.width = (canvasWidth).toString()+'px'
+    ctCanvas.style.height = (canvasHeight).toString()+'px'
+    ctContext.putImageData(selection, 0, 0)
+    cH.push ctCanvas.toDataURL()
+    cH.shift()
+  else
+    canvasDataAsImage = new Image()
+    canvasDataAsImage.onload = ->
+      # Draw the canvas as we know it to be
+      ctContext.drawImage(canvasDataAsImage,0,0)
+      # Then draw the selection
+      ctContext.putImageData(selection, selectionX, selectionY)
+      # Then draw that little box around the selection
+      originX = selectionX
+      originY = selectionY
+      edgeX = originX + selectionsWidth - 1
+      edgeY = originY + selectionsHeight - 1
+      drawSelectBox(ctContext, originX, originY, edgeX, edgeY)
+      # Note that none of this is saved, its merely drawn.
+      # These drawings are not incorporated into the data
+      # of the canvas.
+      # It gets incorporated upon 'exit' from selection.
+    canvasDataAsImage.src = cH[cH.length - 1]
+    areaSelected = true
 
   
 ###
@@ -2899,11 +2912,9 @@ historyUpdate = ->
   cH.shift()
   cF = []
 
-copeWithSelection = (atZeroZero)->
+copeWithSelection = ()->
   copeX = selectionX
   copeY = selectionY
-  if atZeroZero is undefined
-    atZeroZero = false
   if areaSelected
     areaSelected = false
     canvasDataAsImage = new Image()
@@ -3845,6 +3856,7 @@ $(document).ready (event)->
     leftBoundary = (canvasWidth + 5 + toolbarWidth)
     if (event.clientX < rightBoundary) and (leftBoundary < event.clientX)
       if (event.clientY < (canvasHeight + 5 + 20)) and ((canvasHeight + 5) < event.clientY)
+        copeWithSelection()
         cH.push ctCanvas.toDataURL()
         cH.shift()
         cF = []
@@ -3938,7 +3950,6 @@ $(document).ready (event)->
 
   $('#dragAndDrop').on('dragover', (event)->
     event.stopPropagation()
-    event.preventDefault()
     return false
   )
 

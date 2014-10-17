@@ -89,6 +89,8 @@ General to dos and bugs to fix:
 * Sample cursor bug
 * Open Image bug, possible open button
 * magnitude/mode buttons
+* Tweak zoom button
+* Hue, brightness, and saturation buttons.
 
 ------- LICENSING
 

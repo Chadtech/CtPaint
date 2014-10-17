@@ -281,11 +281,9 @@ historyUpdate = ->
   cH.shift()
   cF = []
 
-copeWithSelection = (atZeroZero)->
+copeWithSelection = ()->
   copeX = selectionX
   copeY = selectionY
-  if atZeroZero is undefined
-    atZeroZero = false
   if areaSelected
     areaSelected = false
     canvasDataAsImage = new Image()
