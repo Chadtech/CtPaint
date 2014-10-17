@@ -33,8 +33,8 @@ gulp.task('doAllTheScriptsTogether', function() {
     './initialization/cursorColor.coffee',
     './initialization/undo.coffee',
     './initialization/redo.coffee',
-
     './initialization/resize.coffee',
+    './initialization/zoom.coffee',
 
     './initialization/rendering.coffee',
     './initialization/keyListening.coffee',

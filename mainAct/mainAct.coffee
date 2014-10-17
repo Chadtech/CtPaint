@@ -95,13 +95,68 @@ $(document).ready (event)->
       drawToolbars()
 
     if event.keyCode is keysToKeyCodes['equals'] or event.keyCode is 61
-      if tH[tH.length - 1].magnitude < tH[tH.length - 1].maxMagnitude
-        tH[tH.length - 1].magnitude++
-      drawToolbars()
+      if zoomActivate
+        currentMagnitude = ctPaintTools[toolsToNumbers['zoom']].magnitude
+        maximumMagnitudeForZoom = ctPaintTools[toolsToNumbers['zoom']].maxMagnitude
+        if currentMagnitude < maximumMagnitudeForZoom
+
+          # Unzoom
+          zoomAction()
+
+          # Figure out where we are zooming to
+          screensWidth = window.innerWidth - toolbarWidth
+          screensWidthInCanvasPixels = screensWidth // zoomFactor
+          screensHeight = window.innerHeight - toolbarHeight
+          screensHeightInCanvasPixels = screensHeight // zoomFactor
+
+          adjustX = zoomRootX + ( (screensWidthInCanvasPixels // 4) ) 
+          adjustY = zoomRootY + ( (screensHeightInCanvasPixels // 4) )
+
+          # set zoom for a little bit more
+          ctPaintTools[toolsToNumbers['zoom']].magnitude++
+
+          # Zoom back in
+          zoomAction(adjustX, adjustY)
+      else
+        zoomAction(canvasXOffset, canvasYOffset)
+
+
 
     if event.keyCode is keysToKeyCodes['minus'] or event.keyCode is 173
+      if zoomActivate
+        if ctPaintTools[toolsToNumbers['zoom']].magnitude is 1
+
+          # Unzoom
+          zoomAction()
+
+        else
+          # Unzoom
+          zoomAction()
+
+          # Figure out where we are zooming to
+          screensWidth = window.innerWidth - toolbarWidth
+          screensWidthInCanvasPixels = screensWidth // zoomFactor
+          screensHeight = window.innerHeight - toolbarHeight
+          screensHeightInCanvasPixels = screensHeight // zoomFactor
+
+          adjustX = zoomRootX + (screensWidthInCanvasPixels // 2)
+          adjustY = zoomRootY + (screensHeightInCanvasPixels // 2)
+
+          # set zoom for one less magnitude
+          ctPaintTools[toolsToNumbers['zoom']].magnitude--
+
+          # Zoom back in
+          zoomAction(adjustX, adjustY)
+
+
+    if event.keyCode is keysToKeyCodes['left bracket']
       if tH[tH.length - 1].magnitude > 1
         tH[tH.length - 1].magnitude--
+      drawToolbars()
+
+    if event.keyCode is keysToKeyCodes['right bracket']
+      if tH[tH.length - 1].magnitude < tH[tH.length - 1].maxMagnitude
+        tH[tH.length - 1].magnitude++
       drawToolbars()
 
     if event.keyCode is keysToKeyCodes['shift']

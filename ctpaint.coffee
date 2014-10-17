@@ -2636,6 +2636,58 @@ redoAction = ->
   ,20)
 
   
+zoomAction = (xCor, yCor) ->
+  if zoomActivate
+    zoomActivate = false
+
+    canvasXPos = toolbarWidth + 5
+    canvasYPos = 5
+    positionCanvas()
+
+    ctCanvas.style.width = (canvasWidth).toString()+'px'
+    ctCanvas.style.height = (canvasHeight).toString()+'px'
+        
+  else
+    zoomActivate = true
+    zoomFactor = 2 ** ctPaintTools[toolsToNumbers['zoom']].magnitude
+
+    # The windows width, minus the width of the vertical toolbar
+    screensWidth = window.innerWidth - toolbarWidth
+    # The number of 'represented' pixels in the canvas, not the 
+    # number of pixels across the resolution of the screen
+    screensWidthInCanvasPixels = screensWidth // zoomFactor
+
+    screensHeight = window.innerHeight - toolbarHeight
+    screensHeightInCanvasPixels = screensHeight // zoomFactor
+
+    # zoomRootX, being in the upper left corner of where
+    # they clicked given the new zoom magnitude
+    # This results that they zoom in to where they click
+    # instead of setting the origin ( (0,0) ) of their
+    # new view mode to where they clicked.
+    zoomRootX = xCor - (screensWidthInCanvasPixels // 2)
+    zoomRootY = yCor - (screensHeightInCanvasPixels // 2)
+
+    if zoomRootX < 0
+      zoomRootX = 0
+      canvasXPos += 5
+    if zoomRootY < 0
+      zoomRootY = 0
+      canvasYPos += 5
+
+    canvasXPos -= 5 
+    canvasYPos -= 5
+
+    canvasXPos -= (zoomRootX * zoomFactor)
+    canvasYPos -= (zoomRootY * zoomFactor)
+
+    positionCanvas()
+
+    ctCanvas.style.width = (zoomFactor * ctCanvas.width).toString()+'px'
+    ctCanvas.style.height = (zoomFactor * ctCanvas.height).toString()+'px'
+  drawToolbars()
+
+
 ###
   Figure out where to put the canvas
 ###
@@ -3105,55 +3157,7 @@ zoomPosture = [
     if not mousePressed
       mousePressed = true
       getMousePositionOnCanvas(event)
-      if zoomActivate
-        zoomActivate = false
-
-        canvasXPos = toolbarWidth + 5
-        canvasYPos = 5
-        positionCanvas()
-
-        ctCanvas.style.width = (canvasWidth).toString()+'px'
-        ctCanvas.style.height = (canvasHeight).toString()+'px'
-        
-      else
-        zoomActivate = true
-        zoomFactor = 2 ** tH[tH.length - 1].magnitude
-
-        # The windows width, minus the width of the vertical toolbar
-        screensWidth = window.innerWidth - toolbarWidth
-        # The number of 'represented' pixels in the canvas, not the 
-        # number of pixels across the resolution of the screen
-        screensWidthInCanvasPixels = screensWidth // zoomFactor
-
-        screensHeight = window.innerHeight - toolbarHeight
-        screensHeightInCanvasPixels = screensHeight // zoomFactor
-
-        # zoomRootX, being in the upper left corner of where
-        # they clicked given the new zoom magnitude
-        # This results that they zoom in to where they click
-        # instead of setting the origin ( (0,0) ) of their
-        # new view mode to where they clicked.
-        zoomRootX = xSpot - (screensWidthInCanvasPixels // 2)
-        zoomRootY = ySpot - (screensHeightInCanvasPixels // 2)
-
-        if zoomRootX < 0
-          zoomRootX = 0
-          canvasXPos += 5
-        if zoomRootY < 0
-          zoomRootY = 0
-          canvasYPos += 5
-
-        canvasXPos -= 5 
-        canvasYPos -= 5
-
-        canvasXPos -= (zoomRootX * zoomFactor)
-        canvasYPos -= (zoomRootY * zoomFactor)
-
-        positionCanvas()
-
-        ctCanvas.style.width = (zoomFactor * ctCanvas.width).toString()+'px'
-        ctCanvas.style.height = (zoomFactor * ctCanvas.height).toString()+'px'
-      drawToolbars()
+      zoomAction(xSpot, ySpot)
 
   (event) ->
     if mousePressed
@@ -3850,13 +3854,68 @@ $(document).ready (event)->
       drawToolbars()
 
     if event.keyCode is keysToKeyCodes['equals'] or event.keyCode is 61
-      if tH[tH.length - 1].magnitude < tH[tH.length - 1].maxMagnitude
-        tH[tH.length - 1].magnitude++
-      drawToolbars()
+      if zoomActivate
+        currentMagnitude = ctPaintTools[toolsToNumbers['zoom']].magnitude
+        maximumMagnitudeForZoom = ctPaintTools[toolsToNumbers['zoom']].maxMagnitude
+        if currentMagnitude < maximumMagnitudeForZoom
+
+          # Unzoom
+          zoomAction()
+
+          # Figure out where we are zooming to
+          screensWidth = window.innerWidth - toolbarWidth
+          screensWidthInCanvasPixels = screensWidth // zoomFactor
+          screensHeight = window.innerHeight - toolbarHeight
+          screensHeightInCanvasPixels = screensHeight // zoomFactor
+
+          adjustX = zoomRootX + ( (screensWidthInCanvasPixels // 4) ) 
+          adjustY = zoomRootY + ( (screensHeightInCanvasPixels // 4) )
+
+          # set zoom for a little bit more
+          ctPaintTools[toolsToNumbers['zoom']].magnitude++
+
+          # Zoom back in
+          zoomAction(adjustX, adjustY)
+      else
+        zoomAction(canvasXOffset, canvasYOffset)
+
+
 
     if event.keyCode is keysToKeyCodes['minus'] or event.keyCode is 173
+      if zoomActivate
+        if ctPaintTools[toolsToNumbers['zoom']].magnitude is 1
+
+          # Unzoom
+          zoomAction()
+
+        else
+          # Unzoom
+          zoomAction()
+
+          # Figure out where we are zooming to
+          screensWidth = window.innerWidth - toolbarWidth
+          screensWidthInCanvasPixels = screensWidth // zoomFactor
+          screensHeight = window.innerHeight - toolbarHeight
+          screensHeightInCanvasPixels = screensHeight // zoomFactor
+
+          adjustX = zoomRootX + (screensWidthInCanvasPixels // 2)
+          adjustY = zoomRootY + (screensHeightInCanvasPixels // 2)
+
+          # set zoom for one less magnitude
+          ctPaintTools[toolsToNumbers['zoom']].magnitude--
+
+          # Zoom back in
+          zoomAction(adjustX, adjustY)
+
+
+    if event.keyCode is keysToKeyCodes['left bracket']
       if tH[tH.length - 1].magnitude > 1
         tH[tH.length - 1].magnitude--
+      drawToolbars()
+
+    if event.keyCode is keysToKeyCodes['right bracket']
+      if tH[tH.length - 1].magnitude < tH[tH.length - 1].maxMagnitude
+        tH[tH.length - 1].magnitude++
       drawToolbars()
 
     if event.keyCode is keysToKeyCodes['shift']
@@ -4000,7 +4059,6 @@ $(document).ready (event)->
     notTooLow = toolbar1Y < 25
     withinYBoundaries = notTooHigh and notTooLow
     if withinXBoundaries and withinYBoundaries
-      console.log '9'
       swatchColorPicked = true
 
   $('#toolbar1').mouseup (event)->
@@ -4016,10 +4074,8 @@ $(document).ready (event)->
             colorSwatches[0] = colorPalette[(((toolbar1X - 52 ) // 17) * 2) + ((toolbar1Y - 4) // 16)]
           drawToolbars()
     else
-      console.log 'A', swatchColorPicked
       if 52 < toolbar1X and toolbar1X < 188
         if 4 < toolbar1Y and toolbar1Y < 35
-          console.log 'B'
           spotInColorPalette = (((toolbar1X - 52 ) // 17) * 2) + ((toolbar1Y - 4) // 16)
           colorPalette[spotInColorPalette] = colorSwatches[0]
           swatchColorPicked = false

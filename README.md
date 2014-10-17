@@ -91,7 +91,9 @@ General to dos and bugs to fix:
 * X Select area cursor pixel update bug (it reads the pixel of the selected area when updating the old location)
 * X Sample cursor bug
 * X Open Image bug
+* minus / plus (equals) key triggering zoom in and out (bracket keys?)
 * Tweak zoom button
+* compatibility between all draw informations and cursor pixel
 
 
 ------- LICENSING
