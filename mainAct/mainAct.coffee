@@ -281,7 +281,7 @@ $(document).ready (event)->
         imageToOpen.onload = ->
           widthExceedsCanvas = canvasWidth < imageToOpen.width
           heightExceedsCanvas = canvasHeight < imageToOpen.height
-          if not widthExceedsCanvas or not heightExceedsCanvas
+          if not widthExceedsCanvas and not heightExceedsCanvas
             ctContext.drawImage(imageToOpen, 0, 0)
             copyMemory = ctContext.getImageData(0, 0, imageToOpen.width, imageToOpen.height)
             canvasDataAsImage = new Image()
