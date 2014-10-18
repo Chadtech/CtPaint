@@ -2763,6 +2763,28 @@ modeChangeAction = ->
   ,20)
 
   
+magnitudeUpAction = ->
+  tH.push ctPaintTools[toolsToNumbers['magnitudeUp']]
+  drawToolbars()
+
+  setTimeout( ()->
+    tH.pop()
+    if isNaN(tH[tH.length - 1].maxMagnitude) is false
+      if tH[tH.length - 1].magnitude < tH[tH.length - 1].maxMagnitude
+        tH[tH.length - 1].magnitude++
+    drawToolbars()
+  ,20)
+magnitudeDownAction = ->
+  tH.push ctPaintTools[toolsToNumbers['magnitudeDown']]
+  drawToolbars()
+
+  setTimeout( ()->
+    tH.pop()
+    if isNaN(tH[tH.length - 1].maxMagnitude) is false
+      if 1 < tH[tH.length - 1].magnitude
+        tH[tH.length - 1].magnitude--
+    drawToolbars()
+  ,20)
 ###
   Figure out where to put the canvas
 ###
@@ -3789,6 +3811,8 @@ ctPaintTools[20].toolsAction = undoAction
 ctPaintTools[21].toolsAction = redoAction
 ctPaintTools[22].toolsAction = cursorColorAction
 ctPaintTools[23].toolsAction = modeChangeAction
+ctPaintTools[24].toolsAction = magnitudeUpAction
+ctPaintTools[25].toolsAction = magnitudeDownAction
 
 ctPaintTools[8].menuImage.src = 'assets/t01.png'
 ctPaintTools[11].menuImage.src = 'assets/t02.png'
@@ -3841,6 +3865,8 @@ toolsToNumbers =
   'redo':21
   'cursorColor':22
   'modeChange':23
+  'magnitudeUp':24
+  'magnitudeDown':25
 
 ###
   Fancy Responsive tools are tools with icons that change with the tools magnitude and mode.
@@ -4018,14 +4044,10 @@ $(document).ready (event)->
 
 
     if event.keyCode is keysToKeyCodes['left bracket']
-      if tH[tH.length - 1].magnitude > 1
-        tH[tH.length - 1].magnitude--
-      drawToolbars()
+      magnitudeDownAction()
 
     if event.keyCode is keysToKeyCodes['right bracket']
-      if tH[tH.length - 1].magnitude < tH[tH.length - 1].maxMagnitude
-        tH[tH.length - 1].magnitude++
-      drawToolbars()
+      magnitudeUpAction()
 
     if event.keyCode is keysToKeyCodes['shift']
       colorModify = true

@@ -37,6 +37,8 @@ gulp.task('doAllTheScriptsTogether', function() {
     './initialization/zoom.coffee',
     './initialization/all.coffee',
     './initialization/modeChange.coffee',
+    './initialization/magnitudeUp.coffee',
+    './initialization/magnitudeDown.coffee',
 
     './initialization/rendering.coffee',
     './initialization/keyListening.coffee',

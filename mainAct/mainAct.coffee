@@ -108,14 +108,10 @@ $(document).ready (event)->
 
 
     if event.keyCode is keysToKeyCodes['left bracket']
-      if tH[tH.length - 1].magnitude > 1
-        tH[tH.length - 1].magnitude--
-      drawToolbars()
+      magnitudeDownAction()
 
     if event.keyCode is keysToKeyCodes['right bracket']
-      if tH[tH.length - 1].magnitude < tH[tH.length - 1].maxMagnitude
-        tH[tH.length - 1].magnitude++
-      drawToolbars()
+      magnitudeUpAction()
 
     if event.keyCode is keysToKeyCodes['shift']
       colorModify = true
