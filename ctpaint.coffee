@@ -3245,7 +3245,7 @@ keyListeningUnderNormalCircumstance = [
         canvasDataAsImage = new Image()
         canvasDataAsImage.onload = ->
           ctContext.drawImage(canvasDataAsImage,0,0)
-       canvasDataAsImage.src = cH[cH.length - 1]
+       canvasDataAsImage.src = canvasHoldover
   (event) ->
     if event.keyCode is keysToKeyCodes['d']
       replaceAction()
@@ -3700,7 +3700,7 @@ toolNames = [
   'cut', 'all'
   'undo', 'redo'
   'cursorColor', 'modeChange'
-  'magnitudeUp', 'magnitudeDown'
+  'magnitudeDown', 'magnitudeUp'
 ]
 
 toolMaxMagnitudes = [
@@ -3865,8 +3865,9 @@ toolsToNumbers =
   'redo':21
   'cursorColor':22
   'modeChange':23
-  'magnitudeUp':24
-  'magnitudeDown':25
+  'magnitudeDown':24
+  'magnitudeUp':25
+
 
 ###
   Fancy Responsive tools are tools with icons that change with the tools magnitude and mode.

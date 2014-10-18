@@ -146,7 +146,7 @@ keyListeningUnderNormalCircumstance = [
         canvasDataAsImage = new Image()
         canvasDataAsImage.onload = ->
           ctContext.drawImage(canvasDataAsImage,0,0)
-       canvasDataAsImage.src = cH[cH.length - 1]
+       canvasDataAsImage.src = canvasHoldover
   (event) ->
     if event.keyCode is keysToKeyCodes['d']
       replaceAction()
