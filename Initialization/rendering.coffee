@@ -19,6 +19,20 @@ getMousePositionOnCanvas = (event) ->
     xSpot += zoomRootX
     ySpot += zoomRootY
 
+setCasualPosition = (event) ->
+  if not zoomActivate
+    casualX = event.clientX - canvasXPos - canvasXOffset
+    casualY = event.clientY - canvasYPos - canvasYOffset
+  else
+    casualX = event.clientX - toolbarWidth
+    casualY = event.clientY
+
+    casualX = casualX // zoomFactor
+    casualY = casualY // zoomFactor
+
+    casualX += zoomRootX
+    casualY += zoomRootY
+
 ###
   Only done at the very initialization of CtPaint.
 ###

@@ -158,6 +158,9 @@ ySpot = undefined
 oldX = undefined
 oldY = undefined
 
+casualX = undefined
+casualY = undefined
+
 cursorColors = [
   [ 255, 85, 0, 255 ]
   [ 85, 0, 255, 255 ]

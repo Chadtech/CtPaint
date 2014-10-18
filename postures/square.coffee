@@ -19,6 +19,7 @@ squarePosture = [
       canvasDataAsImage.src = cH[cH.length - 1]
     coverUpOldCursor()
     drawInformation(event)
+    setCasualPosition(event)
     updateCursor(event)
 
   # Mouse Down

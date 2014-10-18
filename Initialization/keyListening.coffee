@@ -59,6 +59,8 @@ keyListeningUnderNormalCircumstance = [
       verticalColorSwap()
     if event.keyCode is keysToKeyCodes['c']
       copyAction()
+    if event.keyCode is keysToKeyCodes['d']
+      replaceAction()
     if event.keyCode is keysToKeyCodes['e']
       resizeAction()
     if event.keyCode is keysToKeyCodes['f']
@@ -147,9 +149,6 @@ keyListeningUnderNormalCircumstance = [
         canvasDataAsImage.onload = ->
           ctContext.drawImage(canvasDataAsImage,0,0)
        canvasDataAsImage.src = canvasHoldover
-  (event) ->
-    if event.keyCode is keysToKeyCodes['d']
-      replaceAction()
 ]
  
 justPassTheCharacter = (keyPressed) ->

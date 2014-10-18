@@ -1,5 +1,6 @@
 fillPosture = [
   (event) ->
+    setCasualPosition(event)
     coverUpOldCursor()
     drawInformation(event)
     updateCursor(event)

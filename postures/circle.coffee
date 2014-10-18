@@ -1,6 +1,7 @@
 circlePosture = [
   # Mouse Move
   (event) ->
+    setCasualPosition(event)
     if mousePressed
       getMousePositionOnCanvas(event)
       calculatedRadius = Math.pow(Math.pow(xSpot - oldX, 2) + Math.pow(ySpot - oldY, 2), 0.5)

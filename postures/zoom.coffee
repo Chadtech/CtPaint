@@ -1,6 +1,7 @@
 zoomPosture = [
   (event) ->
     drawInformation(event)
+    setCasualPosition(event)
     #updateCursor(event)
 
   (event) ->

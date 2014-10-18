@@ -24,6 +24,7 @@ selectPosture = [
         canvasDataAsImage.src = cH[cH.length - 1]
       else
         drawInformation( event, boxInformation )
+        setCasualPosition(event)
 
     else
       if mousePressed

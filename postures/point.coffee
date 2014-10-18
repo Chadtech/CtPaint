@@ -3,6 +3,7 @@ pointPosture = [
     # Mouse Move
     coverUpOldCursor()
     drawInformation(event)
+    setCasualPosition(event)
     if mousePressed
       oldX = xSpot
       oldY = ySpot

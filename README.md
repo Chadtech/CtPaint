@@ -69,7 +69,7 @@ Here is an incomplete list of features, with the ones I have finished checked of
 * X Scale canvas
 * X Scale selected area
 * Hue, brightness, and saturation buttons.
-* magnitude/mode buttons
+* X magnitude/mode buttons
 * X Select all tool
 * X Drag and drop Color palette/swatch changing (tab key)
 * View mode when negate key held down (zoom out)
@@ -98,7 +98,7 @@ General to dos and bugs to fix:
 * Add another 16 Colors
 * X When I paste an image, during circle draw, the tool actually is select, though the toolbar still indicates circle ( FIXED THIS BUG )
 * X Make Sample automatically go to point tool, not previous
-* zoom into mouse location, not center
+* X zoom into mouse location, not center
 * X after replace selection selection box expands
 
 

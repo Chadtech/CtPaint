@@ -38,26 +38,6 @@ $(document).ready (event)->
         maximumMagnitudeForZoom = ctPaintTools[toolsToNumbers['zoom']].maxMagnitude
         if currentMagnitude < maximumMagnitudeForZoom
 
-          # Invent a hypothetical click location that is right in the middle
-          # of the currently presented canvas region
-          pseudoXSpot = undefined
-          if (window.innerWidth - toolbarWidth) < (canvasWidth * zoomFactor)
-            pseudoXSpot = window.innerWidth - toolbarWidth
-            pseudoXSpot /= 2
-            pseudoXSpot //= zoomFactor
-            pseudoXSpot += zoomRootX
-          else
-            pseudoXSpot = canvasWidth // 2
-
-          pseudoYSpot = undefined
-          if window.innerHeight < ( canvasHeight * zoomFactor)
-            pseudoYSpot = window.innerHeight
-            pseudoYSpot /= 2
-            pseudoYSpot //= zoomFactor
-            pseudoYSpot += zoomRootY
-          else
-            pseudoYSpot = canvasHeight // 2
-
           # Unzoom
           zoomAction()
 
@@ -65,7 +45,8 @@ $(document).ready (event)->
           ctPaintTools[toolsToNumbers['zoom']].magnitude++
 
           # Zoom back in
-          zoomAction(pseudoXSpot, pseudoYSpot)
+          if casualX isnt undefined and casualY isnt undefined
+            zoomAction(casualX, casualY)
       else
         zoomAction(canvasXOffset, canvasYOffset)
 

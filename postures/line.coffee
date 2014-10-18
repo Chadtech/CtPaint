@@ -15,6 +15,7 @@ linePosture = [
       canvasDataAsImage.src = cH[cH.length - 1]
     else
       drawInformation(event)
+    setCasualPosition(event)
     updateCursor(event)
 
   # Mouse down

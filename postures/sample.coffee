@@ -3,6 +3,7 @@ samplePosture = [
   (event) ->
     coverUpOldCursor()
     drawInformation(event)
+    setCasualPosition(event)
     updateCursor(event)
 
   # Mouse Down

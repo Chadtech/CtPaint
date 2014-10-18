@@ -158,6 +158,9 @@ ySpot = undefined
 oldX = undefined
 oldY = undefined
 
+casualX = undefined
+casualY = undefined
+
 cursorColors = [
   [ 255, 85, 0, 255 ]
   [ 85, 0, 255, 255 ]
@@ -2806,6 +2809,20 @@ getMousePositionOnCanvas = (event) ->
     xSpot += zoomRootX
     ySpot += zoomRootY
 
+setCasualPosition = (event) ->
+  if not zoomActivate
+    casualX = event.clientX - canvasXPos - canvasXOffset
+    casualY = event.clientY - canvasYPos - canvasYOffset
+  else
+    casualX = event.clientX - toolbarWidth
+    casualY = event.clientY
+
+    casualX = casualX // zoomFactor
+    casualY = casualY // zoomFactor
+
+    casualX += zoomRootX
+    casualY += zoomRootY
+
 ###
   Only done at the very initialization of CtPaint.
 ###
@@ -3158,6 +3175,8 @@ keyListeningUnderNormalCircumstance = [
       verticalColorSwap()
     if event.keyCode is keysToKeyCodes['c']
       copyAction()
+    if event.keyCode is keysToKeyCodes['d']
+      replaceAction()
     if event.keyCode is keysToKeyCodes['e']
       resizeAction()
     if event.keyCode is keysToKeyCodes['f']
@@ -3246,9 +3265,6 @@ keyListeningUnderNormalCircumstance = [
         canvasDataAsImage.onload = ->
           ctContext.drawImage(canvasDataAsImage,0,0)
        canvasDataAsImage.src = canvasHoldover
-  (event) ->
-    if event.keyCode is keysToKeyCodes['d']
-      replaceAction()
 ]
  
 justPassTheCharacter = (keyPressed) ->
@@ -3299,6 +3315,7 @@ mouseListeningUnderAbnormalCircumstance = [
 zoomPosture = [
   (event) ->
     drawInformation(event)
+    setCasualPosition(event)
     #updateCursor(event)
 
   (event) ->
@@ -3341,6 +3358,7 @@ selectPosture = [
         canvasDataAsImage.src = cH[cH.length - 1]
       else
         drawInformation( event, boxInformation )
+        setCasualPosition(event)
 
     else
       if mousePressed
@@ -3444,6 +3462,7 @@ samplePosture = [
   (event) ->
     coverUpOldCursor()
     drawInformation(event)
+    setCasualPosition(event)
     updateCursor(event)
 
   # Mouse Down
@@ -3468,6 +3487,7 @@ samplePosture = [
 
 fillPosture = [
   (event) ->
+    setCasualPosition(event)
     coverUpOldCursor()
     drawInformation(event)
     updateCursor(event)
@@ -3505,6 +3525,7 @@ squarePosture = [
       canvasDataAsImage.src = cH[cH.length - 1]
     coverUpOldCursor()
     drawInformation(event)
+    setCasualPosition(event)
     updateCursor(event)
 
   # Mouse Down
@@ -3531,6 +3552,7 @@ squarePosture = [
 circlePosture = [
   # Mouse Move
   (event) ->
+    setCasualPosition(event)
     if mousePressed
       getMousePositionOnCanvas(event)
       calculatedRadius = Math.pow(Math.pow(xSpot - oldX, 2) + Math.pow(ySpot - oldY, 2), 0.5)
@@ -3589,6 +3611,7 @@ linePosture = [
       canvasDataAsImage.src = cH[cH.length - 1]
     else
       drawInformation(event)
+    setCasualPosition(event)
     updateCursor(event)
 
   # Mouse down
@@ -3615,6 +3638,7 @@ pointPosture = [
     # Mouse Move
     coverUpOldCursor()
     drawInformation(event)
+    setCasualPosition(event)
     if mousePressed
       oldX = xSpot
       oldY = ySpot
@@ -3653,6 +3677,7 @@ pointPosture = [
 
 emptyPosture = [
   (event) ->
+    setCasualPosition(event)
     drawInformation(event)
   (event) ->
     mousePressed = true
@@ -3664,6 +3689,7 @@ emptyPosture = [
 
 horizontalColorSwapPosture = [
   (event) ->
+    setCasualPosition(event)
     drawInformation(event)
   (event) ->
     mousePressed = true
@@ -3677,6 +3703,7 @@ horizontalColorSwapPosture = [
 verticalColorSwapPosture = [
   (event) ->
     drawInformation(event)
+    setCasualPosition(event)
   (event) ->
     mousePressed = true
   (event) ->
@@ -3975,26 +4002,6 @@ $(document).ready (event)->
         maximumMagnitudeForZoom = ctPaintTools[toolsToNumbers['zoom']].maxMagnitude
         if currentMagnitude < maximumMagnitudeForZoom
 
-          # Invent a hypothetical click location that is right in the middle
-          # of the currently presented canvas region
-          pseudoXSpot = undefined
-          if (window.innerWidth - toolbarWidth) < (canvasWidth * zoomFactor)
-            pseudoXSpot = window.innerWidth - toolbarWidth
-            pseudoXSpot /= 2
-            pseudoXSpot //= zoomFactor
-            pseudoXSpot += zoomRootX
-          else
-            pseudoXSpot = canvasWidth // 2
-
-          pseudoYSpot = undefined
-          if window.innerHeight < ( canvasHeight * zoomFactor)
-            pseudoYSpot = window.innerHeight
-            pseudoYSpot /= 2
-            pseudoYSpot //= zoomFactor
-            pseudoYSpot += zoomRootY
-          else
-            pseudoYSpot = canvasHeight // 2
-
           # Unzoom
           zoomAction()
 
@@ -4002,7 +4009,8 @@ $(document).ready (event)->
           ctPaintTools[toolsToNumbers['zoom']].magnitude++
 
           # Zoom back in
-          zoomAction(pseudoXSpot, pseudoYSpot)
+          if casualX isnt undefined and casualY isnt undefined
+            zoomAction(casualX, casualY)
       else
         zoomAction(canvasXOffset, canvasYOffset)
 
