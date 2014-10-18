@@ -72,6 +72,7 @@ Here is an incomplete list of features, with the ones I have finished checked of
 * magnitude/mode buttons
 * Select all tool
 * X Drag and drop Color palette/swatch changing (tab key)
+* View mode when negate key held down (zoom out)
 
 General to dos and bugs to fix:
 
@@ -93,8 +94,12 @@ General to dos and bugs to fix:
 * X Open Image bug
 * X minus / plus (equals) key triggering zoom in and out (bracket keys?)
 * Tweak zoom button
-* compatibility between all draw informations and cursor pixel
+* X compatibility between all draw informations and cursor pixel
 * Add another 16 Colors
+* When I paste an image, during circle draw, the tool actually is select, though the toolbar still indicates circle
+* Make Sample automatically go to point tool, not previous
+* zoom into mouse location, not center
+* after replace selection selection box expands
 
 
 ------- LICENSING

@@ -5,7 +5,7 @@ import os
 sheet = Image.open('toolbar0Sheet.png')
 sheetWidth, sheetHeight = sheet.size
 
-numberOfRows = 11
+numberOfRows = 13
 
 # The sprite sheet toolbar0Sheet.png is cropped and saved
 # into 104 icons.
