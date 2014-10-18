@@ -2720,6 +2720,8 @@ prepareCanvas = ->
 
   positionCanvas()
 
+  $('#wayWideDiv').css('left', (window.innerWidth).toString())
+
 ###
   Position the menu div. The menu is un-(de?)-initialized
   by just putting the menu off screen and switching tools
@@ -2727,7 +2729,7 @@ prepareCanvas = ->
 ###
 positionMenu = () ->
   if not menuUp
-    $('#menuDiv').css('top',(window.innerHeight).toString())
+    $('#menuDiv').css('top',(window.innerHeight + 100).toString())
 
 setCanvasSizes = ->
   toolbar0Context.canvas.width = toolbarWidth
@@ -3889,8 +3891,6 @@ $(document).ready (event)->
       else
         zoomAction(canvasXOffset, canvasYOffset)
 
-
-
     if event.keyCode is keysToKeyCodes['minus'] or event.keyCode is 173
       if zoomActivate
         if ctPaintTools[toolsToNumbers['zoom']].magnitude is 1
@@ -3974,6 +3974,7 @@ $(document).ready (event)->
       $('#menuDiv').css('left', (toolbarWidth + 10).toString())
     else
       $('#menuDiv').css('top', (window.innerHeight).toString())
+    #$('#wayWideDiv').css('left', (window.innerWidth + 100).toString())
     positionCanvas()
     setCanvasSizes()
     placeToolbars()
@@ -3981,7 +3982,6 @@ $(document).ready (event)->
 
   $(window).scroll (event)->
     window.scroll(0,0)
-    console.log event
 
   window.onmousemove = () ->
     rightBoundary = (canvasWidth + 5 + toolbarWidth + 20)

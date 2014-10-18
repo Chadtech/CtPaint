@@ -94,6 +94,7 @@ General to dos and bugs to fix:
 * X minus / plus (equals) key triggering zoom in and out (bracket keys?)
 * Tweak zoom button
 * compatibility between all draw informations and cursor pixel
+* Add another 16 Colors
 
 
 ------- LICENSING

@@ -38,7 +38,7 @@ prepareCanvas = ->
 ###
 positionMenu = () ->
   if not menuUp
-    $('#menuDiv').css('top',(window.innerHeight).toString())
+    $('#menuDiv').css('top',(window.innerHeight + 100).toString())
 
 setCanvasSizes = ->
   toolbar0Context.canvas.width = toolbarWidth

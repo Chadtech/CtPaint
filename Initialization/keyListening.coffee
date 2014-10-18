@@ -79,16 +79,65 @@ keyListeningUnderNormalCircumstance = [
       redoAction()
     if event.keyCode is keysToKeyCodes['z']
       undoAction()
-    if event.keyCode is keysToKeyCodes['right']
-      if canvasWidth > (window.innerWidth - toolbarWidth - 5)
-        if (-1 * canvasXOffset) < ( (canvasWidth + 10) - (window.innerWidth - toolbarWidth) )
-          canvasXOffset -= 3
+
+    if event.keyCode is keysToKeyCodes['up']
+      if not zoomActivate
+        if canvasHeight > (window.innerHeight - toolbarHeight - 5)
+          if canvasYOffset < 0 
+            canvasYOffset += 9
+            positionCanvas()
+      else
+        if ( zoomRootY - ( ( 9 // zoomFactor ) + 2) ) > 0
+          canvasYPos += zoomRootY * zoomFactor
+          zoomRootY -= ( 9 // zoomFactor ) + 2
+          canvasYPos -= (zoomRootY * zoomFactor)
           positionCanvas()
+          updateCursor()
+
+    if event.keyCode is keysToKeyCodes['down']
+      if not zoomActivate
+        if canvasHeight > (window.innerHeight - toolbarHeight - 5)
+          if (-1 * canvasYOffset) < ((canvasHeight + 10) - (window.innerHeight - toolbarHeight))
+            canvasYOffset -= 9
+            positionCanvas()
+      else
+        bottomEdge = (canvasHeight - (window.innerHeight - toolbarHeight) // zoomFactor)
+        if ( zoomRootY + ( ( 9 // zoomFactor ) + 2) ) < (bottomEdge + 2)
+          canvasYPos += zoomRootY * zoomFactor
+          zoomRootY += ( 9 // zoomFactor ) + 2
+          canvasYPos -= (zoomRootY * zoomFactor)
+          positionCanvas()
+          updateCursor()
+
     if event.keyCode is keysToKeyCodes['left']
-      if canvasWidth > (window.innerWidth - toolbarWidth - 5)
-        if canvasXOffset < 0
-          canvasXOffset += 3
+      if not zoomActivate
+        if canvasWidth > (window.innerWidth - toolbarWidth - 5)
+          if canvasXOffset < 0 
+            canvasXOffset += 9
+            positionCanvas()
+      else
+        if ( zoomRootX - ( ( 9 // zoomFactor ) + 2) ) > 0
+          canvasXPos += zoomRootX * zoomFactor
+          zoomRootX -= ( 9 // zoomFactor ) + 2
+          canvasXPos -= (zoomRootX * zoomFactor)
           positionCanvas()
+          updateCursor()
+
+    if event.keyCode is keysToKeyCodes['right']
+      if not zoomActivate
+        if canvasWidth > (window.innerWidth - toolbarWidth - 5)
+          if (-1 * canvasXOffset) < ((canvasWidth + 10) - (window.innerWidth - toolbarWidth))
+            canvasXOffset -= 9
+            positionCanvas()
+      else
+        sideEdge = (canvasWidth - (window.innerWidth - toolbarWidth) // zoomFactor)
+        if ( zoomRootX + ( ( 9 // zoomFactor ) + 2) ) < (sideEdge + 2)
+          canvasXPos += zoomRootX * zoomFactor
+          zoomRootX += ( 9 // zoomFactor ) + 2
+          canvasXPos -= (zoomRootX * zoomFactor)
+          positionCanvas()
+          updateCursor()
+          
     if event.keyCode is keysToKeyCodes['backspace']
       if areaSelected
         areaSelected = false
