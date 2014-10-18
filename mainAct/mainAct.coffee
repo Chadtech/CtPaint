@@ -197,7 +197,7 @@ $(document).ready (event)->
   $('#CtPaint').mouseleave (event)->
     coverUpOldCursor() 
     tH[tH.length - 1].posture[3](event) 
-    toolbar1Context.drawImage(toolbar1sImage1,188,3)  
+    toolbar1Context.drawImage(toolbar1sImage1, toolbar1sImage0.width + 5, 3)
 
   $('#toolbar0').mousedown (event)->
     toolIndex = 0
@@ -221,10 +221,10 @@ $(document).ready (event)->
     tXSpot = event.clientX
     tYSpot = event.clientY - window.innerHeight + toolbarHeight
     information = getColorValue(toolbar1Context, tXSpot, tYSpot).toUpperCase() + ', (#,#) '
-    drawStringAsCommandPrompt(toolbar1Context, information, 0, 191, 12)
+    drawStringAsCommandPrompt(toolbar1Context, information, 0, toolbar1sImage0.width + 7, 12)
 
   $('#toolbar1').mouseleave (event)->  
-    toolbar1Context.drawImage(toolbar1sImage1,188,3)
+    toolbar1Context.drawImage(toolbar1sImage1, toolbar1sImage0.width + 5, 3)
 
   $('#toolbar1').mousedown (event) ->
     toolbar1X = event.clientX
@@ -242,7 +242,7 @@ $(document).ready (event)->
     toolbar1X = event.clientX
     toolbar1Y = event.clientY - (window.innerHeight - toolbarHeight)
     if not swatchColorPicked
-      if 52 < toolbar1X and toolbar1X < 188
+      if 52 < toolbar1X and toolbar1X < toolbar1sImage0.width
         if 4 < toolbar1Y and toolbar1Y < 35
           if colorModify
             spotInColorPalette = (((toolbar1X - 52 ) // 17) * 2) + ((toolbar1Y - 4) // 16)
@@ -251,7 +251,7 @@ $(document).ready (event)->
             colorSwatches[0] = colorPalette[(((toolbar1X - 52 ) // 17) * 2) + ((toolbar1Y - 4) // 16)]
           drawToolbars()
     else
-      if 52 < toolbar1X and toolbar1X < 188
+      if 52 < toolbar1X and toolbar1X < toolbar1sImage0.width
         if 4 < toolbar1Y and toolbar1Y < 35
           spotInColorPalette = (((toolbar1X - 52 ) // 17) * 2) + ((toolbar1Y - 4) // 16)
           colorPalette[spotInColorPalette] = colorSwatches[0]
@@ -281,7 +281,7 @@ $(document).ready (event)->
         imageToOpen.onload = ->
           widthExceedsCanvas = canvasWidth < imageToOpen.width
           heightExceedsCanvas = canvasHeight < imageToOpen.height
-          if not widthExceedsCanvas and not heightExceedsCanvas
+          if not widthExceedsCanvas or not heightExceedsCanvas
             ctContext.drawImage(imageToOpen, 0, 0)
             copyMemory = ctContext.getImageData(0, 0, imageToOpen.width, imageToOpen.height)
             canvasDataAsImage = new Image()

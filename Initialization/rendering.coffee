@@ -208,8 +208,8 @@ drawToolbars = ->
 
   toolbar1Context.drawImage(toolbar1sImage0, 3, 2)
   drawLine(toolbar1Context, [16, 20, 8], toolbarWidth - 1, 0, window.innerWidth, 0)
-  toolbar1Context.drawImage(toolbar1sImage1, toolbar1sImage0.width + 1, 3)
-  toolbar1Context.drawImage(toolbar1sImage1, toolbar1sImage0.width + toolbar1sImage1.width + 13, 3)
+  toolbar1Context.drawImage(toolbar1sImage1, toolbar1sImage0.width + 5, 3)
+  toolbar1Context.drawImage(toolbar1sImage1, toolbar1sImage0.width + toolbar1sImage1.width + 17, 3)
   drawLine(toolbar1Context, [16, 20, 8], toolbarWidth - 1, 0, window.innerWidth, 0)
   toolbar1Context.drawImage(ct, window.innerWidth - 35, 2)
 
@@ -265,11 +265,11 @@ refreshCursor = ( particularColor ) ->
     putPixel( ctContext, colorOfCursorPixel, cursorX, cursorY )
 
 drawInformation = ( event, extraInformation ) ->
-  toolbar1Context.drawImage(toolbar1sImage1, toolbar1sImage0.width + 1, 3) 
+  toolbar1Context.drawImage(toolbar1sImage1, toolbar1sImage0.width + 5, 3) 
   if extraInformation is undefined
     extraInformation = ''
-  toolbar1Context.drawImage(toolbar1sImage1, toolbar1sImage0.width + 1, 3)
-  toolbar1Context.drawImage(toolbar1sImage1, toolbar1sImage0.width + toolbar1sImage1.width + 13, 3)
+  toolbar1Context.drawImage(toolbar1sImage1, toolbar1sImage0.width + 5, 3)
+  toolbar1Context.drawImage(toolbar1sImage1, toolbar1sImage0.width + toolbar1sImage1.width + 17, 3)
 
   if not zoomActivate 
     xPos = event.clientX - canvasXPos - canvasXOffset
@@ -287,11 +287,11 @@ drawInformation = ( event, extraInformation ) ->
   colorValue = getColorValue(ctContext, xPos, yPos).toUpperCase()
   coordinates = ', (' + xPos.toString() + ', ' + yPos.toString() + ')'
   colorAndCoordinates = colorValue + coordinates
-  drawStringAsCommandPrompt(toolbar1Context, colorAndCoordinates, 0, toolbar1sImage0.width + 3, 12)
+  drawStringAsCommandPrompt(toolbar1Context, colorAndCoordinates, 0, toolbar1sImage0.width + 7, 12)
   drawStringAsCommandPrompt(toolbar1Context, 
     extraInformation, 
     0, 
-    toolbar1sImage0.width + toolbar1sImage1.width + 15, 
+    toolbar1sImage0.width + toolbar1sImage1.width + 19, 
     12) 
 
 historyUpdate = ->

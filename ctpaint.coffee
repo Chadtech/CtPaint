@@ -228,10 +228,10 @@ topRow = [
   [192, 192, 192]
   # black
   [0 ,0 ,0]
-  # Coolest Safety Glasses Brown
-  [101, 92, 77]
   # Olive Drab
   [85, 96, 45]
+  # Coolest Safety Glasses Brown
+  [101, 92, 77]
   # That sickly brown orange of wood Shelac
   [240, 147, 35]
   # Sand / Skin / light brown
@@ -248,14 +248,14 @@ topRow = [
   [212, 51, 29]
   # Red from the red top attractive model 'Elly Tran Ha' was wearing
   [242, 29, 35]
-  # The dark red in 4chans Yastsuba color scheme
-  [240, 224, 214]
-  # The light red in 4chans Yatsuba color scheme
-  [255, 255, 238]
   # Slightly gray-blue pink
   [230, 121, 166]
   # The Rose Pedals in the video of Harry Partch making Rose Pedal Jam
   [80, 0, 87]
+  # The dark red in 4chans Yastsuba color scheme
+  [240, 224, 214]
+  # The light red in 4chans Yatsuba color scheme
+  [255, 255, 238]
 ]
 
 bottomRow = [
@@ -265,33 +265,34 @@ bottomRow = [
   [255, 255, 255]
   # Thom Yorke's outfit color in the music video of 'Ingenue'
   [157, 144, 136]
-  # The wonderful blue from blue white board markers
-  [36, 33, 157]
   # Lighter and grayer Navy Blue
   [50, 54, 128]
+  # The wonderful blue from blue white board markers
+  [36, 33, 157]
   # Klein Blue
   [0, 47, 167]
   # Blue that I chose to resemble the color of the sky once
   [23, 92, 254]
   # Tiffany Blue
   [10, 186, 181]
-  # The Dark blue in 4chan's Yastuba B
-  [214, 218, 240]
-  # The light blue in 4chan's Yatsuba B
-  [238, 242, 255]
   # 'Oriental Avenue' Blue
   # As in, the color of that property from the game monopoly
   # that I believe is gray and not blue, but apparently
   # most people consider to be blue.
   [159, 170, 210]
+
+  # The Dark blue in 4chan's Yastuba B
+  [214, 218, 240]
+  # The light blue in 4chan's Yatsuba B
+  [238, 242, 255]
   # 'Green' from the album cover of 'Amplifier Worship' by Boris
-  [170, 211, 13]
-  # Green I made up 0
   [157, 212, 147]
-  # Green I made up 1
-  [10, 202, 26]
+  # Green I made up 0
+  [170, 211, 13]
   # Greg Saunier from Deerhoof's shirt in Jaun's basement performance
   [60, 182, 99]
+  # Green I made up 1
+  [10, 202, 26]
   # The snare drums head in the video 'Zach Hill Practicing'
   [201, 207, 215]
 ]
@@ -3030,8 +3031,8 @@ drawToolbars = ->
 
   toolbar1Context.drawImage(toolbar1sImage0, 3, 2)
   drawLine(toolbar1Context, [16, 20, 8], toolbarWidth - 1, 0, window.innerWidth, 0)
-  toolbar1Context.drawImage(toolbar1sImage1, toolbar1sImage0.width + 1, 3)
-  toolbar1Context.drawImage(toolbar1sImage1, toolbar1sImage0.width + toolbar1sImage1.width + 13, 3)
+  toolbar1Context.drawImage(toolbar1sImage1, toolbar1sImage0.width + 5, 3)
+  toolbar1Context.drawImage(toolbar1sImage1, toolbar1sImage0.width + toolbar1sImage1.width + 17, 3)
   drawLine(toolbar1Context, [16, 20, 8], toolbarWidth - 1, 0, window.innerWidth, 0)
   toolbar1Context.drawImage(ct, window.innerWidth - 35, 2)
 
@@ -3087,11 +3088,11 @@ refreshCursor = ( particularColor ) ->
     putPixel( ctContext, colorOfCursorPixel, cursorX, cursorY )
 
 drawInformation = ( event, extraInformation ) ->
-  toolbar1Context.drawImage(toolbar1sImage1, toolbar1sImage0.width + 1, 3) 
+  toolbar1Context.drawImage(toolbar1sImage1, toolbar1sImage0.width + 5, 3) 
   if extraInformation is undefined
     extraInformation = ''
-  toolbar1Context.drawImage(toolbar1sImage1, toolbar1sImage0.width + 1, 3)
-  toolbar1Context.drawImage(toolbar1sImage1, toolbar1sImage0.width + toolbar1sImage1.width + 13, 3)
+  toolbar1Context.drawImage(toolbar1sImage1, toolbar1sImage0.width + 5, 3)
+  toolbar1Context.drawImage(toolbar1sImage1, toolbar1sImage0.width + toolbar1sImage1.width + 17, 3)
 
   if not zoomActivate 
     xPos = event.clientX - canvasXPos - canvasXOffset
@@ -3109,11 +3110,11 @@ drawInformation = ( event, extraInformation ) ->
   colorValue = getColorValue(ctContext, xPos, yPos).toUpperCase()
   coordinates = ', (' + xPos.toString() + ', ' + yPos.toString() + ')'
   colorAndCoordinates = colorValue + coordinates
-  drawStringAsCommandPrompt(toolbar1Context, colorAndCoordinates, 0, toolbar1sImage0.width + 3, 12)
+  drawStringAsCommandPrompt(toolbar1Context, colorAndCoordinates, 0, toolbar1sImage0.width + 7, 12)
   drawStringAsCommandPrompt(toolbar1Context, 
     extraInformation, 
     0, 
-    toolbar1sImage0.width + toolbar1sImage1.width + 15, 
+    toolbar1sImage0.width + toolbar1sImage1.width + 19, 
     12) 
 
 historyUpdate = ->
@@ -4201,7 +4202,7 @@ $(document).ready (event)->
   $('#CtPaint').mouseleave (event)->
     coverUpOldCursor() 
     tH[tH.length - 1].posture[3](event) 
-    toolbar1Context.drawImage(toolbar1sImage1,188,3)  
+    toolbar1Context.drawImage(toolbar1sImage1, toolbar1sImage0.width + 5, 3)
 
   $('#toolbar0').mousedown (event)->
     toolIndex = 0
@@ -4225,10 +4226,10 @@ $(document).ready (event)->
     tXSpot = event.clientX
     tYSpot = event.clientY - window.innerHeight + toolbarHeight
     information = getColorValue(toolbar1Context, tXSpot, tYSpot).toUpperCase() + ', (#,#) '
-    drawStringAsCommandPrompt(toolbar1Context, information, 0, 191, 12)
+    drawStringAsCommandPrompt(toolbar1Context, information, 0, toolbar1sImage0.width + 7, 12)
 
   $('#toolbar1').mouseleave (event)->  
-    toolbar1Context.drawImage(toolbar1sImage1,188,3)
+    toolbar1Context.drawImage(toolbar1sImage1, toolbar1sImage0.width + 5, 3)
 
   $('#toolbar1').mousedown (event) ->
     toolbar1X = event.clientX
@@ -4246,7 +4247,7 @@ $(document).ready (event)->
     toolbar1X = event.clientX
     toolbar1Y = event.clientY - (window.innerHeight - toolbarHeight)
     if not swatchColorPicked
-      if 52 < toolbar1X and toolbar1X < 188
+      if 52 < toolbar1X and toolbar1X < toolbar1sImage0.width
         if 4 < toolbar1Y and toolbar1Y < 35
           if colorModify
             spotInColorPalette = (((toolbar1X - 52 ) // 17) * 2) + ((toolbar1Y - 4) // 16)
@@ -4255,7 +4256,7 @@ $(document).ready (event)->
             colorSwatches[0] = colorPalette[(((toolbar1X - 52 ) // 17) * 2) + ((toolbar1Y - 4) // 16)]
           drawToolbars()
     else
-      if 52 < toolbar1X and toolbar1X < 188
+      if 52 < toolbar1X and toolbar1X < toolbar1sImage0.width
         if 4 < toolbar1Y and toolbar1Y < 35
           spotInColorPalette = (((toolbar1X - 52 ) // 17) * 2) + ((toolbar1Y - 4) // 16)
           colorPalette[spotInColorPalette] = colorSwatches[0]
