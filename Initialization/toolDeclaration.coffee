@@ -122,6 +122,7 @@ ctPaintTools[19].toolsAction = allAction
 ctPaintTools[20].toolsAction = undoAction
 ctPaintTools[21].toolsAction = redoAction
 ctPaintTools[22].toolsAction = cursorColorAction
+ctPaintTools[23].toolsAction = modeChangeAction
 
 ctPaintTools[8].menuImage.src = 'assets/t01.png'
 ctPaintTools[11].menuImage.src = 'assets/t02.png'
@@ -173,6 +174,7 @@ toolsToNumbers =
   'undo':20
   'redo':21
   'cursorColor':22
+  'modeChange':23
 
 ###
   Fancy Responsive tools are tools with icons that change with the tools magnitude and mode.

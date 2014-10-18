@@ -28,13 +28,9 @@ $(document).ready (event)->
       toolViewMode = toolViewMode%2
       drawToolbars()
 
-    if event.keyCode is keysToKeyCodes['space']
+    if event.keyCode is keysToKeyCodes['single quote']
       #makeTransparent()
-      if tH[tH.length - 1].mode
-        tH[tH.length - 1].mode = false
-      else
-        tH[tH.length - 1].mode = true
-      drawToolbars()
+      modeChangeAction()
 
     if event.keyCode is keysToKeyCodes['equals'] or event.keyCode is 61
       if zoomActivate

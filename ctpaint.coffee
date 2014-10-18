@@ -2706,24 +2706,25 @@ allAction = (event) ->
   tH.push ctPaintTools[toolsToNumbers['all']]
   drawToolbars()
 
-  if areaSelected
-    areaSelected = false
+  if not zoomActivate
+    if areaSelected
+      areaSelected = false
 
-    canvasDataAsImage = new Image()
-    canvasDataAsImage.onload = ->
-      ctContext.drawImage(canvasDataAsImage, 0, 0)
-      ctContext.putImageData(selection, selectionX, selectionY)
+      canvasDataAsImage = new Image()
+      canvasDataAsImage.onload = ->
+        ctContext.drawImage(canvasDataAsImage, 0, 0)
+        ctContext.putImageData(selection, selectionX, selectionY)
 
-      cH.push ctCanvas.toDataURL()
-      cH.shift()
-      cF = []
+        cH.push ctCanvas.toDataURL()
+        cH.shift()
+        cF = []
 
+        selectAll()
+
+      canvasDataAsImage.src = cH[cH.length - 1]
+
+    else
       selectAll()
-
-    canvasDataAsImage.src = cH[cH.length - 1]
-
-  else
-    selectAll()
 
 selectAll = ->
   coverUpOldCursor()
@@ -2748,6 +2749,20 @@ selectAll = ->
   ,20)
 
 
+modeChangeAction = ->
+  tH.push ctPaintTools[toolsToNumbers['modeChange']]
+  drawToolbars()
+
+  setTimeout( ()->
+    tH.pop()
+    if tH[tH.length - 1].mode is true
+      tH[tH.length - 1].mode = false
+    else
+      tH[tH.length - 1].mode = true
+    drawToolbars()
+  ,20)
+
+  
 ###
   Figure out where to put the canvas
 ###
@@ -3773,6 +3788,7 @@ ctPaintTools[19].toolsAction = allAction
 ctPaintTools[20].toolsAction = undoAction
 ctPaintTools[21].toolsAction = redoAction
 ctPaintTools[22].toolsAction = cursorColorAction
+ctPaintTools[23].toolsAction = modeChangeAction
 
 ctPaintTools[8].menuImage.src = 'assets/t01.png'
 ctPaintTools[11].menuImage.src = 'assets/t02.png'
@@ -3824,6 +3840,7 @@ toolsToNumbers =
   'undo':20
   'redo':21
   'cursorColor':22
+  'modeChange':23
 
 ###
   Fancy Responsive tools are tools with icons that change with the tools magnitude and mode.
@@ -3921,13 +3938,9 @@ $(document).ready (event)->
       toolViewMode = toolViewMode%2
       drawToolbars()
 
-    if event.keyCode is keysToKeyCodes['space']
+    if event.keyCode is keysToKeyCodes['single quote']
       #makeTransparent()
-      if tH[tH.length - 1].mode
-        tH[tH.length - 1].mode = false
-      else
-        tH[tH.length - 1].mode = true
-      drawToolbars()
+      modeChangeAction()
 
     if event.keyCode is keysToKeyCodes['equals'] or event.keyCode is 61
       if zoomActivate
