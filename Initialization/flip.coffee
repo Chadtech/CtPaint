@@ -78,7 +78,18 @@ xFlip = ->
       pixelIndex++
 
     #   ( e )
-    ctContext.putImageData(selection, selectionX, selectionY)
+    canvasDataAsImage = new Image()
+    canvasDataAsImage.onload = ->
+      ctContext.drawImage(canvasDataAsImage,0,0)
+      cH.push ctCanvas.toDataURL()
+      cH.shift()
+      cF = []
+      ctContext.putImageData(selection, selectionX, selectionY)
+      rightEdge = selectionX + selectionsWidth - 1
+      bottomEdge = selectionY + selectionsHeight - 1
+      drawSelectBox(ctContext, selectionX, selectionY, rightEdge, bottomEdge)
+    canvasDataAsImage.src = cH[cH.length - 1]
+    
     tH.pop()
     drawToolbars()
     $('#menuDiv').css('top',(window.innerHeight).toString())
@@ -171,7 +182,18 @@ yFlip = ->
       pixelIndex++
 
     #   ( e )
-    ctContext.putImageData(selection, selectionX, selectionY)
+    canvasDataAsImage = new Image()
+    canvasDataAsImage.onload = ->
+      ctContext.drawImage(canvasDataAsImage,0,0)
+      cH.push ctCanvas.toDataURL()
+      cH.shift()
+      cF = []
+      ctContext.putImageData(selection, selectionX, selectionY)
+      rightEdge = selectionX + selectionsWidth - 1
+      bottomEdge = selectionY + selectionsHeight - 1
+      drawSelectBox(ctContext, selectionX, selectionY, rightEdge, bottomEdge)
+    canvasDataAsImage.src = cH[cH.length - 1]
+
     tH.pop()
     drawToolbars()
     $('#menuDiv').css('top',(window.innerHeight).toString())
