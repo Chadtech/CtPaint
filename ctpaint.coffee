@@ -120,6 +120,8 @@ backBoxOriginY = undefined
 backBoxEdgeX = undefined
 backBoxEdgeY = undefined
 
+canvasHoldover = undefined
+
 ###
   These variables are useful when any pop up menu shows up.
   menuUp reflects whether a menu is up. whatSortOfDataSorting
@@ -3283,7 +3285,7 @@ selectPosture = [
         canvasDataAsImage = new Image()
         canvasDataAsImage.onload = ->
           ctContext.drawImage(canvasDataAsImage, 0, 0)
-
+          ###
           squareAction(ctContext, 
             colorSwatches[1], 
             backBoxOriginX, 
@@ -3291,10 +3293,11 @@ selectPosture = [
             backBoxEdgeX, 
             backBoxEdgeY, 
             true)
+          ###
 
           ctContext.putImageData(selection, gripX, gripY)
           drawSelectBox(ctContext, gripX, gripY, rightEdge, bottomEdge)
-        canvasDataAsImage.src = cH[cH.length - 1]
+        canvasDataAsImage.src = canvasHoldover
       else
         drawInformation( event, boxInformation )
 
@@ -3324,6 +3327,7 @@ selectPosture = [
         canvasDataAsImage.onload = ->
           ctContext.drawImage(canvasDataAsImage, 0, 0)
 
+          ###
           squareAction(ctContext, 
             colorSwatches[1], 
             backBoxOriginX, 
@@ -3331,10 +3335,11 @@ selectPosture = [
             backBoxEdgeX, 
             backBoxEdgeY, 
             true)
-          
+          ###
+
           ctContext.putImageData(selection, selectionX, selectionY)
           historyUpdate()
-        canvasDataAsImage.src = cH[cH.length - 1]
+        canvasDataAsImage.src = canvasHoldover
 
   # Mouse up
   (event) ->
@@ -3361,6 +3366,7 @@ selectPosture = [
           backBoxOriginY = oldY
           backBoxEdgeX = xSpot
           backBoxEdgeY = ySpot
+
           squareAction(ctContext, 
             colorSwatches[1], 
             backBoxOriginX, 
@@ -3368,6 +3374,8 @@ selectPosture = [
             backBoxEdgeX, 
             backBoxEdgeY, 
             true)
+
+          canvasHoldover = ctCanvas.toDataURL()
 
           #historyUpdate()
           ctContext.putImageData(selection, selectionX, selectionY)
@@ -3608,7 +3616,7 @@ emptyPosture = [
 
 horizontalColorSwapPosture = [
   (event) ->
-    drawInformation()
+    drawInformation(event)
   (event) ->
     mousePressed = true
   (event) ->

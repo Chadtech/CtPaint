@@ -114,11 +114,7 @@ selectionsWidth = 0
 selectionsHeight = 0
 transparent = false
 boxInformation = undefined
-
-backBoxOriginX = undefined
-backBoxOriginY = undefined
-backBoxEdgeX = undefined
-backBoxEdgeY = undefined
+canvasHoldover = undefined
 
 ###
   These variables are useful when any pop up menu shows up.

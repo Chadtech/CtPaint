@@ -42,18 +42,9 @@ selectPosture = [
         canvasDataAsImage = new Image()
         canvasDataAsImage.onload = ->
           ctContext.drawImage(canvasDataAsImage, 0, 0)
-
-          squareAction(ctContext, 
-            colorSwatches[1], 
-            backBoxOriginX, 
-            backBoxOriginY, 
-            backBoxEdgeX, 
-            backBoxEdgeY, 
-            true)
-
           ctContext.putImageData(selection, gripX, gripY)
           drawSelectBox(ctContext, gripX, gripY, rightEdge, bottomEdge)
-        canvasDataAsImage.src = cH[cH.length - 1]
+        canvasDataAsImage.src = canvasHoldover
       else
         drawInformation( event, boxInformation )
 
@@ -82,18 +73,9 @@ selectPosture = [
         canvasDataAsImage = new Image()
         canvasDataAsImage.onload = ->
           ctContext.drawImage(canvasDataAsImage, 0, 0)
-
-          squareAction(ctContext, 
-            colorSwatches[1], 
-            backBoxOriginX, 
-            backBoxOriginY, 
-            backBoxEdgeX, 
-            backBoxEdgeY, 
-            true)
-          
           ctContext.putImageData(selection, selectionX, selectionY)
           historyUpdate()
-        canvasDataAsImage.src = cH[cH.length - 1]
+        canvasDataAsImage.src = canvasHoldover
 
   # Mouse up
   (event) ->
@@ -116,17 +98,15 @@ selectPosture = [
           selection = 
             ctContext.getImageData( sortedXs[0], sortedYs[0], selectionsWidth, selectionsHeight)
           
-          backBoxOriginX = oldX
-          backBoxOriginY = oldY
-          backBoxEdgeX = xSpot
-          backBoxEdgeY = ySpot
           squareAction(ctContext, 
             colorSwatches[1], 
-            backBoxOriginX, 
-            backBoxOriginY, 
-            backBoxEdgeX, 
-            backBoxEdgeY, 
+            oldX, 
+            oldY, 
+            xSpot, 
+            ySpot, 
             true)
+
+          canvasHoldover = ctCanvas.toDataURL()
 
           #historyUpdate()
           ctContext.putImageData(selection, selectionX, selectionY)

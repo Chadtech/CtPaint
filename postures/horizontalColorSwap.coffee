@@ -1,6 +1,6 @@
 horizontalColorSwapPosture = [
   (event) ->
-    drawInformation()
+    drawInformation(event)
   (event) ->
     mousePressed = true
   (event) ->
