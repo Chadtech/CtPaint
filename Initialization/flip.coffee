@@ -85,7 +85,7 @@ xFlip = ->
       rightEdge = selectionX + selectionsWidth - 1
       bottomEdge = selectionY + selectionsHeight - 1
       drawSelectBox(ctContext, selectionX, selectionY, rightEdge, bottomEdge)
-    canvasDataAsImage.src = cH[cH.length - 1]
+    canvasDataAsImage.src = canvasHoldover
 
     tH.pop()
     drawToolbars()
@@ -186,7 +186,7 @@ yFlip = ->
       rightEdge = selectionX + selectionsWidth - 1
       bottomEdge = selectionY + selectionsHeight - 1
       drawSelectBox(ctContext, selectionX, selectionY, rightEdge, bottomEdge)
-    canvasDataAsImage.src = cH[cH.length - 1]
+    canvasDataAsImage.src = canvasHoldover
 
     tH.pop()
     drawToolbars()

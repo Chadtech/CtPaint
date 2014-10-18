@@ -129,14 +129,11 @@ rotation = ( howManyDegrees ) ->
     canvasDataAsImage = new Image()
     canvasDataAsImage.onload = ->
       ctContext.drawImage(canvasDataAsImage,0,0)
-      cH.push ctCanvas.toDataURL()
-      cH.shift()
-      cF = []
       ctContext.putImageData(selection, selectionX, selectionY)
       rightEdge = selectionX + selectionsWidth
       bottomEdge = selectionY + selectionsHeight
       drawSelectBox(ctContext, selectionX - 1, selectionY - 1, rightEdge, bottomEdge)
-    canvasDataAsImage.src = cH[cH.length - 1]
+    canvasDataAsImage.src = canvasHoldover
 
     tH.pop()
     rotateFinishUp()
