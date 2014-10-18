@@ -8,6 +8,7 @@ squarePosture = [
       boxInformation += 'px x '
       boxInformation += (Math.abs(ySpot - oldY) + 1).toString()
       boxInformation += 'px'
+      coverUpOldCursor()
       drawInformation( event, boxInformation )
 
       canvasDataAsImage = new Image()
@@ -16,9 +17,9 @@ squarePosture = [
         squareAction(ctContext, colorSwatches[0], oldX, oldY, xSpot, ySpot)
         putPixel( ctContext, colorOfCursorPixel, xSpot, ySpot )
       canvasDataAsImage.src = cH[cH.length - 1]
-    else
-      drawInformation(event)
-      updateCursor(event)
+    coverUpOldCursor()
+    drawInformation(event)
+    updateCursor(event)
 
   # Mouse Down
   (event) ->

@@ -14,6 +14,7 @@ circlePosture = [
         putPixel( ctContext, colorOfCursorPixel, xSpot, ySpot )
       canvasDataAsImage.src = cH[cH.length - 1]
     else
+      coverUpOldCursor()
       drawInformation(event)
       updateCursor(event)
 

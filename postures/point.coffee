@@ -1,6 +1,7 @@
 pointPosture = [
   (event) ->
     # Mouse Move
+    coverUpOldCursor()
     drawInformation(event)
     if mousePressed
       oldX = xSpot
