@@ -1,6 +1,7 @@
 selectPosture = [
   # Mouse Move
   (event) ->
+    setCasualPosition(event)
     if not areaSelected
       if mousePressed
         getMousePositionOnCanvas(event)
@@ -24,7 +25,7 @@ selectPosture = [
         canvasDataAsImage.src = cH[cH.length - 1]
       else
         drawInformation( event, boxInformation )
-        setCasualPosition(event)
+
 
     else
       if mousePressed

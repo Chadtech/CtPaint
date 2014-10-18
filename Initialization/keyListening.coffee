@@ -148,7 +148,10 @@ keyListeningUnderNormalCircumstance = [
         canvasDataAsImage = new Image()
         canvasDataAsImage.onload = ->
           ctContext.drawImage(canvasDataAsImage,0,0)
-       canvasDataAsImage.src = canvasHoldover
+          cH.push ctCanvas.toDataURL()
+          cH.shift()
+          cF = []
+        canvasDataAsImage.src = canvasHoldover
 ]
  
 justPassTheCharacter = (keyPressed) ->
