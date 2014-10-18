@@ -12,6 +12,7 @@ pasteAction = ->
       canvasDataAsImage.onload = ->
         ctContext.drawImage(canvasDataAsImage, 0, 0)
         ctContext.putImageData(selection, selectionX, selectionY)
+        canvasHoldover = ctCanvas.toDataURL()
         cH.push ctCanvas.toDataURL()
         cH.shift()
         cF = []

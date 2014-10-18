@@ -314,6 +314,7 @@ $(document).ready (event)->
             canvasDataAsImage = new Image()
             canvasDataAsImage.onload = ->
               ctContext.drawImage(canvasDataAsImage, 0, 0)
+              canvasHoldover = ctCanvas.toDataURL()
               copyExists = true
               pasteAction()
             canvasDataAsImage.src = cH[cH.length - 1]

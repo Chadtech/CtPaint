@@ -2462,9 +2462,7 @@ pasteAction = ->
       canvasDataAsImage.onload = ->
         ctContext.drawImage(canvasDataAsImage, 0, 0)
         ctContext.putImageData(selection, selectionX, selectionY)
-        cH.push ctCanvas.toDataURL()
-        cH.shift()
-        cF = []
+        canvasHoldover = ctCanvas.toDataURL()
         # (A)
         pasteTheSelection()
       canvasDataAsImage.src = cH[cH.length - 1]
@@ -4149,6 +4147,7 @@ $(document).ready (event)->
             canvasDataAsImage = new Image()
             canvasDataAsImage.onload = ->
               ctContext.drawImage(canvasDataAsImage, 0, 0)
+              canvasHoldover = ctCanvas.toDataURL()
               copyExists = true
               pasteAction()
             canvasDataAsImage.src = cH[cH.length - 1]
