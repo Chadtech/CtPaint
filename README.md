@@ -95,7 +95,7 @@ General to dos and bugs to fix:
 * X minus / plus (equals) key triggering zoom in and out (bracket keys?)
 * X Tweak zoom button
 * X compatibility between all draw informations and cursor pixel
-* Add another 16 Colors
+* X Add another 16 Colors
 * X When I paste an image, during circle draw, the tool actually is select, though the toolbar still indicates circle ( FIXED THIS BUG )
 * X Make Sample automatically go to point tool, not previous
 * X zoom into mouse location, not center
