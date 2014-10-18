@@ -115,6 +115,11 @@ selectionsHeight = 0
 transparent = false
 boxInformation = undefined
 
+backBoxOriginX = undefined
+backBoxOriginY = undefined
+backBoxEdgeX = undefined
+backBoxEdgeY = undefined
+
 ###
   These variables are useful when any pop up menu shows up.
   menuUp reflects whether a menu is up. whatSortOfDataSorting

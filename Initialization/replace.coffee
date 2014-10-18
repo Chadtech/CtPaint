@@ -131,9 +131,6 @@ replaceDataSorting = ( inputMaterial, eventIsKeyDown ) ->
               canvasDataAsImage = new Image()
               canvasDataAsImage.onload = ->
                 ctContext.drawImage(canvasDataAsImage,0,0)
-                cH.push ctCanvas.toDataURL()
-                cH.shift()
-                cF = []
                 ctContext.putImageData(selection, selectionX, selectionY)
                 rightEdge = selectionX + selectionsWidth - 1
                 bottomEdge = selectionY + selectionsHeight - 1

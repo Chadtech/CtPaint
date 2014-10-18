@@ -42,6 +42,15 @@ selectPosture = [
         canvasDataAsImage = new Image()
         canvasDataAsImage.onload = ->
           ctContext.drawImage(canvasDataAsImage, 0, 0)
+
+          squareAction(ctContext, 
+            colorSwatches[1], 
+            backBoxOriginX, 
+            backBoxOriginY, 
+            backBoxEdgeX, 
+            backBoxEdgeY, 
+            true)
+
           ctContext.putImageData(selection, gripX, gripY)
           drawSelectBox(ctContext, gripX, gripY, rightEdge, bottomEdge)
         canvasDataAsImage.src = cH[cH.length - 1]
@@ -73,6 +82,15 @@ selectPosture = [
         canvasDataAsImage = new Image()
         canvasDataAsImage.onload = ->
           ctContext.drawImage(canvasDataAsImage, 0, 0)
+
+          squareAction(ctContext, 
+            colorSwatches[1], 
+            backBoxOriginX, 
+            backBoxOriginY, 
+            backBoxEdgeX, 
+            backBoxEdgeY, 
+            true)
+          
           ctContext.putImageData(selection, selectionX, selectionY)
           historyUpdate()
         canvasDataAsImage.src = cH[cH.length - 1]
@@ -97,8 +115,20 @@ selectPosture = [
           ctContext.drawImage(canvasDataAsImage,0,0)
           selection = 
             ctContext.getImageData( sortedXs[0], sortedYs[0], selectionsWidth, selectionsHeight)
-          squareAction(ctContext, colorSwatches[1], oldX, oldY, xSpot, ySpot, true)
-          historyUpdate()
+          
+          backBoxOriginX = oldX
+          backBoxOriginY = oldY
+          backBoxEdgeX = xSpot
+          backBoxEdgeY = ySpot
+          squareAction(ctContext, 
+            colorSwatches[1], 
+            backBoxOriginX, 
+            backBoxOriginY, 
+            backBoxEdgeX, 
+            backBoxEdgeY, 
+            true)
+
+          #historyUpdate()
           ctContext.putImageData(selection, selectionX, selectionY)
           drawSelectBox(ctContext, originX, originY, otherSideX, otherSideY)
         canvasDataAsImage.src = cH[cH.length - 1]

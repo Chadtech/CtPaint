@@ -115,6 +115,11 @@ selectionsHeight = 0
 transparent = false
 boxInformation = undefined
 
+backBoxOriginX = undefined
+backBoxOriginY = undefined
+backBoxEdgeX = undefined
+backBoxEdgeY = undefined
+
 ###
   These variables are useful when any pop up menu shows up.
   menuUp reflects whether a menu is up. whatSortOfDataSorting
@@ -1213,15 +1218,12 @@ xFlip = ->
     canvasDataAsImage = new Image()
     canvasDataAsImage.onload = ->
       ctContext.drawImage(canvasDataAsImage,0,0)
-      cH.push ctCanvas.toDataURL()
-      cH.shift()
-      cF = []
       ctContext.putImageData(selection, selectionX, selectionY)
       rightEdge = selectionX + selectionsWidth - 1
       bottomEdge = selectionY + selectionsHeight - 1
       drawSelectBox(ctContext, selectionX, selectionY, rightEdge, bottomEdge)
     canvasDataAsImage.src = cH[cH.length - 1]
-    
+
     tH.pop()
     drawToolbars()
     $('#menuDiv').css('top',(window.innerHeight).toString())
@@ -1317,9 +1319,6 @@ yFlip = ->
     canvasDataAsImage = new Image()
     canvasDataAsImage.onload = ->
       ctContext.drawImage(canvasDataAsImage,0,0)
-      cH.push ctCanvas.toDataURL()
-      cH.shift()
-      cF = []
       ctContext.putImageData(selection, selectionX, selectionY)
       rightEdge = selectionX + selectionsWidth - 1
       bottomEdge = selectionY + selectionsHeight - 1
@@ -1791,7 +1790,14 @@ invertAction = () ->
         colorIndex++
       pixelIndex++
 
-    ctContext.putImageData(selection, selectionX, selectionY)
+    canvasDataAsImage = new Image()
+    canvasDataAsImage.onload = ->
+      ctContext.drawImage(canvasDataAsImage,0,0)
+      ctContext.putImageData(selection, selectionX, selectionY)
+      rightEdge = selectionX + selectionsWidth - 1
+      bottomEdge = selectionY + selectionsHeight - 1
+      drawSelectBox(ctContext, selectionX, selectionY, rightEdge, bottomEdge)
+    canvasDataAsImage.src = cH[cH.length - 1]
 
     updateOldCursor()
     refreshCursor()
@@ -1935,9 +1941,6 @@ replaceDataSorting = ( inputMaterial, eventIsKeyDown ) ->
               canvasDataAsImage = new Image()
               canvasDataAsImage.onload = ->
                 ctContext.drawImage(canvasDataAsImage,0,0)
-                cH.push ctCanvas.toDataURL()
-                cH.shift()
-                cF = []
                 ctContext.putImageData(selection, selectionX, selectionY)
                 rightEdge = selectionX + selectionsWidth - 1
                 bottomEdge = selectionY + selectionsHeight - 1
@@ -2607,7 +2610,6 @@ undoAction = ->
     undoAndRedoSizeComparison(canvasDataAsImage)
     ctContext.drawImage(canvasDataAsImage,0,0)
     updateOldCursor()
-    refreshCursor()
   canvasDataAsImage.src = cH[cH.length - 1]
 
   setTimeout( ()->
@@ -3281,6 +3283,15 @@ selectPosture = [
         canvasDataAsImage = new Image()
         canvasDataAsImage.onload = ->
           ctContext.drawImage(canvasDataAsImage, 0, 0)
+
+          squareAction(ctContext, 
+            colorSwatches[1], 
+            backBoxOriginX, 
+            backBoxOriginY, 
+            backBoxEdgeX, 
+            backBoxEdgeY, 
+            true)
+
           ctContext.putImageData(selection, gripX, gripY)
           drawSelectBox(ctContext, gripX, gripY, rightEdge, bottomEdge)
         canvasDataAsImage.src = cH[cH.length - 1]
@@ -3312,6 +3323,15 @@ selectPosture = [
         canvasDataAsImage = new Image()
         canvasDataAsImage.onload = ->
           ctContext.drawImage(canvasDataAsImage, 0, 0)
+
+          squareAction(ctContext, 
+            colorSwatches[1], 
+            backBoxOriginX, 
+            backBoxOriginY, 
+            backBoxEdgeX, 
+            backBoxEdgeY, 
+            true)
+          
           ctContext.putImageData(selection, selectionX, selectionY)
           historyUpdate()
         canvasDataAsImage.src = cH[cH.length - 1]
@@ -3336,8 +3356,20 @@ selectPosture = [
           ctContext.drawImage(canvasDataAsImage,0,0)
           selection = 
             ctContext.getImageData( sortedXs[0], sortedYs[0], selectionsWidth, selectionsHeight)
-          squareAction(ctContext, colorSwatches[1], oldX, oldY, xSpot, ySpot, true)
-          historyUpdate()
+          
+          backBoxOriginX = oldX
+          backBoxOriginY = oldY
+          backBoxEdgeX = xSpot
+          backBoxEdgeY = ySpot
+          squareAction(ctContext, 
+            colorSwatches[1], 
+            backBoxOriginX, 
+            backBoxOriginY, 
+            backBoxEdgeX, 
+            backBoxEdgeY, 
+            true)
+
+          #historyUpdate()
           ctContext.putImageData(selection, selectionX, selectionY)
           drawSelectBox(ctContext, originX, originY, otherSideX, otherSideY)
         canvasDataAsImage.src = cH[cH.length - 1]

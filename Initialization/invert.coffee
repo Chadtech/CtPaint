@@ -81,7 +81,14 @@ invertAction = () ->
         colorIndex++
       pixelIndex++
 
-    ctContext.putImageData(selection, selectionX, selectionY)
+    canvasDataAsImage = new Image()
+    canvasDataAsImage.onload = ->
+      ctContext.drawImage(canvasDataAsImage,0,0)
+      ctContext.putImageData(selection, selectionX, selectionY)
+      rightEdge = selectionX + selectionsWidth - 1
+      bottomEdge = selectionY + selectionsHeight - 1
+      drawSelectBox(ctContext, selectionX, selectionY, rightEdge, bottomEdge)
+    canvasDataAsImage.src = cH[cH.length - 1]
 
     updateOldCursor()
     refreshCursor()
