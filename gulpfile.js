@@ -35,6 +35,7 @@ gulp.task('doAllTheScriptsTogether', function() {
     './initialization/redo.coffee',
     './initialization/resize.coffee',
     './initialization/zoom.coffee',
+    './initialization/all.coffee',
 
     './initialization/rendering.coffee',
     './initialization/keyListening.coffee',

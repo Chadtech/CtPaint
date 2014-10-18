@@ -54,6 +54,8 @@ keyListeningUnderNormalCircumstance = [
       drawToolbars()
       copeWithSelection()
     if event.keyCode is keysToKeyCodes['a']
+      allAction()
+    if event.keyCode is keysToKeyCodes['b']
       verticalColorSwap()
     if event.keyCode is keysToKeyCodes['c']
       copyAction()

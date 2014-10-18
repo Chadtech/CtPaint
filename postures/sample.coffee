@@ -17,7 +17,7 @@ samplePosture = [
     colorSwatches[0] = hexToRGB(getColorValue(ctContext, xSpot, ySpot).substr(1))
     refreshCursor()
     tH.pop()
-    tH.push tH[tH.length - 1]
+    tH.push ctPaintTools[toolsToNumbers['point']]
     drawToolbars()
 
   # Mouse Exit

@@ -228,7 +228,7 @@ $(document).ready (event)->
 
   $('#toolbar0').mousedown (event)->
     toolIndex = 0
-    while toolIndex < numberOfTools
+    while toolIndex < toolNames.length
       leftBoundary = ctPaintTools[toolIndex].clickRegion[0] < event.clientX
       rightBoundary = event.clientX < (ctPaintTools[toolIndex].clickRegion[0] + buttonWidth)
       if leftBoundary and rightBoundary

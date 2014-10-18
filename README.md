@@ -99,7 +99,7 @@ General to dos and bugs to fix:
 * When I paste an image, during circle draw, the tool actually is select, though the toolbar still indicates circle
 * Make Sample automatically go to point tool, not previous
 * zoom into mouse location, not center
-* after replace selection selection box expands
+* X after replace selection selection box expands
 
 
 ------- LICENSING

@@ -2463,6 +2463,9 @@ pasteAction = ->
         ctContext.drawImage(canvasDataAsImage, 0, 0)
         ctContext.putImageData(selection, selectionX, selectionY)
         canvasHoldover = ctCanvas.toDataURL()
+        cH.push ctCanvas.toDataURL()
+        cH.shift()
+        cF = []
         # (A)
         pasteTheSelection()
       canvasDataAsImage.src = cH[cH.length - 1]
@@ -2474,9 +2477,9 @@ pasteAction = ->
   # that the tool was used
   setTimeout( ()->
     tH.pop()
-    drawToolbars()
     tH.push ctPaintTools[toolsToNumbers['select']]
     tH.shift()
+    drawToolbars()
   ,20)
 
 pasteTheSelection = ->
@@ -2697,6 +2700,52 @@ zoomAction = (xCor, yCor) ->
     ctCanvas.style.width = (zoomFactor * ctCanvas.width).toString()+'px'
     ctCanvas.style.height = (zoomFactor * ctCanvas.height).toString()+'px'
   drawToolbars()
+
+
+allAction = (event) ->
+  tH.push ctPaintTools[toolsToNumbers['all']]
+  drawToolbars()
+
+  if areaSelected
+    areaSelected = false
+
+    canvasDataAsImage = new Image()
+    canvasDataAsImage.onload = ->
+      ctContext.drawImage(canvasDataAsImage, 0, 0)
+      ctContext.putImageData(selection, selectionX, selectionY)
+
+      cH.push ctCanvas.toDataURL()
+      cH.shift()
+      cF = []
+
+      selectAll()
+
+    canvasDataAsImage.src = cH[cH.length - 1]
+
+  else
+    selectAll()
+
+selectAll = ->
+  coverUpOldCursor()
+  tCanvasWidth = ctContext.canvas.width
+  tCanvasHeight = ctContext.canvas.height
+  selection = ctContext.getImageData(0, 0, tCanvasWidth - 1, tCanvasHeight - 1)
+  squareAction(ctContext, colorSwatches[1], 0, 0, tCanvasWidth - 1, tCanvasHeight - 1, true)
+  canvasHoldover = ctCanvas.toDataURL()
+  ctContext.putImageData(selection, 0, 0)
+  selectionsWidth = tCanvasWidth
+  selectionsHeight = tCanvasHeight
+  selectionX = 0
+  selectionY = 0
+  drawSelectBox( ctContext, 0, 0, tCanvasWidth - 1, tCanvasHeight - 1)
+  areaSelected = true
+
+  setTimeout( ()->
+    tH.pop()
+    tH.push ctPaintTools[toolsToNumbers['select']]
+    tH.shift()
+    drawToolbars()
+  ,20)
 
 
 ###
@@ -3067,6 +3116,8 @@ keyListeningUnderNormalCircumstance = [
       drawToolbars()
       copeWithSelection()
     if event.keyCode is keysToKeyCodes['a']
+      allAction()
+    if event.keyCode is keysToKeyCodes['b']
       verticalColorSwap()
     if event.keyCode is keysToKeyCodes['c']
       copyAction()
@@ -3370,7 +3421,7 @@ samplePosture = [
     colorSwatches[0] = hexToRGB(getColorValue(ctContext, xSpot, ySpot).substr(1))
     refreshCursor()
     tH.pop()
-    tH.push tH[tH.length - 1]
+    tH.push ctPaintTools[toolsToNumbers['point']]
     drawToolbars()
 
   # Mouse Exit
@@ -3609,8 +3660,10 @@ toolNames = [
   'scale', 'resize'
   'horizontalSwap', 'verticalSwap'
   'copy', 'paste'
-  'cut', 'cursorColor'
+  'cut', 'all'
   'undo', 'redo'
+  'cursorColor', 'modeChange'
+  'magnitudeUp', 'magnitudeDown'
 ]
 
 toolMaxMagnitudes = [
@@ -3618,7 +3671,8 @@ toolMaxMagnitudes = [
   '', ''
   7, 7
   7, 7
-
+  '', ''
+  '', ''
   '', ''
   '', ''
   '', ''
@@ -3641,6 +3695,8 @@ toolModeCapacity = [
   false, false
   false, false
   false, false
+  false, false
+  false, false
 ]
 
 toolMenuImages = [
@@ -3655,12 +3711,14 @@ toolMenuImages = [
   '', ''
   '', ''
   '', ''
+  '', ''
+  '', ''
 ]
 
 ctPaintTools = {}
 
 iteration = 0
-while iteration < numberOfTools
+while iteration < toolNames.length
   thisIteration = iteration
   ctPaintTools[iteration] =
     number: iteration
@@ -3711,9 +3769,10 @@ ctPaintTools[13].toolsAction = resizeAction
 ctPaintTools[16].toolsAction = copyAction
 ctPaintTools[17].toolsAction = pasteAction
 ctPaintTools[18].toolsAction = cutAction
-ctPaintTools[19].toolsAction = cursorColorAction
+ctPaintTools[19].toolsAction = allAction
 ctPaintTools[20].toolsAction = undoAction
 ctPaintTools[21].toolsAction = redoAction
+ctPaintTools[22].toolsAction = cursorColorAction
 
 ctPaintTools[8].menuImage.src = 'assets/t01.png'
 ctPaintTools[11].menuImage.src = 'assets/t02.png'
@@ -3761,9 +3820,10 @@ toolsToNumbers =
   'copy':16
   'paste':17
   'cut':18
-  'cursorColor':19
+  'all':19
   'undo':20
   'redo':21
+  'cursorColor':22
 
 ###
   Fancy Responsive tools are tools with icons that change with the tools magnitude and mode.
@@ -4061,7 +4121,7 @@ $(document).ready (event)->
 
   $('#toolbar0').mousedown (event)->
     toolIndex = 0
-    while toolIndex < numberOfTools
+    while toolIndex < toolNames.length
       leftBoundary = ctPaintTools[toolIndex].clickRegion[0] < event.clientX
       rightBoundary = event.clientX < (ctPaintTools[toolIndex].clickRegion[0] + buttonWidth)
       if leftBoundary and rightBoundary

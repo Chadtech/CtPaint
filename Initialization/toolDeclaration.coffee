@@ -9,8 +9,10 @@ toolNames = [
   'scale', 'resize'
   'horizontalSwap', 'verticalSwap'
   'copy', 'paste'
-  'cut', 'cursorColor'
+  'cut', 'all'
   'undo', 'redo'
+  'cursorColor', 'modeChange'
+  'magnitudeUp', 'magnitudeDown'
 ]
 
 toolMaxMagnitudes = [
@@ -18,7 +20,8 @@ toolMaxMagnitudes = [
   '', ''
   7, 7
   7, 7
-
+  '', ''
+  '', ''
   '', ''
   '', ''
   '', ''
@@ -41,6 +44,8 @@ toolModeCapacity = [
   false, false
   false, false
   false, false
+  false, false
+  false, false
 ]
 
 toolMenuImages = [
@@ -55,12 +60,14 @@ toolMenuImages = [
   '', ''
   '', ''
   '', ''
+  '', ''
+  '', ''
 ]
 
 ctPaintTools = {}
 
 iteration = 0
-while iteration < numberOfTools
+while iteration < toolNames.length
   thisIteration = iteration
   ctPaintTools[iteration] =
     number: iteration
@@ -111,9 +118,10 @@ ctPaintTools[13].toolsAction = resizeAction
 ctPaintTools[16].toolsAction = copyAction
 ctPaintTools[17].toolsAction = pasteAction
 ctPaintTools[18].toolsAction = cutAction
-ctPaintTools[19].toolsAction = cursorColorAction
+ctPaintTools[19].toolsAction = allAction
 ctPaintTools[20].toolsAction = undoAction
 ctPaintTools[21].toolsAction = redoAction
+ctPaintTools[22].toolsAction = cursorColorAction
 
 ctPaintTools[8].menuImage.src = 'assets/t01.png'
 ctPaintTools[11].menuImage.src = 'assets/t02.png'
@@ -161,9 +169,10 @@ toolsToNumbers =
   'copy':16
   'paste':17
   'cut':18
-  'cursorColor':19
+  'all':19
   'undo':20
   'redo':21
+  'cursorColor':22
 
 ###
   Fancy Responsive tools are tools with icons that change with the tools magnitude and mode.

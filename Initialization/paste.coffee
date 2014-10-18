@@ -27,9 +27,9 @@ pasteAction = ->
   # that the tool was used
   setTimeout( ()->
     tH.pop()
-    drawToolbars()
     tH.push ctPaintTools[toolsToNumbers['select']]
     tH.shift()
+    drawToolbars()
   ,20)
 
 pasteTheSelection = ->
