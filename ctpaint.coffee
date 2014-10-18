@@ -1802,9 +1802,9 @@ replaceAction = () ->
   whatSortOfMouseListening = replaceMouseListening
 
 replaceDataSortingInitialize = () ->
-  theColorTheCursorIsCurrentlyOver = getColorValue(ctContext, xSpot, ySpot).substr(1)
   firstColorSwatch = rgbToHex(colorSwatches[0]).substr(1,6)
-  menuDatum = theColorTheCursorIsCurrentlyOver + firstColorSwatch
+  secondColorSwatch = rgbToHex(colorSwatches[1]).substr(1,6)
+  menuDatum = firstColorSwatch+ secondColorSwatch
   spotInMenuDatum = 6
   drawReplaceMenu()
 
@@ -1917,9 +1917,9 @@ replaceDataSorting = ( inputMaterial, eventIsKeyDown ) ->
                 cH.shift()
                 cF = []
                 ctContext.putImageData(selection, selectionX, selectionY)
-                rightEdge = selectionX + selectionsWidth
-                bottomEdge = selectionY + selectionsHeight
-                drawSelectBox(ctContext, selectionX - 1, selectionY - 1, rightEdge, bottomEdge)
+                rightEdge = selectionX + selectionsWidth - 1
+                bottomEdge = selectionY + selectionsHeight - 1
+                drawSelectBox(ctContext, selectionX, selectionY, rightEdge, bottomEdge)
               canvasDataAsImage.src = cH[cH.length - 1]
               replaceFinishUp()
     else
