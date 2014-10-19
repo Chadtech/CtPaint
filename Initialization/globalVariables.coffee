@@ -105,6 +105,7 @@ zoomY = undefined
   is the location of selection while it is being dragged.
 ###
 selection = undefined
+selectionImage = undefined
 areaSelected = false
 selectionX = 0
 selectionY = 0

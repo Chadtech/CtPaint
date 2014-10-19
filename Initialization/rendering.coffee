@@ -308,13 +308,10 @@ copeWithSelection = ()->
     canvasDataAsImage.onload = ->
       ctContext.drawImage(canvasDataAsImage, 0, 0)
       #ctContext.putImageData(selection, copeX, copeY)
-      selectionImage = new Image()
-      selectionImage.onload = ->
-        ctContext.drawImage(selectionImage, copeX, copeY)
-        cH.push ctCanvas.toDataURL()
-        cH.shift()
-        cF = []
-      selectionImage.src = imageDataToURL(selection)
+      ctContext.drawImage(selectionImage, copeX, copeY)
+      cH.push ctCanvas.toDataURL()
+      cH.shift()
+      cF = []
     canvasDataAsImage.src = cH[cH.length - 1]
 
 makeTransparent = () ->

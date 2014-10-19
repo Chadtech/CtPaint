@@ -44,11 +44,8 @@ selectPosture = [
         canvasDataAsImage = new Image()
         canvasDataAsImage.onload = ->
           ctContext.drawImage(canvasDataAsImage, 0, 0)
-          selectionImage = new Image()
-          selectionImage.onload = ->
-            ctContext.drawImage(selectionImage, gripX, gripY)
-            drawSelectBox(ctContext, gripX, gripY, rightEdge, bottomEdge)
-          selectionImage.src = imageDataToURL(selection)
+          ctContext.drawImage(selectionImage, gripX, gripY)
+          drawSelectBox(ctContext, gripX, gripY, rightEdge, bottomEdge)
           #ctContext.putImageData(selection, gripX, gripY)
           #drawSelectBox(ctContext, gripX, gripY, rightEdge, bottomEdge)
         canvasDataAsImage.src = canvasHoldover
@@ -80,11 +77,8 @@ selectPosture = [
         canvasDataAsImage = new Image()
         canvasDataAsImage.onload = ->
           ctContext.drawImage(canvasDataAsImage, 0, 0)
-          selectionImage = new Image()
-          selectionImage.onload = ->
-            ctContext.drawImage(selectionImage, selectionX, selectionY)
-            historyUpdate()
-          selectionImage.src = imageDataToURL(selection)
+          ctContext.drawImage(selectionImage, selectionX, selectionY)
+          historyUpdate()
           #ctContext.putImageData(selection, selectionX, selectionY)
         canvasDataAsImage.src = canvasHoldover
 
