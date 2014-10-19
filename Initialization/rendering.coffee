@@ -345,4 +345,16 @@ makeTransparent = () ->
       datumIndex++
     ctPaintTools[toolsToNumbers['select']].mode = true
   drawToolbars()
+  selectionImage = new Image()
+  selectionImage.src = imageDataToURL(selection)
+  canvasDataAsImage = new Image()
+  canvasDataAsImage.onload = ->
+    ctContext.drawImage(canvasDataAsImage,0,0)
+    ctContext.drawImage(selectionImage, selectionX, selectionY)
+    originX = selectionX
+    originY = selectionY
+    edgeX = originX + selectionsWidth - 1
+    edgeY = originY + selectionsHeight - 1
+    drawSelectBox(ctContext, originX, originY, edgeX, edgeY)
+  canvasDataAsImage.src = canvasHoldover
 

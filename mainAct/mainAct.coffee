@@ -29,7 +29,6 @@ $(document).ready (event)->
       drawToolbars()
 
     if event.keyCode is keysToKeyCodes['single quote']
-      #makeTransparent()
       modeChangeAction()
 
     if event.keyCode is keysToKeyCodes['space']
