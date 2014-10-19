@@ -32,6 +32,9 @@ $(document).ready (event)->
       #makeTransparent()
       modeChangeAction()
 
+    if event.keyCode is keysToKeyCodes['space']
+      makeTransparent()
+
     if event.keyCode is keysToKeyCodes['equals'] or event.keyCode is 61
       if zoomActivate
         currentMagnitude = ctPaintTools[toolsToNumbers['zoom']].magnitude

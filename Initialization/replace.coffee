@@ -131,10 +131,14 @@ replaceDataSorting = ( inputMaterial, eventIsKeyDown ) ->
               canvasDataAsImage = new Image()
               canvasDataAsImage.onload = ->
                 ctContext.drawImage(canvasDataAsImage,0,0)
-                ctContext.putImageData(selection, selectionX, selectionY)
-                rightEdge = selectionX + selectionsWidth - 1
-                bottomEdge = selectionY + selectionsHeight - 1
-                drawSelectBox(ctContext, selectionX, selectionY, rightEdge, bottomEdge)
+                #ctContext.putImageData(selection, selectionX, selectionY)
+                selectionImage = new Image()
+                selectionImage.onload = ->
+                  ctContext.drawImage(selectionImage, selectionX, selectionY)
+                  rightEdge = selectionX + selectionsWidth - 1
+                  bottomEdge = selectionY + selectionsHeight - 1
+                  drawSelectBox(ctContext, selectionX, selectionY, rightEdge, bottomEdge)
+                selectionImage.src = imageDataToURL(selection)
               canvasDataAsImage.src = canvasHoldover
               replaceFinishUp()
     else

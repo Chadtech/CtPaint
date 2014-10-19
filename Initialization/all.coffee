@@ -9,13 +9,18 @@ allAction = (event) ->
       canvasDataAsImage = new Image()
       canvasDataAsImage.onload = ->
         ctContext.drawImage(canvasDataAsImage, 0, 0)
-        ctContext.putImageData(selection, selectionX, selectionY)
 
-        cH.push ctCanvas.toDataURL()
-        cH.shift()
-        cF = []
+        #ctContext.putImageData(selection, selectionX, selectionY)
+        selectionImage = new Image()
+        selectionImage.onload = ->
+          ctContext.drawImage(selectionImage, selectionX, selectionY)
 
-        selectAll()
+          cH.push ctCanvas.toDataURL()
+          cH.shift()
+          cF = []
+
+          selectAll()
+        selectionImage.src = imageDataToURL(selection)
 
       canvasDataAsImage.src = cH[cH.length - 1]
 
@@ -29,18 +34,24 @@ selectAll = ->
   selection = ctContext.getImageData(0, 0, tCanvasWidth - 1, tCanvasHeight - 1)
   squareAction(ctContext, colorSwatches[1], 0, 0, tCanvasWidth - 1, tCanvasHeight - 1, true)
   canvasHoldover = ctCanvas.toDataURL()
-  ctContext.putImageData(selection, 0, 0)
-  selectionsWidth = tCanvasWidth
-  selectionsHeight = tCanvasHeight
-  selectionX = 0
-  selectionY = 0
-  drawSelectBox( ctContext, 0, 0, tCanvasWidth - 1, tCanvasHeight - 1)
-  areaSelected = true
 
-  setTimeout( ()->
-    tH.pop()
-    tH.push ctPaintTools[toolsToNumbers['select']]
-    tH.shift()
-    drawToolbars()
-  ,20)
+  #ctContext.putImageData(selection, 0, 0)
+
+  selectionImage = new Image()
+  selectionImage.onload = ->
+    ctContext.drawImage(selectionImage, 0, 0)
+    selectionsWidth = tCanvasWidth
+    selectionsHeight = tCanvasHeight
+    selectionX = 0
+    selectionY = 0
+    drawSelectBox( ctContext, 0, 0, tCanvasWidth - 1, tCanvasHeight - 1)
+    areaSelected = true
+
+    setTimeout( ()->
+      tH.pop()
+      tH.push ctPaintTools[toolsToNumbers['select']]
+      tH.shift()
+      drawToolbars()
+    ,20)
+  selectionImage.src = imageDataToURL(selection)
 

@@ -5,18 +5,18 @@ selectPosture = [
     if not areaSelected
       if mousePressed
 
+        getMousePositionOnCanvas(event)
+        sortedXs = [ Math.min(xSpot, oldX), Math.max(xSpot, oldX) ]
+        sortedYs = [ Math.min(ySpot, oldY), Math.max(ySpot, oldY) ]
+
+        boxInformation = (Math.abs(xSpot - oldX) + 1).toString() 
+        boxInformation += 'px x '
+        boxInformation += (Math.abs(ySpot - oldY) + 1).toString()
+        boxInformation += 'px'
+        drawInformation( event, boxInformation )
+
         canvasDataAsImage = new Image()
         canvasDataAsImage.onload = ->
-          getMousePositionOnCanvas(event)
-          sortedXs = [ Math.min(xSpot, oldX), Math.max(xSpot, oldX) ]
-          sortedYs = [ Math.min(ySpot, oldY), Math.max(ySpot, oldY) ]
-
-          boxInformation = (Math.abs(xSpot - oldX) + 1).toString() 
-          boxInformation += 'px x '
-          boxInformation += (Math.abs(ySpot - oldY) + 1).toString()
-          boxInformation += 'px'
-          drawInformation( event, boxInformation )
-
           originX = sortedXs[0]
           originY = sortedYs[0]
           otherSideX = sortedXs[1]
@@ -26,7 +26,6 @@ selectPosture = [
         canvasDataAsImage.src = cH[cH.length - 1]
       else
         drawInformation( event, boxInformation )
-
 
     else
       if mousePressed
@@ -45,8 +44,13 @@ selectPosture = [
         canvasDataAsImage = new Image()
         canvasDataAsImage.onload = ->
           ctContext.drawImage(canvasDataAsImage, 0, 0)
-          ctContext.putImageData(selection, gripX, gripY)
-          drawSelectBox(ctContext, gripX, gripY, rightEdge, bottomEdge)
+          selectionImage = new Image()
+          selectionImage.onload = ->
+            ctContext.drawImage(selectionImage, gripX, gripY)
+            drawSelectBox(ctContext, gripX, gripY, rightEdge, bottomEdge)
+          selectionImage.src = imageDataToURL(selection)
+          #ctContext.putImageData(selection, gripX, gripY)
+          #drawSelectBox(ctContext, gripX, gripY, rightEdge, bottomEdge)
         canvasDataAsImage.src = canvasHoldover
       else
         drawInformation( event, boxInformation )
@@ -76,8 +80,12 @@ selectPosture = [
         canvasDataAsImage = new Image()
         canvasDataAsImage.onload = ->
           ctContext.drawImage(canvasDataAsImage, 0, 0)
-          ctContext.putImageData(selection, selectionX, selectionY)
-          historyUpdate()
+          selectionImage = new Image()
+          selectionImage.onload = ->
+            ctContext.drawImage(selectionImage, selectionX, selectionY)
+            historyUpdate()
+          selectionImage.src = imageDataToURL(selection)
+          #ctContext.putImageData(selection, selectionX, selectionY)
         canvasDataAsImage.src = canvasHoldover
 
   # Mouse up
@@ -111,9 +119,15 @@ selectPosture = [
 
           canvasHoldover = ctCanvas.toDataURL()
 
-          #historyUpdate()
-          ctContext.putImageData(selection, selectionX, selectionY)
-          drawSelectBox(ctContext, originX, originY, otherSideX, otherSideY)
+          selectionImage = new Image()
+          selectionImage.onload = ->
+            ctContext.drawImage(selectionImage, selectionX, selectionY)
+            drawSelectBox(ctContext, originX, originY, otherSideX, otherSideY)
+          selectionImage.src = imageDataToURL(selection)
+
+          #ctContext.putImageData(selection, selectionX, selectionY)
+          #drawSelectBox(ctContext, originX, originY, otherSideX, otherSideY)
+
         canvasDataAsImage.src = cH[cH.length - 1]
         areaSelected = true
     else

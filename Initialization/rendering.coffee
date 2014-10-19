@@ -307,23 +307,45 @@ copeWithSelection = ()->
     canvasDataAsImage = new Image()
     canvasDataAsImage.onload = ->
       ctContext.drawImage(canvasDataAsImage, 0, 0)
-      ctContext.putImageData(selection, copeX, copeY)
-      cH.push ctCanvas.toDataURL()
-      cH.shift()
-      cF = []
+      #ctContext.putImageData(selection, copeX, copeY)
+      selectionImage = new Image()
+      selectionImage.onload = ->
+        ctContext.drawImage(selectionImage, copeX, copeY)
+        cH.push ctCanvas.toDataURL()
+        cH.shift()
+        cF = []
+      selectionImage.src = imageDataToURL(selection)
     canvasDataAsImage.src = cH[cH.length - 1]
 
-#makeTransparent = () ->
-#  if areaSelected
-
-
-
-
-
-
-
-
-
-
-
+makeTransparent = () ->
+  if ctPaintTools[toolsToNumbers['select']].mode
+    datumIndex = 0
+    while datumIndex < selection.data.length
+      if (datumIndex % 4) is 3
+        if selection.data[datumIndex] isnt 255
+          selection.data[datumIndex] = 255
+      datumIndex++
+    ctPaintTools[toolsToNumbers['select']].mode = false
+  else
+    datumIndex = 0
+    isSameColor = true
+    while datumIndex < selection.data.length
+      switch (datumIndex%4)
+        when 0
+          if selection.data[datumIndex] isnt colorSwatches[1][0]
+            isSameColor = false
+        when 1
+          if selection.data[datumIndex] isnt colorSwatches[1][1]
+            isSameColor = false
+        when 2
+          if selection.data[datumIndex] isnt colorSwatches[1][2]
+            isSameColor = false
+        when 3
+          if isSameColor
+            selection.data[datumIndex] = 0
+          else
+            isSameColor = true
+      datumIndex++
+    ctPaintTools[toolsToNumbers['select']].mode = true
+  drawToolbars()
 

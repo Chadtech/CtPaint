@@ -96,7 +96,6 @@ keyListeningUnderNormalCircumstance = [
           zoomRootY -= ( 9 // zoomFactor ) + 2
           canvasYPos -= (zoomRootY * zoomFactor)
           positionCanvas()
-          updateCursor()
 
     if event.keyCode is keysToKeyCodes['down']
       if not zoomActivate
@@ -111,7 +110,6 @@ keyListeningUnderNormalCircumstance = [
           zoomRootY += ( 9 // zoomFactor ) + 2
           canvasYPos -= (zoomRootY * zoomFactor)
           positionCanvas()
-          updateCursor()
 
     if event.keyCode is keysToKeyCodes['left']
       if not zoomActivate
@@ -125,7 +123,6 @@ keyListeningUnderNormalCircumstance = [
           zoomRootX -= ( 9 // zoomFactor ) + 2
           canvasXPos -= (zoomRootX * zoomFactor)
           positionCanvas()
-          updateCursor()
 
     if event.keyCode is keysToKeyCodes['right']
       if not zoomActivate
@@ -140,7 +137,6 @@ keyListeningUnderNormalCircumstance = [
           zoomRootX += ( 9 // zoomFactor ) + 2
           canvasXPos -= (zoomRootX * zoomFactor)
           positionCanvas()
-          updateCursor()
           
     if event.keyCode is keysToKeyCodes['backspace']
       if areaSelected
@@ -152,6 +148,8 @@ keyListeningUnderNormalCircumstance = [
           cH.shift()
           cF = []
         canvasDataAsImage.src = canvasHoldover
+  (event) ->
+
 ]
  
 justPassTheCharacter = (keyPressed) ->

@@ -11,13 +11,18 @@ pasteAction = ->
       canvasDataAsImage = new Image()
       canvasDataAsImage.onload = ->
         ctContext.drawImage(canvasDataAsImage, 0, 0)
-        ctContext.putImageData(selection, selectionX, selectionY)
-        canvasHoldover = ctCanvas.toDataURL()
-        cH.push ctCanvas.toDataURL()
-        cH.shift()
-        cF = []
-        # (A)
-        pasteTheSelection()
+
+        #ctContext.putImageData(selection, selectionX, selectionY)
+        selectionImage = new Image()
+        selectionImage.onload = ->
+          ctContext.drawImage(selectionImage, selectionX, selectionY)
+          canvasHoldover = ctCanvas.toDataURL()
+          cH.push ctCanvas.toDataURL()
+          cH.shift()
+          cF = []
+          # (A)
+          pasteTheSelection()
+        selectionImage.src = imageDataToURL(selection)
       canvasDataAsImage.src = cH[cH.length - 1]
     else
       # (A)
@@ -66,17 +71,22 @@ pasteTheSelection = ->
       # Draw the canvas as we know it to be
       ctContext.drawImage(canvasDataAsImage,0,0)
       # Then draw the selection
-      ctContext.putImageData(selection, selectionX, selectionY)
-      # Then draw that little box around the selection
-      originX = selectionX
-      originY = selectionY
-      edgeX = originX + selectionsWidth - 1
-      edgeY = originY + selectionsHeight - 1
-      drawSelectBox(ctContext, originX, originY, edgeX, edgeY)
-      # Note that none of this is saved, its merely drawn.
-      # These drawings are not incorporated into the data
-      # of the canvas.
-      # It gets incorporated upon 'exit' from selection.
+     
+      #ctContext.putImageData(selection, selectionX, selectionY)
+      selectionImage = new Image()
+      selectionImage.onload = ->
+        ctContext.drawImage(selectionImage, selectionX, selectionY)
+        # Then draw that little box around the selection
+        originX = selectionX
+        originY = selectionY
+        edgeX = originX + selectionsWidth - 1
+        edgeY = originY + selectionsHeight - 1
+        drawSelectBox(ctContext, originX, originY, edgeX, edgeY)
+        # Note that none of this is saved, its merely drawn.
+        # These drawings are not incorporated into the data
+        # of the canvas.
+        # It gets incorporated upon 'exit' from selection.
+      selectionImage.src = imageDataToURL(selection)
     canvasDataAsImage.src = cH[cH.length - 1]
     areaSelected = true
 

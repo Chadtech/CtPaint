@@ -47,4 +47,24 @@ sameColorCheck = (colorA, colorB) ->
     blueAreSame = colorA[2] == colorB[2]
     return  redAreSame and greenAreSame and blueAreSame
 
+###
+  There are two functions that can be used to draw something onto a canvas,
+  putImageData, and drawImage. putImageData replaces data, and drawImage
+  Merges data, accounting for transparency.
+
+  I use this function to convert image data, which naturally has no
+  function toDataURL(), into a data URL. The data URL is then used
+  as a source for a new image object, which can be the subject of 
+  the drawImage function.
+###
+imageDataToURL = ( imageAsImageData ) ->
+  temporaryCanvas = document.createElement('canvas')
+  temporaryCanvas.width = imageAsImageData.width
+  temporaryCanvas.height = imageAsImageData.height
+
+  temporaryContext = temporaryCanvas.getContext('2d')
+  temporaryContext.putImageData(imageAsImageData, 0, 0)
+
+  return temporaryCanvas.toDataURL()
+
     
