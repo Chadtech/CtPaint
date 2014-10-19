@@ -3378,22 +3378,23 @@ selectPosture = [
     setCasualPosition(event)
     if not areaSelected
       if mousePressed
-        getMousePositionOnCanvas(event)
-        sortedXs = [ Math.min(xSpot, oldX), Math.max(xSpot, oldX) ]
-        sortedYs = [ Math.min(ySpot, oldY), Math.max(ySpot, oldY) ]
 
-        boxInformation = (Math.abs(xSpot - oldX) + 1).toString() 
-        boxInformation += 'px x '
-        boxInformation += (Math.abs(ySpot - oldY) + 1).toString()
-        boxInformation += 'px'
-        drawInformation( event, boxInformation )
-
-        originX = sortedXs[0]
-        originY = sortedYs[0]
-        otherSideX = sortedXs[1]
-        otherSideY = sortedYs[1]
         canvasDataAsImage = new Image()
         canvasDataAsImage.onload = ->
+          getMousePositionOnCanvas(event)
+          sortedXs = [ Math.min(xSpot, oldX), Math.max(xSpot, oldX) ]
+          sortedYs = [ Math.min(ySpot, oldY), Math.max(ySpot, oldY) ]
+
+          boxInformation = (Math.abs(xSpot - oldX) + 1).toString() 
+          boxInformation += 'px x '
+          boxInformation += (Math.abs(ySpot - oldY) + 1).toString()
+          boxInformation += 'px'
+          drawInformation( event, boxInformation )
+
+          originX = sortedXs[0]
+          originY = sortedYs[0]
+          otherSideX = sortedXs[1]
+          otherSideY = sortedYs[1]
           ctContext.drawImage(canvasDataAsImage, 0, 0)
           drawSelectBox(ctContext, originX, originY, otherSideX, otherSideY)
         canvasDataAsImage.src = cH[cH.length - 1]
