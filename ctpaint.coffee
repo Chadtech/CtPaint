@@ -2987,7 +2987,7 @@ drawToolbars = ->
         iconY = ctPaintTools[toolsToNumbers['zoom']].clickRegion[1]
         toolbar0Context.drawImage( theImage, iconX, iconY)
 
-   if tH[tH.length - 1].name is 'select'
+    if tH[tH.length - 1].name is 'select'
       if tH[tH.length - 1].mode
         theImage = solidIcons['select'][1]
         iconX = tH[tH.length - 1].clickRegion[0]
