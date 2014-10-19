@@ -64,7 +64,7 @@ Here is an incomplete list of features, with the ones I have finished checked of
 * X Square draw tool
 * X Tool cursor images
 * X Zoom
-* Secondary color transparency
+* X Secondary color transparency
 * X Arrow key scrolling
 * X Scale canvas
 * X Scale selected area
