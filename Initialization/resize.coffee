@@ -23,7 +23,7 @@ resizeDataSortingInitialize = (width, height) ->
     canvasDataAsImage = new Image()
     canvasDataAsImage.onload = ->
       ctContext.drawImage(canvasDataAsImage,0,0)
-      ctContext.putImageData(selection, selectionX, selectionY)
+      #ctContext.putImageData(selection, selectionX, selectionY)
       historyUpdate()
     canvasDataAsImage.src = cH[cH.length - 1]
   menuDatum = zeroPadder(width, 4) + zeroPadder(height, 4)

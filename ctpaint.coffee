@@ -2339,7 +2339,7 @@ resizeDataSortingInitialize = (width, height) ->
     canvasDataAsImage = new Image()
     canvasDataAsImage.onload = ->
       ctContext.drawImage(canvasDataAsImage,0,0)
-      ctContext.putImageData(selection, selectionX, selectionY)
+      #ctContext.putImageData(selection, selectionX, selectionY)
       historyUpdate()
     canvasDataAsImage.src = cH[cH.length - 1]
   menuDatum = zeroPadder(width, 4) + zeroPadder(height, 4)
@@ -3336,7 +3336,6 @@ keyListeningUnderNormalCircumstance = [
           zoomRootY -= ( 9 // zoomFactor ) + 2
           canvasYPos -= (zoomRootY * zoomFactor)
           positionCanvas()
-          updateCursor()
 
     if event.keyCode is keysToKeyCodes['down']
       if not zoomActivate
@@ -3351,7 +3350,6 @@ keyListeningUnderNormalCircumstance = [
           zoomRootY += ( 9 // zoomFactor ) + 2
           canvasYPos -= (zoomRootY * zoomFactor)
           positionCanvas()
-          updateCursor()
 
     if event.keyCode is keysToKeyCodes['left']
       if not zoomActivate
@@ -3365,7 +3363,6 @@ keyListeningUnderNormalCircumstance = [
           zoomRootX -= ( 9 // zoomFactor ) + 2
           canvasXPos -= (zoomRootX * zoomFactor)
           positionCanvas()
-          updateCursor()
 
     if event.keyCode is keysToKeyCodes['right']
       if not zoomActivate
@@ -3380,7 +3377,6 @@ keyListeningUnderNormalCircumstance = [
           zoomRootX += ( 9 // zoomFactor ) + 2
           canvasXPos -= (zoomRootX * zoomFactor)
           positionCanvas()
-          updateCursor()
           
     if event.keyCode is keysToKeyCodes['backspace']
       if areaSelected
@@ -3445,7 +3441,6 @@ zoomPosture = [
   (event) ->
     drawInformation(event)
     setCasualPosition(event)
-    #updateCursor(event)
 
   (event) ->
     if not mousePressed
