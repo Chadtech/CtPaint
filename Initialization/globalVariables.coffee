@@ -1,6 +1,9 @@
 ct = new Image()
 ct.src = "assets/ct.png"
 
+instructions = new Image()
+instructions.src = 'assets/instructions.png'
+
 # Useful when I want to ensure a datum entry is a hexadecimal value
 hexadecimalProper = [
   '0'

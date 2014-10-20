@@ -17,6 +17,9 @@ $(document).ready (event)->
     positionMenu()
     # Fill the canvas history with the current state
     clearOutCanvasHistoryIndex = 0
+
+    ctContext.drawImage(instructions, 0, 0)
+
     while clearOutCanvasHistoryIndex < 10
       cH.push ctCanvas.toDataURL()
       cH.shift()
