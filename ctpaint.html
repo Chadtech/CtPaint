@@ -14,7 +14,7 @@
       <link href="ctpaint.css" rel="stylesheet" type="text/css">
       <link rel="shortcut icon" href="https://raw.githubusercontent.com/ChadCS/ChadTech-v0/master/thumbnail.ico">
   </head>
-<body>
+<body style = "background-color: #000000">
     <div id="wholeWindow">
       <div id="backgroundDiv" style="position: absolute; top:0px; left:0px;">
         <canvas id="background" style = " background-color : #202020"></canvas>
@@ -22,24 +22,25 @@
 
       <div id="dragAndDrop">
         <div id="ctpaintDiv" style="position: absolute; top:0px; left:0px;">
-          <canvas id="CtPaint" style = "background-color : #202020"></canvas>
+          <canvas id="CtPaint" style = "background-color : #000000"></canvas>
         </div>
       </div>
 
       <div id="toolbar0Div" style="position: absolute; top:0px; left:0px;">
-        <canvas id="toolbar0" style = " background-color : #FF00FF"></canvas>
+        <canvas id="toolbar0" style = " background-color : #000000"></canvas>
       </div>
+
       <div id="toolbar1Div" style="position: absolute; top:0px; left:0px;">
-        <canvas id="toolbar1" style = " background-color : #0000FF"></canvas>
+        <canvas id="toolbar1" style = " background-color : #000000"></canvas>
       </div>
 
       <div id="menuDiv" style="position: absolute; top:0px; left:0px;">
-        <canvas id="menu" style = " background-color : #0000FF"></canvas>
+        <canvas id="menu" style = " background-color : #000000"></canvas>
       </div>
-
-      <div id="wayWideDiv">
-        <canvas id="wayWide"></canvas>
-      </div>
+      <div>
+      
+      <img id="loadingImage" src="http://i.imgur.com/FiFkC8j.png" style="position: absolute; top:250px;">
+    </div>
   </div>
 </body>
 </html>

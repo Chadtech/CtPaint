@@ -81,7 +81,7 @@ drawToolbars = ->
 
   ###
     The following code looks at the condition of the state-sensitive tool icons (fancy and 
-    solid-capable tools). The relevant tools are square, circle, line, and point.
+    solid-capable tools). The relevant tools are square, circle, line, zoom, and point.
 
     Each section, for square, circle, line and point, is identical. So I have therefore
     only commented the square section. The comments should be equally explainatory for the 
@@ -231,6 +231,7 @@ drawToolbars = ->
     toolbar1Context.fillRect(52 + (17 * (paletteIndex // 2)), 4 + (17 * (paletteIndex % 2)), 14, 14)
     paletteIndex++
 
+# Put the color of the cursor pixel, where the cursor pixel is currently located
 updateCursor = (event)->
   coverUpOldCursor()
   if not zoomActivate
@@ -251,19 +252,26 @@ updateCursor = (event)->
   oldCursorY = cursorY
   putPixel( ctContext, colorOfCursorPixel, cursorX, cursorY)
 
+# Put the color of the canvas at the cursor pixels location, over the cursor pixel
 coverUpOldCursor = ->
   if oldCursorsColor isnt undefined
     putPixel( ctContext, oldCursorsColor.data, oldCursorX, oldCursorY )
 
+# Update the stored memory of the canvass color at the cursors location
 updateOldCursor = ->
   oldCursorsColor = ctContext.getImageData(cursorX, cursorY, 1, 1)
 
+# Redraw the cursor at its location
 refreshCursor = ( particularColor ) ->
   if particularColor isnt undefined
     putPixel( ctContext, particularColor, cursorX, cursorY )
   else
     putPixel( ctContext, colorOfCursorPixel, cursorX, cursorY )
 
+# This function draws the information in the information bar in the bottom horizontal
+# tool bar. The information drawn could be, for example the radius of the circle
+# being drawn. The mouses position, and the color at that position, are always
+# drawn. 
 drawInformation = ( event, extraInformation ) ->
   toolbar1Context.drawImage(toolbar1sImage1, toolbar1sImage0.width + 5, 3) 
   if extraInformation is undefined
@@ -294,11 +302,17 @@ drawInformation = ( event, extraInformation ) ->
     toolbar1sImage0.width + toolbar1sImage1.width + 19, 
     12) 
 
+# get rid of the oldest remembered canvas, and add the most recent canvas
+# set the 'future canvas' to an empty array (no available canvass to 'redo'
+# to)
 historyUpdate = ->
   cH.push ctCanvas.toDataURL()
   cH.shift()
   cF = []
 
+# If there is a selection, put it back down onto the canvas
+# This function is used when ever the select tool is deviated
+# from, but there remains a selection.
 copeWithSelection = ()->
   copeX = selectionX
   copeY = selectionY
@@ -315,22 +329,32 @@ copeWithSelection = ()->
       cF = []
     canvasDataAsImage.src = canvasHoldover
 
+# Make every instance of the second swatch color, transparent,
+# within the selection
 makeTransparent = () ->
+  # If transparency is already turned on
   if ctPaintTools[toolsToNumbers['select']].mode
     datumIndex = 0
+    # For every datum
     while datumIndex < selection.data.length
+      # If its an alpha channel
       if (datumIndex % 4) is 3
+        # and its not opaque (level 255)
         if selection.data[datumIndex] isnt 255
+          # make it so
           selection.data[datumIndex] = 255
       datumIndex++
     ctPaintTools[toolsToNumbers['select']].mode = false
   else
     datumIndex = 0
+    # Presume the pixel is already the color we are making transparent
     isSameColor = true
     while datumIndex < selection.data.length
       switch (datumIndex%4)
         when 0
+          # if its the same color we are making transparent their red channels will be identical
           if selection.data[datumIndex] isnt colorSwatches[1][0]
+            # and if they arent, we have falsified our hypothesis (presumption)
             isSameColor = false
         when 1
           if selection.data[datumIndex] isnt colorSwatches[1][1]
@@ -339,9 +363,14 @@ makeTransparent = () ->
           if selection.data[datumIndex] isnt colorSwatches[1][2]
             isSameColor = false
         when 3
+          # If we have checked all three color channels, and our hypothesis that the colors
+          # are the same has not been falsified, then we go ahead and set the alpha channel
+          # to 0, ie, it is now transparent.
           if isSameColor
             selection.data[datumIndex] = 0
           else
+            # if we falsified the hypothesis, move onto the next pixel, with the presumption 
+            # that it is the color to make transparent.
             isSameColor = true
       datumIndex++
     ctPaintTools[toolsToNumbers['select']].mode = true

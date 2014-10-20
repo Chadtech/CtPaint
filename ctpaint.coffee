@@ -2828,6 +2828,10 @@ zoomAction = (xCor, yCor) ->
   drawToolbars()
 
 
+###
+  This function selects the whole canvas, much like what would
+  happen if you pressed cmd + a in any image software
+###
 allAction = (event) ->
   if not zoomActivate
     tH.push ctPaintTools[toolsToNumbers['all']]
@@ -2881,6 +2885,9 @@ selectAll = ->
   ,20)
 
 
+###
+  Change the mode from true to false, or from false to true.
+###
 modeChangeAction = ->
   tH.push ctPaintTools[toolsToNumbers['modeChange']]
   drawToolbars()
@@ -2906,6 +2913,8 @@ magnitudeUpAction = ->
         tH[tH.length - 1].magnitude++
     drawToolbars()
   ,20)
+
+  
 magnitudeDownAction = ->
   tH.push ctPaintTools[toolsToNumbers['magnitudeDown']]
   drawToolbars()
@@ -2917,6 +2926,8 @@ magnitudeDownAction = ->
         tH[tH.length - 1].magnitude--
     drawToolbars()
   ,20)
+
+  
 ###
   Figure out where to put the canvas
 ###
@@ -3000,7 +3011,7 @@ drawToolbars = ->
 
   ###
     The following code looks at the condition of the state-sensitive tool icons (fancy and 
-    solid-capable tools). The relevant tools are square, circle, line, and point.
+    solid-capable tools). The relevant tools are square, circle, line, zoom, and point.
 
     Each section, for square, circle, line and point, is identical. So I have therefore
     only commented the square section. The comments should be equally explainatory for the 
@@ -3150,6 +3161,7 @@ drawToolbars = ->
     toolbar1Context.fillRect(52 + (17 * (paletteIndex // 2)), 4 + (17 * (paletteIndex % 2)), 14, 14)
     paletteIndex++
 
+# Put the color of the cursor pixel, where the cursor pixel is currently located
 updateCursor = (event)->
   coverUpOldCursor()
   if not zoomActivate
@@ -3170,19 +3182,26 @@ updateCursor = (event)->
   oldCursorY = cursorY
   putPixel( ctContext, colorOfCursorPixel, cursorX, cursorY)
 
+# Put the color of the canvas at the cursor pixels location, over the cursor pixel
 coverUpOldCursor = ->
   if oldCursorsColor isnt undefined
     putPixel( ctContext, oldCursorsColor.data, oldCursorX, oldCursorY )
 
+# Update the stored memory of the canvass color at the cursors location
 updateOldCursor = ->
   oldCursorsColor = ctContext.getImageData(cursorX, cursorY, 1, 1)
 
+# Redraw the cursor at its location
 refreshCursor = ( particularColor ) ->
   if particularColor isnt undefined
     putPixel( ctContext, particularColor, cursorX, cursorY )
   else
     putPixel( ctContext, colorOfCursorPixel, cursorX, cursorY )
 
+# This function draws the information in the information bar in the bottom horizontal
+# tool bar. The information drawn could be, for example the radius of the circle
+# being drawn. The mouses position, and the color at that position, are always
+# drawn. 
 drawInformation = ( event, extraInformation ) ->
   toolbar1Context.drawImage(toolbar1sImage1, toolbar1sImage0.width + 5, 3) 
   if extraInformation is undefined
@@ -3213,11 +3232,17 @@ drawInformation = ( event, extraInformation ) ->
     toolbar1sImage0.width + toolbar1sImage1.width + 19, 
     12) 
 
+# get rid of the oldest remembered canvas, and add the most recent canvas
+# set the 'future canvas' to an empty array (no available canvass to 'redo'
+# to)
 historyUpdate = ->
   cH.push ctCanvas.toDataURL()
   cH.shift()
   cF = []
 
+# If there is a selection, put it back down onto the canvas
+# This function is used when ever the select tool is deviated
+# from, but there remains a selection.
 copeWithSelection = ()->
   copeX = selectionX
   copeY = selectionY
@@ -3234,22 +3259,32 @@ copeWithSelection = ()->
       cF = []
     canvasDataAsImage.src = canvasHoldover
 
+# Make every instance of the second swatch color, transparent,
+# within the selection
 makeTransparent = () ->
+  # If transparency is already turned on
   if ctPaintTools[toolsToNumbers['select']].mode
     datumIndex = 0
+    # For every datum
     while datumIndex < selection.data.length
+      # If its an alpha channel
       if (datumIndex % 4) is 3
+        # and its not opaque (level 255)
         if selection.data[datumIndex] isnt 255
+          # make it so
           selection.data[datumIndex] = 255
       datumIndex++
     ctPaintTools[toolsToNumbers['select']].mode = false
   else
     datumIndex = 0
+    # Presume the pixel is already the color we are making transparent
     isSameColor = true
     while datumIndex < selection.data.length
       switch (datumIndex%4)
         when 0
+          # if its the same color we are making transparent their red channels will be identical
           if selection.data[datumIndex] isnt colorSwatches[1][0]
+            # and if they arent, we have falsified our hypothesis (presumption)
             isSameColor = false
         when 1
           if selection.data[datumIndex] isnt colorSwatches[1][1]
@@ -3258,9 +3293,14 @@ makeTransparent = () ->
           if selection.data[datumIndex] isnt colorSwatches[1][2]
             isSameColor = false
         when 3
+          # If we have checked all three color channels, and our hypothesis that the colors
+          # are the same has not been falsified, then we go ahead and set the alpha channel
+          # to 0, ie, it is now transparent.
           if isSameColor
             selection.data[datumIndex] = 0
           else
+            # if we falsified the hypothesis, move onto the next pixel, with the presumption 
+            # that it is the color to make transparent.
             isSameColor = true
       datumIndex++
     ctPaintTools[toolsToNumbers['select']].mode = true
@@ -3298,70 +3338,92 @@ keyListeningUnderNormalCircumstance = [
       tH.shift()
       drawToolbars()
       copeWithSelection()
+
     if event.keyCode is keysToKeyCodes['2']
       coverUpOldCursor()
       tH.push ctPaintTools[1]
       tH.shift()
       drawToolbars()
       copeWithSelection()
+
     if event.keyCode is keysToKeyCodes['3']
       tH.push ctPaintTools[2]
       tH.shift()
       drawToolbars()
       copeWithSelection()
+
     if event.keyCode is keysToKeyCodes['4']
       tH.push ctPaintTools[3]
       tH.shift()
       drawToolbars()
       copeWithSelection()
+
     if event.keyCode is keysToKeyCodes['5']
       tH.push ctPaintTools[4]
       tH.shift()
       drawToolbars()
       copeWithSelection()
+
     if event.keyCode is keysToKeyCodes['6']
       tH.push ctPaintTools[5]
       tH.shift()
       drawToolbars()
       copeWithSelection()
+
     if event.keyCode is keysToKeyCodes['7']
       tH.push ctPaintTools[6]
       tH.shift()
       drawToolbars()
       copeWithSelection()
+
     if event.keyCode is keysToKeyCodes['8']
       tH.push ctPaintTools[7]
       tH.shift()
       drawToolbars()
       copeWithSelection()
+
     if event.keyCode is keysToKeyCodes['a']
       allAction()
+
     if event.keyCode is keysToKeyCodes['b']
       verticalColorSwap()
+
     if event.keyCode is keysToKeyCodes['c']
       copyAction()
+
     if event.keyCode is keysToKeyCodes['d']
       replaceAction()
+
     if event.keyCode is keysToKeyCodes['e']
       resizeAction()
+
     if event.keyCode is keysToKeyCodes['f']
       flipAction()
+
     if event.keyCode is keysToKeyCodes['g']
       cursorColorAction()
+
     if event.keyCode is keysToKeyCodes['i']
       invertAction()
+
     if event.keyCode is keysToKeyCodes['q']
       horizontalColorSwap()
+
     if event.keyCode is keysToKeyCodes['r']
       rotateAction()
+
     if event.keyCode is keysToKeyCodes['v']
       pasteAction()
+
     if event.keyCode is keysToKeyCodes['w']
       scaleAction()
+
     if event.keyCode is keysToKeyCodes['x']
       cutAction()
+
     if event.keyCode is keysToKeyCodes['y']
       redoAction()
+
     if event.keyCode is keysToKeyCodes['z']
       undoAction()
 
@@ -3657,20 +3719,27 @@ samplePosture = [
 
 
 fillPosture = [
+  # Mouse move
   (event) ->
     setCasualPosition(event)
     coverUpOldCursor()
     drawInformation(event)
     updateCursor(event)
+
+  # Mouse down
   (event) ->
     mousePressed = true
     getMousePositionOnCanvas(event)
     coverUpOldCursor()
     floodFill(ctCanvas, ctContext, colorSwatches[0], xSpot, ySpot)
     updateOldCursor()
+
+  # Mouse Up
   (event) ->
     mousePressed = false
     historyUpdate()
+
+  # Mouse exit
   (event) ->
 ]
 
@@ -3858,32 +3927,6 @@ emptyPosture = [
 ]
 
 
-horizontalColorSwapPosture = [
-  (event) ->
-    setCasualPosition(event)
-    drawInformation(event)
-  (event) ->
-    mousePressed = true
-  (event) ->
-    mousePressed = false
-    drawToolbars()
-  (event) ->
-]
-
-
-verticalColorSwapPosture = [
-  (event) ->
-    drawInformation(event)
-    setCasualPosition(event)
-  (event) ->
-    mousePressed = true
-  (event) ->
-    mousePressed = false
-    drawToolbars()
-  (event) ->
-]
-
-
 # organized as they are in the 2 x 11 tool bar grid
 toolNames = [
   'zoom', 'select'
@@ -3952,6 +3995,7 @@ toolMenuImages = [
 
 ctPaintTools = {}
 
+# Declare every tool
 iteration = 0
 while iteration < toolNames.length
   thisIteration = iteration
@@ -3972,6 +4016,7 @@ while iteration < toolNames.length
   ctPaintTools[iteration].pressedImage[1].src = 'assets/v'+zeroPadder(iteration,2)+'000.PNG'
   iteration++
 
+# Set the posture for each tool
 ctPaintTools[0].posture = zoomPosture
 ctPaintTools[1].posture = selectPosture
 ctPaintTools[2].posture = samplePosture
@@ -3986,8 +4031,8 @@ ctPaintTools[10].posture = emptyPosture
 ctPaintTools[11].posture = emptyPosture
 ctPaintTools[12].posture = emptyPosture
 ctPaintTools[13].posture = emptyPosture
-ctPaintTools[14].posture = horizontalColorSwapPosture
-ctPaintTools[15].posture = verticalColorSwapPosture
+ctPaintTools[14].posture = emptyPosture
+ctPaintTools[15].posture = emptyPosture
 ctPaintTools[16].posture = emptyPosture
 ctPaintTools[17].posture = emptyPosture
 ctPaintTools[18].posture = emptyPosture
@@ -3999,6 +4044,7 @@ ctPaintTools[23].posture = emptyPosture
 ctPaintTools[24].posture = emptyPosture
 ctPaintTools[25].posture = emptyPosture
 
+# Set the action for each tool
 ctPaintTools[8].toolsAction = flipAction
 ctPaintTools[9].toolsAction = rotateAction
 ctPaintTools[10].toolsAction = invertAction
@@ -4018,24 +4064,28 @@ ctPaintTools[23].toolsAction = modeChangeAction
 ctPaintTools[24].toolsAction = magnitudeDownAction
 ctPaintTools[25].toolsAction = magnitudeUpAction
 
+# If it has a menu, set the source of the image
 ctPaintTools[8].menuImage.src = 'assets/t01.png'
 ctPaintTools[11].menuImage.src = 'assets/t02.png'
 ctPaintTools[9].menuImage.src = 'assets/t04.png'
 ctPaintTools[12].menuImage.src = 'assets/t05.png'
 ctPaintTools[13].menuImage.src = 'assets/t03.png'
 
+# enter and cancel are buttons that appear on many menus
 enterLitUp = new Image()
 cancelLitUp = new Image()
 
 enterLitUp.src = 'assets/tEnter.png'
 cancelLitUp.src = 'assets/tCancel.png'
 
+# 'X' and 'Y' are buttons on the flip menu
 xLitUp = new Image()
 yLitUp = new Image()
 
 xLitUp.src = 'assets/t11.png'
 yLitUp.src = 'assets/t21.png'
 
+# Buttons labeled with 90, 180, and 270 degrees are on the rotate menu
 ninetyDegreesLitUp = new Image()
 oneHundredAndEightyDegreesLitUp = new Image()
 twoHundredAndSeventyDegreesLitUp = new Image()
@@ -4044,6 +4094,9 @@ ninetyDegreesLitUp.src = 'assets/t14.png'
 oneHundredAndEightyDegreesLitUp.src = 'assets/t24.png'
 twoHundredAndSeventyDegreesLitUp.src = 'assets/t34.png'
 
+# This dictionary is useful for when I want to reference a tool in the CtPaintTools object
+# but dont want to rely on my memory of the tools order. It also makes the code more readable
+# since I type 'do this to tool Zoom', instead of 'do this to tool at index 4'.
 toolsToNumbers =
   'zoom':0
   'select':1
@@ -4141,6 +4194,7 @@ while solidToolIndex < toolsWhichCanBeSolid.length
 
 $(document).ready (event)->
   setTimeout( (event)->
+    $('#loadingImage').remove()
     setCanvasSizes()
     prepareCanvas()
     placeToolbars()
@@ -4345,7 +4399,6 @@ $(document).ready (event)->
       $('#wholeWindow').css 'cursor', 'default'   
 
   $('#CtPaint').mousemove (event)->
-    console.log 'cH.length', cH.length
     tH[tH.length - 1].posture[0](event)
 
   $('#CtPaint').mousedown (event)->

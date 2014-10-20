@@ -9,3 +9,5 @@ magnitudeUpAction = ->
         tH[tH.length - 1].magnitude++
     drawToolbars()
   ,20)
+
+  

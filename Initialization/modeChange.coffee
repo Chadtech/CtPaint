@@ -1,3 +1,6 @@
+###
+  Change the mode from true to false, or from false to true.
+###
 modeChangeAction = ->
   tH.push ctPaintTools[toolsToNumbers['modeChange']]
   drawToolbars()

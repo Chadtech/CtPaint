@@ -17,70 +17,92 @@ keyListeningUnderNormalCircumstance = [
       tH.shift()
       drawToolbars()
       copeWithSelection()
+
     if event.keyCode is keysToKeyCodes['2']
       coverUpOldCursor()
       tH.push ctPaintTools[1]
       tH.shift()
       drawToolbars()
       copeWithSelection()
+
     if event.keyCode is keysToKeyCodes['3']
       tH.push ctPaintTools[2]
       tH.shift()
       drawToolbars()
       copeWithSelection()
+
     if event.keyCode is keysToKeyCodes['4']
       tH.push ctPaintTools[3]
       tH.shift()
       drawToolbars()
       copeWithSelection()
+
     if event.keyCode is keysToKeyCodes['5']
       tH.push ctPaintTools[4]
       tH.shift()
       drawToolbars()
       copeWithSelection()
+
     if event.keyCode is keysToKeyCodes['6']
       tH.push ctPaintTools[5]
       tH.shift()
       drawToolbars()
       copeWithSelection()
+
     if event.keyCode is keysToKeyCodes['7']
       tH.push ctPaintTools[6]
       tH.shift()
       drawToolbars()
       copeWithSelection()
+
     if event.keyCode is keysToKeyCodes['8']
       tH.push ctPaintTools[7]
       tH.shift()
       drawToolbars()
       copeWithSelection()
+
     if event.keyCode is keysToKeyCodes['a']
       allAction()
+
     if event.keyCode is keysToKeyCodes['b']
       verticalColorSwap()
+
     if event.keyCode is keysToKeyCodes['c']
       copyAction()
+
     if event.keyCode is keysToKeyCodes['d']
       replaceAction()
+
     if event.keyCode is keysToKeyCodes['e']
       resizeAction()
+
     if event.keyCode is keysToKeyCodes['f']
       flipAction()
+
     if event.keyCode is keysToKeyCodes['g']
       cursorColorAction()
+
     if event.keyCode is keysToKeyCodes['i']
       invertAction()
+
     if event.keyCode is keysToKeyCodes['q']
       horizontalColorSwap()
+
     if event.keyCode is keysToKeyCodes['r']
       rotateAction()
+
     if event.keyCode is keysToKeyCodes['v']
       pasteAction()
+
     if event.keyCode is keysToKeyCodes['w']
       scaleAction()
+
     if event.keyCode is keysToKeyCodes['x']
       cutAction()
+
     if event.keyCode is keysToKeyCodes['y']
       redoAction()
+
     if event.keyCode is keysToKeyCodes['z']
       undoAction()
 

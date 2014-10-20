@@ -1,14 +1,21 @@
 $(document).ready (event)->
   setTimeout( (event)->
+    # Get rid of the loading image
+    $('#loadingImage').remove()
+    # Set up the canvases and tool bars
     setCanvasSizes()
     prepareCanvas()
     placeToolbars()
+    # Fill the tool history with the point tool
     tH.push ctPaintTools[toolsToNumbers['point']]
     tH.shift()
     tH.push ctPaintTools[toolsToNumbers['point']]
     tH.shift()
+    # Draw the tool bars, which will reflect the status of the tools
     drawToolbars()
+    # Position the menu outside of the visible area
     positionMenu()
+    # Fill the canvas history with the current state
     clearOutCanvasHistoryIndex = 0
     while clearOutCanvasHistoryIndex < 10
       cH.push ctCanvas.toDataURL()
@@ -147,7 +154,6 @@ $(document).ready (event)->
       $('#menuDiv').css('left', (toolbarWidth + 10).toString())
     else
       $('#menuDiv').css('top', (window.innerHeight).toString())
-    #$('#wayWideDiv').css('left', (window.innerWidth + 100).toString())
     positionCanvas()
     setCanvasSizes()
     placeToolbars()
@@ -288,18 +294,24 @@ $(document).ready (event)->
   )
 
   $('#dragAndDrop').on('drop', (event)->
+    # Dont let the browser just load up the image in the tab
     event.stopPropagation()
     event.preventDefault()
     filesType = event.originalEvent.dataTransfer.files[0].type.substr(0,5)
     if filesType is 'image'
       imageLoaded = new FileReader()
       theFile = event.originalEvent.dataTransfer.files[0]
+      # when the file is loaded
       imageLoaded.onload = ->
+        # create a new image
         imageToOpen = new Image()
+        # and when that image is loaded
         imageToOpen.onload = ->
+          # check if its bigger than the canvas
           widthExceedsCanvas = canvasWidth < imageToOpen.width
           heightExceedsCanvas = canvasHeight < imageToOpen.height
           if not widthExceedsCanvas and not heightExceedsCanvas
+            # If it isnt just put it in the canvas as a selection
             ctContext.drawImage(imageToOpen, 0, 0)
             copyMemory = ctContext.getImageData(0, 0, imageToOpen.width, imageToOpen.height)
             canvasDataAsImage = new Image()
@@ -310,6 +322,7 @@ $(document).ready (event)->
               pasteAction()
             canvasDataAsImage.src = cH[cH.length - 1]
           else
+            # otherwise replace the canvas with the image loaded
             newWidth = imageToOpen.width
             newHeight = imageToOpen.height
             ctContext.canvas.width = parseInt(newWidth)

@@ -1,3 +1,7 @@
+###
+  This function selects the whole canvas, much like what would
+  happen if you pressed cmd + a in any image software
+###
 allAction = (event) ->
   if not zoomActivate
     tH.push ctPaintTools[toolsToNumbers['all']]
