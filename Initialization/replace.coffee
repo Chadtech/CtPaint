@@ -55,96 +55,98 @@ replaceDataSorting = ( inputMaterial, eventIsKeyDown ) ->
             drawReplaceMenu()
           when 'n' then replaceFinishUp()
           when 'enter'
-            if not areaSelected
-              colorToReplace = hexToRGB(menuDatum.substr(0,6))
-              replacement = hexToRGB(menuDatum.substr(6,6))
-              replacement.push 255
-
-              tWidth = ctContext.canvas.width
-              tHeight = ctContext.canvas.height
-              canvasAsWeFoundIt = ctContext.getImageData(0, 0, tWidth, tHeight)
-              canvasData = canvasAsWeFoundIt.data
-              canvasInPixels = []
-
-              canvasIndex = 0
-              colorAtDatum = []
-              while canvasIndex < canvasData.length
-                colorAtDatum.push canvasData[canvasIndex]
-                if canvasIndex % 4 is 3
-                  if sameColorCheck(colorAtDatum, colorToReplace)
-                    canvasInPixels.push replacement
-                  else
-                    canvasInPixels.push colorAtDatum
-                  colorAtDatum = []
-                canvasIndex++
-
-              pixelIndex = 0
-              while pixelIndex < canvasInPixels.length
-                colorIndex = 0
-                while colorIndex < 4
-                  datumIndex = pixelIndex * 4
-                  canvasAsWeFoundIt.data[datumIndex + colorIndex] = 
-                    canvasInPixels[pixelIndex][colorIndex]
-                  colorIndex++
-                pixelIndex++
-
-              ctContext.putImageData(canvasAsWeFoundIt, 0, 0)
-              cH.push ctCanvas.toDataURL()
-              cH.shift()
-              cF = []
-
-              $('#menuDiv').css('top',(window.innerHeight).toString())
-              normalCircumstance = true
-              menuUp = false
-              tH.pop()
-              drawToolbars()
-            else
-              colorToReplace = hexToRGB(menuDatum.substr(0,6))
-              replacement = hexToRGB(menuDatum.substr(6,6))
-              replacement.push 255
-
-              selectionData = selection.data
-              selectionInPixels = []
-
-              selectionIndex = 0
-              colorAtDatum = []
-              while selectionIndex < selectionData.length
-                colorAtDatum.push selectionData[selectionIndex]
-                if selectionIndex % 4 is 3
-                  if sameColorCheck(colorAtDatum, colorToReplace)
-                    selectionInPixels.push replacement
-                  else
-                    selectionInPixels.push colorAtDatum
-                  colorAtDatum = []
-                selectionIndex++
-
-              pixelIndex = 0
-              while pixelIndex < selectionInPixels.length
-                colorIndex = 0
-                while colorIndex < 4
-                  datumIndex = pixelIndex * 4
-                  selection.data[datumIndex + colorIndex] = 
-                    selectionInPixels[pixelIndex][colorIndex]
-                  colorIndex++
-                pixelIndex++
-
-              selectionImage = new Image()
-              selectionImage.src = imageDataToURL(selection)
-              canvasDataAsImage = new Image()
-              canvasDataAsImage.onload = ->
-                ctContext.drawImage(canvasDataAsImage,0,0)
-                #ctContext.putImageData(selection, selectionX, selectionY)
-                ctContext.drawImage(selectionImage, selectionX, selectionY)
-                rightEdge = selectionX + selectionsWidth - 1
-                bottomEdge = selectionY + selectionsHeight - 1
-                drawSelectBox(ctContext, selectionX, selectionY, rightEdge, bottomEdge)
-              canvasDataAsImage.src = canvasHoldover
-              replaceFinishUp()
+            replace()
     else
       switch inputMaterial
         when 'enter' then menuContext.drawImage(enterLitUp, tH[tH.length - 1].menuImage.width - 162, 5)
         when 'n' then menuContext.drawImage(cancelLitUp, tH[tH.length - 1].menuImage.width - 89, 5)
     updateOldCursor()
+
+replace = ->
+  if not areaSelected
+    colorToReplace = hexToRGB(menuDatum.substr(0,6))
+    replacement = hexToRGB(menuDatum.substr(6,6))
+    replacement.push 255
+
+    tWidth = ctContext.canvas.width
+    tHeight = ctContext.canvas.height
+    canvasAsWeFoundIt = ctContext.getImageData(0, 0, tWidth, tHeight)
+    canvasData = canvasAsWeFoundIt.data
+    canvasInPixels = []
+
+    canvasIndex = 0
+    colorAtDatum = []
+    while canvasIndex < canvasData.length
+      colorAtDatum.push canvasData[canvasIndex]
+      if canvasIndex % 4 is 3
+        if sameColorCheck(colorAtDatum, colorToReplace)
+          canvasInPixels.push replacement
+        else
+          canvasInPixels.push colorAtDatum
+        colorAtDatum = []
+      canvasIndex++
+
+    pixelIndex = 0
+    while pixelIndex < canvasInPixels.length
+      colorIndex = 0
+      while colorIndex < 4
+        datumIndex = pixelIndex * 4
+        canvasAsWeFoundIt.data[datumIndex + colorIndex] = 
+          canvasInPixels[pixelIndex][colorIndex]
+        colorIndex++
+      pixelIndex++
+
+    ctContext.putImageData(canvasAsWeFoundIt, 0, 0)
+    cH.push ctCanvas.toDataURL()
+    cH.shift()
+    cF = []
+
+    $('#menuDiv').css('top',(window.innerHeight).toString())
+    normalCircumstance = true
+    menuUp = false
+    tH.pop()
+    drawToolbars()
+  else
+    colorToReplace = hexToRGB(menuDatum.substr(0,6))
+    replacement = hexToRGB(menuDatum.substr(6,6))
+    replacement.push 255
+
+    selectionData = selection.data
+    selectionInPixels = []
+
+    selectionIndex = 0
+    colorAtDatum = []
+    while selectionIndex < selectionData.length
+      colorAtDatum.push selectionData[selectionIndex]
+      if selectionIndex % 4 is 3
+        if sameColorCheck(colorAtDatum, colorToReplace)
+          selectionInPixels.push replacement
+        else
+          selectionInPixels.push colorAtDatum
+        colorAtDatum = []
+      selectionIndex++
+
+    pixelIndex = 0
+    while pixelIndex < selectionInPixels.length
+      colorIndex = 0
+      while colorIndex < 4
+        datumIndex = pixelIndex * 4
+        selection.data[datumIndex + colorIndex] = 
+          selectionInPixels[pixelIndex][colorIndex]
+        colorIndex++
+      pixelIndex++
+
+    selectionImage = new Image()
+    selectionImage.src = imageDataToURL(selection)
+    canvasDataAsImage = new Image()
+    canvasDataAsImage.onload = ->
+      ctContext.drawImage(canvasDataAsImage,0,0)
+      ctContext.drawImage(selectionImage, selectionX, selectionY)
+      rightEdge = selectionX + selectionsWidth - 1
+      bottomEdge = selectionY + selectionsHeight - 1
+      drawSelectBox(ctContext, selectionX, selectionY, rightEdge, bottomEdge)
+    canvasDataAsImage.src = canvasHoldover
+    replaceFinishUp()
 
 replaceFinishUp = ->
   $('#menuDiv').css('top',(window.innerHeight).toString())
@@ -165,7 +167,7 @@ replaceMouseListening = ( coordinates, eventIsMouseDown ) ->
     if eventIsMouseDown
       menuContext.drawImage(enterLitUp, tH[tH.length - 1].menuImage.width - 162, 5)
     else
-      replaceFinishUp()
+      replace()
 
   #Check if mouse event was in cancel button region
   notTooFarLeft = (tH[tH.length - 1].menuImage.width - 89) < coordinates[0]
