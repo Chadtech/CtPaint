@@ -88,6 +88,7 @@ mouseExit = false
 draggingBorder = false
 
 zoomActivate = false
+viewMode = false
 zoomFactor = 1
 zoomRootX = undefined
 zoomRootY = undefined
@@ -228,10 +229,6 @@ topRow = [
   [85, 96, 45]
   [176, 214, 48]
   [221, 201, 142]
-
-
-
-
   [243, 211, 27]
   [240, 147, 35]
   [255, 91, 49]
@@ -4166,6 +4163,12 @@ $(document).ready (event)->
     if event.keyCode is keysToKeyCodes['tab']
       swatchColorPicked = true
 
+    if event.keyCode is keysToKeyCodes['t']
+      if zoomActivate
+        zoomAction()
+        viewMode = true
+
+
   $('body').keyup (event) ->
     event.preventDefault()
     if normalCircumstance
@@ -4178,6 +4181,12 @@ $(document).ready (event)->
 
     if event.keyCode is keysToKeyCodes['tab']
       swatchColorPicked = false
+
+    if event.keyCode is keysToKeyCodes['t']
+      if not zoomActivate
+        if viewMode
+          if casualX isnt undefined and casualY isnt undefined
+            zoomAction(casualX, casualY)
 
   $('#menuDiv').mousedown (event) ->
     whatSortOfMouseListening( mouseListeningUnderAbnormalCircumstance[0]( event ), true)

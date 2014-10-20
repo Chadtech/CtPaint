@@ -88,6 +88,7 @@ mouseExit = false
 draggingBorder = false
 
 zoomActivate = false
+viewMode = false
 zoomFactor = 1
 zoomRootX = undefined
 zoomRootY = undefined

@@ -106,6 +106,12 @@ $(document).ready (event)->
     if event.keyCode is keysToKeyCodes['tab']
       swatchColorPicked = true
 
+    if event.keyCode is keysToKeyCodes['t']
+      if zoomActivate
+        zoomAction()
+        viewMode = true
+
+
   $('body').keyup (event) ->
     event.preventDefault()
     if normalCircumstance
@@ -118,6 +124,12 @@ $(document).ready (event)->
 
     if event.keyCode is keysToKeyCodes['tab']
       swatchColorPicked = false
+
+    if event.keyCode is keysToKeyCodes['t']
+      if not zoomActivate
+        if viewMode
+          if casualX isnt undefined and casualY isnt undefined
+            zoomAction(casualX, casualY)
 
   $('#menuDiv').mousedown (event) ->
     whatSortOfMouseListening( mouseListeningUnderAbnormalCircumstance[0]( event ), true)
