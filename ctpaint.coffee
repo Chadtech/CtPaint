@@ -3930,8 +3930,8 @@ ctPaintTools[20].toolsAction = undoAction
 ctPaintTools[21].toolsAction = redoAction
 ctPaintTools[22].toolsAction = cursorColorAction
 ctPaintTools[23].toolsAction = modeChangeAction
-ctPaintTools[24].toolsAction = magnitudeUpAction
-ctPaintTools[25].toolsAction = magnitudeDownAction
+ctPaintTools[24].toolsAction = magnitudeDownAction
+ctPaintTools[25].toolsAction = magnitudeUpAction
 
 ctPaintTools[8].menuImage.src = 'assets/t01.png'
 ctPaintTools[11].menuImage.src = 'assets/t02.png'
