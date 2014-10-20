@@ -2382,7 +2382,7 @@ resizeMouseListening = ( coordinates, eventIsMouseDown ) ->
     if eventIsMouseDown
       menuContext.drawImage(enterLitUp, tH[tH.length - 1].menuImage.width - 162, 5)
     else
-      resizeFinishUp()
+      resize()
 
   #Check if mouse event was in cancel button region
   notTooFarLeft = (tH[tH.length - 1].menuImage.width - 89) < coordinates[0]
@@ -2745,10 +2745,9 @@ zoomAction = (xCor, yCor) ->
 
 
 allAction = (event) ->
-  tH.push ctPaintTools[toolsToNumbers['all']]
-  drawToolbars()
-
   if not zoomActivate
+    tH.push ctPaintTools[toolsToNumbers['all']]
+    drawToolbars()
     if areaSelected
       areaSelected = false
 
@@ -2756,7 +2755,6 @@ allAction = (event) ->
       canvasDataAsImage.onload = ->
         ctContext.drawImage(canvasDataAsImage, 0, 0)
 
-        #ctContext.putImageData(selection, selectionX, selectionY)
         ctContext.drawImage(selectionImage, selectionX, selectionY)
 
         cH.push ctCanvas.toDataURL()
@@ -2771,25 +2769,26 @@ allAction = (event) ->
     else
       selectAll()
 
+
 selectAll = ->
   coverUpOldCursor()
   tCanvasWidth = ctContext.canvas.width
   tCanvasHeight = ctContext.canvas.height
   selection = ctContext.getImageData(0, 0, tCanvasWidth - 1, tCanvasHeight - 1)
   selectionImage = new Image()
-  selectionImage.src = imageToDataURL(selection)
-  squareAction(ctContext, colorSwatches[1], 0, 0, tCanvasWidth - 1, tCanvasHeight - 1, true)
-  canvasHoldover = ctCanvas.toDataURL()
+  selectionImage.onload = ->
+    squareAction(ctContext, colorSwatches[1], 0, 0, tCanvasWidth - 1, tCanvasHeight - 1, true)
+    canvasHoldover = ctCanvas.toDataURL()
 
-  #ctContext.putImageData(selection, 0, 0)
+    ctContext.drawImage(selectionImage, 0, 0)
+    selectionsWidth = tCanvasWidth
+    selectionsHeight = tCanvasHeight
+    selectionX = 0
+    selectionY = 0
+    drawSelectBox( ctContext, 0, 0, tCanvasWidth - 1, tCanvasHeight - 1)
+    areaSelected = true
 
-  ctContext.drawImage(selectionImage, 0, 0)
-  selectionsWidth = tCanvasWidth
-  selectionsHeight = tCanvasHeight
-  selectionX = 0
-  selectionY = 0
-  drawSelectBox( ctContext, 0, 0, tCanvasWidth - 1, tCanvasHeight - 1)
-  areaSelected = true
+  selectionImage.src = imageDataToURL(selection)
 
   setTimeout( ()->
     tH.pop()
@@ -3144,12 +3143,12 @@ copeWithSelection = ()->
     canvasDataAsImage = new Image()
     canvasDataAsImage.onload = ->
       ctContext.drawImage(canvasDataAsImage, 0, 0)
-      #ctContext.putImageData(selection, copeX, copeY)
       ctContext.drawImage(selectionImage, copeX, copeY)
       cH.push ctCanvas.toDataURL()
       cH.shift()
       cF = []
-    canvasDataAsImage.src = cH[cH.length - 1]
+    #canvasDataAsImage.src = cH[cH.length - 1]
+    canvasDataAsImage.src = canvasHoldover
 
 makeTransparent = () ->
   if ctPaintTools[toolsToNumbers['select']].mode
@@ -3915,6 +3914,10 @@ ctPaintTools[18].posture = emptyPosture
 ctPaintTools[19].posture = emptyPosture
 ctPaintTools[20].posture = emptyPosture
 ctPaintTools[21].posture = emptyPosture
+ctPaintTools[22].posture = emptyPosture
+ctPaintTools[23].posture = emptyPosture
+ctPaintTools[24].posture = emptyPosture
+ctPaintTools[25].posture = emptyPosture
 
 ctPaintTools[8].toolsAction = flipAction
 ctPaintTools[9].toolsAction = rotateAction
@@ -3922,6 +3925,8 @@ ctPaintTools[10].toolsAction = invertAction
 ctPaintTools[11].toolsAction = replaceAction
 ctPaintTools[12].toolsAction = scaleAction
 ctPaintTools[13].toolsAction = resizeAction
+ctPaintTools[14].toolsAction = horizontalColorSwap
+ctPaintTools[15].toolsAction = verticalColorSwap
 ctPaintTools[16].toolsAction = copyAction
 ctPaintTools[17].toolsAction = pasteAction
 ctPaintTools[18].toolsAction = cutAction
@@ -4244,6 +4249,7 @@ $(document).ready (event)->
       $('#wholeWindow').css 'cursor', 'default'   
 
   $('#CtPaint').mousemove (event)->
+    console.log 'tH.length = ', tH.length
     tH[tH.length - 1].posture[0](event)
 
   $('#CtPaint').mousedown (event)->

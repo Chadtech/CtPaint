@@ -110,7 +110,7 @@ resizeMouseListening = ( coordinates, eventIsMouseDown ) ->
     if eventIsMouseDown
       menuContext.drawImage(enterLitUp, tH[tH.length - 1].menuImage.width - 162, 5)
     else
-      resizeFinishUp()
+      resize()
 
   #Check if mouse event was in cancel button region
   notTooFarLeft = (tH[tH.length - 1].menuImage.width - 89) < coordinates[0]

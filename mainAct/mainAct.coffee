@@ -188,6 +188,7 @@ $(document).ready (event)->
       $('#wholeWindow').css 'cursor', 'default'   
 
   $('#CtPaint').mousemove (event)->
+    console.log 'tH.length = ', tH.length
     tH[tH.length - 1].posture[0](event)
 
   $('#CtPaint').mousedown (event)->

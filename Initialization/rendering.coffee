@@ -307,12 +307,12 @@ copeWithSelection = ()->
     canvasDataAsImage = new Image()
     canvasDataAsImage.onload = ->
       ctContext.drawImage(canvasDataAsImage, 0, 0)
-      #ctContext.putImageData(selection, copeX, copeY)
       ctContext.drawImage(selectionImage, copeX, copeY)
       cH.push ctCanvas.toDataURL()
       cH.shift()
       cF = []
-    canvasDataAsImage.src = cH[cH.length - 1]
+    #canvasDataAsImage.src = cH[cH.length - 1]
+    canvasDataAsImage.src = canvasHoldover
 
 makeTransparent = () ->
   if ctPaintTools[toolsToNumbers['select']].mode
