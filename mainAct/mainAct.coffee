@@ -264,6 +264,8 @@ $(document).ready (event)->
     withinYBoundaries = notTooHigh and notTooLow
     if withinXBoundaries and withinYBoundaries
       swatchColorPicked = true
+    if (window.innerWidth - toolbarWidth) < toolbar1X
+      window.open('http://i.imgur.com/BRiBk8Y.png')
 
   $('#toolbar1').mouseup (event)->
     toolbar1X = event.clientX
