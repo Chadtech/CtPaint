@@ -8,6 +8,7 @@ redoAction = ->
   # queue, replace our current canvas with it.
   if cF.length > 0
     cH.push cF.pop()
+    cH.shift()
     canvasDataAsImage = new Image()
     canvasDataAsImage.onload = ->
       # Figure out what to do if the replacing canvas

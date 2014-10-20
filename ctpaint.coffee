@@ -1,6 +1,7 @@
 ct = new Image()
 ct.src = "assets/ct.png"
 
+# Useful when I want to ensure a datum entry is a hexadecimal value
 hexadecimalProper = [
   '0'
   '1'
@@ -58,6 +59,7 @@ cH = [
   undefined
   undefined
 ]
+
 ###
   cF is short for canvas future
 ###
@@ -153,6 +155,10 @@ fillProceed = true
   They are only updated by the getMousePositionOnCanvas function.
   oldX and oldY are used in the many tools that require a memory
   of where the tool started, or where it was.
+
+  casualX and casualY are used in instances where the mouse location
+  needs to be asertained, but without interference to the xSpot/ySpot
+  pair.
 ###
 xSpot = undefined
 ySpot = undefined
@@ -163,6 +169,12 @@ oldY = undefined
 casualX = undefined
 casualY = undefined
 
+###
+  The location of the cursor on the canvas is indicated by a colored pixel
+  Since a color might not be visible over certain canvases, the option
+  to change the pixel color is available. The array cursorColors is contains
+  the full selection of cursor colors.
+###
 cursorColors = [
   [ 255, 85, 0, 255 ]
   [ 85, 0, 255, 255 ]
@@ -181,6 +193,12 @@ indexOfCursorColors = 0
 
 colorOfCursorPixel = cursorColors[indexOfCursorColors]
 
+###
+  The location of the cursor is defined seperately from the other
+  cursor location pairs (xSpot, oldX, casualX), to prevent
+  interference. The location of the cursor pixel is updated continuously,
+  with the old pixel being covered up, and the new one being drawn
+###
 cursorX = undefined
 cursorY = undefined
 
@@ -192,6 +210,11 @@ oldCursorsColor = undefined
 buttonWidth = 24
 buttonHeight = 24
 
+###
+  The user can click and drag the primary color swatch to the color
+  palette. This boolean indicates if the primary color swatch has been
+  clicked down on.
+###
 swatchColorPicked = false
 
 
@@ -842,12 +865,53 @@ floodFill = (canvas, context, colorToChangeTo, xPosition, yPosition) ->
     context.putImageData(revisedCanvasToPaste,0,0)
 
 
+###
+  This function draws a square onto the canvas.
+###
 squareAction = (canvas, color, beginX, beginY, endX, endY, fillOrNot) ->
+  # First, let us check if the square is to be drawn filled in or not
   if not tH[tH.length - 1].mode and not fillOrNot
+    ###
+      If it isnt getting filled in, let the function draw a square
+      for every pixel of width the square is to have
+      The width of course, being defined by the square tool's
+      magnitude property. (A)
+
+      Before drawing the square though, the function must realize
+      the relative positions of where the mouse was clicked down,
+      and where the mouse now is. These two positions are typically
+      the arguments beginX/beginY, and endX/endY.
+
+      For both the x and y dimensions, the starting point could be
+      farther than the end point from the origin, or closer. This
+      means ther are four possible states of relative position: 0)
+      the starting X is closer to the origin, and the starting Y is 
+      closer to the origin; 1) the ending X is closer to the origin
+      ( than the ending X ), and the starting Y is closer to the origin 
+      (than the ending Y); 2) the starting X is closer to the origin 
+      and the ending Y is closer to the origin; and 3) the ending X 
+      is closer to the origin and the ending Y is closer to the origin.
+      To Minimize the number of if statements, the function first
+      judges if the starting and ending points for each dimension
+      are the same ( B ), and then judges the relative position
+      of one dimension, with the other dimensions relative
+      position infered ( C )
+
+      When the square drawn has a border, the function simply
+      drawns many squares with a one pixel border. When the square 
+      drawn has a border, the relative positions of the points in 
+      each dimension must be recognized, least the function will not 
+      know if the next bordering square to be drawn is to be drawn
+      one pixel left, or one pixel right (or up or down), 
+      of the prior square.
+    ###
     magnitudeIncrement = 0
-    if (beginX < endX) == (beginY < endY)
+    # ( B )
+    if (beginX < endX) is (beginY < endY)
+      # ( C )
       if (beginX < endX)
         while magnitudeIncrement < tH[tH.length - 1].magnitude
+          # ( A )
           mi = magnitudeIncrement
           drawLine(canvas, color, beginX + mi, beginY + mi, endX - mi, beginY + mi)
           drawLine(canvas, color, beginX + mi, beginY + mi, beginX + mi, endY - mi )
@@ -856,6 +920,7 @@ squareAction = (canvas, color, beginX, beginY, endX, endY, fillOrNot) ->
           magnitudeIncrement++
       else
         while magnitudeIncrement < tH[tH.length - 1].magnitude
+          # ( A )
           mi = magnitudeIncrement
           drawLine(canvas, color, beginX - mi, beginY - mi, endX + mi, beginY - mi)
           drawLine(canvas, color, beginX - mi, beginY - mi, beginX - mi, endY + mi )
@@ -863,8 +928,10 @@ squareAction = (canvas, color, beginX, beginY, endX, endY, fillOrNot) ->
           drawLine(canvas, color, beginX - mi, endY + mi, endX + mi, endY + mi)
           magnitudeIncrement++
     else
+      # ( C )
       if (endY < beginY)
         while magnitudeIncrement < tH[tH.length - 1].magnitude
+          # ( A )
           mi = magnitudeIncrement
           drawLine(canvas, color, beginX + mi, beginY - mi, endX - mi, beginY - mi)
           drawLine(canvas, color, beginX + mi, beginY - mi, beginX + mi, endY + mi )
@@ -873,6 +940,7 @@ squareAction = (canvas, color, beginX, beginY, endX, endY, fillOrNot) ->
           magnitudeIncrement++
       else
         while magnitudeIncrement < tH[tH.length - 1].magnitude
+          # ( A )
           mi = magnitudeIncrement
           drawLine(canvas, color, beginX - mi, beginY + mi, endX + mi, beginY + mi)
           drawLine(canvas, color, beginX - mi, beginY + mi, beginX - mi, endY - mi )
@@ -886,7 +954,7 @@ squareAction = (canvas, color, beginX, beginY, endX, endY, fillOrNot) ->
     else
       numberOfIterationsNecessary = Math.abs(beginX - endX)
     magnitudeIncrement = 0
-    if (beginX < endX) == (beginY < endY)
+    if (beginX < endX) is (beginY < endY)
       if (beginX < endX)
         while magnitudeIncrement < numberOfIterationsNecessary
           mi = magnitudeIncrement
@@ -1071,28 +1139,6 @@ lineAction = (canvas, color, beginX, beginY, endX, endY) ->
   if tH[tH.length - 1].magnitude > 1
     doingBoldness = tH[tH.length - 1].magnitude - 1
   drawLine(canvas, color, beginX, beginY, endX, endY, doingBoldness)
-  ###
-  lineSlope = undefined
-  if tH[tH.length - 1].magnitude > 1
-    lineSlope = Math.abs(beginX - endX) / Math.abs(beginY - endY)
-    if lineSlope > 1
-      lineSlope = Math.abs(beginY - endY) / Math.abs(beginX - endX)
-
-  magnitudeIncrement = 0
-  while magnitudeIncrement < tH[tH.length - 1].magnitude
-    drawLine(canvas, color, beginX + magnitudeIncrement, beginY, endX + magnitudeIncrement, endY)
-    drawLine(canvas, color, beginX - magnitudeIncrement, beginY, endX - magnitudeIncrement, endY)
-    drawLine(canvas, color, beginX, beginY + magnitudeIncrement, endX, endY + magnitudeIncrement)
-    drawLine(canvas, color, beginX, beginY - magnitudeIncrement, endX, endY - magnitudeIncrement)
-    magnitudeIncrement++
-  if tH[tH.length - 1].magnitude > 1
-    calculatedRadius = (tH[tH.length - 1].magnitude) - Math.round(lineSlope * 1.21)
-    magnitudeIncrement = 0
-    while magnitudeIncrement < calculatedRadius
-      drawCircle( canvas, color, beginX, beginY, calculatedRadius - magnitudeIncrement, true )
-      drawCircle( canvas, color, endX, endY, calculatedRadius - magnitudeIncrement, true )
-      magnitudeIncrement++
-  ###
 
 
 ###
@@ -1501,14 +1547,22 @@ rotateDataSorting = ( inputMaterial, eventIsKeyDown) ->
           rotateFinishUp()
   else
     switch inputMaterial
-      when '9' then menuContext.drawImage(ninetyDegreesLitUp, tH[tH.length - 1].menuImage.width - 223, 5)
-      when '1' then menuContext.drawImage(oneHundredAndEightyDegreesLitUp, tH[tH.length - 1].menuImage.width - 187, 5)
-      when '2' then menuContext.drawImage(twoHundredAndSeventyDegreesLitUp, tH[tH.length - 1].menuImage.width - 138, 5)
-      when 'n' then menuContext.drawImage(cancelLitUp, tH[tH.length - 1].menuImage.width - 89, 5)
+      when '9' 
+        menuContext.drawImage(ninetyDegreesLitUp, tH[tH.length - 1].menuImage.width - 223, 5)
+      when '1'
+        xPositionOfButton = tH[tH.length - 1].menuImage.width - 187
+        menuContext.drawImage(oneHundredAndEightyDegreesLitUp, xPositionOfButton, 5)
+      when '2' 
+        xPositionOfButton = tH[tH.length - 1].menuImage.width - 138
+        menuContext.drawImage(twoHundredAndSeventyDegreesLitUp, xPositionOfButton, 5)
+      when 'n' 
+        menuContext.drawImage(cancelLitUp, tH[tH.length - 1].menuImage.width - 89, 5)
 
 rotation = ( howManyDegrees ) ->
+  # Cover up the cursor pixel so that it doesnt become an artifact on the canvas
   coverUpOldCursor()
   if not areaSelected
+
     sWidth = ctContext.canvas.width
     sHeight = ctContext.canvas.height
     canvasCurrently = ctContext.getImageData(0, 0, sWidth, sHeight)
@@ -1516,12 +1570,15 @@ rotation = ( howManyDegrees ) ->
     canvasAsPixels = dataToPixels(canvasCurrently.data)
     switch howManyDegrees
       when '9'
+        # Rotate ninety degrees
         canvasAsPixels = axisFlip(canvasAsPixels, sWidth, sHeight)
         canvasAsPixels = horizontalFlip(canvasAsPixels[0], canvasAsPixels[1], canvasAsPixels[2])
       when '1'
+        # rotate 180 degrees
         canvasAsPixels = horizontalFlip(canvasAsPixels, sWidth, sHeight)
         canvasAsPixels = verticalFlip(canvasAsPixels[0], canvasAsPixels[1], canvasAsPixels[2])
       when '2'
+        # Rotate 270 degrees
         canvasAsPixels = horizontalFlip(canvasAsPixels, sWidth, sHeight)
         canvasAsPixels = axisFlip(canvasAsPixels[0], canvasAsPixels[1], canvasAsPixels[2])
 
@@ -1605,7 +1662,6 @@ rotation = ( howManyDegrees ) ->
     canvasDataAsImage = new Image()
     canvasDataAsImage.onload = ->
       ctContext.drawImage(canvasDataAsImage,0,0)
-      #ctContext.putImageData(selection, selectionX, selectionY)
       ctContext.drawImage(selectionImage, selectionX, selectionY)
       rightEdge = selectionX + selectionsWidth
       bottomEdge = selectionY + selectionsHeight
@@ -1621,6 +1677,7 @@ rotateFinishUp = ->
   normalCircumstance = true
   menuUp = false
 
+# Converts image data into an array of pixels
 dataToPixels = (imageData) ->
   convertedData = []
   datumIndex = 0
@@ -1633,6 +1690,20 @@ dataToPixels = (imageData) ->
     datumIndex++
   return convertedData
 
+###
+  The following three functions manipulate a canvas, 
+  given as an array of pixels, and its dimensions as arguments.
+
+  The following three functions, when done in sequence, can bring
+  the canvas to various states of rotation. Meaning, that though
+  a horizontal flip ( a mirroring ) nor an 'axis flip' count as a rotation,
+  horiontally flipping, and 'axis flipping' when done in a sequence
+  bring the canvas to a state the user would expect if they wanted
+  the canvas rotated 270 degrees.
+
+  'axis flip' is just a term I made up, I refer to switching the
+  x and y axes with each other.
+###
 horizontalFlip = (imageInPixels, itsWidth, itsHeight) ->
   flippedCanvas = []
   pixelIndex = 0
@@ -1898,6 +1969,8 @@ replaceDataSorting = ( inputMaterial, eventIsKeyDown ) ->
 
 replace = ->
   if not areaSelected
+    # Figure out what color is being replaced, and what color
+    # its getting replaced by
     colorToReplace = hexToRGB(menuDatum.substr(0,6))
     replacement = hexToRGB(menuDatum.substr(6,6))
     replacement.push 255
@@ -1906,20 +1979,25 @@ replace = ->
     tHeight = ctContext.canvas.height
     canvasAsWeFoundIt = ctContext.getImageData(0, 0, tWidth, tHeight)
     canvasData = canvasAsWeFoundIt.data
-    canvasInPixels = []
 
+    # convert the canvas into an array of pixels
+    canvasInPixels = []
     canvasIndex = 0
     colorAtDatum = []
     while canvasIndex < canvasData.length
       colorAtDatum.push canvasData[canvasIndex]
       if canvasIndex % 4 is 3
+        # If the pixel is the one we are replacing, dont pass
+        # it on into the array of pixels
         if sameColorCheck(colorAtDatum, colorToReplace)
+          # instead pass its replacement
           canvasInPixels.push replacement
         else
           canvasInPixels.push colorAtDatum
         colorAtDatum = []
       canvasIndex++
 
+    # Now turn it back into data
     pixelIndex = 0
     while pixelIndex < canvasInPixels.length
       colorIndex = 0
@@ -2298,7 +2376,6 @@ resizeDataSortingInitialize = (width, height) ->
     canvasDataAsImage = new Image()
     canvasDataAsImage.onload = ->
       ctContext.drawImage(canvasDataAsImage,0,0)
-      #ctContext.putImageData(selection, selectionX, selectionY)
       historyUpdate()
     canvasDataAsImage.src = cH[cH.length - 1]
   menuDatum = zeroPadder(width, 4) + zeroPadder(height, 4)
@@ -2333,8 +2410,10 @@ resizeDataSorting = ( inputMaterial, eventIsKeyDown ) ->
       drawResizeMenu()
     else
       switch inputMaterial
-        when 'enter' then menuContext.drawImage(enterLitUp, tH[tH.length - 1].menuImage.width - 162, 5)
-        when 'n' then menuContext.drawImage(cancelLitUp, tH[tH.length - 1].menuImage.width - 89, 5)
+        when 'enter' 
+          menuContext.drawImage(enterLitUp, tH[tH.length - 1].menuImage.width - 162, 5)
+        when 'n' 
+          menuContext.drawImage(cancelLitUp, tH[tH.length - 1].menuImage.width - 89, 5)
 
 resize = ->
   $('#menuDiv').css('top',(window.innerHeight).toString())
@@ -2617,6 +2696,10 @@ cutAction = ->
   ,20)
 
   
+###
+  This function changes the color of the pixel
+  that the cursor hovers over.
+###
 cursorColorAction = ->
   tH.push ctPaintTools[toolsToNumbers['cursorColor']]
   drawToolbars()
@@ -2674,6 +2757,7 @@ redoAction = ->
   # queue, replace our current canvas with it.
   if cF.length > 0
     cH.push cF.pop()
+    cH.shift()
     canvasDataAsImage = new Image()
     canvasDataAsImage.onload = ->
       # Figure out what to do if the replacing canvas
@@ -4261,6 +4345,7 @@ $(document).ready (event)->
       $('#wholeWindow').css 'cursor', 'default'   
 
   $('#CtPaint').mousemove (event)->
+    console.log 'cH.length', cH.length
     tH[tH.length - 1].posture[0](event)
 
   $('#CtPaint').mousedown (event)->

@@ -27,14 +27,22 @@ rotateDataSorting = ( inputMaterial, eventIsKeyDown) ->
           rotateFinishUp()
   else
     switch inputMaterial
-      when '9' then menuContext.drawImage(ninetyDegreesLitUp, tH[tH.length - 1].menuImage.width - 223, 5)
-      when '1' then menuContext.drawImage(oneHundredAndEightyDegreesLitUp, tH[tH.length - 1].menuImage.width - 187, 5)
-      when '2' then menuContext.drawImage(twoHundredAndSeventyDegreesLitUp, tH[tH.length - 1].menuImage.width - 138, 5)
-      when 'n' then menuContext.drawImage(cancelLitUp, tH[tH.length - 1].menuImage.width - 89, 5)
+      when '9' 
+        menuContext.drawImage(ninetyDegreesLitUp, tH[tH.length - 1].menuImage.width - 223, 5)
+      when '1'
+        xPositionOfButton = tH[tH.length - 1].menuImage.width - 187
+        menuContext.drawImage(oneHundredAndEightyDegreesLitUp, xPositionOfButton, 5)
+      when '2' 
+        xPositionOfButton = tH[tH.length - 1].menuImage.width - 138
+        menuContext.drawImage(twoHundredAndSeventyDegreesLitUp, xPositionOfButton, 5)
+      when 'n' 
+        menuContext.drawImage(cancelLitUp, tH[tH.length - 1].menuImage.width - 89, 5)
 
 rotation = ( howManyDegrees ) ->
+  # Cover up the cursor pixel so that it doesnt become an artifact on the canvas
   coverUpOldCursor()
   if not areaSelected
+
     sWidth = ctContext.canvas.width
     sHeight = ctContext.canvas.height
     canvasCurrently = ctContext.getImageData(0, 0, sWidth, sHeight)
@@ -42,12 +50,15 @@ rotation = ( howManyDegrees ) ->
     canvasAsPixels = dataToPixels(canvasCurrently.data)
     switch howManyDegrees
       when '9'
+        # Rotate ninety degrees
         canvasAsPixels = axisFlip(canvasAsPixels, sWidth, sHeight)
         canvasAsPixels = horizontalFlip(canvasAsPixels[0], canvasAsPixels[1], canvasAsPixels[2])
       when '1'
+        # rotate 180 degrees
         canvasAsPixels = horizontalFlip(canvasAsPixels, sWidth, sHeight)
         canvasAsPixels = verticalFlip(canvasAsPixels[0], canvasAsPixels[1], canvasAsPixels[2])
       when '2'
+        # Rotate 270 degrees
         canvasAsPixels = horizontalFlip(canvasAsPixels, sWidth, sHeight)
         canvasAsPixels = axisFlip(canvasAsPixels[0], canvasAsPixels[1], canvasAsPixels[2])
 
@@ -131,7 +142,6 @@ rotation = ( howManyDegrees ) ->
     canvasDataAsImage = new Image()
     canvasDataAsImage.onload = ->
       ctContext.drawImage(canvasDataAsImage,0,0)
-      #ctContext.putImageData(selection, selectionX, selectionY)
       ctContext.drawImage(selectionImage, selectionX, selectionY)
       rightEdge = selectionX + selectionsWidth
       bottomEdge = selectionY + selectionsHeight
@@ -147,6 +157,7 @@ rotateFinishUp = ->
   normalCircumstance = true
   menuUp = false
 
+# Converts image data into an array of pixels
 dataToPixels = (imageData) ->
   convertedData = []
   datumIndex = 0
@@ -159,6 +170,20 @@ dataToPixels = (imageData) ->
     datumIndex++
   return convertedData
 
+###
+  The following three functions manipulate a canvas, 
+  given as an array of pixels, and its dimensions as arguments.
+
+  The following three functions, when done in sequence, can bring
+  the canvas to various states of rotation. Meaning, that though
+  a horizontal flip ( a mirroring ) nor an 'axis flip' count as a rotation,
+  horiontally flipping, and 'axis flipping' when done in a sequence
+  bring the canvas to a state the user would expect if they wanted
+  the canvas rotated 270 degrees.
+
+  'axis flip' is just a term I made up, I refer to switching the
+  x and y axes with each other.
+###
 horizontalFlip = (imageInPixels, itsWidth, itsHeight) ->
   flippedCanvas = []
   pixelIndex = 0

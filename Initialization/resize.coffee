@@ -23,7 +23,6 @@ resizeDataSortingInitialize = (width, height) ->
     canvasDataAsImage = new Image()
     canvasDataAsImage.onload = ->
       ctContext.drawImage(canvasDataAsImage,0,0)
-      #ctContext.putImageData(selection, selectionX, selectionY)
       historyUpdate()
     canvasDataAsImage.src = cH[cH.length - 1]
   menuDatum = zeroPadder(width, 4) + zeroPadder(height, 4)
@@ -58,8 +57,10 @@ resizeDataSorting = ( inputMaterial, eventIsKeyDown ) ->
       drawResizeMenu()
     else
       switch inputMaterial
-        when 'enter' then menuContext.drawImage(enterLitUp, tH[tH.length - 1].menuImage.width - 162, 5)
-        when 'n' then menuContext.drawImage(cancelLitUp, tH[tH.length - 1].menuImage.width - 89, 5)
+        when 'enter' 
+          menuContext.drawImage(enterLitUp, tH[tH.length - 1].menuImage.width - 162, 5)
+        when 'n' 
+          menuContext.drawImage(cancelLitUp, tH[tH.length - 1].menuImage.width - 89, 5)
 
 resize = ->
   $('#menuDiv').css('top',(window.innerHeight).toString())

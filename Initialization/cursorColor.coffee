@@ -1,3 +1,7 @@
+###
+  This function changes the color of the pixel
+  that the cursor hovers over.
+###
 cursorColorAction = ->
   tH.push ctPaintTools[toolsToNumbers['cursorColor']]
   drawToolbars()

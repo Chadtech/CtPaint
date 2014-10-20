@@ -64,6 +64,8 @@ replaceDataSorting = ( inputMaterial, eventIsKeyDown ) ->
 
 replace = ->
   if not areaSelected
+    # Figure out what color is being replaced, and what color
+    # its getting replaced by
     colorToReplace = hexToRGB(menuDatum.substr(0,6))
     replacement = hexToRGB(menuDatum.substr(6,6))
     replacement.push 255
@@ -72,20 +74,25 @@ replace = ->
     tHeight = ctContext.canvas.height
     canvasAsWeFoundIt = ctContext.getImageData(0, 0, tWidth, tHeight)
     canvasData = canvasAsWeFoundIt.data
-    canvasInPixels = []
 
+    # convert the canvas into an array of pixels
+    canvasInPixels = []
     canvasIndex = 0
     colorAtDatum = []
     while canvasIndex < canvasData.length
       colorAtDatum.push canvasData[canvasIndex]
       if canvasIndex % 4 is 3
+        # If the pixel is the one we are replacing, dont pass
+        # it on into the array of pixels
         if sameColorCheck(colorAtDatum, colorToReplace)
+          # instead pass its replacement
           canvasInPixels.push replacement
         else
           canvasInPixels.push colorAtDatum
         colorAtDatum = []
       canvasIndex++
 
+    # Now turn it back into data
     pixelIndex = 0
     while pixelIndex < canvasInPixels.length
       colorIndex = 0
