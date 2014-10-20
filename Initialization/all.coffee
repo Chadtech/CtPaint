@@ -23,7 +23,6 @@ allAction = (event) ->
     else
       selectAll()
 
-
 selectAll = ->
   coverUpOldCursor()
   tCanvasWidth = ctContext.canvas.width

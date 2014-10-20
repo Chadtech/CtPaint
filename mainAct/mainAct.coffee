@@ -29,10 +29,14 @@ $(document).ready (event)->
       drawToolbars()
 
     if event.keyCode is keysToKeyCodes['single quote']
-      modeChangeAction()
+      if tH[tH.length - 1].name is 'select'
+        makeTransparent()
+      else
+        modeChangeAction()
 
     if event.keyCode is keysToKeyCodes['space']
-      makeTransparent()
+      if tH[tH.length - 1].name is 'select'
+        makeTransparent()
 
     if event.keyCode is keysToKeyCodes['equals'] or event.keyCode is 61
       if zoomActivate
@@ -188,7 +192,6 @@ $(document).ready (event)->
       $('#wholeWindow').css 'cursor', 'default'   
 
   $('#CtPaint').mousemove (event)->
-    console.log 'tH.length = ', tH.length
     tH[tH.length - 1].posture[0](event)
 
   $('#CtPaint').mousedown (event)->

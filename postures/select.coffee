@@ -46,8 +46,6 @@ selectPosture = [
           ctContext.drawImage(canvasDataAsImage, 0, 0)
           ctContext.drawImage(selectionImage, gripX, gripY)
           drawSelectBox(ctContext, gripX, gripY, rightEdge, bottomEdge)
-          #ctContext.putImageData(selection, gripX, gripY)
-          #drawSelectBox(ctContext, gripX, gripY, rightEdge, bottomEdge)
         canvasDataAsImage.src = canvasHoldover
       else
         drawInformation( event, boxInformation )
@@ -72,6 +70,8 @@ selectPosture = [
       withinYBoundaries = notTooLow and notTooHigh
 
       if not (withinXBoundaries and withinYBoundaries)
+        ctPaintTools[toolsToNumbers['select']].mode = false
+        drawToolbars()
         areaSelected = false
         boxInformation = undefined
         canvasDataAsImage = new Image()
@@ -79,7 +79,6 @@ selectPosture = [
           ctContext.drawImage(canvasDataAsImage, 0, 0)
           ctContext.drawImage(selectionImage, selectionX, selectionY)
           historyUpdate()
-          #ctContext.putImageData(selection, selectionX, selectionY)
         canvasDataAsImage.src = canvasHoldover
 
   # Mouse up
@@ -118,9 +117,6 @@ selectPosture = [
             ctContext.drawImage(selectionImage, selectionX, selectionY)
             drawSelectBox(ctContext, originX, originY, otherSideX, otherSideY)
           selectionImage.src = imageDataToURL(selection)
-
-          #ctContext.putImageData(selection, selectionX, selectionY)
-          #drawSelectBox(ctContext, originX, originY, otherSideX, otherSideY)
 
         canvasDataAsImage.src = cH[cH.length - 1]
         areaSelected = true

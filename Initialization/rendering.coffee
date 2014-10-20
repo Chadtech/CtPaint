@@ -304,6 +304,8 @@ copeWithSelection = ()->
   copeY = selectionY
   if areaSelected
     areaSelected = false
+    ctPaintTools[toolsToNumbers['select']].mode = false
+    drawToolbars()
     canvasDataAsImage = new Image()
     canvasDataAsImage.onload = ->
       ctContext.drawImage(canvasDataAsImage, 0, 0)
@@ -311,7 +313,6 @@ copeWithSelection = ()->
       cH.push ctCanvas.toDataURL()
       cH.shift()
       cF = []
-    #canvasDataAsImage.src = cH[cH.length - 1]
     canvasDataAsImage.src = canvasHoldover
 
 makeTransparent = () ->
