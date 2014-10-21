@@ -2722,12 +2722,14 @@ undoAction = ->
   tH.push ctPaintTools[toolsToNumbers['undo']]
   drawToolbars()
 
-  cF.push cH.pop()
+  cF.push cH[cH.length - 1]
+  cH.pop()
   cH.unshift(cH[0])
   canvasDataAsImage = new Image()
   canvasDataAsImage.onload = ->
     undoAndRedoSizeComparison(canvasDataAsImage)
     ctContext.drawImage(canvasDataAsImage,0,0)
+    canvasHoldover = ctCanvas.toDataURL()
     updateOldCursor()
   canvasDataAsImage.src = cH[cH.length - 1]
 
