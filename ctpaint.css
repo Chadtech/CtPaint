@@ -1,4 +1,5 @@
 #CtPaint { 
   image-rendering: -moz-crisp-edges;;
+  image-rendering: pixelated;
   cursor: url("./ctpaintcursor.cur"), auto;
 }

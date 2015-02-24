@@ -1,10 +1,11 @@
 # CtPaint
 
 CtPaint is basically a clone of MSPaint in browser.
+http://www.ctpaint.us
 
 ~~Its not near completion, and I have no releases of it yet.~~
 CtPaint vB.0 is complete: ctpaint.us
-I suggest using firefox, where pixelation is possible. Presently, image smoothing cannot be turned off in google chrome. I hear the css property 'image-rendering: pixelated' is coming out this November 2014 with Chrome 40. 
+I suggest using firefox, where pixelation is possible. Presently, image smoothing cannot be turned off in google chrome. I hear the css property 'image-rendering: pixelated' is coming out this November 2014 with Chrome 40 (UPDATE: Image-rendering pixelated is available in Chrome 41!). 
 
 # Navigating this repo
 
