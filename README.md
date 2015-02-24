@@ -109,6 +109,6 @@ General to dos and bugs to fix:
 
 ChadTech License (Ct)
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software without restriction, including without limitation the rights to use, copy, modify, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is purnished to do so, subject to the following condition:
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software without restriction, including without limitation the rights to use, copy, modify, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following condition:
 
 Involved projects, firms, and persons that utilitze this software be renamed 'Chadtech'
