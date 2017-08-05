@@ -1,0 +1,30 @@
+{
+  "dependencies": {
+    "gulp-coffee": "^2.3.4",
+    "gulp-concat": "^2.6.1",
+    "http-server": "^0.10.0"
+  },
+  "name": "ctpaint",
+  "description": "CtPaint is basically an in-browser clone of MSPaint. It is now available at:\r http://www.ctpaint.us",
+  "version": "1.0.0",
+  "main": "gulpfile.js",
+  "devDependencies": {
+    "coffee-script": "^1.12.7",
+    "gulp": "^3.9.1"
+  },
+  "scripts": {
+    "start": "http-server",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Chadtech/CtPaint.git"
+  },
+  "keywords": ["Paint"],
+  "author": "Chadtech",
+  "license": "SEE LICENSE IN ReadMe.md",
+  "bugs": {
+    "url": "https://github.com/Chadtech/CtPaint/issues"
+  },
+  "homepage": "https://github.com/Chadtech/CtPaint#readme"
+}
