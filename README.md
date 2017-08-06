@@ -3,6 +3,16 @@
 CtPaint is basically an in-browser clone of MSPaint. It is now available at:
 http://www.ctpaint.us
 
+# Quickstart
+
+```sh
+npm install
+npm start
+```
+
+navigate to `http://localhost:8080/ctpaint.html`
+
+
 # Navigating this repo
 
 ctpaint.coffee is the file run in the browser via ctpaint.html. gulpfile.js concatenates the many coffeescript files found in the various folders mainAct, postures, and initialization, into ctpaint.coffee
